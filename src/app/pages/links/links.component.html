@@ -1,0 +1,95 @@
+<h2 class="page-title">🔗 Backhaul Links</h2>
+
+<div class="filters-row">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search by device name</mat-label>
+    <input matInput [(ngModel)]="searchTerm"
+           (ngModelChange)="applyFilter()"
+           placeholder="ex: TUN_0001 or ARI_0045"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Filter by alarm</mat-label>
+    <mat-select [(ngModel)]="alarmFilter" (ngModelChange)="applyFilter()">
+      <mat-option value="">All</mat-option>
+      <mat-option value="normal">Normal</mat-option>
+      <mat-option value="warning">Warning</mat-option>
+      <mat-option value="minor">Minor</mat-option>
+      <mat-option value="major">Major</mat-option>
+      <mat-option value="critical">Critical</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner class="loading-spinner"></mat-spinner>
+</div>
+
+<mat-card *ngIf="!loading">
+  <mat-card-content>
+    <p class="stats-text">
+      Showing {{ pagedLinks.length }} of {{ filteredLinks.length }} links (Total: {{ links.length }})
+    </p>
+
+    <table mat-table [dataSource]="pagedLinks" class="full-width-table">
+
+      <ng-container matColumnDef="alarm_severity">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Alarm</th>
+        <td mat-cell *matCellDef="let l">
+          <span class="alarm-badge" [style.background]="getAlarmColor(l.alarm_severity)">
+            {{ l.alarm_severity | titlecase }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="source_ne">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Source NE</th>
+        <td mat-cell *matCellDef="let l" class="ne-text">{{ l.source_ne }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="source_port">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Source Port</th>
+        <td mat-cell *matCellDef="let l" class="port-text">{{ l.source_port }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="sink_ne">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Sink NE</th>
+        <td mat-cell *matCellDef="let l" class="ne-text">{{ l.sink_ne }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="sink_port">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Sink Port</th>
+        <td mat-cell *matCellDef="let l" class="port-text">{{ l.sink_port }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="link_level">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Rate</th>
+        <td mat-cell *matCellDef="let l">
+          <span class="rate-badge">
+            {{ l.link_level }}
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns;"
+          [style.background]="row.alarm_severity !== 'normal' ? '#e8bda2' : ''">
+      </tr>
+    </table>
+
+    <div class="pagination-container">
+      <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0">
+        ← Previous
+      </button>
+
+      <span class="page-info">
+        Page {{ currentPage + 1 }} of {{ totalPages }}
+      </span>
+
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
+        Next →
+      </button>
+    </div>
+
+  </mat-card-content>
+</mat-card>

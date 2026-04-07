@@ -1,0 +1,113 @@
+<h2 class="page-title">⚙️ Provisioning</h2>
+
+<div class="layout-container">
+
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>New Provisioning Task</mat-card-title>
+      <mat-card-subtitle>Start an automated provisioning job</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="card-content-spacing">
+
+      <mat-form-field appearance="outline" class="full-width-field">
+        <mat-label>Device Name</mat-label>
+        <input matInput [(ngModel)]="form.device_name"
+               placeholder="ex: B2B_ARI_0010"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width-field">
+        <mat-label>Device IP</mat-label>
+        <input matInput [(ngModel)]="form.device_ip"
+               placeholder="ex: 10.16.1.117"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width-field">
+        <mat-label>Task Type</mat-label>
+        <mat-select [(ngModel)]="form.task_type">
+          <mat-option value="backhaul">Backhaul Link</mat-option>
+          <mat-option value="b2b">B2B Link</mat-option>
+          <mat-option value="internet">Internet Service</mat-option>
+          <mat-option value="voip">VoIP Service</mat-option>
+          <mat-option value="mpls">MPLS</mat-option>
+          <mat-option value="vpn">VPN</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div *ngIf="message" 
+           class="status-message"
+           [style.background]="messageType === 'success' ? '#e8f5e9' : '#ffebee'"
+           [style.color]="messageType === 'success' ? 'green' : 'red'">
+        {{ message }}
+      </div>
+
+      <button class="submit-btn"
+        (click)="startProvisioning()"
+        [disabled]="submitting || !form.device_name || !form.device_ip || !form.task_type">
+        {{ submitting ? '⏳ Starting...' : ' Start Provisioning' }}
+      </button>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="history-card">
+    <mat-card-header>
+      <mat-card-title>Task History</mat-card-title>
+      <mat-card-subtitle>{{ tasks.length }} tasks total</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="card-content-spacing">
+
+      <div *ngIf="loadingTasks" class="loading-container">
+        <mat-spinner diameter="40" class="loading-spinner"></mat-spinner>
+      </div>
+
+      <table *ngIf="!loadingTasks" mat-table [dataSource]="tasks" class="full-width-table">
+
+        <ng-container matColumnDef="device_name">
+          <th mat-header-cell *matHeaderCellDef class="header-accent">Device</th>
+          <td mat-cell *matCellDef="let t" class="device-text">{{ t.device_name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="task_type">
+          <th mat-header-cell *matHeaderCellDef class="header-accent">Type</th>
+          <td mat-cell *matCellDef="let t">
+            <span class="type-badge">
+              {{ t.task_type | titlecase }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="header-accent">Status</th>
+          <td mat-cell *matCellDef="let t">
+            <span class="status-badge" [style.background]="getStatusColor(t.status)">
+              {{ t.status | titlecase }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="created_at">
+          <th mat-header-cell *matHeaderCellDef class="header-accent">Started</th>
+          <td mat-cell *matCellDef="let t" class="date-text">
+            {{ t.created_at | date:'dd/MM HH:mm' }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;"
+            class="clickable-row"
+            (click)="selectTask(row)"
+            [style.background]="selectedTask?.id === row.id ? '#FFF3E0' : ''">
+        </tr>
+      </table>
+
+      <div *ngIf="selectedTask" class="task-detail-container">
+        <strong>Result:</strong>
+        <p class="task-result-text">
+          {{ selectedTask.result || 'No result yet...' }}
+        </p>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+</div>

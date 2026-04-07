@@ -1,0 +1,59 @@
+.page-title {
+  color: #E87722;
+  margin-bottom: 24px;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.loading-spinner {
+  margin: auto;
+}
+
+.dashboard-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 180px;
+}
+
+.border-orange {
+  border-top: 4px solid #E87722;
+}
+
+.border-dark {
+  border-top: 4px solid #333;
+}
+
+.stat-label {
+  color: #888;
+  margin: 0;
+}
+
+.stat-value {
+  margin: 8px 0;
+}
+
+.sub-stat {
+  margin: 0;
+  font-size: 13px;
+}
+
+.text-orange {
+  color: #E87722;
+}
+
+.text-red {
+  color: red;
+}
+
+.text-green {
+  color: green;
+}

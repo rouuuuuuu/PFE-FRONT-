@@ -1,0 +1,123 @@
+<h2 class="page-title">🖥️ Routers</h2>
+
+<div class="filters-row">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search by name or IP</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
+           placeholder="ex: TUN_0001 or 10.51.2.1"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Filter by vendor</mat-label>
+    <mat-select [(ngModel)]="vendorFilter" (ngModelChange)="applyFilter()">
+      <mat-option value="">All</mat-option>
+      <mat-option value="huawei">Huawei</mat-option>
+      <mat-option value="juniper">Juniper</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner class="loading-spinner"></mat-spinner>
+</div>
+
+<mat-card *ngIf="!loading">
+  <mat-card-content>
+    <p class="stats-text">
+      Showing {{ pagedRouters.length }} of {{ filteredRouters.length }} routers (Total: {{ routers.length }})
+    </p>
+
+    <table mat-table [dataSource]="pagedRouters" class="full-width-table">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Name</th>
+        <td mat-cell *matCellDef="let r">{{ r.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="loopback_ip">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Loopback IP</th>
+        <td mat-cell *matCellDef="let r">{{ r.loopback_ip }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Model</th>
+        <td mat-cell *matCellDef="let r">{{ r.model }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="vendor">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Vendor</th>
+        <td mat-cell *matCellDef="let r">
+          <span class="vendor-badge" [style.background]="r.vendor === 'huawei' ? '#E87722' : '#888'">
+            {{ r.vendor | titlecase }}
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns;"
+          class="clickable-row"
+          (click)="selectRouter(row)"
+          [style.background]="selectedRouter?.name === row.name ? '#e8bda2' : ''">
+      </tr>
+    </table>
+
+    <div class="pagination-container">
+      <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0">
+        ← Previous
+      </button>
+
+      <span class="page-info">
+        Page {{ currentPage + 1 }} of {{ totalPages }}
+      </span>
+
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
+        Next →
+      </button>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="selectedRouter" class="verification-card">
+  <mat-card-header>
+    <mat-card-title>🔍 Hardware Verification — {{ selectedRouter.name }}</mat-card-title>
+    <mat-card-subtitle>{{ selectedRouter.loopback_ip }} · {{ selectedRouter.vendor | titlecase }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="verification-content">
+
+    <div *ngIf="verifying" class="verifying-container">
+      <mat-spinner diameter="40" class="loading-spinner"></mat-spinner>
+      <p>Checking hardware status...</p>
+    </div>
+
+    <div *ngIf="!verifying && verification">
+      <div class="status-banner" [style.background]="verification.overall_status === 'OK' ? '#e8bda2' : '#e8bda2'">
+        <strong>Overall Status:</strong>
+        <span class="status-icon" [style.color]="verification.overall_status === 'OK' ? 'green' : 'red'">
+          {{ verification.overall_status === 'OK' ? '✅ OK' : '⚠️ Needs Attention' }}
+        </span>
+      </div>
+
+      <table mat-table [dataSource]="verificationRows" class="full-width-table">
+        <ng-container matColumnDef="component">
+          <th mat-header-cell *matHeaderCellDef>Component</th>
+          <td mat-cell *matCellDef="let v">{{ v.component }}</td>
+        </ng-container>
+        <ng-container matColumnDef="count">
+          <th mat-header-cell *matHeaderCellDef>Count</th>
+          <td mat-cell *matCellDef="let v">{{ v.count }}</td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let v">
+            <span [style.color]="v.status === 'OK' ? 'green' : 'red'">
+              {{ v.status === 'OK' ? '✅ ' + v.status : '⚠️ ' + v.status }}
+            </span>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="verifyColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: verifyColumns;"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

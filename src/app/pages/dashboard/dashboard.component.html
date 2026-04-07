@@ -1,0 +1,86 @@
+<h2 class="page-title">📊 NOC Dashboard</h2>
+
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner class="loading-spinner"></mat-spinner>
+  <p>Loading network data...</p>
+</div>
+
+<div *ngIf="!loading && stats">
+
+  <div class="dashboard-row">
+
+    <mat-card class="stat-card border-orange">
+      <mat-card-content>
+        <p class="stat-label">Total Routers</p>
+        <h1 class="stat-value text-orange">{{ stats.devices.routers }}</h1>
+        <p class="sub-stat">
+          🟢 Huawei: {{ getVendorCount('huawei') }} &nbsp;
+          🔵 Juniper: {{ getVendorCount('juniper') }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card border-dark">
+      <mat-card-content>
+        <p class="stat-label">Total Switches</p>
+        <h1 class="stat-value">{{ stats.devices.switches }}</h1>
+        <p class="sub-stat">Juniper EX Series</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card"
+      [style.border-top]="stats.backhaul_links.alarm > 0 ? '4px solid red' : '4px solid green'">
+      <mat-card-content>
+        <p class="stat-label">Backhaul Links</p>
+        <h1 class="stat-value">{{ stats.backhaul_links.total }}</h1>
+        <p class="sub-stat">
+          ✅ Normal: {{ stats.backhaul_links.normal }} &nbsp;
+          <span [style.color]="stats.backhaul_links.alarm > 0 ? 'red' : 'green'">
+            🔴 Alarm: {{ stats.backhaul_links.alarm }}
+          </span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <div class="dashboard-row">
+
+    <mat-card class="stat-card"
+      [style.border-top]="stats.hardware.ports.down > 0 ? '4px solid orange' : '4px solid green'">
+      <mat-card-content>
+        <p class="stat-label">Ports</p>
+        <h1 class="stat-value">{{ stats.hardware.ports.total }}</h1>
+        <p class="sub-stat">
+          ✅ Up: {{ stats.hardware.ports.up }} &nbsp;
+          <span class="text-orange">⬇️ Down: {{ stats.hardware.ports.down }}</span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card"
+      [style.border-top]="stats.hardware.cards.abnormal > 0 ? '4px solid red' : '4px solid green'">
+      <mat-card-content>
+        <p class="stat-label">Cards</p>
+        <h1 class="stat-value">{{ stats.hardware.cards.total }}</h1>
+        <p class="sub-stat">
+          ✅ Normal: {{ stats.hardware.cards.normal }} &nbsp;
+          <span class="text-red">⚠️ Abnormal: {{ stats.hardware.cards.abnormal }}</span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card"
+      [style.border-top]="stats.hardware.sfps.abnormal > 0 ? '4px solid red' : '4px solid green'">
+      <mat-card-content>
+        <p class="stat-label">SFPs</p>
+        <h1 class="stat-value">{{ stats.hardware.sfps.total }}</h1>
+        <p class="sub-stat">
+          ✅ Normal: {{ stats.hardware.sfps.normal }} &nbsp;
+          <span class="text-red">⚠️ Abnormal: {{ stats.hardware.sfps.abnormal }}</span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

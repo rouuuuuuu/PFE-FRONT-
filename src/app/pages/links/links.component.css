@@ -1,0 +1,97 @@
+.page-title {
+  color: #E87722;
+  margin-bottom: 16px;
+}
+
+.filters-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  flex: 2;
+  min-width: 200px;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 160px;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.loading-spinner {
+  margin: auto;
+}
+
+.stats-text {
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.header-accent {
+  color: #E87722;
+  font-weight: bold;
+}
+
+.alarm-badge {
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.ne-text {
+  font-size: 13px;
+}
+
+.port-text {
+  font-size: 12px;
+  color: #888;
+}
+
+.rate-badge {
+  background: #333;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.page-btn {
+  background: #E87722;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Gray out the buttons when they are disabled */
+.page-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.page-info {
+  color: #666;
+  font-size: 14px;
+}
