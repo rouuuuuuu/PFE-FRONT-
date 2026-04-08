@@ -1,5 +1,5 @@
 <div style="margin-bottom: 24px;">
-  <button (click)="goBack()" style="background:none; border:none; color:#E87722; cursor:pointer; font-size:16px;">
+  <button (click)="goBack()" style="background:none; border:none; color:#E87722; cursor:pointer; font-size:16px; font-weight: bold;">
     ← Back to Routers
   </button>
 </div>
@@ -10,35 +10,82 @@
 </div>
 
 <div *ngIf="!loading && verification">
-  <h2 style="color:#E87722; margin-bottom: 8px;">{{ verification.device_name }}</h2>
-  <p style="color: #888; margin-bottom: 24px;">{{ ip }} · {{ verification.vendor | titlecase }}</p>
+  <h2 style="color:#E87722; margin-bottom: 4px; font-size: 28px;">{{ verification.device_name }}</h2>
+  <p style="color: #888; margin-bottom: 24px; font-size: 16px;">{{ ip }} · {{ verification.vendor | titlecase }}</p>
 
   <div style="display: flex; gap: 16px; flex-wrap: wrap;">
     
     <mat-card style="flex: 1; min-width: 250px; border-top: 4px solid #1a73e8;">
-      <mat-card-content>
-        <h3 style="margin-top:0">🔌 Ports</h3>
-        <h1 style="font-size: 36px; margin: 10px 0;">{{ verification.counts.total_ports }}</h1>
+      <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
+        <h3 style="margin: 0 0 8px 0; color: #757575; width: 100%; text-align: left;">🔌 Ports</h3>
         
-        <div style="display: flex; gap: 16px; margin-top: 16px;">
-          <div (click)="goToDetails('ports', 'up')" 
-               style="flex: 1; background: #e8f5e9; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s;">
-            <div style="color: green; font-weight: bold;">UP</div>
-            <div style="font-size: 20px;">
-              {{ (verification.port_details | filterStatus:'up').length }}
-            </div>
+        <div class="chart-wrapper" *ngIf="isBrowser" style="position: relative; width: 140px; height: 140px; margin: 10px auto; display: block;">
+          <canvas baseChart style="width: 140px; height: 140px;" [data]="portsChartData" [options]="chartOptions" type="doughnut"></canvas>
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #333; pointer-events: none;">
+            {{ verification.counts.total_ports }}
           </div>
-          
-          <div (click)="goToDetails('ports', 'down')" 
-               style="flex: 1; background: #ffebee; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s;">
-            <div style="color: red; font-weight: bold;">DOWN</div>
-            <div style="font-size: 20px;">
-              {{ (verification.port_details | filterStatus:'down').length }}
-            </div>
+        </div>
+        
+        <div style="display: flex; gap: 12px; margin-top: 20px; width: 100%;">
+          <div (click)="goToDetails('ports', 'up')" class="status-btn up-btn" style="flex: 1; background: #abe5b0; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+            <div style="color: green; font-weight: bold; font-size: 13px;">UP</div>
+            <div style="font-size: 20px; font-weight: 500; color: #eeecec; margin-top: 4px;">{{ portsUp }}</div>
+          </div>
+          <div (click)="goToDetails('ports', 'down')" class="status-btn down-btn" style="flex: 1; background: #ffb2bd; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+            <div style="color: red; font-weight: bold; font-size: 13px;">DOWN</div>
+            <div style="font-size: 20px; font-weight: 500; color: #eeecec; margin-top: 4px;">{{ portsDown }}</div>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
 
-    </div>
+    <mat-card style="flex: 1; min-width: 250px; border-top: 4px solid #E87722;">
+      <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
+        <h3 style="margin: 0 0 8px 0; color: #757575; width: 100%; text-align: left;">🃏 Cards</h3>
+        
+        <div class="chart-wrapper" *ngIf="isBrowser" style="position: relative; width: 140px; height: 140px; margin: 10px auto; display: block;">
+          <canvas baseChart style="width: 140px; height: 140px;" [data]="cardsChartData" [options]="chartOptions" type="doughnut"></canvas>
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #333; pointer-events: none;">
+            {{ verification.counts.total_cards }}
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: 12px; margin-top: 20px; width: 100%;">
+          <div (click)="goToDetails('cards', 'normal')" class="status-btn up-btn" style="flex: 1; background: #abe5b0; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+            <div style="color: green; font-weight: bold; font-size: 13px;">NORMAL</div>
+            <div style="font-size: 20px; font-weight: 500; color: #eeecec; margin-top: 4px;">{{ cardsNormal }}</div>
+          </div>
+          <div (click)="goToDetails('cards', 'abnormal')" class="status-btn down-btn" style="flex: 1; background: #ffb2bd; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+            <div style="color: red; font-weight: bold; font-size: 13px;">ABNORMAL</div>
+            <div style="font-size: 20px; font-weight: 500; color: #eeecec; margin-top: 4px;">{{ cardsAbnormal }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card style="flex: 1; min-width: 250px; border-top: 4px solid #333;">
+      <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
+        <h3 style="margin: 0 0 8px 0; color: #757575; width: 100%; text-align: left;">💡 SFPs</h3>
+        
+        <div class="chart-wrapper" *ngIf="isBrowser" style="position: relative; width: 140px; height: 140px; margin: 10px auto; display: block;">
+          <canvas baseChart style="width: 140px; height: 140px;" [data]="sfpsChartData" [options]="chartOptions" type="doughnut"></canvas>
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #333; pointer-events: none;">
+            {{ verification.counts.total_sfps }}
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: 12px; margin-top: 20px; width: 100%;">
+          <div (click)="goToDetails('sfps', 'normal')" class="status-btn up-btn" style="flex: 1; background: #abe5b0; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+            <div style="color: green; font-weight: bold; font-size: 13px;">NORMAL</div>
+            <div style="font-size: 20px; font-weight: 500; color: #eeecec; margin-top: 4px;">{{ sfpsNormal }}</div>
+          </div>
+          <div (click)="goToDetails('sfps', 'abnormal')" class="status-btn down-btn" style="flex: 1; background: #ffb2bd; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer;">
+            <div style="color: red; font-weight: bold; font-size: 13px;">ABNORMAL</div>
+            <div style="font-size: 20px; font-weight: 500; color: #eeecec; margin-top: 4px;">{{ sfpsAbnormal }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
 </div>

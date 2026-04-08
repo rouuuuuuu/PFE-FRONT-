@@ -1,0 +1,41 @@
+/* Container to hold the chart and the centered text */
+.chart-wrapper {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 10px auto;
+}
+
+/* Places the total count perfectly in the middle of the donut */
+.chart-center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Styles for the clickable buttons at the bottom */
+.status-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.up-btn { background: #e8f5e9; }
+.up-btn .btn-label { color: green; font-weight: bold; font-size: 13px; }
+.up-btn .btn-value { font-size: 20px; font-weight: 500; color: #333; margin-top: 4px; }
+
+.down-btn { background: #ffebee; }
+.down-btn .btn-label { color: red; font-weight: bold; font-size: 13px; }
+.down-btn .btn-value { font-size: 20px; font-weight: 500; color: #333; margin-top: 4px; }
