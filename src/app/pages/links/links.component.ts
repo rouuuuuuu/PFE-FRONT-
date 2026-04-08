@@ -8,14 +8,21 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-links',
   standalone: true,
   imports: [
-    CommonModule, MatTableModule, MatCardModule,
-    MatInputModule, MatFormFieldModule,
-    MatProgressSpinnerModule, MatSelectModule, FormsModule,
+    CommonModule, 
+    MatTableModule, 
+    MatCardModule,
+    MatInputModule, 
+    MatFormFieldModule,
+    MatProgressSpinnerModule, 
+    MatSelectModule, 
+    MatChipsModule,
+    FormsModule,
   ],
   templateUrl: './links.component.html',
   styleUrl: './links.component.css'
@@ -25,12 +32,26 @@ export class LinksComponent implements OnInit {
   filteredLinks: any[] = [];
   pagedLinks: any[] = [];
   loading = true;
-  searchTerm = '';
+
+  // Three separate search criteria
+  sourceSearch = '';
+  sinkSearch = '';
+  rateSearch = '';
+
   alarmFilter = '';
   pageSize = 25;
   currentPage = 0;
 
-  columns = ['alarm_severity', 'source_ne', 'source_port', 'sink_ne', 'sink_port', 'link_level'];
+  // Exactly matches the HTML ng-container definitions
+  columns = [
+    'alarm_severity', 
+    'source_ne', 
+    'source_port', 
+    'sink_ne', 
+    'sink_port', 
+    'link_rate',  
+    'link_type'   
+  ];
 
   constructor(private api: ApiService) {}
 
@@ -69,19 +90,27 @@ export class LinksComponent implements OnInit {
 
   applyFilter() {
     let result = this.links;
-    
-    if (this.searchTerm) {
-      const term = this.searchTerm.toLowerCase();
-      result = result.filter(l =>
-        l.source_ne.toLowerCase().includes(term) ||
-        l.sink_ne.toLowerCase().includes(term)
-      );
+
+    if (this.sourceSearch) {
+      const term = this.sourceSearch.toLowerCase().trim();
+      result = result.filter(l => l.source_ne?.toLowerCase().includes(term));
     }
-    
+
+    if (this.sinkSearch) {
+      const term = this.sinkSearch.toLowerCase().trim();
+      result = result.filter(l => l.sink_ne?.toLowerCase().includes(term));
+    }
+
+    // Now correctly searching the human-readable "10GE" string
+    if (this.rateSearch) {
+      const term = this.rateSearch.toLowerCase().trim();
+      result = result.filter(l => l.link_level?.toLowerCase().includes(term));
+    }
+
     if (this.alarmFilter) {
       result = result.filter(l => l.alarm_severity === this.alarmFilter);
     }
-    
+
     this.filteredLinks = result;
     this.currentPage = 0;
     this.updatePagedLinks();

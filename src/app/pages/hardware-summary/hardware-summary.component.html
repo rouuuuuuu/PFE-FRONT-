@@ -21,7 +21,7 @@
         
         <div class="chart-wrapper" *ngIf="isBrowser" style="position: relative; width: 140px; height: 140px; margin: 10px auto; display: block;">
           <canvas baseChart style="width: 140px; height: 140px;" [data]="portsChartData" [options]="chartOptions" type="doughnut"></canvas>
-          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #333; pointer-events: none;">
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #9e9999; pointer-events: none;">
             {{ verification.counts.total_ports }}
           </div>
         </div>
@@ -45,7 +45,7 @@
         
         <div class="chart-wrapper" *ngIf="isBrowser" style="position: relative; width: 140px; height: 140px; margin: 10px auto; display: block;">
           <canvas baseChart style="width: 140px; height: 140px;" [data]="cardsChartData" [options]="chartOptions" type="doughnut"></canvas>
-          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #333; pointer-events: none;">
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #9e9999; pointer-events: none;">
             {{ verification.counts.total_cards }}
           </div>
         </div>
@@ -69,7 +69,7 @@
         
         <div class="chart-wrapper" *ngIf="isBrowser" style="position: relative; width: 140px; height: 140px; margin: 10px auto; display: block;">
           <canvas baseChart style="width: 140px; height: 140px;" [data]="sfpsChartData" [options]="chartOptions" type="doughnut"></canvas>
-          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #333; pointer-events: none;">
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; font-weight: bold; color: #9e9999; pointer-events: none;">
             {{ verification.counts.total_sfps }}
           </div>
         </div>

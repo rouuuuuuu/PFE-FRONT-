@@ -84,7 +84,28 @@
   cursor: pointer;
   font-size: 14px;
 }
+.full-width-table {
+  width: 100%;
+}
 
+/* Ensure columns don't squish too much */
+.mat-column-link_rate {
+  font-weight: bold;
+  color: #E87722;
+  min-width: 100px;
+}
+
+.mat-column-link_type {
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.rate-badge {
+  background: #e6e5e55d;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
 /* Gray out the buttons when they are disabled */
 .page-btn:disabled {
   background: #ccc;
