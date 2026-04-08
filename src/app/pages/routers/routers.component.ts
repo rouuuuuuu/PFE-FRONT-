@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { Router } from '@angular/router'; // <-- Router imported
 
 @Component({
   selector: 'app-routers',
@@ -28,17 +29,15 @@ export class RoutersComponent implements OnInit {
   loading = true;
   searchTerm = '';
   vendorFilter = '';
-  selectedRouter: any = null;
-  verification: any = null;
-  verifying = false;
+  
+  // Pagination State
   pageSize = 25;
   currentPage = 0;
 
   columns = ['name', 'loopback_ip', 'model', 'vendor'];
-  verifyColumns = ['component', 'count', 'status'];
-  verificationRows: any[] = [];
 
-  constructor(private api: ApiService) {}
+  // <-- Router injected here
+  constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit() {
     this.api.getRouters().subscribe({
@@ -95,24 +94,8 @@ export class RoutersComponent implements OnInit {
     this.pagedRouters = this.filteredRouters.slice(start, start + this.pageSize);
   }
 
+  // <-- Updated function: Navigates to the Summary Page
   selectRouter(router: any) {
-    this.selectedRouter = router;
-    this.verification = null;
-    this.verifying = true;
-    this.api.verifyDevice(router.loopback_ip).subscribe({
-      next: (data: any) => {
-        this.verification = data;
-        this.verificationRows = [
-          { component: '🔌 Ports', count: data.counts.total_ports, status: data.verification_results.ports },
-          { component: '🃏 Cards', count: data.counts.total_cards, status: data.verification_results.cards },
-          { component: '💡 SFPs',  count: data.counts.total_sfps,  status: data.verification_results.sfps },
-        ];
-        this.verifying = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.verifying = false;
-      }
-    });
+    this.router.navigate(['/routers', router.loopback_ip]);
   }
 }

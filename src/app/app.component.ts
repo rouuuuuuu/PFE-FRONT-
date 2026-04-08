@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   template: `
     <mat-toolbar color="primary" style="background:#E87722">
-      <span> DRS 010 — Orange Tunisie NOC</span>
+      <span>Orange Tunisie NOC</span>
     </mat-toolbar>
 
     <mat-sidenav-container style="height: calc(100vh - 64px)">

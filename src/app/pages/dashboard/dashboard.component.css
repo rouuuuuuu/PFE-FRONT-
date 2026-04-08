@@ -22,6 +22,21 @@
 .stat-card {
   flex: 1;
   min-width: 180px;
+  transition: all 0.3s ease; /* Fluidité pour l'effet de clic */
+}
+
+/* Effets pour les cartes cliquables */
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.clickable:active {
+  transform: scale(0.98);
 }
 
 .border-orange {
@@ -56,4 +71,43 @@
 
 .text-green {
   color: green;
+}
+
+/* Styles pour l'affichage des graphiques (Expansion) */
+.chart-expansion {
+  margin-bottom: 24px;
+  width: 100%;
+  animation: slideDown 0.4s ease-out;
+}
+
+.chart-inner-card {
+  border-left: 5px solid #E87722;
+  background-color: #fafafa;
+}
+
+.chart-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.canvas-wrapper {
+  width: 300px; /* Taille optimisée pour ne pas prendre tout l'écran */
+  height: 300px;
+  display: block;
+}
+
+/* Animation d'ouverture du graphique */
+@keyframes slideDown {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+    max-height: 0;
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+    max-height: 500px;
+  }
 }

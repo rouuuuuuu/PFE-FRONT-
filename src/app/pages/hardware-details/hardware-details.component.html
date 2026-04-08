@@ -1,0 +1,52 @@
+<div style="margin-bottom: 24px;">
+  <button (click)="goBack()" style="background:none; border:none; color:#E87722; cursor:pointer; font-size:16px;">
+    ← Back to Summary
+  </button>
+</div>
+
+<div *ngIf="loading" style="text-align: center; padding: 40px;">
+  <mat-spinner style="margin: auto"></mat-spinner>
+  <p>Loading {{ statusFilter | uppercase }} {{ componentType }}...</p>
+</div>
+
+<mat-card *ngIf="!loading && deviceInfo" style="border-top: 4px solid #E87722;">
+  <mat-card-header>
+    <mat-card-title style="text-transform: capitalize;">
+      {{ statusFilter }} {{ componentType }} — {{ deviceInfo.device_name }}
+    </mat-card-title>
+    <mat-card-subtitle>{{ ip }} · {{ deviceInfo.vendor | titlecase }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content style="padding-top: 16px;">
+    <div class="table-container">
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding: 12px; border-bottom: 2px solid #eee;">Name</th>
+            <th style="text-align: center; padding: 12px; border-bottom: 2px solid #eee;">Status</th>
+            <th style="text-align: left; padding: 12px; border-bottom: 2px solid #eee;">Description / Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredData" style="border-bottom: 1px solid #eee;">
+            <td style="padding: 12px; font-family: monospace; font-weight: bold;">{{ item.name }}</td>
+            <td style="text-align: center; padding: 12px;">
+              <span class="port-badge" 
+                    [class.up]="item.status === 'up' || item.status === 'normal'" 
+                    [class.down]="item.status !== 'up' && item.status !== 'normal'">
+                {{ item.status | uppercase }}
+              </span>
+            </td>
+            <td style="padding: 12px; color: #666;">{{ item.description }}</td>
+          </tr>
+          
+          <tr *ngIf="filteredData.length === 0">
+            <td colspan="3" style="text-align: center; padding: 24px; color: #888;">
+              No {{ statusFilter }} {{ componentType }} found on this device.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

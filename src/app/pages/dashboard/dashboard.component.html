@@ -8,19 +8,19 @@
 <div *ngIf="!loading && stats">
 
   <div class="dashboard-row">
-
-    <mat-card class="stat-card border-orange">
+    <mat-card class="stat-card border-orange clickable" (click)="toggleChart('routers')">
       <mat-card-content>
         <p class="stat-label">Total Routers</p>
         <h1 class="stat-value text-orange">{{ stats.devices.routers }}</h1>
         <p class="sub-stat">
           🟢 Huawei: {{ getVendorCount('huawei') }} &nbsp;
+          🟡 Cisco: {{ getVendorCount('cisco') }} &nbsp;
           🔵 Juniper: {{ getVendorCount('juniper') }}
         </p>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card border-dark">
+    <mat-card class="stat-card border-dark clickable" (click)="toggleChart('switches')">
       <mat-card-content>
         <p class="stat-label">Total Switches</p>
         <h1 class="stat-value">{{ stats.devices.switches }}</h1>
@@ -28,7 +28,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card"
+    <mat-card class="stat-card clickable" (click)="toggleChart('links')"
       [style.border-top]="stats.backhaul_links.alarm > 0 ? '4px solid red' : '4px solid green'">
       <mat-card-content>
         <p class="stat-label">Backhaul Links</p>
@@ -41,12 +41,27 @@
         </p>
       </mat-card-content>
     </mat-card>
+  </div>
 
+  <div class="chart-expansion" *ngIf="expandedRow === 'top'">
+    <mat-card class="chart-inner-card">
+      <mat-card-header>
+        <mat-card-title>{{ chartTitle }} Distribution</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="chart-body">
+        <div class="canvas-wrapper">
+          <canvas baseChart
+            [data]="pieChartData"
+            [options]="pieChartOptions"
+            [type]="pieChartType">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <div class="dashboard-row">
-
-    <mat-card class="stat-card"
+    <mat-card class="stat-card clickable" (click)="toggleChart('ports')"
       [style.border-top]="stats.hardware.ports.down > 0 ? '4px solid orange' : '4px solid green'">
       <mat-card-content>
         <p class="stat-label">Ports</p>
@@ -58,7 +73,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card"
+    <mat-card class="stat-card clickable" (click)="toggleChart('cards')"
       [style.border-top]="stats.hardware.cards.abnormal > 0 ? '4px solid red' : '4px solid green'">
       <mat-card-content>
         <p class="stat-label">Cards</p>
@@ -70,7 +85,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card"
+    <mat-card class="stat-card clickable" (click)="toggleChart('sfps')"
       [style.border-top]="stats.hardware.sfps.abnormal > 0 ? '4px solid red' : '4px solid green'">
       <mat-card-content>
         <p class="stat-label">SFPs</p>
@@ -81,6 +96,23 @@
         </p>
       </mat-card-content>
     </mat-card>
-
   </div>
+
+  <div class="chart-expansion" *ngIf="expandedRow === 'bottom'">
+    <mat-card class="chart-inner-card">
+      <mat-card-header>
+        <mat-card-title>{{ chartTitle }} Details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="chart-body">
+        <div class="canvas-wrapper">
+          <canvas baseChart
+            [data]="pieChartData"
+            [options]="pieChartOptions"
+            [type]="pieChartType">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
 </div>

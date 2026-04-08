@@ -13,6 +13,7 @@
       <mat-option value="">All</mat-option>
       <mat-option value="huawei">Huawei</mat-option>
       <mat-option value="juniper">Juniper</mat-option>
+      <mat-option value="cisco">Cisco</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
@@ -56,8 +57,7 @@
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr mat-row *matRowDef="let row; columns: columns;"
           class="clickable-row"
-          (click)="selectRouter(row)"
-          [style.background]="selectedRouter?.name === row.name ? '#e8bda2' : ''">
+          (click)="selectRouter(row)">
       </tr>
     </table>
 
@@ -75,49 +75,5 @@
       </button>
     </div>
 
-  </mat-card-content>
-</mat-card>
-
-<mat-card *ngIf="selectedRouter" class="verification-card">
-  <mat-card-header>
-    <mat-card-title>🔍 Hardware Verification — {{ selectedRouter.name }}</mat-card-title>
-    <mat-card-subtitle>{{ selectedRouter.loopback_ip }} · {{ selectedRouter.vendor | titlecase }}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content class="verification-content">
-
-    <div *ngIf="verifying" class="verifying-container">
-      <mat-spinner diameter="40" class="loading-spinner"></mat-spinner>
-      <p>Checking hardware status...</p>
-    </div>
-
-    <div *ngIf="!verifying && verification">
-      <div class="status-banner" [style.background]="verification.overall_status === 'OK' ? '#e8bda2' : '#e8bda2'">
-        <strong>Overall Status:</strong>
-        <span class="status-icon" [style.color]="verification.overall_status === 'OK' ? 'green' : 'red'">
-          {{ verification.overall_status === 'OK' ? '✅ OK' : '⚠️ Needs Attention' }}
-        </span>
-      </div>
-
-      <table mat-table [dataSource]="verificationRows" class="full-width-table">
-        <ng-container matColumnDef="component">
-          <th mat-header-cell *matHeaderCellDef>Component</th>
-          <td mat-cell *matCellDef="let v">{{ v.component }}</td>
-        </ng-container>
-        <ng-container matColumnDef="count">
-          <th mat-header-cell *matHeaderCellDef>Count</th>
-          <td mat-cell *matCellDef="let v">{{ v.count }}</td>
-        </ng-container>
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let v">
-            <span [style.color]="v.status === 'OK' ? 'green' : 'red'">
-              {{ v.status === 'OK' ? '✅ ' + v.status : '⚠️ ' + v.status }}
-            </span>
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="verifyColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: verifyColumns;"></tr>
-      </table>
-    </div>
   </mat-card-content>
 </mat-card>

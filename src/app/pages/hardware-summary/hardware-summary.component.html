@@ -1,0 +1,44 @@
+<div style="margin-bottom: 24px;">
+  <button (click)="goBack()" style="background:none; border:none; color:#E87722; cursor:pointer; font-size:16px;">
+    ← Back to Routers
+  </button>
+</div>
+
+<div *ngIf="loading" style="text-align: center; padding: 40px;">
+  <mat-spinner style="margin: auto"></mat-spinner>
+  <p>Fetching hardware status for {{ ip }}...</p>
+</div>
+
+<div *ngIf="!loading && verification">
+  <h2 style="color:#E87722; margin-bottom: 8px;">{{ verification.device_name }}</h2>
+  <p style="color: #888; margin-bottom: 24px;">{{ ip }} · {{ verification.vendor | titlecase }}</p>
+
+  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    
+    <mat-card style="flex: 1; min-width: 250px; border-top: 4px solid #1a73e8;">
+      <mat-card-content>
+        <h3 style="margin-top:0">🔌 Ports</h3>
+        <h1 style="font-size: 36px; margin: 10px 0;">{{ verification.counts.total_ports }}</h1>
+        
+        <div style="display: flex; gap: 16px; margin-top: 16px;">
+          <div (click)="goToDetails('ports', 'up')" 
+               style="flex: 1; background: #e8f5e9; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s;">
+            <div style="color: green; font-weight: bold;">UP</div>
+            <div style="font-size: 20px;">
+              {{ (verification.port_details | filterStatus:'up').length }}
+            </div>
+          </div>
+          
+          <div (click)="goToDetails('ports', 'down')" 
+               style="flex: 1; background: #ffebee; padding: 12px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s;">
+            <div style="color: red; font-weight: bold;">DOWN</div>
+            <div style="font-size: 20px;">
+              {{ (verification.port_details | filterStatus:'down').length }}
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    </div>
+</div>
