@@ -18,30 +18,84 @@
   </mat-card-header>
 
   <mat-card-content style="padding-top: 16px;">
-    <div class="table-container">
-      <table class="detail-table">
+    <div class="table-container" style="overflow-x: auto;">
+      <table class="detail-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+        
         <thead>
           <tr>
-            <th style="text-align: left; padding: 12px; border-bottom: 2px solid #eee;">Name</th>
-            <th style="text-align: center; padding: 12px; border-bottom: 2px solid #eee;">Status</th>
-            <th style="text-align: left; padding: 12px; border-bottom: 2px solid #eee;">Description / Details</th>
+            <th style="padding: 12px; border-bottom: 2px solid #eee;">Name / Port</th>
+            <th style="padding: 12px; border-bottom: 2px solid #eee; text-align: center;">Status</th>
+            
+            <ng-container [ngSwitch]="componentType">
+              <ng-container *ngSwitchCase="'ports'">
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Type</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Rate</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Admin Status</th>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'cards'">
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Board Type</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Hardware Ver.</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Software Ver.</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Serial Number</th>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'sfps'">
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Optic Type</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Speed (Mb/s)</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Rx Power (dBm)</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Tx Power (dBm)</th>
+                <th style="padding: 12px; border-bottom: 2px solid #eee;">Vendor</th>
+              </ng-container>
+            </ng-container>
           </tr>
         </thead>
+
         <tbody>
           <tr *ngFor="let item of filteredData" style="border-bottom: 1px solid #eee;">
-            <td style="padding: 12px; font-family: monospace; font-weight: bold;">{{ item.name }}</td>
+            
+            <td style="padding: 12px; font-family: monospace; font-weight: bold; color: #888;">
+              {{ item.name || item.board_type || 'N/A' }}
+            </td>
+            
             <td style="text-align: center; padding: 12px;">
               <span class="port-badge" 
-                    [class.up]="item.status === 'up' || item.status === 'normal'" 
-                    [class.down]="item.status !== 'up' && item.status !== 'normal'">
+                    [class.up]="item.status === 'up' || item.status === 'normal' || item.status === 'active'" 
+                    [class.down]="item.status !== 'up' && item.status !== 'normal' && item.status !== 'active'">
                 {{ item.status | uppercase }}
               </span>
             </td>
-            <td style="padding: 12px; color: #666;">{{ item.description }}</td>
+
+            <ng-container [ngSwitch]="componentType">
+              
+              <ng-container *ngSwitchCase="'ports'">
+                <td style="padding: 12px; color: #666;">{{ item.port_type || '-' }}</td>
+                <td style="padding: 12px; color: #666;">{{ item.rate || '-' }}</td>
+                <td style="padding: 12px; color: #666;">{{ item.admin_status || '-' }}</td>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'cards'">
+                <td style="padding: 12px; color: #666;">{{ item.board_type || '-' }}</td>
+                <td style="padding: 12px; color: #666;">{{ item.hardware_version || '-' }}</td>
+                <td style="padding: 12px; color: #666;">{{ item.software_version || '-' }}</td>
+                <td style="padding: 12px; color: #666;">{{ item.serial_number || '-' }}</td>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'sfps'">
+                <td style="padding: 12px; color: #666;">{{ item.optical_type || '-' }}</td>
+                <td style="padding: 12px; color: #666;">{{ item.speed || '-' }}</td>
+                <td style="padding: 12px; font-weight: 500;" [ngStyle]="{'color': (item.rx_power < -25) ? '#d32f2f' : '#666'}">
+                  {{ item.rx_power || '-' }}
+                </td>
+                <td style="padding: 12px; color: #666;">{{ item.tx_power || '-' }}</td>
+                <td style="padding: 12px; color: #666;">{{ item.vendor || '-' }}</td>
+              </ng-container>
+
+            </ng-container>
           </tr>
           
           <tr *ngIf="filteredData.length === 0">
-            <td colspan="3" style="text-align: center; padding: 24px; color: #888;">
+            <td colspan="7" style="text-align: center; padding: 24px; color: #888;">
               No {{ statusFilter }} {{ componentType }} found on this device.
             </td>
           </tr>

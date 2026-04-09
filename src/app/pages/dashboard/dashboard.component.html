@@ -11,7 +11,7 @@
     <mat-card class="stat-card border-orange clickable" (click)="toggleChart('routers')">
       <mat-card-content>
         <p class="stat-label">Total Routers</p>
-        <h1 class="stat-value text-orange">{{ stats.devices.routers }}</h1>
+        <h1 class="stat-value">{{ stats.devices.routers }}</h1>
         <p class="sub-stat">
           🟢 Huawei: {{ getVendorCount('huawei') }} &nbsp;
           🟡 Cisco: {{ getVendorCount('cisco') }} &nbsp;
@@ -23,7 +23,7 @@
     <mat-card class="stat-card border-dark clickable" (click)="toggleChart('switches')">
       <mat-card-content>
         <p class="stat-label">Total Switches</p>
-        <h1 class="stat-value">{{ stats.devices.switches }}</h1>
+        <h1 class="stat-value">{{ getTotalSwitches() }}</h1>
         <p class="sub-stat">Juniper EX Series</p>
       </mat-card-content>
     </mat-card>

@@ -37,6 +37,7 @@ export class HardwareDetailsComponent implements OnInit {
     if (this.ip) {
       this.api.verifyDevice(this.ip).subscribe({
         next: (data) => {
+          console.log(`=== HARDWARE DATA FOR ${this.componentType.toUpperCase()} ===`, data);
           this.deviceInfo = data;
           this.extractAndFilterData(data);
           this.loading = false;
@@ -49,17 +50,16 @@ export class HardwareDetailsComponent implements OnInit {
     }
   }
 
-  extractAndFilterData(data: any) {
+extractAndFilterData(data: any) {
     let sourceArray: any[] = [];
     
-    // Map the URL 'component' parameter to the correct array from Django
     switch (this.componentType) {
       case 'ports': sourceArray = data.port_details || []; break;
       case 'cards': sourceArray = data.card_details || []; break;
       case 'sfps':  sourceArray = data.sfp_details || []; break;
     }
 
-    // Filter the array so it only shows items matching the requested status
+    // Le HTML va maintenant lire directement item.rx_power, item.hardware_version, etc !
     this.filteredData = sourceArray.filter(
       item => item.status?.toLowerCase() === this.statusFilter.toLowerCase()
     );

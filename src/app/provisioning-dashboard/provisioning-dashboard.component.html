@@ -1,0 +1,24 @@
+<h2 style="color: #888; margin-bottom: 8px;">⚡ Provisioning Automation</h2>
+<p style="color: #666; margin-bottom: 24px;">Select a task below to start an automation workflow.</p>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+  
+  <mat-card *ngFor="let task of tasks" 
+            (click)="goToTask(task.id)" 
+            style="cursor: pointer; border-top: 4px solid #E87722; transition: transform 0.2s, box-shadow 0.2s;"
+            onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+    
+    <mat-card-header style="margin-bottom: 16px;">
+      <div mat-card-avatar style="font-size: 28px; display: flex; align-items: center; justify-content: center;">
+        {{ task.icon }}
+      </div>
+      <mat-card-title style="font-size: 18px;">{{ task.title }}</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <p style="color: #666;">{{ task.desc }}</p>
+    </mat-card-content>
+  </mat-card>
+
+</div>

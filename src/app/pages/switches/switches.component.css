@@ -1,3 +1,5 @@
+/* switches.component.css */
+
 .page-title {
   color: #E87722;
   margin-bottom: 16px;
@@ -59,6 +61,7 @@
   background-color: #f6a330;
   transition: background-color 0.2s ease;
 }
+
 .pagination-container {
   display: flex;
   justify-content: center;
@@ -87,7 +90,7 @@
   font-size: 14px;
 }
 
-/* Verification Panel Specific Styles */
+/* Verification Panel Specific Styles (Ready for when we add Netmiko provisioning to this page!) */
 .verification-card {
   margin-top: 24px;
   border-top: 4px solid #E87722;
