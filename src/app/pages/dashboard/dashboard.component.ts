@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../services/api.service';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
@@ -9,7 +10,7 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, NgChartsModule],
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, NgChartsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

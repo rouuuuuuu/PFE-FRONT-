@@ -1,0 +1,186 @@
+/* ============================================================
+   APP SHELL — Toolbar + Sidebar
+   ============================================================ */
+
+/* --- Toolbar --- */
+.app-toolbar {
+  background: var(--bg-surface) !important;
+  border-bottom: 1px solid var(--glass-border);
+  height: 56px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.app-toolbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-orange), transparent 60%);
+}
+
+.toolbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--primary-orange);
+  letter-spacing: -0.3px;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--glass-border);
+}
+
+.brand-sub {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* --- Container --- */
+.app-container {
+  height: calc(100vh - 56px);
+}
+
+/* --- Sidebar --- */
+.app-sidenav {
+  width: 250px;
+  background: var(--bg-surface) !important;
+  border-right: 1px solid var(--glass-border) !important;
+  overflow-x: hidden;
+}
+
+.sidenav-nav {
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* --- Nav Items --- */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 14px;
+  font-weight: 400;
+  position: relative;
+  user-select: none;
+}
+
+.nav-item:hover {
+  background: var(--glass-hover);
+  color: var(--text-primary);
+}
+
+.nav-item:hover .nav-icon {
+  color: var(--primary-orange);
+}
+
+/* --- Active State --- */
+.nav-active {
+  background: var(--orange-glow) !important;
+  color: var(--primary-orange) !important;
+  font-weight: 500;
+}
+
+.nav-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--primary-orange);
+}
+
+.nav-active .nav-icon {
+  color: var(--primary-orange) !important;
+}
+
+/* --- Nav Icon --- */
+.nav-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.nav-label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+/* --- Provisioning Toggle --- */
+.nav-toggle {
+  cursor: pointer;
+}
+
+.nav-chevron {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--text-muted);
+  transition: transform var(--transition-smooth);
+}
+
+.nav-chevron-open {
+  transform: rotate(180deg);
+}
+
+/* --- Submenu --- */
+.nav-submenu {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease;
+}
+
+.nav-submenu-open {
+  max-height: 250px;
+  opacity: 1;
+}
+
+.nav-sub-item {
+  padding-left: 46px !important;
+  font-size: 13px;
+}
+
+/* --- Divider --- */
+.nav-divider {
+  height: 1px;
+  background: var(--glass-border);
+  margin: 12px 14px;
+}
+
+/* --- Content Area --- */
+.app-content {
+  padding: 28px 32px;
+  background: var(--bg-primary) !important;
+}

@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-hardware-details',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule],
   templateUrl: './hardware-details.component.html',
   styleUrl: './hardware-details.component.css'
 })

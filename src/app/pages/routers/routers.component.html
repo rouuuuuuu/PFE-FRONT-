@@ -1,10 +1,9 @@
-<h2 class="page-title">🖥️ Routers</h2>
+<h2 class="page-title">Routers</h2>
 
 <div class="filters-row">
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Search by name or IP</mat-label>
-    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
-           placeholder="ex: TUN_0001 or 10.51.2.1"/>
+    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="ex: TUN_0001 or 10.51.2.1" />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="filter-field">
@@ -55,9 +54,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
-      <tr mat-row *matRowDef="let row; columns: columns;"
-          class="clickable-row"
-          (click)="selectRouter(row)">
+      <tr mat-row *matRowDef="let row; columns: columns;" class="clickable-row" (click)="selectRouter(row)">
       </tr>
     </table>
 

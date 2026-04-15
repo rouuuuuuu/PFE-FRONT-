@@ -1,22 +1,22 @@
-<h2 class="page-title">🕹️Switches</h2>
+<h2 class="page-title">Switches</h2>
 
-<div class="filters-row" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
-  <mat-form-field appearance="outline" class="filter-field" style="flex: 1; min-width: 180px;">
+<div class="filters-row">
+  <mat-form-field appearance="outline" class="filter-field">
     <mat-label>Name Device</mat-label>
     <input matInput [(ngModel)]="nameSearch" (ngModelChange)="applyFilter()" placeholder="ex: B2B_ARI_0012_SW_FH">
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="filter-field" style="flex: 1; min-width: 180px;">
+  <mat-form-field appearance="outline" class="filter-field">
     <mat-label>Loopback IP</mat-label>
     <input matInput [(ngModel)]="ipSearch" (ngModelChange)="applyFilter()" placeholder="ex: 10.41.236.34">
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="filter-field" style="flex: 1; min-width: 180px;">
+  <mat-form-field appearance="outline" class="filter-field">
     <mat-label>Model</mat-label>
     <input matInput [(ngModel)]="modelSearch" (ngModelChange)="applyFilter()" placeholder="ex: ex4200-48t">
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="filter-field" style="flex: 1; min-width: 180px;">
+  <mat-form-field appearance="outline" class="filter-field">
     <mat-label>Router</mat-label>
     <input matInput [(ngModel)]="routerSearch" (ngModelChange)="applyFilter()" placeholder="ex: 78">
   </mat-form-field>
@@ -70,7 +70,7 @@
 
     <div class="pagination-container">
       <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0">
-        ← Previous
+        Previous
       </button>
 
       <span class="page-info">
@@ -78,7 +78,7 @@
       </span>
 
       <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
-        Next →
+        Next
       </button>
     </div>
 

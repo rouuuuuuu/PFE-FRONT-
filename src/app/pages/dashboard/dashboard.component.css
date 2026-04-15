@@ -1,17 +1,33 @@
+/* ============================================================
+   DASHBOARD — Dark Glass Cards
+   ============================================================ */
+
 .page-title {
-  color: #E87722;
-  margin-bottom: 24px;
+  color: var(--primary-orange);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  margin-bottom: 28px;
+  letter-spacing: -0.3px;
 }
 
+/* --- Loading --- */
 .loading-container {
   text-align: center;
-  padding: 40px;
+  padding: 60px 40px;
 }
 
 .loading-spinner {
   margin: auto;
 }
 
+.loading-text {
+  color: var(--text-secondary);
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+/* --- Dashboard Grid --- */
 .dashboard-row {
   display: flex;
   gap: 16px;
@@ -19,61 +35,155 @@
   flex-wrap: wrap;
 }
 
+/* --- Stat Cards --- */
 .stat-card {
   flex: 1;
-  min-width: 180px;
-  transition: all 0.3s ease; /* Fluidité pour l'effet de clic */
+  min-width: 200px;
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-md) !important;
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Effets pour les cartes cliquables */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+/* --- Card Border Accents --- */
+.border-orange {
+  border-top: 3px solid var(--primary-orange) !important;
+}
+
+.border-dark {
+  border-top: 3px solid #333 !important;
+}
+
+.border-green {
+  border-top: 3px solid var(--status-green) !important;
+}
+
+.border-red {
+  border-top: 3px solid var(--status-red) !important;
+}
+
+/* --- Clickable Cards --- */
 .clickable {
   cursor: pointer;
 }
 
 .clickable:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-orange) !important;
 }
 
 .clickable:active {
   transform: scale(0.98);
 }
 
-.border-orange {
-  border-top: 4px solid #E87722;
+/* --- Stat Content --- */
+.stat-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
-.border-dark {
-  border-top: 4px solid #333;
+.stat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--primary-orange);
+  opacity: 0.7;
 }
 
 .stat-label {
-  color: #888;
+  color: var(--text-secondary);
   margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .stat-value {
-  margin: 8px 0;
+  margin: 6px 0 8px 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  font-family: 'Outfit', sans-serif;
 }
 
 .sub-stat {
   margin: 0;
   font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
 }
 
+/* --- Status Dots --- */
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.dot--green {
+  background: var(--status-green);
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+}
+
+.dot--yellow {
+  background: var(--status-yellow);
+  box-shadow: 0 0 6px rgba(255, 193, 7, 0.4);
+}
+
+.dot--blue {
+  background: var(--status-blue);
+  box-shadow: 0 0 6px rgba(26, 115, 232, 0.4);
+}
+
+.dot--orange {
+  background: var(--primary-orange);
+  box-shadow: 0 0 6px rgba(255, 121, 0, 0.4);
+}
+
+.dot--red {
+  background: var(--status-red);
+  box-shadow: 0 0 6px rgba(244, 67, 54, 0.4);
+}
+
+/* --- Text Colors --- */
 .text-orange {
-  color: #E87722;
+  color: var(--primary-orange);
 }
 
 .text-red {
-  color: red;
+  color: var(--status-red);
 }
 
 .text-green {
-  color: green;
+  color: var(--status-green);
 }
 
-/* Styles pour l'affichage des graphiques (Expansion) */
+/* --- Chart Expansion --- */
 .chart-expansion {
   margin-bottom: 24px;
   width: 100%;
@@ -81,8 +191,8 @@
 }
 
 .chart-inner-card {
-  border-left: 5px solid #E87722;
-  background-color: #0000001f;
+  border-left: 4px solid var(--primary-orange) !important;
+  background: var(--glass-bg) !important;
 }
 
 .chart-body {
@@ -93,20 +203,20 @@
 }
 
 .canvas-wrapper {
-  width: 300px; /* Taille optimisée pour ne pas prendre tout l'écran */
+  width: 300px;
   height: 300px;
   display: block;
 }
 
-/* Animation d'ouverture du graphique */
+/* Animation */
 @keyframes slideDown {
-  from { 
-    opacity: 0; 
-    transform: translateY(-10px); 
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
     max-height: 0;
   }
-  to { 
-    opacity: 1; 
+  to {
+    opacity: 1;
     transform: translateY(0);
     max-height: 500px;
   }

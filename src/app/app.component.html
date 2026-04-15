@@ -1,1 +1,64 @@
-<!-- This file is not used. AppComponent uses an inline template defined in app.component.ts -->
+<mat-toolbar class="app-toolbar">
+  <div class="toolbar-brand">
+    <span class="brand-text">Orange</span>
+    <span class="brand-divider"></span>
+    <span class="brand-sub">NOC</span>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container class="app-container">
+  <mat-sidenav mode="side" opened class="app-sidenav">
+    <nav class="sidenav-nav">
+      <a class="nav-item" routerLink="/" routerLinkActive="nav-active"
+         [routerLinkActiveOptions]="{exact:true}">
+        <mat-icon class="nav-icon">dashboard</mat-icon>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/routers" routerLinkActive="nav-active">
+        <mat-icon class="nav-icon">router</mat-icon>
+        <span class="nav-label">Routers</span>
+      </a>
+      <a class="nav-item" routerLink="/switches" routerLinkActive="nav-active">
+        <mat-icon class="nav-icon">device_hub</mat-icon>
+        <span class="nav-label">Switches</span>
+      </a>
+      <a class="nav-item" routerLink="/links" routerLinkActive="nav-active">
+        <mat-icon class="nav-icon">link</mat-icon>
+        <span class="nav-label">Backhaul Links</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-item nav-toggle" (click)="toggleProvisioning()">
+        <mat-icon class="nav-icon">settings</mat-icon>
+        <span class="nav-label">Provisioning</span>
+        <mat-icon class="nav-chevron" [class.nav-chevron-open]="isProvisioningOpen">
+          expand_more
+        </mat-icon>
+      </div>
+
+      <div class="nav-submenu" [class.nav-submenu-open]="isProvisioningOpen">
+        <a class="nav-item nav-sub-item" routerLink="/provisioning" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
+          <mat-icon class="nav-icon">folder_open</mat-icon>
+          <span class="nav-label">All Tasks</span>
+        </a>
+        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/configure_vlan" routerLinkActive="nav-active">
+          <mat-icon class="nav-icon">power</mat-icon>
+          <span class="nav-label">task1</span>
+        </a>
+        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/firmware_upgrade" routerLinkActive="nav-active">
+          <mat-icon class="nav-icon">system_update</mat-icon>
+          <span class="nav-label">task2</span>
+        </a>
+        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/push_acl" routerLinkActive="nav-active">
+          <mat-icon class="nav-icon">security</mat-icon>
+          <span class="nav-label">task3</span>
+        </a>
+      </div>
+    </nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="app-content">
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>

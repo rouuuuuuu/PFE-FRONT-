@@ -1,41 +1,204 @@
-/* Container to hold the chart and the centered text */
+/* ============================================================
+   HARDWARE SUMMARY — Dark Glass Cards
+   ============================================================ */
+
+/* --- Back Button --- */
+.back-container {
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--primary-orange);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  padding: 6px 0;
+  transition: opacity var(--transition-fast);
+}
+
+.back-btn:hover {
+  opacity: 0.8;
+}
+
+.back-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* --- Loading --- */
+.loading-container {
+  text-align: center;
+  padding: 60px 40px;
+}
+
+.loading-spinner {
+  margin: auto;
+}
+
+.loading-text {
+  color: var(--text-secondary);
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+/* --- Device Header --- */
+.device-name {
+  color: var(--primary-orange);
+  margin-bottom: 4px;
+  font-size: 28px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+}
+
+.device-meta {
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  font-size: 15px;
+}
+
+/* --- Hardware Grid --- */
+.hardware-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* --- Hardware Cards --- */
+.hw-card {
+  flex: 1;
+  min-width: 260px;
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  transition: all var(--transition-smooth);
+}
+
+.hw-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.hw-card--blue {
+  border-top: 3px solid var(--status-blue) !important;
+}
+
+.hw-card--orange {
+  border-top: 3px solid var(--primary-orange) !important;
+}
+
+.hw-card--dark {
+  border-top: 3px solid #444 !important;
+}
+
+.hw-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hw-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px 0;
+  color: var(--text-secondary);
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.hw-title-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+}
+
+/* --- Chart --- */
 .chart-wrapper {
   position: relative;
   width: 140px;
   height: 140px;
-  margin: 10px auto;
+  margin: 12px auto;
 }
 
-/* Places the total count perfectly in the middle of the donut */
 .chart-center-text {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 28px;
-  font-weight: bold;
-  color: #333;
+  font-weight: 700;
+  color: var(--text-secondary);
+  pointer-events: none;
+  font-family: 'Outfit', sans-serif;
 }
 
-/* Styles for the clickable buttons at the bottom */
+/* --- Status Buttons --- */
+.status-btns {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  width: 100%;
+}
+
 .status-btn {
   flex: 1;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px 12px;
+  border-radius: var(--radius-sm);
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
 }
 
 .status-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.up-btn { background: #e8f5e9; }
-.up-btn .btn-label { color: green; font-weight: bold; font-size: 13px; }
-.up-btn .btn-value { font-size: 20px; font-weight: 500; color: #333; margin-top: 4px; }
+.up-btn {
+  background: var(--status-green-bg);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
 
-.down-btn { background: #ffebee; }
-.down-btn .btn-label { color: red; font-weight: bold; font-size: 13px; }
-.down-btn .btn-value { font-size: 20px; font-weight: 500; color: #333; margin-top: 4px; }
+.up-btn .btn-label {
+  color: var(--status-green);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.up-btn .btn-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 4px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.down-btn {
+  background: var(--status-red-bg);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+}
+
+.down-btn .btn-label {
+  color: var(--status-red);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.down-btn .btn-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 4px;
+  font-family: 'Outfit', sans-serif;
+}

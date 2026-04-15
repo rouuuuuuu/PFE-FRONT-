@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete'; // Added for Autocomplete
+import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { forkJoin } from 'rxjs'; // Added to fetch both routers and switches
@@ -18,7 +19,7 @@ import { forkJoin } from 'rxjs'; // Added to fetch both routers and switches
     CommonModule, MatCardModule, MatFormFieldModule,
     MatInputModule, MatTableModule,
     MatProgressSpinnerModule, FormsModule,
-    MatAutocompleteModule // Don't forget this!
+    MatAutocompleteModule, MatIconModule
   ],
   templateUrl: './provisioning-task.component.html',
   styleUrl: './provisioning-task.component.css'
@@ -126,7 +127,7 @@ export class ProvisioningTaskComponent implements OnInit {
 
     this.api.startProvisioning(this.form).subscribe({
       next: (data: any) => {
-        this.message = `✅ ${data.message} — Task ID: ${data.task_id}`;
+        this.message = `${data.message} — Task ID: ${data.task_id}`;
         this.messageType = 'success';
         this.submitting = false;
         
@@ -135,7 +136,7 @@ export class ProvisioningTaskComponent implements OnInit {
         setTimeout(() => this.loadTasks(), 1000);
       },
       error: (err: any) => {
-        this.message = `❌ Error: ${JSON.stringify(err.error)}`;
+        this.message = `Error: ${JSON.stringify(err.error)}`;
         this.messageType = 'error';
         this.submitting = false;
       }

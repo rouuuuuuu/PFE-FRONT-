@@ -1,91 +1,89 @@
-<div style="margin-bottom: 24px;">
-  <button (click)="goBack()" style="background:none; border:none; color:#E87722; cursor:pointer; font-size:16px; font-weight: bold;">
-    ← Back to Dashboard
+<div class="back-container">
+  <button (click)="goBack()" class="back-btn">
+    <mat-icon class="back-icon">arrow_back</mat-icon>
+    Back to Dashboard
   </button>
 </div>
 
-<h2 style="color: #888;">Execute: {{ taskDisplayName }}</h2>
-<p style="color: #666; margin-bottom: 24px;">Search for a device below to queue this automation task.</p>
+<h2 class="page-title">Execute: {{ taskDisplayName }}</h2>
+<p class="page-subtitle">Search for a device below to queue this automation task.</p>
 
-<mat-card style="margin-bottom: 30px; border-top: 4px solid #E87722;">
-  <mat-card-content style="padding-top: 20px;">
-    
-    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-      
-      <mat-form-field appearance="outline" style="flex: 1; min-width: 250px;">
+<mat-card class="form-card">
+  <mat-card-content class="form-content">
+
+    <div class="form-row">
+
+      <mat-form-field appearance="outline" class="form-field">
         <mat-label>Device Name (Start typing to search...)</mat-label>
-        <input type="text" 
-               matInput 
-               [(ngModel)]="form.device_name" 
-               (ngModelChange)="filterDevices($event)"
-               [matAutocomplete]="auto"
-               placeholder="ex: ARI_0008_">
-               
+        <input type="text" matInput [(ngModel)]="form.device_name" (ngModelChange)="filterDevices($event)"
+          [matAutocomplete]="auto" placeholder="ex: ARI_0008_">
+
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onDeviceSelected($event)">
           <mat-option *ngFor="let dev of filteredDevices" [value]="dev.name">
-            <span style="font-weight: bold;">{{ dev.name }}</span> 
-            <span style="color: #888; font-size: 12px; margin-left: 8px;">({{ dev.loopback_ip }})</span>
+            <span class="autocomplete-name">{{ dev.name }}</span>
+            <span class="autocomplete-ip">({{ dev.loopback_ip }})</span>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" style="flex: 1; min-width: 250px;">
+      <mat-form-field appearance="outline" class="form-field">
         <mat-label>Device IP</mat-label>
         <input matInput [(ngModel)]="form.device_ip" placeholder="ex: 10.51.2.14">
       </mat-form-field>
     </div>
 
-    <div *ngIf="message" style="padding: 12px; margin-top: 10px; border-radius: 4px;" 
-         [ngStyle]="{'background-color': messageType === 'success' ? '#e8f5e9' : '#ffebee', 
-                     'color': messageType === 'success' ? '#2e7d32' : '#c62828'}">
+    <div *ngIf="message" class="message-banner"
+      [class.message-success]="messageType === 'success'"
+      [class.message-error]="messageType === 'error'">
+      <mat-icon class="message-icon">{{ messageType === 'success' ? 'check_circle' : 'error' }}</mat-icon>
       {{ message }}
     </div>
 
-    <div style="margin-top: 20px; text-align: right;">
-      <button mat-raised-button 
-              style="background-color: #E87722; color: white; padding: 8px 24px;" 
-              [disabled]="submitting || !form.device_name" 
-              (click)="startProvisioning()">
-        <span *ngIf="!submitting">▶ Run {{ taskDisplayName }}</span>
+    <div class="form-actions">
+      <button class="run-btn"
+        [disabled]="submitting || !form.device_name" (click)="startProvisioning()">
+        <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon>
+        <span *ngIf="!submitting">Run {{ taskDisplayName }}</span>
         <span *ngIf="submitting">Running...</span>
       </button>
     </div>
   </mat-card-content>
 </mat-card>
 
-<h3 style="color: #888;">Recent {{ taskDisplayName }} History</h3>
+<h3 class="history-title">Recent {{ taskDisplayName }} History</h3>
 
-<div *ngIf="loadingTasks" style="text-align: center; padding: 20px;">
-  <mat-spinner diameter="40" style="margin: 0 auto;"></mat-spinner>
+<div *ngIf="loadingTasks" class="loading-container">
+  <mat-spinner diameter="40" class="loading-spinner"></mat-spinner>
 </div>
 
-<mat-card *ngIf="!loadingTasks">
-  <table mat-table [dataSource]="tasks" style="width: 100%;">
-    
+<mat-card *ngIf="!loadingTasks" class="history-card">
+  <table mat-table [dataSource]="tasks" class="full-width-table">
+
     <ng-container matColumnDef="device_name">
-      <th mat-header-cell *matHeaderCellDef> Device </th>
-      <td mat-cell *matCellDef="let t" style="font-weight: bold;"> {{ t.device_name }} </td>
+      <th mat-header-cell *matHeaderCellDef class="header-accent"> Device </th>
+      <td mat-cell *matCellDef="let t" class="td-bold"> {{ t.device_name }} </td>
     </ng-container>
 
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Status </th>
-      <td mat-cell *matCellDef="let t" style="text-align: center;">
-        <span [style.color]="getStatusColor(t.status)" style="font-weight: bold; text-transform: uppercase; font-size: 12px;">
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center"> Status </th>
+      <td mat-cell *matCellDef="let t" class="td-center">
+        <span [style.color]="getStatusColor(t.status)"
+          class="status-text">
           {{ t.status }}
         </span>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="created_at">
-      <th mat-header-cell *matHeaderCellDef> Requested On </th>
-      <td mat-cell *matCellDef="let t" style="color: #666;"> {{ t.created_at | date:'medium' }} </td>
+      <th mat-header-cell *matHeaderCellDef class="header-accent"> Requested On </th>
+      <td mat-cell *matCellDef="let t" class="td-secondary"> {{ t.created_at | date:'medium' }} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-    
+
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="3" style="text-align: center; padding: 20px; color: #888;">
+      <td class="mat-cell td-empty" colspan="3">
         No history found for {{ taskDisplayName }}.
       </td>
     </tr>

@@ -1,0 +1,210 @@
+/* ============================================================
+   PROVISIONING TASK — Dark Form + History Table
+   ============================================================ */
+
+/* --- Back Button --- */
+.back-container {
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--primary-orange);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  padding: 6px 0;
+  transition: opacity var(--transition-fast);
+}
+
+.back-btn:hover {
+  opacity: 0.8;
+}
+
+.back-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* --- Page Header --- */
+.page-title {
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+}
+
+.page-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+/* --- Form Card --- */
+.form-card {
+  margin-bottom: 32px;
+  border-top: 3px solid var(--primary-orange) !important;
+  background: var(--glass-bg) !important;
+}
+
+.form-content {
+  padding-top: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.form-field {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* --- Autocomplete --- */
+.autocomplete-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.autocomplete-ip {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+/* --- Message Banner --- */
+.message-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+.message-success {
+  background: var(--status-green-bg);
+  color: var(--status-green);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.message-error {
+  background: var(--status-red-bg);
+  color: var(--status-red);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+}
+
+.message-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* --- Run Button --- */
+.form-actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-orange);
+  color: white;
+  border: none;
+  padding: 10px 28px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  transition: all var(--transition-fast);
+}
+
+.run-btn:hover {
+  background: var(--secondary-orange);
+  box-shadow: var(--shadow-orange);
+}
+
+.run-btn:disabled {
+  background: #2a2a2a;
+  color: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.run-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* --- History Section --- */
+.history-title {
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 24px;
+}
+
+.loading-spinner {
+  margin: 0 auto;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.header-accent {
+  color: var(--primary-orange) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.th-center {
+  text-align: center;
+}
+
+.td-bold {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.td-center {
+  text-align: center;
+}
+
+.td-secondary {
+  color: var(--text-secondary);
+}
+
+.td-empty {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+}
+
+.status-text {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}

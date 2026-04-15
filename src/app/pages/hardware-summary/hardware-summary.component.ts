@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common'; // <-- Add is
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../services/api.service';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
@@ -10,7 +11,7 @@ import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
 @Component({
   selector: 'app-hardware-summary',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, NgChartsModule],
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, NgChartsModule],
   templateUrl: './hardware-summary.component.html',
   styleUrl: './hardware-summary.component.css'
 })
