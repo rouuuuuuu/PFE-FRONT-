@@ -4,6 +4,16 @@
     <span class="brand-divider"></span>
     <span class="brand-sub">NOC</span>
   </div>
+
+  <div class="toolbar-spacer"></div>
+
+  <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+    <div class="toggle-track" [class.toggle-track-light]="!isDarkMode">
+      <div class="toggle-thumb" [class.toggle-thumb-light]="!isDarkMode">
+        <mat-icon class="toggle-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
+      </div>
+    </div>
+  </button>
 </mat-toolbar>
 
 <mat-sidenav-container class="app-container">

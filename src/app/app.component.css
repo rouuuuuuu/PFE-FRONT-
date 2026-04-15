@@ -184,3 +184,70 @@
   padding: 28px 32px;
   background: var(--bg-primary) !important;
 }
+
+/* ============================================================
+   THEME TOGGLE SWITCH
+   ============================================================ */
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --- Track --- */
+.toggle-track {
+  width: 52px;
+  height: 28px;
+  border-radius: 14px;
+  background: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+
+.toggle-track-light {
+  background: #e0e0e0;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* --- Thumb --- */
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.35s ease;
+  box-shadow: 0 2px 6px rgba(255, 121, 0, 0.3);
+}
+
+.toggle-thumb-light {
+  transform: translateX(24px);
+  background: var(--primary-orange);
+  box-shadow: 0 2px 6px rgba(255, 121, 0, 0.25);
+}
+
+/* --- Icon inside thumb --- */
+.toggle-icon {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  color: white;
+  line-height: 1;
+}

@@ -50,6 +50,44 @@
 }
 
 /* ============================================================
+   LIGHT THEME OVERRIDES
+   ============================================================ */
+
+body.light-theme {
+  /* --- Light Backgrounds --- */
+  --bg-primary: #f5f5f7;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0f0f2;
+  --bg-hover: #eaeaec;
+
+  /* --- Glass Effect (Light) --- */
+  --glass-bg: rgba(0, 0, 0, 0.02);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-hover: rgba(0, 0, 0, 0.04);
+
+  /* --- Text (Light) --- */
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+
+  /* --- Status (slightly deeper for light bg readability) --- */
+  --status-green-bg: rgba(76, 175, 80, 0.1);
+  --status-red-bg: rgba(244, 67, 54, 0.08);
+  --status-yellow-bg: rgba(255, 193, 7, 0.1);
+  --status-blue-bg: rgba(26, 115, 232, 0.08);
+
+  /* --- Shadows (softer for light) --- */
+  --shadow-card: 0 1px 6px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 6px 24px rgba(0, 0, 0, 0.1);
+  --shadow-orange: 0 4px 20px rgba(255, 121, 0, 0.12);
+
+  /* --- Orange stays the same --- */
+  --orange-glow: rgba(255, 121, 0, 0.08);
+  --orange-glow-strong: rgba(255, 121, 0, 0.16);
+}
+
+/* ============================================================
    BASE STYLES
    ============================================================ */
 
@@ -63,6 +101,30 @@ body {
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth transition when switching themes */
+body,
+body * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Light theme scrollbar */
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+/* Light theme table rows */
+body.light-theme .mat-mdc-header-row {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+body.light-theme .mat-mdc-row {
+  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+body.light-theme .mat-mdc-cell {
+  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
 }
 
 /* ============================================================
