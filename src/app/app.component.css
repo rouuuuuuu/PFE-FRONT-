@@ -183,6 +183,9 @@
 .app-content {
   padding: 28px 32px;
   background: var(--bg-primary) !important;
+  overflow: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* ============================================================

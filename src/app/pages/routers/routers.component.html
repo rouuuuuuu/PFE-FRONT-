@@ -22,45 +22,47 @@
 </div>
 
 <mat-card *ngIf="!loading">
-  <mat-card-content>
+  <mat-card-content class="card-body">
     <p class="stats-text">
       Showing {{ pagedRouters.length }} of {{ filteredRouters.length }} routers (Total: {{ routers.length }})
     </p>
 
-    <table mat-table [dataSource]="pagedRouters" class="full-width-table">
+    <div class="table-scroll">
+      <table mat-table [dataSource]="pagedRouters" class="full-width-table">
 
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Name</th>
-        <td mat-cell *matCellDef="let r">{{ r.name }}</td>
-      </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="header-accent">Name</th>
+          <td mat-cell *matCellDef="let r">{{ r.name }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="loopback_ip">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Loopback IP</th>
-        <td mat-cell *matCellDef="let r">{{ r.loopback_ip }}</td>
-      </ng-container>
+        <ng-container matColumnDef="loopback_ip">
+          <th mat-header-cell *matHeaderCellDef class="header-accent">Loopback IP</th>
+          <td mat-cell *matCellDef="let r">{{ r.loopback_ip }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="model">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Model</th>
-        <td mat-cell *matCellDef="let r">{{ r.model }}</td>
-      </ng-container>
+        <ng-container matColumnDef="model">
+          <th mat-header-cell *matHeaderCellDef class="header-accent">Model</th>
+          <td mat-cell *matCellDef="let r">{{ r.model }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="vendor">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Vendor</th>
-        <td mat-cell *matCellDef="let r">
-          <span class="vendor-badge" [style.background]="r.vendor === 'huawei' ? '#E87722' : '#888'">
-            {{ r.vendor | titlecase }}
-          </span>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="vendor">
+          <th mat-header-cell *matHeaderCellDef class="header-accent">Vendor</th>
+          <td mat-cell *matCellDef="let r">
+            <span class="vendor-badge" [style.background]="r.vendor === 'huawei' ? '#E87722' : '#888'">
+              {{ r.vendor | titlecase }}
+            </span>
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="columns"></tr>
-      <tr mat-row *matRowDef="let row; columns: columns;" class="clickable-row" (click)="selectRouter(row)">
-      </tr>
-    </table>
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;" class="clickable-row" (click)="selectRouter(row)">
+        </tr>
+      </table>
+    </div>
 
     <div class="pagination-container">
       <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0">
-        ← Previous
+        Previous
       </button>
 
       <span class="page-info">
@@ -68,7 +70,7 @@
       </span>
 
       <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
-        Next →
+        Next
       </button>
     </div>
 

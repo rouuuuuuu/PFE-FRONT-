@@ -20,7 +20,7 @@
 
 .filter-field {
   flex: 1;
-  min-width: 180px;
+  min-width: 160px;
 }
 
 .loading-container {
@@ -32,14 +32,29 @@
   margin: auto;
 }
 
+/* --- Card Body --- */
+.card-body {
+  padding-bottom: 20px !important;
+  overflow: visible;
+}
+
 .stats-text {
   color: var(--text-secondary);
   margin-bottom: 12px;
   font-size: 13px;
 }
 
+/* --- Table Scroll --- */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
 .full-width-table {
   width: 100%;
+  min-width: 700px;
 }
 
 .header-accent {
@@ -63,10 +78,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   margin-top: 20px;
-  padding-top: 16px;
+  padding: 16px 0 4px 0;
   border-top: 1px solid var(--glass-border);
+  flex-wrap: wrap;
 }
 
 .page-btn {
@@ -80,6 +96,8 @@
   font-weight: 500;
   font-family: 'Outfit', sans-serif;
   transition: all var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .page-btn:hover {
@@ -88,7 +106,7 @@
 }
 
 .page-btn:disabled {
-  background: #2a2a2a;
+  background: var(--bg-elevated);
   color: var(--text-muted);
   cursor: not-allowed;
   box-shadow: none;
@@ -97,6 +115,7 @@
 .page-info {
   color: var(--text-secondary);
   font-size: 13px;
+  white-space: nowrap;
 }
 
 .vendor-badge {
@@ -105,6 +124,7 @@
   border-radius: 20px;
   font-size: 11px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 /* Verification Panel Styles */
@@ -131,4 +151,14 @@
 .status-icon {
   font-size: 18px;
   margin-left: 8px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .filters-row {
+    flex-direction: column;
+  }
+  .filter-field {
+    min-width: 100%;
+  }
 }
