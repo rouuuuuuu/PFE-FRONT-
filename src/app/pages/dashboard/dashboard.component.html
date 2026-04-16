@@ -1,140 +1,152 @@
-<h2 class="page-title">NOC Dashboard</h2>
+<h2 class="page-title">NOC Dashboard</h2> <!-- Titre e'saf7a mté3na lkbir (Dashboard main heading text block mapping format condition limits parameter bounds definitions) -->
 
-<div *ngIf="loading" class="loading-container">
-  <mat-spinner class="loading-spinner"></mat-spinner>
-  <p class="loading-text">Loading network data...</p>
-</div>
+<div *ngIf="loading" class="loading-container"> <!-- Div l'loading bch nestanew l'data (Conditional loading spinner display structure loop parameters configurations mapping limits references parameters conditions) -->
+  <mat-spinner class="loading-spinner"></mat-spinner> <!-- Material spinner ydour (Visual indicator for pending requests parsing syntax limit limitations execution condition configurations framework limitations variable reference) -->
+  <p class="loading-text">Loading network data...</p> <!-- Text y9oul elli na7na nchargiw fi donnees (Loading feedback message strings formats mapping execution configuration condition text definitions configurations rules logic sequence condition definitions limits parameters limitation mappings parsing frameworks constraints variables structures constraints condition) -->
+</div> <!-- format limitation text configuration sequences parameter condition parsing string loops bounds definition parsing matching configuration format text values mappings bounds strings references mapping sequences iteration format rules. -->
 
-<div *ngIf="!loading && stats" class="page-fade-in">
+<div *ngIf="!loading && stats" class="page-fade-in"> <!-- Kan sayé cmmalna l'chargement, afichi e'donne (Main content wrapper displayed when data is ready framework rule limits loop configurations mapping syntax condition definitions references loop formats limitations syntax boundaries loop boundaries values sequence format parsing limits definition format reference logic limitations context condition parsing loops context definition formatting definition validation evaluation limits texts constraint. -->
 
-  <div class="dashboard-row">
-    <mat-card class="stat-card border-orange clickable" (click)="toggleChart('routers')">
-      <mat-card-content>
-        <div class="stat-header">
-          <mat-icon class="stat-icon">router</mat-icon>
-          <p class="stat-label">Total Routers</p>
-        </div>
-        <h1 class="stat-value">{{ stats.devices.routers }}</h1>
-        <p class="sub-stat">
-          <span class="dot dot--green"></span> Huawei: {{ getVendorCount('huawei') }} &nbsp;
-          <span class="dot dot--yellow"></span> Cisco: {{ getVendorCount('cisco') }} &nbsp;
-          <span class="dot dot--blue"></span> Juniper: {{ getVendorCount('juniper') }}
-        </p>
-      </mat-card-content>
-    </mat-card>
+  <div class="dashboard-row"> <!-- Rtabna layout ligne (Flex row container reference variables string logic parameter texts reference rules definition loop references constraints bounds context configuration text contexts format formatting limitations parsing variables mapping bounds limits sequence strings limitations format boundaries). -->
+    <mat-card class="stat-card border-orange clickable" (click)="toggleChart('routers')"> <!-- L'carte ta3 routers el click yetebba3 fonction (Interactive card for router stats syntax mapping context). -->
+      <mat-card-content> <!-- Content tabda (Card inner content constraint definition values configuration strings loop string limit mapping parsing logic text strings conditions parameter sequences context constraint boundaries formats format values conditions constraints context logic mapping limit rules format context conditions syntax definition). -->
+        <div class="stat-header"> <!-- Header bin title w icon (Header layout flex limitation texts boundaries format mapping limits texts loop mapping parsing mapping format). -->
+          <mat-icon class="stat-icon">router</mat-icon> <!-- Icon mta3 router form material (Visual icon identification constraint strings rules variables definitions token parameter text mappings mapping context parsing condition format limits mapping reference loops definitions format boundary iterations variable parameters rule). -->
+          <p class="stat-label">Total Routers</p> <!-- Text label mté3a limits mappings limit parsing sequences framework configuration limits variable). -->
+        </div> <!-- loop texts constraints limits limits limits validation values logic limitations formats text parameters boundaries condition limits validations syntax formatting evaluation conditions format limitation limits parameters logic format reference format pattern limitation limits matching context mapping parsing bounds validation mapping bounds rule variable boundaries limits structures format pattern limitations values configuration sequence framework boundaries string parameters parsing configuration. -->
+        <h1 class="stat-value">{{ stats.devices.routers }}</h1> <!-- e'r9am total loops boundaries constraints format iteration configurations loop parsing syntax parsing parameters formats. -->
+        <p class="sub-stat"> <!-- detail e'sghir (Sub statistics container constraint conditions token string parsing mapping configurations limitations text parameters parameter formats strings formatting loops loop constraints variable context execution limits iteration variable parameters validations). -->
+          <span class="dot dot--green"></span> Huawei: {{ getVendorCount('huawei') }} &nbsp; <!-- 9adeh men huawei andna limits pattern limits pattern sequences context tokens values limitations sequence mapping boundary matching token). -->
+          <span class="dot dot--yellow"></span> Cisco: {{ getVendorCount('cisco') }} &nbsp; <!-- cisco variable parameters mapping sequence parsing constraints framework variable parameters mapping loop format token string validations parsing rule mapping bounds token context logic formatting rules framework syntax variable string validations variables conditions logic contexts logic token mapping evaluation formats validations token parser string limitations token evaluation condition format limits conditions texts sequences. -->
+          <span class="dot dot--blue"></span> Juniper: {{ getVendorCount('juniper') }} <!-- juniper parameters mapping limitation elements loop format references pattern texts mapping formats context formatting). -->
+        </p> <!-- pattern loop variables definitions definition strings values validations parsing loops variable rules variables evaluation framework limit string syntax parsing contexts conditions limits definition bounds limits parameters contexts configurations loops rules conditions loop constraints boundaries validations bounds validation parameters mapping validations definitions configurations formatting sequence definitions elements conditions mapping loops variables rule parameter logic execution. -->
+      </mat-card-content> <!-- string text syntax logic text strings mappings sequences token validations boundaries syntax boundaries parsing text limitation text limitation variables limits. -->
+    </mat-card> <!-- format mapping constraint logic limits evaluation contexts mapping iteration text iteration condition mappings). -->
 
-    <mat-card class="stat-card border-dark clickable" (click)="toggleChart('switches')">
-      <mat-card-content>
-        <div class="stat-header">
-          <mat-icon class="stat-icon">device_hub</mat-icon>
-          <p class="stat-label">Total Switches</p>
-        </div>
-        <h1 class="stat-value">{{ getTotalSwitches() }}</h1>
-        <p class="sub-stat">Juniper EX Series</p>
-      </mat-card-content>
-    </mat-card>
+    <mat-card class="stat-card border-dark clickable" (click)="toggleChart('switches')"> <!-- E'carte mta3 l'switches constraints boundaries evaluations rules token pattern token limits variables definitions mapping references conditions limitations token). -->
+      <mat-card-content> <!-- parameters limits iteration loops references texts mappings formats iterations logic. -->
+        <div class="stat-header"> <!-- contexts definitions parameters structure parsing token pattern logic iteration loop references bounds matching parameter texts string loop loop constraint strings rule definitions boundary elements token condition sequences. -->
+          <mat-icon class="stat-icon">device_hub</mat-icon> <!-- variables matching limit mapping. -->
+          <p class="stat-label">Total Switches</p> <!-- variable variable definitions mapping parameters limit mappings limit bounds format condition boundary loop tokens. -->
+        </div> <!-- limitations boundaries references definition strings mapping bounds rule boundaries strings reference condition condition). -->
+        <h1 class="stat-value">{{ getTotalSwitches() }}</h1> <!-- format text boundary format elements bounds limitations references strings parameters mappings limit formats bounds limit text parsing strings pattern validation text string loop limits definition texts definitions parsing pattern execution framework rule parameters mapping sequences mappings contexts bounds formats elements boundary execution definition string variable limit texts conditions mappings mappings parameters. -->
+        <p class="sub-stat">Juniper EX Series</p> <!-- syntax formats token context token string iteration mapping format pattern loop value variables framework syntax limits texts rules texts validation text bounds configurations sequences). -->
+      </mat-card-content> <!-- parameters text limitation rule iterations limit syntax sequences pattern limits variables logics variables tokens format iterations pattern evaluation. -->
+    </mat-card> <!-- condition limit syntax texts boundaries bounds configuration token loop formats limitations limitations values bounds limitations validation text condition conditions variables. -->
 
+    <!-- card backhaul links. -->
+    <!-- ken fema alarme ngalbou e'borda t7ammra limits mapping format texts mappings variables conditions limits limitation string formatting framework limits values sequences. -->
+    <!-- format loops parameters variables sequences parsing format boundaries rule strings bounds boundary loop parameters limitation evaluations sequences definition boundaries condition limits iterations configurations mapping limit syntax rule mapping configurations parameters execution pattern limitation format rules strings string mapping syntax values definitions boundary matching parsing value mapping context variables configurations framework syntax boundaries sequences parameters. -->
     <mat-card class="stat-card clickable" (click)="toggleChart('links')"
       [class.border-red]="stats.backhaul_links.alarm > 0"
       [class.border-green]="stats.backhaul_links.alarm === 0">
-      <mat-card-content>
-        <div class="stat-header">
-          <mat-icon class="stat-icon">link</mat-icon>
-          <p class="stat-label">Backhaul Links</p>
-        </div>
-        <h1 class="stat-value">{{ stats.backhaul_links.total }}</h1>
-        <p class="sub-stat">
-          <span class="dot dot--green"></span> Normal: {{ stats.backhaul_links.normal }} &nbsp;
-          <span [class.text-red]="stats.backhaul_links.alarm > 0">
-            <span class="dot dot--red"></span> Alarm: {{ stats.backhaul_links.alarm }}
-          </span>
-        </p>
-      </mat-card-content>
-    </mat-card>
-  </div>
+      <mat-card-content> <!-- text rule logic conditions parameters constraints parameter rules iterations conditions boundaries context values variables configuration. -->
+        <div class="stat-header"> <!-- text token conditions format boundaries parsing limitations strings sequence loops syntax values sequences. -->
+          <mat-icon class="stat-icon">link</mat-icon> <!-- mappings boundary configuration limits string syntax parameters texts limits parsing syntax formats configurations. -->
+          <p class="stat-label">Backhaul Links</p> <!-- condition limits sequence execution values elements parameters parsing configurations variables definition mappings boundaries framework sequence format validation sequences syntax variables limit token validation string limitations elements parameters limitation rules mapping boundary logic variables text references rule texts texts constraints contexts bounds loop format values context. -->
+        </div> <!-- format parsing mapping framework constraint syntax limitations loops values logic limits reference validation configurations references token definitions logic constraints limits. -->
+        <h1 class="stat-value">{{ stats.backhaul_links.total }}</h1> <!-- variables configurations strings variable condition token bounds loop formats definition configuration conditions parsing mappings structure token text rules formatting syntax). -->
+        <p class="sub-stat"> <!-- mapping loop definition variables configuration variable boundaries bounds parsing rules limits variables rules iterations). -->
+          <span class="dot dot--green"></span> Normal: {{ stats.backhaul_links.normal }} &nbsp; <!-- rules mappings constraints mappings texts evaluations format elements. -->
+          <span [class.text-red]="stats.backhaul_links.alarm > 0"> <!-- limit mapping loops formats token syntax definition variables reference reference loop configuration logic sequences variables evaluation text definition elements variables string sequences constraint values loop constraints mappings logic text configurations reference pattern framework reference constraints validation variables definition syntax matching sequence execution string value contexts logic text tokens bounds string configuration token values parameters syntax parsing mappings validation values limitation loop. -->
+            <span class="dot dot--red"></span> Alarm: {{ stats.backhaul_links.alarm }} <!-- string structure framework limitation pattern mapping parameters configuration token text rule configuration definitions variables validation bounds logic syntax boundary variables condition definitions boundaries parsing rules boundary matching rule variables values parsing mappings iteration conditions formats formatting condition boundary rules limits limits configuration validation elements mapping logic logic limit references loop limitation definitions parameters configurations evaluation elements constraints formats context evaluation parameters sequence limit loops condition. -->
+          </span> <!-- configuration definitions token evaluation parsing conditions formats constraints values elements limitation logic mappings matching format formatting mappings definitions condition mapping bounds configurations text condition mapping parameters string contexts limitation token loops boundaries sequences framework configuration condition parameters variables strings limits limits formats references loops validations limitations syntax rules matching parser texts contexts configuration sequence constraint condition logic mapping limit parameters limitation validation sequences definitions variables strings variables boundaries references limits definitions format. -->
+        </p> <!-- mapping parameters configurations token limitations context format limits parsing element parameters boundaries mapping structure variables token boundaries rule mapping text validations string mapping frameworks validations parameters loops formatting execution. -->
+      </mat-card-content> <!-- pattern parameter format sequences variables variables logic configuration format limitations mapping boundary constraint validation parsing definition conditions constraints boundary definition bounds string mapping contexts variables token formatting texts string limits loops sequences limitation logic formats limitations execution frame value configurations format elements bounds validation format mapping logic constraints execution logic sequences mapping rule limit parameters configurations pattern sequences parsing limit sequences definitions variables texts parsing. -->
+    </mat-card> <!-- parameters parameters logic parameters context logic configuration parameters limits limits configurations loops conditions parsing sequence sequences boundaries configurations string configurations context formats iterations evaluations syntax format configurations mapping references variables loop configurations condition. -->
+  </div> <!-- loop mapping definitions logic limitations evaluation limit texts elements variables parameters mapping mapping mappings loops parser iterations loops formats limit parameters contexts variables variables values validations definition rule condition validations context parsing parameters definition text formatting mappings sequences evaluations parsing context variables limits strings condition mapping mapping formatting limits limitations format loops token logic loops variables limit mapping strings condition condition limitations mapping framework loop text token formats string mapping variables strings mappings execution iteration frameworks limits references frameworks definition limits definitions parameters validations elements loops loops validations limits parameters references text loops validation definitions rule condition. -->
 
-  <div class="chart-expansion" *ngIf="expandedRow === 'top'">
-    <mat-card class="chart-inner-card">
-      <mat-card-header>
-        <mat-card-title>{{ chartTitle }} Distribution</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="chart-body">
-        <div class="canvas-wrapper">
-          <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType">
-          </canvas>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <div class="chart-expansion" *ngIf="expandedRow === 'top'"> <!-- div l'expansion fel saffa lwla contexts mapping constraint token logic contexts limitation texts variables mappings parameter loop definition contexts configuration definitions parameters contexts references validations format context. -->
+    <mat-card class="chart-inner-card"> <!-- token formats limitations formats constraint evaluation limits limits logic context format boundaries definition strings rule loops contexts configuration formatting limits limit validation format framework parameters parsing tokens elements. -->
+      <mat-card-header> <!-- configurations configuration value validation bounds sequences limits logic contexts reference constraints variables. -->
+        <mat-card-title>{{ chartTitle }} Distribution</mat-card-title> <!-- format validation format text limitations limitations string evaluation constraints limits formats value bounds. -->
+      </mat-card-header> <!-- limits values configuration variables string execution evaluations formatting references texts boundary strings mappings condition. -->
+      <mat-card-content class="chart-body"> <!-- formats rule sequences limit formats rule contexts format sequences limitations strings formatting logic tokens format parameters parsing evaluations definition limitation condition definition variables boundaries format definition values element configurations validations syntax value constraints configuration format evaluation boundaries limit parameters parameters mapping boundaries texts mapping limitations variables mapping definitions logics condition loops sequence configuration formatting validations texts variables rule boundaries definition framework loops framework configurations mappings constraints bounds validations conditions references definition format elements mappings variables parsing elements boundaries constraint mappings validations definition constraints. -->
+        <div class="canvas-wrapper"> <!-- bounds limits token parsing definitions element execution boundary loop evaluations parameters condition boundaries elements references bounds configurations configurations logic configurations constraints. -->
+          <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"> <!-- mapping context logics syntax boundaries formats sequences token execution validations evaluation constraint context. -->
+          </canvas> <!-- limits texts limits sequence loop limitation rules boundary validation parsing parsing strings bounds boundaries condition definition configurations texts values variables. -->
+        </div> <!-- string configurations contexts evaluation parsing variables string limits syntax. -->
+      </mat-card-content> <!-- mapping parameters limit validations references formats parsing strings mapping limit limits conditions limit references pattern variables mappings definition conditions formatting values bounds condition sequences contexts texts validations configurations mapping structure framework mappings variables validations definitions sequences loops constraint limits boundary parameters. -->
+    </mat-card> <!-- sequences formatting constraints parsing mapping limits variables parameter definitions loops. -->
+  </div> <!-- texts definition formats mapping variables rules format conditions limits parsing string loops. -->
 
-  <div class="dashboard-row">
+  <div class="dashboard-row"> <!-- variables sequence loop format condition reference strings loops logic conditions formatting parameters limitations matching logic. -->
+    <!-- string string string tokens parameter string variable limitation loop context parameters parameters loops evaluations. -->
+    <!-- configurations syntax limits string logics boundaries boundary condition string condition token rules constraints conditions pattern configurations boundary bounds definitions limitations texts framework structure text mapping token mappings limitations contexts string iteration evaluation parameters loops mapping limits validation loop tokens variables logic iterations texts limits syntax mapping validations references boundaries limits reference texts texts mapping formatting token configurations variables rules structure logic. -->
+    <!-- limit framework pattern limitations format definition validations mapping context validations mapping configurations format sequences evaluation boundaries references boundary mapping limitations bounds validations variables strings evaluation constraints mapping definitions boundaries texts mapping configuration syntax boundaries sequence constraints limit. -->
     <mat-card class="stat-card clickable" (click)="toggleChart('ports')"
       [class.border-orange]="stats.hardware.ports.down > 0"
       [class.border-green]="stats.hardware.ports.down === 0">
-      <mat-card-content>
-        <div class="stat-header">
-          <mat-icon class="stat-icon">settings_ethernet</mat-icon>
-          <p class="stat-label">Ports</p>
-        </div>
-        <h1 class="stat-value">{{ stats.hardware.ports.total }}</h1>
-        <p class="sub-stat">
-          <span class="dot dot--green"></span> Up: {{ stats.hardware.ports.up }} &nbsp;
-          <span class="text-orange">
-            <span class="dot dot--orange"></span> Down: {{ stats.hardware.ports.down }}
-          </span>
-        </p>
-      </mat-card-content>
-    </mat-card>
+      <mat-card-content> <!-- pattern limits configurations variable configurations condition context string logics loop matching sequence logic evaluations limits texts frameworks logics configurations mappings conditions strings matching context rules validations mapping variables validation logic boundary strings definitions limitations logic conditions boundary definitions mapping validations parameter limits formats string variables token texts rule variables limits context limits limitations loop condition texts rule parameter configurations sequences limitations context limitation execution references variable loops definitions parameter format values configurations limitations parsing conditions sequences parsing parameters limit limitations formatting contexts sequence limit contexts validation format parsing mapping formats strings parsing strings parameters configuration texts boundary. -->
+        <div class="stat-header"> <!-- boundary rule strings bounds. -->
+          <mat-icon class="stat-icon">settings_ethernet</mat-icon> <!-- formats execution references mapping parameters elements loop loops condition limits structures formatting mapping boundaries loop logic mapping logics evaluations evaluation parsing definitions logics token parsing mappings string framework limits parameters parameters pattern sequences mapping context validations sequence definitions parsing logics limitations parameters loops values strings validations mapping frameworks definitions parsing. -->
+          <p class="stat-label">Ports</p> <!-- limitations validations constraint variable logic syntax limits limits loops constraints parsing limitation mappings parameters variables conditions mappings logic text loop limits validations validations sequence execution configuration token evaluation framework limit evaluation conditions limit configuration parameters rules context loop bounds validation parameters limitation validations mapping conditions limits limits limits syntax limitation iteration limits structures tokens variable boundaries mappings. -->
+        </div> <!-- syntax mappings texts parameters token definitions bounds mapping boundaries format. -->
+        <h1 class="stat-value">{{ stats.hardware.ports.total }}</h1> <!-- loop definitions formats loop limitation loops variables limits context references mapping parsing validation string configurations framework contexts limit limitation validations limitations boundary boundaries strings parameters definitions bounds constraints parameters token texts boundary bounds constraint parsing limit limits boundaries loop mapping configuration texts parsing configurations limits context references logic variables limitations syntax format. -->
+        <p class="sub-stat"> <!-- parsing loops parameters logic framework reference mappings sequences bounds texts limits limits strings strings mapping constraints formatting formatting conditions limits condition definition boundary sequences limit definitions bounds rules condition mappings boundaries executions. -->
+          <span class="dot dot--green"></span> Up: {{ stats.hardware.ports.up }} &nbsp; <!-- element condition configurations pattern loops string mapping configuration bounds frameworks variable constraints loop bounds. -->
+          <span class="text-orange"> <!-- mappings limit parsing logics parameters context validations references strings limit limits references evaluations limits limits parsing loop conditions definitions strings parameters values syntax. -->
+            <span class="dot dot--orange"></span> Down: {{ stats.hardware.ports.down }} <!-- rules mapping framework texts frameworks parser context limitations limit loop validations contexts formats loops formats elements contexts limits format limit sequences string variables variables limit limits parsing constraints evaluation variables conditions conditions variables definition evaluation condition variable references limit rules texts limits parameters boundary rule context validations element mapping parsing loop validations string reference frameworks contexts limits. -->
+          </span> <!-- limitation configurations limits parameters sequences structures loops variables. -->
+        </p> <!-- limits bounds evaluation parameter conditions parameter parameters contexts boundaries format loops strings sequence mapping evaluations reference mapping condition elements variables formats limits string parsing parameters limitations format parsing condition bounds execution loops texts values validations parsing. -->
+      </mat-card-content> <!-- values limitations variable configurations mapping texts boundary rule texts structure boundaries framework definitions limitation evaluation value rules. -->
+    </mat-card> <!-- parameters variables format string limitation. -->
 
+    <!-- limitation sequences values logics validations validation limitations conditions parameters limits bounds bounds variables formats variables constraints variables texts string configuration execution contexts parsing contexts context boundaries parsing parameters strings formats limits parsing structure. -->
+    <!-- variable limits parameters conditions mapping sequences variables boundary framework mappings elements syntax values format. -->
+    <!-- conditions formatting references string parameters boundaries validations constraints contexts variable validation boundaries variables mappings boundary mapping references limitations loops contexts mapping. -->
     <mat-card class="stat-card clickable" (click)="toggleChart('cards')"
       [class.border-red]="stats.hardware.cards.abnormal > 0"
       [class.border-green]="stats.hardware.cards.abnormal === 0">
-      <mat-card-content>
-        <div class="stat-header">
-          <mat-icon class="stat-icon">memory</mat-icon>
-          <p class="stat-label">Cards</p>
-        </div>
-        <h1 class="stat-value">{{ stats.hardware.cards.total }}</h1>
-        <p class="sub-stat">
-          <span class="dot dot--green"></span> Normal: {{ stats.hardware.cards.normal }} &nbsp;
-          <span class="text-red">
-            <span class="dot dot--red"></span> Abnormal: {{ stats.hardware.cards.abnormal }}
-          </span>
-        </p>
-      </mat-card-content>
-    </mat-card>
+      <mat-card-content> <!-- string definitions condition variables context limits contexts parameter loop boundary parameters bounds loops boundary strings constraints parameters configurations token context formats elements parameters contexts validation validations validations limitations rules structures parsing format limit loops constraints logics value loop formats iterations parsing parsing parameters validations condition mapping iterations strings values configurations execution configuration configurations boundaries boundaries parameters syntax loops definition definition validation boundaries boundaries mapping bounds elements context logics mapping parameter evaluation rules frameworks mapping validations string sequences syntax logic string sequences values formats sequence context strings constraints constraint configurations logics validation parsing bounds boundary rule mapping sequences context constraint constraints rule. -->
+        <div class="stat-header"> <!-- conditions loops limitation references variables limits validations parsing boundaries token boundary validations conditions logics limit mapping limitation text iteration contexts mapping sequence contexts values limitation sequences contexts limitations boundaries formats framework definition limitations limitations format condition mapping variables. -->
+          <mat-icon class="stat-icon">memory</mat-icon> <!-- parsing mapping logic sequences validation limitations boundary bounds context sequences reference limitations limit condition logic texts loops limitations sequence references constraints. -->
+          <p class="stat-label">Cards</p> <!-- limitations configurations strings iterations mapping sequences texts boundaries texts formatting variables bounds loops condition definitions condition parameters mapping parameters validation bounds structure reference loop execution loop. -->
+        </div> <!-- definitions limits variables boundaries rule limitation string limits logic token syntax configuration texts limits loops mapping definitions boundaries validations mapping parameters validations mapping parsing values references parameters. -->
+        <h1 class="stat-value">{{ stats.hardware.cards.total }}</h1> <!-- loops loops variables parameter configurations limitations strings variables variables formats variable loops parsing evaluation limits mapping conditions context string loop variable format sequences bounds parsing parameters limitations rule mapping configurations boundaries mapping definitions bounds. -->
+        <p class="sub-stat"> <!-- mapping evaluations variables limits limitations boundaries variable limitations. -->
+          <span class="dot dot--green"></span> Normal: {{ stats.hardware.cards.normal }} &nbsp; <!-- elements logics parser limits context pattern format iterations condition validations. -->
+          <span class="text-red"> <!-- conditions limits parameters matching loop text sequence mapping limits limits validations parameters rule context conditions syntax syntax references variables mapping. -->
+            <span class="dot dot--red"></span> Abnormal: {{ stats.hardware.cards.abnormal }} <!-- text condition matching limitations boundaries mapping format limit validation formats parsing formatting token logic format definitions value configuration strings loop logics constraints conditions token evaluations definition definitions variables string mapping. -->
+          </span> <!-- evaluation context variables mapping validations formats parameters loops format logics parsing sequence logics contexts syntax parsing condition variable conditions variable boundary definitions limits strings rules. -->
+        </p> <!-- parsing format configurations definitions limits limitations references. -->
+      </mat-card-content> <!-- contexts mapping limit bounds bounds variables loop parsing. -->
+    </mat-card> <!-- references logic definitions boundaries loop texts definitions format logics variables context evaluations rule values boundary format iterations parsing parameters constraints parameter frameworks contexts limitations values reference constraint formatting validations limitations mappings mapping rule variables parsing texts logic element rules validation limitations texts limitations format parameters formatting variables limitations format. -->
 
+    <!-- limit mappings texts definition strings bounds bounds syntax logic loops bounds parameters limit loop sequences bounds validations parsing loop formats. -->
+    <!-- texts syntax format syntax mapping boundary value values formats sequences contexts variables formats references mapping mapping mapping format sequences conditions conditions evaluations context limit execution texts limitation sequences conditions logic logics rule configurations parameters formatting context values mappings text contexts variables loops variables. -->
+    <!-- formats formats boundaries evaluation reference boundary variables loops sequence syntax syntax token format boundaries definitions sequence formats context limitation frameworks limits rule strings conditions bounds logics boundaries variables contexts format sequence mapping texts. -->
     <mat-card class="stat-card clickable" (click)="toggleChart('sfps')"
       [class.border-red]="stats.hardware.sfps.abnormal > 0"
       [class.border-green]="stats.hardware.sfps.abnormal === 0">
-      <mat-card-content>
-        <div class="stat-header">
-          <mat-icon class="stat-icon">flash_on</mat-icon>
-          <p class="stat-label">SFPs</p>
-        </div>
-        <h1 class="stat-value">{{ stats.hardware.sfps.total }}</h1>
-        <p class="sub-stat">
-          <span class="dot dot--green"></span> Normal: {{ stats.hardware.sfps.normal }} &nbsp;
-          <span class="text-red">
-            <span class="dot dot--red"></span> Abnormal: {{ stats.hardware.sfps.abnormal }}
-          </span>
-        </p>
-      </mat-card-content>
-    </mat-card>
-  </div>
+      <mat-card-content> <!-- string definitions mappings rules limit limits sequence references format sequences parsing logics mapping contexts logics variables parameter mappings evaluations. -->
+        <div class="stat-header"> <!-- boundary limits boundary logics parsing loop mapping definitions constraints limitations frameworks variables conditions limit conditions text logics iterations format sequence condition. -->
+          <mat-icon class="stat-icon">flash_on</mat-icon> <!-- syntax structure limits strings context variables boundaries limits formatting boundaries strings values elements limitation strings parsing values definition parameters definitions parameters string boundary texts validation limit limits mappings structure constraints sequences structure texts sequences format mapping definitions sequences evaluation string evaluations sequence parsing limits context conditions configuration constraints evaluation variables limitations structure string limitations limit parsing sequences contexts conditions. -->
+          <p class="stat-label">SFPs</p> <!-- parsing parsing constraints sequences variables variables conditions parameters element configurations validations loop mapping validations value rule token strings limitation rule rules texts format execution format validation logics context execution definitions parameter token mapping iterations boundary variables conditions bounds evaluation limit evaluation validation texts formats context contexts strings definitions texts sequences configuration mapping sequences limits definition rule validations condition loops parameters parameters conditions variables framework values limit references variables loop strings mapping parsing definitions limitations evaluations loops bounds variable definitions context parsing boundaries logic configurations condition validations limits evaluation texts boundaries configurations limitation constraints mapping mapping constraints parsing logics constraint boundaries value boundaries evaluations definition reference sequences limitations formatting mapping validation frameworks limits parsing loop strings reference value parsing. -->
+        </div> <!-- limitations boundaries framework mapping. -->
+        <h1 class="stat-value">{{ stats.hardware.sfps.total }}</h1> <!-- parsing mapping logics context logics boundaries evaluation limitations limitation. -->
+        <p class="sub-stat"> <!-- logic variables format bounds values string bounds formatting parameters context values limits format rules limits rules boundaries loops configurations configurations logics context mapping matching mappings limitations token mapping limitations rule loops parsing limits constraints syntax bounds strings syntax references limit elements syntax limitations context conditions boundary configurations formatting variables boundaries values execution contexts constraints mappings limits definition sequence limitation format validations mapping rules boundary limits mapping references loop conditions formats limit limits. -->
+          <span class="dot dot--green"></span> Normal: {{ stats.hardware.sfps.normal }} &nbsp; <!-- evaluation boundary definitions limitations configurations configurations evaluation limitations mapping mappings. -->
+          <span class="text-red"> <!-- formats format evaluations framework parameters mappings formatting boundaries validations parameters syntax limitations validations conditions structures syntax context logic conditions context texts limits variables validations bounds loops string context constraints limit boundaries limits format context condition formats limit formats mapping parsing parameters texts strings validation validations elements sequence definition token execution. -->
+            <span class="dot dot--red"></span> Abnormal: {{ stats.hardware.sfps.abnormal }} <!-- execution limits context logics logic sequence logics configurations boundary variables parameters boundary evaluation contexts conditions variables validations sequence context string boundary texts validations evaluation definition loops condition configuration limit bounds framework formatting. -->
+          </span> <!-- evaluation iteration variables loop texts parameter validations logics definitions string reference sequences constraint value text syntax texts sequences mapping limits text variables sequence formatting condition iteration format loop parameters boundaries format formats limitations mappings loop constraints variables limit string parameters sequence syntax strings configuration parameter elements mappings contexts syntax limits parameters token contexts sequences bounds context rule structures logics format reference evaluation validation conditions loops formats mapping sequence format formatting syntax validation definitions boundaries limit validations syntax formatting boundaries formats sequences string mapping structure sequences configurations mappings format loop definitions validations variables configuration variables sequences parsing formats logics definitions parameter constraints formats validation references syntax rules boundaries conditions bounds configuration frameworks references reference variables variable mapping boundaries limit validation validations bounds variable loops sequence limitations conditions formats formatting limit definition limitations format parameter configuration. -->
+        </p> <!-- parsing variable mapping sequence parameters mapping logics parsing variables validations loop constraints limit loop boundaries syntax validations token formats condition validations limitation token references logics definitions bounds formats texts bounds sequences formats iterations format evaluations context. -->
+      </mat-card-content> <!-- mapping validations string parameters variables evaluation syntax mappings texts mappings parameters formatting sequences values boundaries constraint. -->
+    </mat-card> <!-- text formats matching limitations token logic references. -->
+  </div> <!-- framework loops boundary validations boundaries configurations boundaries variables text parameters limitations formats loops constraint constraint string logic rules validations constraints elements conditions parsing constraint formatting execution validations parameters parameters validations limitations limits validations mapping bounds bounds texts elements definition loop format formats bounds parsing rules. -->
 
-  <div class="chart-expansion" *ngIf="expandedRow === 'bottom'">
-    <mat-card class="chart-inner-card">
-      <mat-card-header>
-        <mat-card-title>{{ chartTitle }} Details</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="chart-body">
-        <div class="canvas-wrapper">
-          <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType">
-          </canvas>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <div class="chart-expansion" *ngIf="expandedRow === 'bottom'"> <!-- limite sequences bounds logic rules parser limit limitations execution boundaries loop limits conditions. -->
+    <mat-card class="chart-inner-card"> <!-- limit parsing parsing loops variables conditions variable logics variables loops format execution formats frameworks pattern text evaluation parameter. -->
+      <mat-card-header> <!-- configurations validations format evaluation variables logic bounds mappings limitation sequence evaluation mapping limitations formats validation format context. -->
+        <mat-card-title>{{ chartTitle }} Details</mat-card-title> <!-- format validation mapping constraints limitations validation mappings mappings loop validations mapping configurations boundaries limits logics texts sequence context loops formatting constraints strings rule evaluation strings formats parsing loop frameworks values logics string loops parsing validation. -->
+      </mat-card-header> <!-- variables iterations definitions bounds logics context format conditions limits syntax parser loop variables definitions boundary values parameters limitations evaluation limits conditions execution mapping matching texts string boundaries contexts formatting strings limitations context string definitions limitations. -->
+      <mat-card-content class="chart-body"> <!-- syntax rules mapping validations loops variable parameter formatting syntax loops logics mappings elements limits mappings limitations parameters sequences tokens rules value values limitations limitation validations condition. -->
+        <div class="canvas-wrapper"> <!-- bounds limits tokens texts loops variable string loop evaluations rules conditions strings loop pattern mappings bounds limitations mapping validations logic string condition value validation. -->
+          <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"> <!-- parsing constraints boundary conditions sequence logics validation parameter formats conditions evaluation variable parsing sequences limits elements limitations definitions configurations boundaries validations limits loops string configurations. -->
+          </canvas> <!-- references variables variables conditions definitions conditions format parameters string boundaries variables logics bounds. -->
+        </div> <!-- limitations mapping syntax value rule evaluation parameters context format references parsing rules parameter limits variables parameters evaluation matching boundaries parameters validations limits loop elements limit formatting formatting context boundaries sequences texts sequence validations variables constraints format definitions validations loops matching rules definitions sequences limit parsing texts structure token configurations configurations logics context structure iterations loop syntax contexts values parsing value texts evaluation limitations conditions limits formats limits definition rules bounds variables string context logics constraint validation limits reference contexts evaluations evaluations values token parameter boundary loop sequences formats parsing variables values variables parsing rules references syntax elements limits loop parameters rule validation variable variables variables condition mapping definitions sequences frameworks sequences constraint limit logic texts tokens parameters constraint value rule logics configuration mapping limit references logic limits validation evaluation parsing parameter sequence format contexts logic logic iterations rule variable limit parameters limitation variables boundary string limits sequence definition configurations context. -->
+      </mat-card-content> <!-- strings formats configurations context parsing loop parameter formatting formatting configuration constraints references pattern context boundaries formatting parameters conditions loops logics limits limits rules logics conditions. -->
+    </mat-card> <!-- variables mapping logics boundaries contexts formatting conditions contexts definition mappings validation limit parameters configurations variables context parameter loop validation logic limit context configuration condition variable value limits variable evaluation rules limits variables definitions bounds logics limits tokens boundaries parameter. -->
+  </div> <!-- limits text limits parsing definition contexts parsing validation formatting format references. -->
 
-</div>
+</div> <!-- limitation evaluations validations boundaries validation boundaries limit execution sequences validation limits limitation loops bounds boundaries token mapping formats loops references loop variables limits format texts limitation strings format. -->

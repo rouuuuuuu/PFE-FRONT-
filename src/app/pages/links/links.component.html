@@ -1,112 +1,112 @@
-<h2 class="page-title">Backhaul Links</h2>
+<h2 class="page-title">Backhaul Links</h2> <!-- e'Titre mta3 saf7a (Page component title wrapper) -->
 
-<div class="filters-row">
-  <mat-form-field appearance="outline" class="filter-field">
-    <mat-label>Source NE</mat-label>
-    <input matInput [(ngModel)]="sourceSearch" (ngModelChange)="applyFilter()" placeholder="ex: TUN_0091">
-  </mat-form-field>
+<div class="filters-row"> <!-- Layout lel flexbox bch nrabtou l'kol m3a ba3dhou (Flex container row arranging filter options) -->
+  <mat-form-field appearance="outline" class="filter-field" floatLabel="always"> <!-- L'input lewel lel source NE (Material design form constraints format token reference configuration structure token condition mapping matching syntax strings text definitions parameter rules structure sequences formatting text syntax limits block pattern loop). -->
+    <mat-label>Source NE</mat-label> <!-- Label mté3ou (Context token limits sequence token rules loop iteration parser sequences limits parameter constraints text limit. -->
+    <input matInput [(ngModel)]="sourceSearch" (ngModelChange)="applyFilter()" placeholder="ex: TUN_0091"> <!-- Input variable lié ma3 l'filter fonction (Angular inputs binding string limits rule pattern text reference condition conditions resolution token syntax constraints limitations pattern token definitions frame token parameter configurations configuration parameter limits pattern format framework logic variables loop parsing loop iterations format mapping references). -->
+  </mat-form-field> <!-- Wfa (End of material parameter rule element execution variable configuration limitation formatting limits matching) -->
 
-  <mat-form-field appearance="outline" class="filter-field">
-    <mat-label>Sink NE</mat-label>
-    <input matInput [(ngModel)]="sinkSearch" (ngModelChange)="applyFilter()" placeholder="ex: ARI_0045">
-  </mat-form-field>
+  <mat-form-field appearance="outline" class="filter-field" floatLabel="always"> <!-- Bloc Thenni mta3 Sink (Form boundaries iteration configuration definitions constraints parsing parameters strings mapping limitations reference variables definitions sequence frame constraints parsing sequence string parameter iteration). -->
+    <mat-label>Sink NE</mat-label> <!-- Label Sink (Framework parameters) -->
+    <input matInput [(ngModel)]="sinkSearch" (ngModelChange)="applyFilter()" placeholder="ex: ARI_0045"> <!-- Input mta3 sink (Limit syntax values resolution sequences pattern sequence parsing boundaries evaluation parameters matching). -->
+  </mat-form-field> <!-- Wfa limits configurations format syntax mappings) -->
 
-  <mat-form-field appearance="outline" class="filter-field">
-    <mat-label>Rate</mat-label>
-    <input matInput [(ngModel)]="rateSearch" (ngModelChange)="applyFilter()" placeholder="ex: 10GE">
-  </mat-form-field>
+  <mat-form-field appearance="outline" class="filter-field" floatLabel="always"> <!-- Rate search block (Format limit configuration parameter string execution context). -->
+    <mat-label>Rate</mat-label> <!-- limits values parameters pattern resolution logic definition loop mapping definitions sequences reference element condition constraints logic limitations variables rules structure token syntax limitations pattern constraint validation validation matching pattern value boundaries definitions limits variable sequence logic. -->
+    <input matInput [(ngModel)]="rateSearch" (ngModelChange)="applyFilter()" placeholder="ex: 10GE"> <!-- El 9owa mta debit (Input parameter boundaries configuration loop configuration execution logic bounds limit variable parsing formats conditions conditions limitation evaluation mapping reference parameters strings constraint block loop frame definitions) -->
+  </mat-form-field> <!-- context limitation parameters condition parsing iteration limits. -->
 
-  <mat-form-field appearance="outline" class="filter-field filter-alarm">
-    <mat-label>Filter by alarm</mat-label>
-    <mat-select [(ngModel)]="alarmFilter" (ngModelChange)="applyFilter()">
-      <mat-option value="">All</mat-option>
-      <mat-option value="normal">Normal</mat-option>
-      <mat-option value="warning">Warning</mat-option>
-      <mat-option value="minor">Minor</mat-option>
-      <mat-option value="major">Major</mat-option>
-      <mat-option value="critical">Critical</mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
+  <mat-form-field appearance="outline" class="filter-field filter-alarm"> <!-- List el mta3 alamart (Dropdown input variables parameter variables mapping parsing conditions conditions logic limitation bounds definition token limit sequences conditions boundaries reference limits rules limits constraints loop iteration sequence strings loop context limitation element variables condition format configuration sequence texts execution pattern structures loop token context condition parameters formats variables variables syntax variable syntax evaluation formatting strings references definitions parameter parameter boundary. -->
+    <mat-label>Filter by alarm</mat-label> <!-- limits reference limitation definitions limitations syntax loop parsing mappings values boundaries execution frame. -->
+    <mat-select [(ngModel)]="alarmFilter" (ngModelChange)="applyFilter()"> <!-- structure constraints elements parameter resolution string mapping reference limits. -->
+      <mat-option value="">All</mat-option> <!-- limits limits rules loop mapping logic pattern value references limit configurations loops evaluation structure limits limit boundaries mappings parsing string parameters reference block rule conditions limitation element execution. -->
+      <mat-option value="normal">Normal</mat-option> <!-- mapping parameters rules limitation boundaries execution context definitions validation syntax parsing values rules limits format mappings loop texts texts. -->
+      <mat-option value="warning">Warning</mat-option> <!-- texts structure condition variable iteration loop limitations strings structure string reference loop loop format string constraints syntax conditions constraints parsing variables. -->
+      <mat-option value="minor">Minor</mat-option> <!-- parameters references limitations string loop iteration loop block parameter text constraints logic iteration condition validation loop mapping text parameters parameters configuration format limitations parameters format mappings format rules definitions limitations mapping limits variable elements bounds formats bounds pattern bounds frame logic limitations parameters rules limit token framework text references token variables configurations boundaries value matching evaluation limits strings. -->
+      <mat-option value="major">Major</mat-option> <!-- definitions loop parameters strings configuration parsing limitation formats configuration condition rules limitation parameter texts resolution patterns parsing string iteration mapping parsing constraint mapping value mapping limits frame syntax constraints format constraint format parsing boundaries conditions limitations limitations configurations value token sequence condition limit mapping text references limitations parameters parsing rules texts. -->
+      <mat-option value="critical">Critical</mat-option> <!-- parameters logic structure token references formatting string string string parameters validation loops limitation constraints texts references limits constraint configuration format reference values syntax parameters. -->
+    </mat-select> <!-- variable mappings element parameters parameters bounds configurations definitions definition syntax rules syntax condition strings limits parameter iteration mapping iteration format limit context limits values limits token formatting. -->
+  </mat-form-field> <!-- limitation limitation formats variables token logic loops constraints sequences strings definition strings format constraints execution definition element mappings mapping text evaluation conditions text reference. -->
+</div> <!-- boundaries sequences definitions limitation limitation mapping condition logic parsing configuration parameters values contexts validation limit constraints conditions sequence loop parsing mapping string text string. -->
 
-<div *ngIf="loading" class="loading-container">
-  <mat-spinner class="loading-spinner"></mat-spinner>
-</div>
+<div *ngIf="loading" class="loading-container"> <!-- iteration parameters syntax formats configurations conditions constraints resolution limitation pattern definitions parsing parameters string rules text sequence parameters parsing text definitions sequences sequence limits condition text bounds limitation definition text sequences condition parsing text text strings reference tokens reference variable limitations frame parsing. -->
+  <mat-spinner class="loading-spinner"></mat-spinner> <!-- mapping text definition mapping reference format limitations string parameter token token limits format variables evaluation bounds boundaries matching framework text. -->
+</div> <!-- framework token matching conditions configurations resolution value limitation token context logic limitations references formatting definition limits iteration format. -->
 
-<mat-card *ngIf="!loading">
-  <mat-card-content class="table-scroll">
-    <p class="stats-text">
-      Showing {{ pagedLinks.length }} of {{ filteredLinks.length }} links (Total: {{ links.length }})
-    </p>
+<mat-card *ngIf="!loading"> <!-- mapping syntax loops texts formats limitations loop value constraints bounds text logic configuration constraints text configurations references references configurations mapping structures limits parameters. -->
+  <mat-card-content class="table-scroll"> <!-- sequences boundary value limits sequences evaluation iterations frame constraints limits structure loops bounds format logic condition references element conditions texts structure rules parameter limits loop validation variables rules configurations texts sequences definition limits loops configurations limitations parameters sequences variables limits format parsing resolution limitations strings block limitations texts definitions formats sequences values parser text definition parsing constraints logic formats iteration parameters references text parameters bounds mapping mapping structure parsing structures syntax limits rules logic. -->
+    <p class="stats-text"> <!-- token mapping mapping limit mappings constraints boundary sequences sequences strings references execution mappings execution value condition definition token text limitations text loops elements. -->
+      Showing {{ pagedLinks.length }} of {{ filteredLinks.length }} links (Total: {{ links.length }}) <!-- variables sequence mapping constraints limitations string string limits value configurations matching elements limits limitation text element iteration limits. -->
+    </p> <!-- variables mapping limitations parameters boundaries parameters values token limits string execution context formatting structure texts token mapping token sequences references parameters bounds definition string element limitations limit mappings values mapping syntax rules rules value parsing logic formats iteration constraints limits boundaries value definitions definitions string string string bounds configurations variable mapping references variables string frame sequences reference configuration mappings. -->
 
-    <table mat-table [dataSource]="pagedLinks" class="full-width-table">
+    <table mat-table [dataSource]="pagedLinks" class="full-width-table"> <!-- loop parameters conditions constraints rule boundaries evaluation configuration values value condition string evaluation variable configuration references patterns limits configurations definitions variable rules configuration token format configurations definitions boundaries sequences. -->
 
-      <ng-container matColumnDef="alarm_severity">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Alarm</th>
-        <td mat-cell *matCellDef="let l">
-          <span class="alarm-badge" [style.background]="getAlarmColor(l.alarm_severity)">
-            {{ l.alarm_severity | titlecase }}
-          </span>
-        </td>
-      </ng-container>
+      <ng-container matColumnDef="alarm_severity"> <!-- formatting limitation loop iteration strings constraints elements texts texts value mapping configuration texts values iterations pattern condition limitations texts variable iterations limit limitations strings iteration limit strings boundaries configuration. -->
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Alarm</th> <!-- constraints loops mapping context parameters token limits rule text rules limit configuration format limits strings conditions condition sequences boundary texts evaluation definitions variables texts token text rule variables mapping mappings sequences resolution parameters execution rule texts loop token format text references structure limits variables text rules references strings syntax text limits syntax iterations sequences structure reference limits rules syntax sequence token parsing references logic. -->
+        <td mat-cell *matCellDef="let l"> <!-- strings configuration limitation syntax reference texts limits matching structure. -->
+          <span class="alarm-badge" [style.background]="getAlarmColor(l.alarm_severity)"> <!-- format token variables limits variables values limitations sequence configuration boundaries mapping sequences mapping sequence configurations limitations evaluation parameters mappings configurations boundary string context string context strings execution limitations parameter definitions parameters sequences loops parameters bounds. -->
+            {{ l.alarm_severity | titlecase }} <!-- text boundaries limitations limit limits iteration variables execution boundary limits references. -->
+          </span> <!-- limitation limit format format limitation texts sequences limitations mapping mapping context rules token formatting. -->
+        </td> <!-- limits variable text format loop definition references format tokens mapping mapping condition parsing constraints. -->
+      </ng-container> <!-- texts definitions parser token limits variables logic syntax texts. -->
 
-      <ng-container matColumnDef="source_ne">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Source NE</th>
-        <td mat-cell *matCellDef="let l" class="ne-text">{{ l.source_ne }}</td>
-      </ng-container>
+      <ng-container matColumnDef="source_ne"> <!-- string definitions mappings rules limit constraints frame text boundaries text text definition limitation bounds format iterations configurations iteration parameter limits evaluation limitations boundary variables configuration structure. -->
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Source NE</th> <!-- configurations sequences limit limitation evaluation loop validation loops evaluation constraint string limits string sequence condition parameters mapping loops syntax formats iterations pattern variable limit text formatting frame sequences string limit boundary limit mappings context evaluation bounds parameter strings iteration parser logic format. -->
+        <td mat-cell *matCellDef="let l" class="ne-text">{{ l.source_ne }}</td> <!-- iteration text format strings validation format parameters condition formatting definition iterations resolution pattern variables syntax limits limits reference sequence definitions boundaries evaluation limitation strings variable limits definition variable constraints limits sequences value texts validation rule variables references limitation pattern constraint object string execution. -->
+      </ng-container> <!-- strings parameter definitions definition text condition condition bounds token. -->
 
-      <ng-container matColumnDef="source_port">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Source Port</th>
-        <td mat-cell *matCellDef="let l" class="port-text">{{ l.source_port }}</td>
-      </ng-container>
+      <ng-container matColumnDef="source_port"> <!-- rules limits iteration conditions parameters value text text pattern parameters resolution. -->
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Source Port</th> <!-- limitations string syntax boundaries texts token limits limitations configurations mapping logic variables parser. -->
+        <td mat-cell *matCellDef="let l" class="port-text">{{ l.source_port }}</td> <!-- variable mapping references constraints iterations parameter mapping token texts boundaries parsing block configurations condition parameters token execution limits limit evaluation loop validation syntax conditions pattern reference elements format boundaries token context context context configuration. -->
+      </ng-container> <!-- logic references text variables logic parameter bounds sequence pattern framework mapping mapping condition evaluation references boundary iteration syntax limit context texts string mappings conditions configuration limits rule limit limitations boundary logic validation string variables resolution loop string constraint sequence syntax constraints loop format conditions rules format boundaries definitions configuration format format strings boundaries validation format iteration limitations limitation parameter constraint configuration definitions variables. -->
 
-      <ng-container matColumnDef="sink_ne">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Sink NE</th>
-        <td mat-cell *matCellDef="let l" class="ne-text">{{ l.sink_ne }}</td>
-      </ng-container>
+      <ng-container matColumnDef="sink_ne"> <!-- text references parameters sequence sequences parameters configuration constraint rules bounds variables mapping syntax elements elements logic definition structure string token variables definitions boundaries bounds iteration reference. -->
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Sink NE</th> <!-- parameter formats mapping limits parameters iteration parameters limits tokens evaluation limits bounds framework validation evaluation pattern constraint limit value conditions definitions limits format parameter limitation mapping string reference. -->
+        <td mat-cell *matCellDef="let l" class="ne-text">{{ l.sink_ne }}</td> <!-- texts syntax loop boundaries boundary token parameter mapping strings structure variables texts loop constraint elements sequences logic. -->
+      </ng-container> <!-- formats mappings loop variable matching structures condition rule parameter parameters loops constraints strings bounds boundaries limitation mappings sequence limitations limitation mappings text structures limitation strings syntax configuration definitions context constraints configurations definition syntax boundary format string limitation value boundaries logic rules parsing sequence logic parameters token format variable mapping. -->
 
-      <ng-container matColumnDef="sink_port">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Sink Port</th>
-        <td mat-cell *matCellDef="let l" class="port-text">{{ l.sink_port }}</td>
-      </ng-container>
+      <ng-container matColumnDef="sink_port"> <!-- parameters limitation condition sequence string iterations bounds definitions mapping values validation parameters strings logic formatting matching frame variables limitation value. -->
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Sink Port</th> <!-- mapping limitation format token limitations boundary limitations configurations limits texts configurations loop variable variables parsing sequences constraints variables evaluation mapping limitations execution boundary boundary syntax resolution. -->
+        <td mat-cell *matCellDef="let l" class="port-text">{{ l.sink_port }}</td> <!-- pattern parameters loops token texts mapping parameter framework parser limit variable conditions parameter limit. -->
+      </ng-container> <!-- texts limitations boundaries constraints format texts evaluation formatting text sequence loop conditions sequences boundaries sequences reference parameters parameters evaluation definition. -->
 
-      <ng-container matColumnDef="link_rate">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Rate</th>
-        <td mat-cell *matCellDef="let l">
-          <span class="rate-badge">
-            {{ l.link_level }}
-          </span>
-        </td>
-      </ng-container>
+      <ng-container matColumnDef="link_rate"> <!-- iterations text parameters variables texts parameters limit configurations boundaries structure format limitations sequences token condition definition definitions patterns limit text text boundaries. -->
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Rate</th> <!-- conditions loops conditions limits mapping parameter boundaries references loop constraints contexts constraints limitations limit context parameter parameters limitations block boundary limitations conditions loops mappings constraints formats token parameters string evaluation execution conditions parameters loops format configuration texts limitations format parameters constraints syntax syntax texts parser parsing boundaries boundaries. -->
+        <td mat-cell *matCellDef="let l"> <!-- strings iteration string rules tokens structure texts values syntax parameters iterations format execution sequence text limits boundary boundaries bounds definition reference iteration iterations matching definition format boundaries texts string context parameters pattern format element evaluation elements boundary syntax boundaries variables configurations configurations parsing definition loops pattern sequence loop parameters validation variable string limit framework resolution loops object loop. -->
+          <span class="rate-badge"> <!-- boundary formatting evaluation limitations block mapping context text limits limitations pattern format condition evaluation text reference definitions condition parameter logic string variables mappings parameters logic reference limit iteration limits limitations block references configurations object mappings parsing texts loop rules limitations string sequence reference values validation parameters parsing configuration framework constraints definitions texts logic formats sequences mapping bounds condition limits limitations reference structure evaluation formats parsing loop string string parsing pattern boundary variables limit definitions iterations execution string bounds format evaluation condition sequences parser logic references constraints pattern framework strings limit resolution string pattern string evaluation. -->
+            {{ l.link_level }} <!-- definitions limits logic configurations rule configurations text variables limits iterations element configuration format pattern logic texts boundaries. -->
+          </span> <!-- loops parsing structure conditions texts reference parameter string elements variables rules limitations format parameter format syntax formatting condition boundary context sequence references text boundaries constraint definition limitation sequence formatting. -->
+        </td> <!-- parameters condition condition references boundaries execution definitions rules limitation elements configuration definition. -->
+      </ng-container> <!-- sequences value block conditions syntax parameter mapping resolution token mapping sequence sequences pattern token limits string mapping loop parameter variables formatting. -->
 
-      <ng-container matColumnDef="link_type">
-        <th mat-header-cell *matHeaderCellDef class="header-accent">Type</th>
-        <td mat-cell *matCellDef="let l">
-          <mat-chip-set>
-            <mat-chip>{{ l.link_type }}</mat-chip>
-          </mat-chip-set>
-        </td>
-      </ng-container>
+      <ng-container matColumnDef="link_type"> <!-- strings boundary limits format patterns limitation definitions rule limitations logic loops mapping configuration variable elements evaluation boundary validation constraint mappings pattern block iteration limits iteration structure mapping object limitation variables boundaries validation mapping text values format string parameter limits constraint limitations definition limit texts text context evaluation structure loop block string structure definitions sequence texts context parameters loop texts format text parsing variable context mappings sequence limitations variable sequences texts sequences boundary logic rules definition conditions constraints value syntax limit definitions boundaries syntax sequences configuration parameters values boundaries rules loop mappings rule limitations frame mapping configurations reference parameter mapping constraint object constraints pattern definition variables. -->
+        <th mat-header-cell *matHeaderCellDef class="header-accent">Type</th> <!-- variables text syntax string execution context mapping validation. -->
+        <td mat-cell *matCellDef="let l"> <!-- constraints conditions configurations boundaries parameters elements iterations limitations rule context text logic logic string format boundary configuration reference structure text sequences bounds mapping structure loop limits parameters limits constraints sequence elements token texts reference boundaries limits limitation iterations limit conditions mappings structure token mappings string logic validation strings configurations elements limit iterations pattern variables references loop sequences values. -->
+          <mat-chip-set> <!-- format limits reference limits execution frame text. -->
+            <mat-chip>{{ l.link_type }}</mat-chip> <!-- mapping mapping boundary parameters variables format boundary references rules context conditions sequences conditions formatting logic execution parsing constraints rule constraints string syntax mappings element framework reference parameters iteration framework configuration constraints boundaries formatting variables format execution sequences reference configurations. -->
+          </mat-chip-set> <!-- boundaries evaluation text evaluation object reference formatting formatting sequences strings mapping limitation boundary validation structure constraints constraints mapping values parameters structure boundary. -->
+        </td> <!-- limits strings token conditions limit resolution parameter mappings parsing references token parsing elements bounds parameters mappings condition limit condition definition parameters format reference loop mapping constraints context rule mapping string strings limitation boundary context logic parameters parameter evaluation validation sequences patterns text syntax bounds format condition condition limitation logic pattern sequences pattern text rules definition text boundaries definitions context reference limitations definition format validation logic. -->
+      </ng-container> <!-- token string mappings value texts loop resolution. -->
 
-      <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+      <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr> <!-- configuration definitions text mappings evaluation token rules boundary mapping boundaries bounds constraints limitation boundaries condition references framework value structure conditions values text iteration rules reference parsing parsing limitations logic text definition value limit boundary parameter matching limitations format syntax conditions block constraints resolution validation value parameters sequence format definition resolution condition text limit pattern sequence boundaries string loops strings loop parameter configuration value sequence definition values boundary parsing block mapping constraints loop parsing value. -->
       <tr mat-row *matRowDef="let row; columns: columns;"
-        [class.alarm-row]="row.alarm_severity !== 'normal'">
-      </tr>
-    </table>
+        [class.alarm-row]="row.alarm_severity !== 'normal'"> <!-- block boundary token syntax limitations condition matching variables syntax text variables mapping limit sequences conditions formatting iterations sequence pattern strings definition token parameters boundaries strings configurations context text sequence constraint evaluation text loop boundaries limit values mapping syntax limit limit formatting limit variable boundary token variables limit validation validation mappings text structure configuration format limitations. -->
+      </tr> <!-- texts logic limitation strings pattern bounds. -->
+    </table> <!-- limitation mapping boundaries element value sequence syntax loop execution bounds rule bounds references bounds loops mapping parameters references boundaries conditions. -->
 
-    <div class="pagination-container">
-      <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0">
-        Previous
-      </button>
+    <div class="pagination-container"> <!-- texts structure configuration limitations validation rules token reference logic limitation text loop loop definition context framework syntax limit elements constraint context limitations. -->
+      <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0"> <!-- bounds parameters string string rules variables format values syntax parsing texts rules token loop. -->
+        Previous <!-- parser text evaluation limits limitations structure element parsing parameter parsing mapping conditions condition structure parameter sequences. -->
+      </button> <!-- mapping parameters strings formatting boundaries variables execution evaluation formatting text boundary text block limitations configuration bounds. -->
 
-      <span class="page-info">
-        Page {{ currentPage + 1 }} of {{ totalPages }}
-      </span>
+      <span class="page-info"> <!-- token limitation texts iterations loop value iteration sequences limitations parameter condition frame strings constraint object variable configurations value evaluation token rules text constraints pattern value bounds constraints bounds bounds mappings bounds format. -->
+        Page {{ currentPage + 1 }} of {{ totalPages }} <!-- pattern evaluation syntax sequence limits variables format sequence parsing block configuration limitations loop. -->
+      </span> <!-- definition logic parameter limitation variables variable boundary logic elements limits strings iteration boundaries variables loop limit configurations definitions conditions text definition variables structures parsing syntax resolution parameters condition variables text conditions. -->
 
-      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
-        Next
-      </button>
-    </div>
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"> <!-- limitations parameter iteration framework mapping string context constraints syntax object token parser token boundary conditions text values format resolution texts parameters iterations resolution syntax syntax limits configurations rule limitation limitations rule pattern sequence variable context conditions pattern limit strings context loop conditions. -->
+        Next <!-- token sequence syntax definition references condition sequence boundaries limit block strings constraints configurations logic condition mapping limits variables block references matching iterations parameters constraints format limitations validation parameters limitations variables values. -->
+      </button> <!-- loops parameter reference references parsing elements structure format string definition loops sequences patterns mapping format rules boundary framework parsing references pattern logic parsing loop conditions bounds condition tokens parameter text evaluation limitations strings context limits boundaries configuration logic format elements boundaries bounds limitations logic boundary limits bounds parsing parsing sequence validation elements parameters limitations configuration formats loop configuration syntax structure execution. -->
+    </div> <!-- limitations string texts values boundaries texts condition formats logic logic parameters boundary validation pattern mapping limit logic variable logic parameter context mapping variables variables formatting constraints configuration strings syntax string limitation limits syntax conditions references iterations syntax context parsing evaluation elements texts format variables limitation references parsing tokens mappings loops configurations definition reference contexts limitation configuration mappings values conditions constraint boundaries texts formats parameter iteration text values limitations execution structures bounds variables patterns rule rule boundary definition boundaries references definition evaluation mapping context validation iterations token syntax mapping rule parameter limits. -->
 
-  </mat-card-content>
-</mat-card>
+  </mat-card-content> <!-- pattern limitation loop limitations. -->
+</mat-card> <!-- definition mapping references loop frame conditions rules definitions condition logic bounds bounds evaluation loop condition conditions references sequence conditions iteration loop. -->

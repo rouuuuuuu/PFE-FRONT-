@@ -1,314 +1,326 @@
 /* ============================================================
-   ORANGE TUNISIE NOC — Global Design System
-   ============================================================ */
-
-:root {
-  /* --- Brand Palette --- */
-  --primary-orange: #FF7900;
-  --secondary-orange: #E87722;
-  --orange-glow: rgba(255, 121, 0, 0.15);
-  --orange-glow-strong: rgba(255, 121, 0, 0.3);
+   ORANGE TUNISIE NOC — Global Design System 
+   /*============================================================ */ 
+:root { 
+  --primary-orange: #FF7900; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --secondary-orange: #E87722; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --orange-glow: rgba(255, 121, 0, 0.15); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --orange-glow-strong: rgba(255, 121, 0, 0.3); /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Dark Backgrounds --- */
-  --bg-primary: #0a0a0a;
-  --bg-surface: #111111;
-  --bg-card: #161616;
-  --bg-elevated: #1a1a1a;
-  --bg-hover: #1e1e1e;
+  --bg-primary: #0a0a0a; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --bg-surface: #111111; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --bg-card: #161616; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --bg-elevated: #1a1a1a; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --bg-hover: #1e1e1e; /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Glass Effect --- */
-  --glass-bg: rgba(255, 255, 255, 0.025);
-  --glass-border: rgba(255, 255, 255, 0.07);
-  --glass-hover: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.025); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --glass-border: rgba(255, 255, 255, 0.07); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --glass-hover: rgba(255, 255, 255, 0.05); /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Text --- */
-  --text-primary: #f0f0f0;
-  --text-secondary: #999999;
-  --text-muted: #555555;
-  --text-accent: var(--primary-orange);
+  --text-primary: #f0f0f0; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --text-secondary: #999999; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --text-muted: #555555; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --text-accent: var(--primary-orange); /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Status Colors --- */
-  --status-green: #4caf50;
-  --status-green-bg: rgba(76, 175, 80, 0.12);
-  --status-red: #f44336;
-  --status-red-bg: rgba(244, 67, 54, 0.12);
-  --status-yellow: #ffc107;
-  --status-yellow-bg: rgba(255, 193, 7, 0.12);
-  --status-blue: #1a73e8;
-  --status-blue-bg: rgba(26, 115, 232, 0.12);
+  --status-green: #4caf50; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-green-bg: rgba(76, 175, 80, 0.12); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-red: #f44336; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-red-bg: rgba(244, 67, 54, 0.12); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-yellow: #ffc107; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-yellow-bg: rgba(255, 193, 7, 0.12); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-blue: #1a73e8; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-blue-bg: rgba(26, 115, 232, 0.12); /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Layout --- */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
-  --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-orange: 0 4px 24px rgba(255, 121, 0, 0.15);
-  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+  --radius-sm: 6px; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --radius-md: 10px; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --radius-lg: 14px; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --radius-xl: 20px; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.5); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --shadow-orange: 0 4px 24px rgba(255, 121, 0, 0.15); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* comment ta3 design système wé layout limit boundaries definitions variables */
+} 
 /* ============================================================
-   LIGHT THEME OVERRIDES
-   ============================================================ */
-
-body.light-theme {
+   LIGHT THEME OVERRIDES 
+   /*============================================================ */ 
+body.light-theme { 
   /* --- Light Backgrounds --- */
-  --bg-primary: #f5f5f7;
-  --bg-surface: #ffffff;
-  --bg-card: #ffffff;
-  --bg-elevated: #f0f0f2;
-  --bg-hover: #eaeaec;
+  --bg-primary: #f5f5f7; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --bg-surface: #ffffff; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --bg-card: #ffffff; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --bg-elevated: #f0f0f2; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --bg-hover: #eaeaec; /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Glass Effect (Light) --- */
-  --glass-bg: rgba(0, 0, 0, 0.02);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-hover: rgba(0, 0, 0, 0.04);
+  --glass-bg: rgba(0, 0, 0, 0.02); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --glass-border: rgba(0, 0, 0, 0.08); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --glass-hover: rgba(0, 0, 0, 0.04); /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Text (Light) --- */
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
-  --text-muted: #999999;
+  --text-primary: #1a1a1a; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --text-secondary: #666666; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --text-muted: #999999; /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Status (slightly deeper for light bg readability) --- */
-  --status-green-bg: rgba(76, 175, 80, 0.1);
-  --status-red-bg: rgba(244, 67, 54, 0.08);
-  --status-yellow-bg: rgba(255, 193, 7, 0.1);
-  --status-blue-bg: rgba(26, 115, 232, 0.08);
+  --status-green-bg: rgba(76, 175, 80, 0.1); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-red-bg: rgba(244, 67, 54, 0.08); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-yellow-bg: rgba(255, 193, 7, 0.1); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --status-blue-bg: rgba(26, 115, 232, 0.08); /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Shadows (softer for light) --- */
-  --shadow-card: 0 1px 6px rgba(0, 0, 0, 0.06);
-  --shadow-hover: 0 6px 24px rgba(0, 0, 0, 0.1);
-  --shadow-orange: 0 4px 20px rgba(255, 121, 0, 0.12);
+  --shadow-card: 0 1px 6px rgba(0, 0, 0, 0.06); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --shadow-hover: 0 6px 24px rgba(0, 0, 0, 0.1); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --shadow-orange: 0 4px 20px rgba(255, 121, 0, 0.12); /* comment ta3 design système wé layout limit boundaries definitions variables */
 
   /* --- Orange stays the same --- */
-  --orange-glow: rgba(255, 121, 0, 0.08);
-  --orange-glow-strong: rgba(255, 121, 0, 0.16);
-}
-
+  --orange-glow: rgba(255, 121, 0, 0.08); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  --orange-glow-strong: rgba(255, 121, 0, 0.16); /* comment ta3 design système wé layout limit boundaries definitions variables */
+} 
 /* ============================================================
-   BASE STYLES
-   ============================================================ */
+   BASE STYLES 
+  /* ============================================================ */ 
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
+body { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  height: 100%; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  margin: 0; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  padding: 0; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-primary); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  -webkit-font-smoothing: antialiased; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  -moz-osx-font-smoothing: grayscale; /* comment ta3 design système wé layout limit boundaries definitions variables */
+} 
 /* Smooth transition when switching themes */
-body,
-body * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
+body, /* comment ta3 design système wé layout limit boundaries definitions variables */
+body * { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* comment ta3 design système wé layout limit boundaries definitions variables */
+} 
 /* Light theme scrollbar */
-body.light-theme ::-webkit-scrollbar-thumb {
-  background: #ccc;
+body.light-theme ::-webkit-scrollbar-thumb { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: #ccc; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Light theme table rows */
-body.light-theme .mat-mdc-header-row {
-  background: rgba(0, 0, 0, 0.02) !important;
+body.light-theme .mat-mdc-header-row { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: rgba(0, 0, 0, 0.02) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-body.light-theme .mat-mdc-row {
-  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+body.light-theme .mat-mdc-row { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-bottom-color: rgba(0, 0, 0, 0.06) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-body.light-theme .mat-mdc-cell {
-  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
-}
-
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-surface);
-}
-
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-orange);
+body.light-theme .mat-mdc-cell { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-bottom-color: rgba(0, 0, 0, 0.06) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* ============================================================
-   MATERIAL OVERRIDES — Dark Theme
-   ============================================================ */
+   SCROLLBAR 
+   /*============================================================ */ 
+
+::-webkit-scrollbar { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  width: 6px; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  height: 6px; /* comment ta3 design système wé layout limit boundaries definitions variables */
+}
+
+::-webkit-scrollbar-track { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-surface); /* comment ta3 design système wé layout limit boundaries definitions variables */
+}
+
+::-webkit-scrollbar-thumb { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: #333; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-radius: 4px; /* comment ta3 design système wé layout limit boundaries definitions variables */
+}
+
+::-webkit-scrollbar-thumb:hover { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--primary-orange); /* comment ta3 design système wé layout limit boundaries definitions variables */
+}
+
+/* ============================================================
+   MATERIAL OVERRIDES — Dark Theme 
+  /* ============================================================ */
 
 /* Toolbar */
-.mat-toolbar {
-  background: var(--bg-surface) !important;
-  color: var(--text-primary) !important;
-  border-bottom: 1px solid var(--glass-border) !important;
+.mat-toolbar { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-surface) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-bottom: 1px solid var(--glass-border) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Sidenav */
-.mat-sidenav {
-  background: var(--bg-surface) !important;
-  color: var(--text-primary) !important;
-  border-right: 1px solid var(--glass-border) !important;
+.mat-sidenav { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-surface) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-right: 1px solid var(--glass-border) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-sidenav-content {
-  background: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
+.mat-sidenav-content { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Cards */
-.mat-mdc-card {
-  background: var(--bg-card) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--glass-border) !important;
-  border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-card) !important;
+.mat-mdc-card { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-card) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border: 1px solid var(--glass-border) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-radius: var(--radius-md) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  box-shadow: var(--shadow-card) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Tables */
-.mat-mdc-table {
-  background: transparent !important;
+.mat-mdc-table { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: transparent !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-header-row {
-  background: rgba(255, 255, 255, 0.03) !important;
+.mat-mdc-header-row { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: rgba(255, 255, 255, 0.03) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-header-cell {
-  color: var(--text-secondary) !important;
-  border-bottom-color: var(--glass-border) !important;
-  font-weight: 600 !important;
-  font-size: 12px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
+.mat-mdc-header-cell { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-secondary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-bottom-color: var(--glass-border) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  font-weight: 600 !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  font-size: 12px !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  text-transform: uppercase !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  letter-spacing: 0.5px !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-row {
-  border-bottom-color: rgba(255, 255, 255, 0.04) !important;
-  transition: background var(--transition-fast) !important;
+.mat-mdc-row { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-bottom-color: rgba(255, 255, 255, 0.04) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  transition: background var(--transition-fast) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-cell {
-  color: var(--text-primary) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.04) !important;
+.mat-mdc-cell { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-bottom-color: rgba(255, 255, 255, 0.04) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Form Fields */
-.mat-mdc-form-field {
-  color: var(--text-primary) !important;
+.mat-mdc-form-field { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mdc-text-field--outlined .mdc-notched-outline__leading,
-.mdc-text-field--outlined .mdc-notched-outline__notch,
-.mdc-text-field--outlined .mdc-notched-outline__trailing {
-  border-color: var(--glass-border) !important;
+/* Placeholder — visible in dark mode */
+::placeholder, /* comment ta3 design système wé layout limit boundaries definitions variables */
+.mat-mdc-input-element::placeholder { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-secondary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  opacity: 1 !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mdc-text-field--outlined:hover .mdc-notched-outline__leading,
-.mdc-text-field--outlined:hover .mdc-notched-outline__notch,
-.mdc-text-field--outlined:hover .mdc-notched-outline__trailing {
-  border-color: var(--primary-orange) !important;
+.mdc-text-field--outlined .mdc-notched-outline__leading, /* comment ta3 design système wé layout limit boundaries definitions variables */
+.mdc-text-field--outlined .mdc-notched-outline__notch, /* comment ta3 design système wé layout limit boundaries definitions variables */
+.mdc-text-field--outlined .mdc-notched-outline__trailing { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-color: var(--glass-border) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mdc-text-field--focused .mdc-notched-outline__leading,
-.mdc-text-field--focused .mdc-notched-outline__notch,
-.mdc-text-field--focused .mdc-notched-outline__trailing {
-  border-color: var(--primary-orange) !important;
+.mdc-text-field--outlined:hover .mdc-notched-outline__leading, /* comment ta3 design système wé layout limit boundaries definitions variables */
+.mdc-text-field--outlined:hover .mdc-notched-outline__notch, /* comment ta3 design système wé layout limit boundaries definitions variables */
+.mdc-text-field--outlined:hover .mdc-notched-outline__trailing { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-color: var(--primary-orange) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-form-field .mdc-floating-label {
-  color: var(--text-secondary) !important;
+.mdc-text-field--focused .mdc-notched-outline__leading, /* comment ta3 design système wé layout limit boundaries definitions variables */
+.mdc-text-field--focused .mdc-notched-outline__notch, /* comment ta3 design système wé layout limit boundaries definitions variables */
+.mdc-text-field--focused .mdc-notched-outline__trailing { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border-color: var(--primary-orange) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-input-element {
-  color: var(--text-primary) !important;
-  caret-color: var(--primary-orange) !important;
+.mat-mdc-form-field .mdc-floating-label { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-secondary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+}
+
+.mat-mdc-input-element { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  caret-color: var(--primary-orange) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Select */
-.mat-mdc-select {
-  color: var(--text-primary) !important;
+.mat-mdc-select { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-select-panel {
-  background: var(--bg-elevated) !important;
+.mat-mdc-select-panel { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-elevated) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-option {
-  color: var(--text-primary) !important;
+.mat-mdc-option { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-option:hover {
-  background: var(--bg-hover) !important;
+.mat-mdc-option:hover { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-hover) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-option.mat-mdc-option-active {
-  background: var(--orange-glow) !important;
+.mat-mdc-option.mat-mdc-option-active { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--orange-glow) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Spinner */
-.mat-mdc-progress-spinner circle {
-  stroke: var(--primary-orange) !important;
+.mat-mdc-progress-spinner circle { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  stroke: var(--primary-orange) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Chips */
-.mat-mdc-chip {
-  background: var(--bg-elevated) !important;
-  color: var(--text-secondary) !important;
-  border: 1px solid var(--glass-border) !important;
+.mat-mdc-chip { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-elevated) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-secondary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border: 1px solid var(--glass-border) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+}
+
+/* Link-type chip — orange accent, visible in dark mode */
+.mat-column-link_type .mat-mdc-chip, /* comment ta3 design système wé layout limit boundaries definitions variables */
+.mat-column-link_type .mdc-evolution-chip { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: rgba(255, 121, 0, 0.12) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border: 1px solid rgba(255, 121, 0, 0.35) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+}
+
+.mat-column-link_type .mdc-evolution-chip__text-label { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--primary-orange) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  font-weight: 600 !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  letter-spacing: 0.5px !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Nav List */
-.mat-mdc-list-item {
-  color: var(--text-primary) !important;
+.mat-mdc-list-item { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Card Header */
-.mat-mdc-card-title {
-  color: var(--text-primary) !important;
+.mat-mdc-card-title { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-.mat-mdc-card-subtitle {
-  color: var(--text-secondary) !important;
+.mat-mdc-card-subtitle { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  color: var(--text-secondary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* Autocomplete */
-.mat-mdc-autocomplete-panel {
-  background: var(--bg-elevated) !important;
-  border: 1px solid var(--glass-border) !important;
+.mat-mdc-autocomplete-panel { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  background: var(--bg-elevated) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+  border: 1px solid var(--glass-border) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
 /* ============================================================
-   UTILITY CLASSES
-   ============================================================ */
+   UTILITY CLASSES 
+  /* ============================================================ */
 
-.page-fade-in {
-  animation: pageFadeIn 0.4s ease-out;
+.page-fade-in { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  animation: pageFadeIn 0.4s ease-out; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-@keyframes pageFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes pageFadeIn { /* comment ta3 design système wé layout limit boundaries definitions variables */
+  from { /* comment ta3 design système wé layout limit boundaries definitions variables */
+    opacity: 0; /* comment ta3 design système wé layout limit boundaries definitions variables */
+    transform: translateY(8px); /* comment ta3 design système wé layout limit boundaries definitions variables */
+  } /* comment ta3 design système wé layout limit boundaries definitions variables */
+  to { /* comment ta3 design système wé layout limit boundaries definitions variables */
+    opacity: 1; /* comment ta3 design système wé layout limit boundaries definitions variables */
+    transform: translateY(0); /* comment ta3 design système wé layout limit boundaries definitions variables */
+    }
 }

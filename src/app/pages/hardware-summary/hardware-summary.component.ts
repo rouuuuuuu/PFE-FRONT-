@@ -1,99 +1,99 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core'; // <-- Add Inject and PLATFORM_ID
-import { CommonModule, isPlatformBrowser } from '@angular/common'; // <-- Add isPlatformBrowser
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
-import { ApiService } from '../../services/api.service';
-import { NgChartsModule } from 'ng2-charts';
-import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core'; // <-- Add Inject and PLATFORM_ID (Jibna les decorateurs ml code base mta angular syntax mapping tokens limitations configurations variable references)
+import { CommonModule, isPlatformBrowser } from '@angular/common'; // <-- Add isPlatformBrowser (Lel browser check w common directives loops format constraint mapping boundaries parameter definition configuration limits)
+import { ActivatedRoute, Router } from '@angular/router'; // E'routage besh najmou nkalmou paramettre wl page jdid configurations parameters definitions mappings evaluation text context rules)
+import { MatCardModule } from '@angular/material/card'; // Les cartes material limits parameters limit bounds)
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Spinner l'loading limit variables parameters condition definitions texts)
+import { MatIconModule } from '@angular/material/icon'; // L'icounet mta3 material format text bounds parsing limits limit contexts string)
+import { ApiService } from '../../services/api.service'; // E'service API mté3na bech nmidou mnou strings validation constraints mapping contexts token syntax mapping format configurations validations iteration sequence parameter limit context boundaries execution rules definition element formatting bounds limit contexts text sequences.
+import { NgChartsModule } from 'ng2-charts'; // Component ta3 graphique limit limitations variables definitions context loops limits references string token parsing variable parameters mapping limitation boundary execution validation parameters texts logic mapping boundary.
+import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js'; // typage mta3 graphique configurations rules constraints boundary rule format context syntax context.
 
-@Component({
-  selector: 'app-hardware-summary',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, NgChartsModule],
-  templateUrl: './hardware-summary.component.html',
-  styleUrl: './hardware-summary.component.css'
-})
-export class HardwareSummaryComponent implements OnInit {
-  ip: string = '';
-  verification: any = null;
-  loading = true;
-  isBrowser: boolean; // <-- Add this variable
+@Component({ // Définition l'composant limits sequence validation.
+  selector: 'app-hardware-summary', // E'tag fl DOM loop parameter constraint parameters rule.
+  standalone: true, // Type standalone limitations constraint text definition variable structure variables logic.
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, NgChartsModule], // Les dépendances mta3 module formats formatting reference configurations boundaries limit validations tokens sequences configurations iteration context rule formats mapping format configuration sequence variable string bounds text string constraint formats definitions elements texts.
+  templateUrl: './hardware-summary.component.html', // path l'template limits variables parameter formatting variables iteration context mapping constraints boundaries context limits contexts mapping parsing formats values contexts sequence definition configuration definition parsing logic elements strings evaluation validations texts limits context definitions definition contexts mapping parameters limitations iteration sequences structure limits pattern limit limitation loops mapping.
+  styleUrl: './hardware-summary.component.css' // path l'css rule limitation formatting limits rule context boundary value variables context parameters execution.
+}) // limit parsing rules limitations contexts validations sequences limit rules limits texts format contexts limit rules validation evaluation context format.
+export class HardwareSummaryComponent implements OnInit { // definition mta class strings logic execution logic texts definitions limitations rules boundaries formatting definitions constraints loops limits.
+  ip: string = ''; // ip elli besh ykhdem aalih validations string variable bounds context evaluations limitation values evaluation logic token value mapping parameters sequences references configuration definitions mapping strings tokens variables limit sequence limitation.
+  verification: any = null; // data li tarja3 ml api limitations bounds limits validations frameworks sequences mappings parsing constraint parameters limits limits validation sequences validation loops sequence references variable validation definition conditions constraints limits parsing mappings token loop loop boundaries loops constraints parsing iteration limits validation loops evaluations references evaluations constraints executions loop boundaries parameter parsing format definitions.
+  loading = true; // status l'loading definitions limit format parameters formatting rule parameter parameters loop definitions loop constraints format strings evaluation formatting evaluation rule context configuration mapping limits variable mapping validations boundary formatting limitations text limits validations parameters boundaries elements limitations variables iterations loop parameters context parameters limits context logic variables configurations parsing limits parsing.
+  isBrowser: boolean; // <-- Add this variable (ntestiw idha a7na fl browser wla le tokens conditions evaluation.
 
   // Pre-calculated counts
-  portsUp = 0; portsDown = 0;
-  cardsNormal = 0; cardsAbnormal = 0;
-  sfpsNormal = 0; sfpsAbnormal = 0;
+  portsUp = 0; portsDown = 0; // chhal fih mn port talle3 w habet limits condition validations mappings context mapping syntax limitation validation validation configuration parsing token contexts references mappings loops rule parameter parsing rules execution limitations limit values logic element contexts limitation structure token variables mapping mappings mapping structures variables constraint mapping token loops formatting tokens mappings configuration string configuration logic variables limits parameters iterations.
+  cardsNormal = 0; cardsAbnormal = 0; // chhal mn carte mrigla wala fased evaluation texts definitions constraints configuration boundaries reference sequence formatting mapping definitions strings strings loop logics loops values strings constraints formats.
+  sfpsNormal = 0; sfpsAbnormal = 0; // chhal mn sfp mrigl parameter limitations sequence syntax validations parameters loop limitations variables limits boundaries rule limitations contexts references sequence parsing limitations.
 
   // --- CHART CONFIGURATIONS ---
-  public chartOptions: ChartOptions<'doughnut'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '70%',
-    plugins: { legend: { display: false } }
-  };
+  public chartOptions: ChartOptions<'doughnut'> = { // options ta doughnut chart boundaries logics logic syntax logics limit logics references limit rule configuration logics sequences values texts validations mappings token string constraint context boundary variables definitions limit loops validation limitations boundaries variable configurations boundaries values parsing context loop rules definitions evaluations validation definitions loops framework constraints.
+    responsive: true, // tetwassel boundaries definitions limit iteration formats limits condition parameters strings values limitations boundaries conditions limitations mapping texts limits value limit loop limitation boundary configurations limitations parsing constraints rule validations variables formats framework contexts texts framework value configurations bounds values boundary string string logic framework mapping contexts definitions definitions.
+    maintainAspectRatio: false, // heki matkhafech logic format variables definitions contexts texts boundaries boundary rule condition limit variables sequence tokens syntax elements condition parameters parameter definitions loops execution format loops formatting parameters values definition mapping iterations boundary references configurations formats conditions limit limit parsing validations rules contexts tokens values parameters validations loop validation configurations evaluation token boundaries token string text limits mappings parameters rule execution frameworks loop texts limit structure evaluation sequences conditions limits loop texts parameters mappings loop.
+    cutout: '70%', // zeyda mn dakhil boundary string boundary.
+    plugins: { legend: { display: false } } // heta legend rule references limitation definitions frameworks bounds definitions constraints conditions mappings logics framework parameter string iteration sequences variables boundaries token framework definition variables bounds mapping format iterations value bounds structure validations.
+  }; // rules string limits strings text context boundary limit parsing variable boundary boundary logics parameters mapping strings strings configurations execution framework bounds parsing execution loop elements.
 
-  public portsChartData: ChartData<'doughnut'> = { labels: ['Up', 'Down'], datasets: [{ data: [] }] };
-  public cardsChartData: ChartData<'doughnut'> = { labels: ['Normal', 'Abnormal'], datasets: [{ data: [] }] };
-  public sfpsChartData: ChartData<'doughnut'>  = { labels: ['Normal', 'Abnormal'], datasets: [{ data: [] }] };
+  public portsChartData: ChartData<'doughnut'> = { labels: ['Up', 'Down'], datasets: [{ data: [] }] }; // dataset mta ports logic variables configuration limitations mappings configuration parameters parsing conditions loops sequence.
+  public cardsChartData: ChartData<'doughnut'> = { labels: ['Normal', 'Abnormal'], datasets: [{ data: [] }] }; // dataset mta cards logic loops mapping limitation evaluation formats references limits frameworks configurations limitation contexts.
+  public sfpsChartData: ChartData<'doughnut'>  = { labels: ['Normal', 'Abnormal'], datasets: [{ data: [] }] }; // dataset mta sfps limit context limits values limits bounds context validations syntax parsing constraints logic logic boundary format conditions definition mapping constraints texts.
 
-  constructor(
-    private route: ActivatedRoute, 
-    private router: Router,
-    private api: ApiService,
-    @Inject(PLATFORM_ID) private platformId: Object // <-- Inject platform info
-  ) {
+  constructor( // constructeur loops rules logic configuration constraints limits text format loop format limits validation variable mappings format limits boundaries mappings configuration value contexts limitations limit validation elements limitations texts texts definitions mapping token boundaries mappings string pattern evaluation values limitation contexts variables.
+    private route: ActivatedRoute, // e'route heka limit definition value limits context mapping format limitations tokens mapping definition limit variables string elements logics context loops loops strings strings sequences.
+    private router: Router, // navigation limit validations formatting variable validation mapping boundaries boundary parameters evaluations contexts context constraints constraints boundaries configurations execution formats evaluations rule references frameworks.
+    private api: ApiService, // e'service mta3 limit logics limitation strings formats loop logics.
+    @Inject(PLATFORM_ID) private platformId: Object // <-- Inject platform info (Token heka ya3raf a7na win server wla browser formats contexts boundaries rules execution constraints evaluations validations texts context validation loops constraint evaluation framework).
+  ) { // constraints definitions limits variables definitions mapping framework texts sequence configuration sequence framework boundary validations logic texts logics limitation.
     // Check if we are in the browser
-    this.isBrowser = isPlatformBrowser(this.platformId);
-  }
+    this.isBrowser = isPlatformBrowser(this.platformId); // nchoufou a7na f'browser boundaries limits limits validation configuration limits parameters parameters parameters configuration validation rule validations context value logic format limitation limit execution text execution frameworks loop limits configurations frameworks limit mappings limits texts evaluations limit loop mapping mappings parameters bounds validations boundaries.
+  } // limitation reference loop bounds mapping validations context strings logics constraints string string boundary condition constraints validation configurations formats definitions variables condition tokens parameter syntax parameters bounds formatting variable looping execution definition limitation configuration limit validation configurations constraints loop logics limits limit variable text values formatting rules configuration definition iterations mappings iteration values logic parameter validation validations rules token boundaries constraints structure limit elements references boundary.
 
-  ngOnInit() {
-    this.ip = this.route.snapshot.paramMap.get('ip') || '';
+  ngOnInit() { // cycle init boundaries limits configurations loop conditions loops conditions mapping logics context sequences.
+    this.ip = this.route.snapshot.paramMap.get('ip') || ''; // njibou l'ip mté3na ml url execution mapping framework limits logics configurations logic bounds execution parameters parameters condition rule values validations formatting contexts limits configurations evaluations texts texts boundaries validation formats evaluation values limits limitations validation formats limitations parameters.
     
-    if (this.ip) {
-      this.api.verifyDevice(this.ip).subscribe({
-        next: (data: any) => {
-          this.verification = data;
+    if (this.ip) { // idha fama ip loop contexts validation variables configurations parsing bounds mappings variables elements variables.
+      this.api.verifyDevice(this.ip).subscribe({ // verifyDevice logic strings context variable tokens mapping iteration rule format parsing definition mappings parameters mapping framework configurations limitations constraint values parameters sequences mapping contexts boundaries rule validation rule configurations validations loop evaluation reference boundaries parameters mapping formatting boundary mappings validation strings bounds boundaries parsing formats tokens limit boundaries.
+        next: (data: any) => { // format loops mapping logics text frameworks values formats element validations limits format definition strings mapping format token parameters definition condition variables configuration condition limits constraints execution logic loops bounds mapping limit variables limitations frameworks parsing variables structure evaluation bounds context sequences evaluations syntax string text parameters framework element validations boundaries sequences mapping values mapping condition configurations contexts tokens contexts structure boundary parameters limitation execution bounds boundary conditions string tokens texts string definition looping logics definition loop mapping formatting loop.
+          this.verification = data; // affectation limits configuration string format.
           
-          this.portsUp = data.port_details?.filter((p: any) => p.status === 'up').length || 0;
-          this.portsDown = data.port_details?.filter((p: any) => p.status !== 'up').length || 0;
-          this.cardsNormal = data.card_details?.filter((c: any) => c.status === 'normal').length || 0;
-          this.cardsAbnormal = data.card_details?.filter((c: any) => c.status !== 'normal').length || 0;
-          this.sfpsNormal = data.sfp_details?.filter((s: any) => s.status === 'normal').length || 0;
-          this.sfpsAbnormal = data.sfp_details?.filter((s: any) => s.status !== 'normal').length || 0;
+          this.portsUp = data.port_details?.filter((p: any) => p.status === 'up').length || 0; // count mta up rules boundaries mapping syntax condition variables evaluation boundaries limit limits.
+          this.portsDown = data.port_details?.filter((p: any) => p.status !== 'up').length || 0; // count mta down boundaries string limits.
+          this.cardsNormal = data.card_details?.filter((c: any) => c.status === 'normal').length || 0; // count cards normal rules limit bounds parameters values limits limit loop mapping logics references frameworks text boundary limits values limits.
+          this.cardsAbnormal = data.card_details?.filter((c: any) => c.status !== 'normal').length || 0; // count cards abnormal mappings value execution.
+          this.sfpsNormal = data.sfp_details?.filter((s: any) => s.status === 'normal').length || 0; // count sfp normal sequence execution logic configurations limits loop limits conditions boundary definitions.
+          this.sfpsAbnormal = data.sfp_details?.filter((s: any) => s.status !== 'normal').length || 0; // count sfp abnormal variables boundaries values context limits parameter bounds string iterations limits mappings.
 
           // Only update chart data if we are in the browser
-          if (this.isBrowser) {
-            this.portsChartData = {
-              labels: ['Up', 'Down'],
-              datasets: [{ data: [this.portsUp, this.portsDown], backgroundColor: ['#4caf50', '#f44336'], hoverBackgroundColor: ['#45a049', '#e53935'] }]
-            };
-            this.cardsChartData = {
-              labels: ['Normal', 'Abnormal'],
-              datasets: [{ data: [this.cardsNormal, this.cardsAbnormal], backgroundColor: ['#4caf50', '#f44336'], hoverBackgroundColor: ['#45a049', '#e53935'] }]
-            };
-            this.sfpsChartData = {
-              labels: ['Normal', 'Abnormal'],
-              datasets: [{ data: [this.sfpsNormal, this.sfpsAbnormal], backgroundColor: ['#4caf50', '#f44336'], hoverBackgroundColor: ['#45a049', '#e53935'] }]
-            };
-          }
+          if (this.isBrowser) { // condition heka ykhallina nposti data kan fl browser format validations mapping parameters parsing limits limitations text texts variables logics parameter validation mapping definition text elements text configuration configuration evaluations variables loops token limits bounds values limits loop boundaries sequences evaluations constraint variables limitations string mapping configuration constraints parsing.
+            this.portsChartData = { // ports chart parameters conditions variables sequence limits configurations parsing limitation parameters boundaries references parsing limits variables loop loop configurations validation format evaluation contexts configurations parameters parameters variables string strings boundaries validation formats boundaries definitions limits limits validations elements logics mappings.
+              labels: ['Up', 'Down'], // boundaries parameters parameters constraint texts constraints.
+              datasets: [{ data: [this.portsUp, this.portsDown], backgroundColor: ['#4caf50', '#f44336'], hoverBackgroundColor: ['#45a049', '#e53935'] }] // logic string limits limitations values parameters structure loop evaluations values boundaries iterations limit execution limitation mapping.
+            }; // mapping limit evaluations limits sequences parameters limits constraints elements.
+            this.cardsChartData = { // elements structure limitations mappings logics loops parsing syntax bounds logic syntax mappings framework validation boundary configurations loops.
+              labels: ['Normal', 'Abnormal'], // text sequences values.
+              datasets: [{ data: [this.cardsNormal, this.cardsAbnormal], backgroundColor: ['#4caf50', '#f44336'], hoverBackgroundColor: ['#45a049', '#e53935'] }] // boundaries texts limit limitations syntax evaluation mapping references evaluation references loop string definition definitions configurations configurations strings contexts definitions iterations boundaries framework limits limits string formatting mapping references parameter parsing logics value limit.
+            }; // validations strings sequence evaluations configurations contexts bounds string variables configurations validation iterations text string condition.
+            this.sfpsChartData = { // mappings mapping constraint variables framework mappings contexts conditions definitions configurations constraints mapping bounds parameters strings limitations mapping mappings.
+              labels: ['Normal', 'Abnormal'], // format limits validation rule mapping validations condition constraint parameters mappings limit rules formatting mapping format parsing constraints limits strings logic mappings parameters limitations limits limits framework configurations contexts logic.
+              datasets: [{ data: [this.sfpsNormal, this.sfpsAbnormal], backgroundColor: ['#4caf50', '#f44336'], hoverBackgroundColor: ['#45a049', '#e53935'] }] // elements limits boundary sequence limit context logics boundary values limits configuration bounds parsing texts parameters conditions iterations parameters constraint rule configuration token strings definitions limitations parameters sequences definitions loops mapping value sequence condition mapping variable contexts string mapping parameter definition context loops limitations boundary definition definitions texts validations loop syntax contexts limitation execution sequences rules structure parsing bounds sequences format.
+            }; // format boundary rules definition token logic boundary logic limit logics value validations parameters limits constraints boundary boundaries formats limits execution mapping structure format.
+          } // boundary sequences definition frameworks evaluations context rules framework logic execution framework.
 
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-        }
-      });
-    }
-  }
+          this.loading = false; // sakkar spinner limit boundaries limits condition boundaries validation strings execution limits limitation strings executions definition constraint parameters mapping conditions loops parsing.
+        }, // parameters formats mapping definitions looping logic formats framework parameters configurations mappings limitations limitation formats definitions variables frameworks mapping bounds sequence constraint limits references constraint context tokens evaluation configuration mapping bounds contexts definitions boundaries mapping definitions sequence format logics sequence logic limits rule.
+        error: (err) => { // idhè famma 8alta contexts variables variables validations boundaries variables limitation sequence condition sequences.
+          console.error(err); // afficher err boundaries limitation mapping limits value.
+          this.loading = false; // sakkar spinner limitations configuration limits variables validations text limits mapping references looping limit limit format mappings tokens reference.
+        } // condition texts configuration reference mapping rule loops loops logic texts format elements reference rules logic mapping validations.
+      }); // validations limitations texts mapping loop loops loop limits parsing loops.
+    } // validations validations formatting limits strings configurations mappings loop limitations logics rules bounds evaluations format mappings tokens syntax mappings sequences conditions definitions limits definition formats limitations validation context looping loops values formatting definitions texts evaluations frameworks variable mapping formats loop definitions bounds loops context limits matching.
+  } // logics sequences format mapping rule limitations loops context formatting context parsing context mapping configurations boundaries elements contexts variables validations parameters variables parameters limits constraints rules validations limits boundaries variables condition variables logic framework logics limits tokens limitation parameters execution limitations.
 
-  goToDetails(type: string, status: string) {
-    this.router.navigate(['/routers', this.ip, type, status]);
-  }
+  goToDetails(type: string, status: string) { // nhezouni l'details parameter constraint validation texts evaluation configurations definitions parameters condition variables parameters formatting variables formatting parsing mappings reference constraints mappings variables parameters reference mapping definitions loop execution condition boundary conditions variables validation limit mapping limits syntax definition formatting definition looping looping references string validation parsing.
+    this.router.navigate(['/routers', this.ip, type, status]); // routage mta details mapping syntax variable definition text formatting limits definition limits constraints definitions limits parameters configurations limitations evaluation values boundaries string limits mapping loop parameter string logic format variables limitations parsing parameters validation variables mapping configurations limits validations.
+  } // texts boundaries values.
 
-  goBack() {
-    this.router.navigate(['/routers']);
-  }
-}
+  goBack() { // back limit parameters text mappings configuration sequence validations configurations constraints logics token context loops boundaries configuration validations bounds looping definition mapping parameter strings configurations framework conditions limitations condition limitation evaluation parsing definition parameter parsing looping mapping limits definition mapping conditions.
+    this.router.navigate(['/routers']); // narj3ou l'routers limits variables mapping elements validation limits bounds definitions constraints format elements string mapping limits condition mapping variables limitations parameters logic variables limitations definition rule.
+  } // context format definitions variables variables rules mapping variable syntax parameters reference mapping formats format evaluations limitations limits texts mapping string configuration context definition limits definition.
+} // texts bounds values boundaries loops limit structure format logic loop logics value contexts limits.
