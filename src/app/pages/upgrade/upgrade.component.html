@@ -1,0 +1,512 @@
+<!-- src/app/pages/upgrade/upgrade.component.html -->
+<div class="upgrade-page">
+
+  <!-- Page Header -->
+  <div class="back-container">
+    <h2 class="page-title">Bandwidth Upgrade / Downgrade</h2>
+    <p class="page-subtitle">Modify bandwidth on B2B links</p>
+  </div>
+
+  <div class="header-actions" *ngIf="step !== 'device'">
+    <button class="back-btn" (click)="resetForm()">
+      <mat-icon class="back-icon">refresh</mat-icon> Reset Wizard
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       WIZARD CARD
+       ══════════════════════════════════════════════════════════ -->
+  <mat-card class="form-card">
+    <mat-card-content class="form-content">
+
+      <!-- Progress Stepper -->
+      <div class="wizard-stepper">
+
+        <div class="step-item"
+             [class.active]="step === 'device'"
+             [class.completed]="selectedRouter !== null">
+          <div class="step-circle">
+            <mat-icon *ngIf="!selectedRouter">router</mat-icon>
+            <mat-icon *ngIf="selectedRouter">check</mat-icon>
+          </div>
+          <span class="step-label">Router</span>
+        </div>
+
+        <div class="step-connector" [class.completed]="selectedRouter !== null"></div>
+
+        <div class="step-item"
+             [class.active]="step === 'interface'"
+             [class.completed]="selectedInterface !== null">
+          <div class="step-circle">
+            <mat-icon *ngIf="!selectedInterface">cable</mat-icon>
+            <mat-icon *ngIf="selectedInterface">check</mat-icon>
+          </div>
+          <span class="step-label">Interface</span>
+        </div>
+
+        <div class="step-connector" [class.completed]="selectedInterface !== null"></div>
+
+        <div class="step-item" [class.active]="step === 'configure'">
+          <div class="step-circle">
+            <mat-icon>speed</mat-icon>
+          </div>
+          <span class="step-label">Bandwidth</span>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════════════
+           STEP 1 — Select Router
+           ═══════════════════════════════════ -->
+      <div class="wizard-step" *ngIf="step === 'device'">
+
+        <div class="step-header">
+          <h2>
+            <mat-icon>router</mat-icon>
+            Select Router
+          </h2>
+        </div>
+
+        <!-- Search / Autocomplete -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+            <mat-label>Device Name (Start typing to search...)</mat-label>
+            <input
+              type="text"
+              matInput
+              placeholder="ex: ARI_0008_PE or 10.51.2.14"
+              [(ngModel)]="searchQuery"
+              (ngModelChange)="filterRouters($event)"
+              [matAutocomplete]="routerAuto"
+            />
+            <mat-icon matPrefix>search</mat-icon>
+            <mat-autocomplete #routerAuto="matAutocomplete" (optionSelected)="onRouterAutoSelected($event)">
+              <mat-option *ngFor="let router of filteredRoutersList" [value]="router.ne_name">
+                <span class="autocomplete-name">{{ router.ne_name }}</span>
+                <span class="autocomplete-ip">({{ router.ip_address }})</span>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-container" *ngIf="loadingRouters">
+          <mat-spinner diameter="40" class="loading-spinner"></mat-spinner>
+          <p>Loading routers...</p>
+        </div>
+
+        <!-- Router Grid (paginated) -->
+        <div class="device-grid" *ngIf="!loadingRouters">
+          <div
+            class="device-card"
+            *ngFor="let router of paginatedRouters"
+            (click)="selectRouter(router)"
+          >
+            <div class="device-icon">
+              <mat-icon>{{ getVendorIcon(router.vendor) }}</mat-icon>
+            </div>
+            <div class="device-info">
+              <h3>{{ router.ne_name }}</h3>
+              <p class="device-ip">
+                <mat-icon class="small-icon">lan</mat-icon>
+                {{ router.ip_address }}
+              </p>
+              <p class="device-vendor">
+                <mat-icon class="small-icon">business</mat-icon>
+                {{ router.vendor || 'N/A' }}
+              </p>
+            </div>
+            <mat-icon class="arrow-icon">arrow_forward_ios</mat-icon>
+          </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination" *ngIf="!loadingRouters && filteredRoutersList.length > routerPageSize">
+          <button class="page-btn" (click)="prevRouterPage()" [disabled]="routerPage === 1">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <span class="page-info">
+            Page {{ routerPage }} of {{ totalRouterPages }}
+            <span class="page-count">({{ filteredRoutersList.length }} routers)</span>
+          </span>
+          <button class="page-btn" (click)="nextRouterPage()" [disabled]="routerPage >= totalRouterPages">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <div class="empty-state" *ngIf="!loadingRouters && filteredRoutersList.length === 0">
+          <mat-icon>search_off</mat-icon>
+          <p>No routers found</p>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════════════
+           STEP 2 — Select Interface
+           ═══════════════════════════════════ -->
+      <div class="wizard-step" *ngIf="step === 'interface'">
+
+        <div class="step-header">
+          <button class="back-btn" (click)="goBack()">
+            <mat-icon class="back-icon">arrow_back</mat-icon> Back
+          </button>
+          <h2>
+            <mat-icon>cable</mat-icon>
+            Select Interface
+          </h2>
+        </div>
+
+        <!-- Selected router summary -->
+        <div class="selection-summary">
+          <mat-icon>router</mat-icon>
+          <div class="summary-rows">
+            <div class="summary-row">
+              <strong>{{ selectedRouter?.ne_name }}</strong>
+              <span class="ip-badge">{{ selectedRouter?.ip_address }}</span>
+            </div>
+            <div class="summary-row" *ngIf="selectedRouter?.vendor">
+              <mat-icon>business</mat-icon>
+              <span>{{ selectedRouter?.vendor }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-container" *ngIf="loadingInterfaces">
+          <mat-spinner diameter="40" class="loading-spinner"></mat-spinner>
+          <p>Fetching interfaces...</p>
+        </div>
+
+        <!-- Interface List -->
+        <div class="interface-list" *ngIf="!loadingInterfaces">
+          <div
+            class="interface-card"
+            *ngFor="let iface of interfaces"
+            [class.unavailable]="!iface.is_available"
+            (click)="selectInterface(iface)"
+          >
+            <div class="interface-icon">
+              <mat-icon *ngIf="iface.is_available">check_circle</mat-icon>
+              <mat-icon *ngIf="!iface.is_available" class="error-icon">cancel</mat-icon>
+            </div>
+            <div class="interface-info">
+              <h4>{{ iface.interface }}</h4>
+              <p class="interface-desc">
+                <mat-icon class="small-icon">description</mat-icon>
+                {{ iface.description || 'No description' }}
+              </p>
+            </div>
+            <div class="interface-status" [class.up]="iface.is_available" [class.down]="!iface.is_available">
+              <mat-icon>{{ iface.is_available ? 'cloud_done' : 'cloud_off' }}</mat-icon>
+              <span>{{ iface.status }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="!loadingInterfaces && interfaces.length === 0">
+          <mat-icon>error_outline</mat-icon>
+          <p>No interfaces available</p>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════════════════════════
+           STEP 3 — Configure Bandwidth
+           ═══════════════════════════════════ -->
+      <div class="wizard-step" *ngIf="step === 'configure'">
+
+        <div class="step-header">
+          <button class="back-btn" (click)="goBack()">
+            <mat-icon class="back-icon">arrow_back</mat-icon> Back
+          </button>
+          <h2>
+            <mat-icon>speed</mat-icon>
+            Configure Bandwidth
+          </h2>
+        </div>
+
+        <!-- Selection summary -->
+        <div class="selection-summary">
+          <mat-icon>receipt_long</mat-icon>
+          <div class="summary-rows">
+            <div class="summary-row">
+              <mat-icon>router</mat-icon>
+              <strong>{{ selectedRouter?.ne_name }}</strong>
+              <span class="ip-badge">{{ selectedRouter?.ip_address }}</span>
+            </div>
+            <div class="summary-row">
+              <mat-icon>cable</mat-icon>
+              <strong>Interface:</strong>&nbsp;{{ selectedInterface?.interface }}
+            </div>
+            <div class="summary-row" *ngIf="selectedInterface?.description">
+              <mat-icon>description</mat-icon>
+              <span>{{ selectedInterface?.description }}</span>
+            </div>
+          </div>
+        </div>
+
+        <form (ngSubmit)="submitUpgrade()">
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+              <mat-label>Customer Name</mat-label>
+              <input matInput type="text" [(ngModel)]="customerName" name="customerName"
+                     placeholder="e.g. STEG, SONEDE..." required />
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+              <mat-label>Old Bandwidth (Mbps)</mat-label>
+              <input matInput type="number" [(ngModel)]="oldBandwidth" name="oldBandwidth"
+                     placeholder="e.g. 50" min="1" />
+              <mat-icon matPrefix>insights</mat-icon>
+              <mat-hint>Optional — for statistics</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+              <mat-label>New Bandwidth (Mbps)</mat-label>
+              <input matInput type="number" [(ngModel)]="newBandwidth" name="newBandwidth"
+                     placeholder="e.g. 100" min="1" required />
+              <mat-icon matPrefix>speed</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <!-- Bandwidth Change Preview -->
+          <div class="bandwidth-preview" *ngIf="oldBandwidth && newBandwidth">
+            <div class="preview-content">
+              <div class="bandwidth-value">{{ oldBandwidth }} Mbps</div>
+              <mat-icon class="arrow-icon"
+                [class.upgrade]="newBandwidth > oldBandwidth"
+                [class.downgrade]="newBandwidth < oldBandwidth">
+                {{ newBandwidth > oldBandwidth ? 'trending_up' : 'trending_down' }}
+              </mat-icon>
+              <div class="bandwidth-value new">{{ newBandwidth }} Mbps</div>
+            </div>
+            <div class="preview-label"
+                 [class.upgrade]="newBandwidth > oldBandwidth"
+                 [class.downgrade]="newBandwidth < oldBandwidth">
+              {{ newBandwidth > oldBandwidth ? '▲ Upgrade' : '▼ Downgrade' }}
+              <span class="percentage">({{ ((newBandwidth - oldBandwidth!) / oldBandwidth! * 100).toFixed(1) }}%)</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="run-btn" [disabled]="submitting || !customerName || !newBandwidth">
+              <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon>
+              <span *ngIf="!submitting">Execute Upgrade</span>
+              <span *ngIf="submitting">Processing...</span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <!-- ══════════════════════════════════════════════════════════
+       HISTORY CARD
+       ══════════════════════════════════════════════════════════ -->
+  <mat-card class="history-card">
+
+    <div class="section-header">
+      <h3 class="history-title">Operations History</h3>
+      <div class="controls">
+
+        <mat-form-field appearance="outline" class="search-field" floatLabel="always">
+          <mat-label>Search</mat-label>
+          <input matInput
+                 type="text"
+                 placeholder="Router, customer..."
+                 [(ngModel)]="searchHistoryQuery" />
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <select [(ngModel)]="filterStatus" (change)="onFilterChange()" class="glass-select">
+          <option value="all">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="in_progress">In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="failed">Failed</option>
+        </select>
+
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="filteredUpgrades" class="full-width-table">
+
+        <ng-container matColumnDef="upgrade_id">
+          <th mat-header-cell *matHeaderCellDef class="header-accent"> ID </th>
+          <td mat-cell *matCellDef="let u">
+            <span class="id-badge">{{ u.upgrade_id }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="device_name">
+          <th mat-header-cell *matHeaderCellDef class="header-accent"> Router </th>
+          <td mat-cell *matCellDef="let u">
+            <div class="device-cell">
+              <mat-icon class="small-icon">{{ getVendorIcon(u.vendor) }}</mat-icon>
+              <div>
+                <div class="device-name td-bold">{{ u.device_name }}</div>
+                <div class="device-ip-small td-secondary">{{ u.device_ip }}</div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="interface">
+          <th mat-header-cell *matHeaderCellDef class="header-accent"> Interface </th>
+          <td mat-cell *matCellDef="let u">
+            <span class="interface-badge">{{ u.interface }}</span>
+            <span class="vlan-badge" *ngIf="u.vlan">VLAN {{ u.vlan }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="customer_name">
+          <th mat-header-cell *matHeaderCellDef class="header-accent"> Customer </th>
+          <td mat-cell *matCellDef="let u">{{ u.customer_name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="bandwidth">
+          <th mat-header-cell *matHeaderCellDef class="header-accent"> Bandwidth </th>
+          <td mat-cell *matCellDef="let u">
+            <div class="bandwidth-cell">
+              <span *ngIf="u.old_bandwidth_mbps" class="old-bw">{{ u.old_bandwidth_mbps }}</span>
+              <mat-icon *ngIf="u.old_bandwidth_mbps" class="bw-arrow {{ getBandwidthChangeClass(u) }}">
+                {{ getBandwidthChangeIcon(u) }}
+              </mat-icon>
+              <span class="new-bw">{{ u.new_bandwidth_mbps }} Mbps</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="is_upgrade">
+          <th mat-header-cell *matHeaderCellDef class="header-accent"> Type </th>
+          <td mat-cell *matCellDef="let u">
+            <span class="type-badge {{ getBandwidthChangeClass(u) }}" *ngIf="u.is_upgrade !== null">
+              <mat-icon class="badge-icon">{{ getBandwidthChangeIcon(u) }}</mat-icon>
+              {{ u.is_upgrade ? 'Upgrade' : 'Downgrade' }}
+            </span>
+            <span class="type-badge neutral" *ngIf="u.is_upgrade === null">N/A</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="header-accent th-center"> Status </th>
+          <td mat-cell *matCellDef="let u" class="td-center">
+            <span class="status-badge {{ getStatusClass(u.status) }}">
+              <mat-icon class="badge-icon">{{ getStatusIcon(u.status) }}</mat-icon>
+              {{ getStatusLabel(u.status) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="created_at">
+          <th mat-header-cell *matHeaderCellDef class="header-accent"> Date </th>
+          <td mat-cell *matCellDef="let u">
+            <div class="date-cell">
+              {{ u.created_at | date:'dd/MM/yyyy' }}
+              <small>{{ u.created_at | date:'HH:mm' }}</small>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="header-accent"> Actions </th>
+          <td mat-cell *matCellDef="let u">
+            <div class="action-buttons">
+              <button class="btn-icon-action" (click)="viewDetails(u)" title="View details">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                *ngIf="u.status === 'failed'"
+                class="btn-icon-action retry"
+                (click)="retryUpgrade(u.upgrade_id)"
+                title="Retry">
+                <mat-icon>refresh</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;" class="table-row-hover"></tr>
+
+      </table>
+
+      <div class="empty-state" *ngIf="filteredUpgrades.length === 0">
+        <mat-icon>inbox</mat-icon>
+        <p>No upgrade/downgrade operations found</p>
+      </div>
+    </div>
+
+  </mat-card>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     DETAIL MODAL
+     ══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showDetailModal" (click)="closeDetailModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>
+        <mat-icon>info</mat-icon>
+        Upgrade Details #{{ selectedUpgradeDetail?.upgrade_id }}
+      </h3>
+      <button class="btn-close" (click)="closeDetailModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="selectedUpgradeDetail">
+
+      <div class="detail-section">
+        <h4><mat-icon>settings</mat-icon> General Information</h4>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Router</span>
+            <span>{{ selectedUpgradeDetail.device_name }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">IP Address</span>
+            <span>{{ selectedUpgradeDetail.device_ip }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Interface</span>
+            <span>{{ selectedUpgradeDetail.interface }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Customer</span>
+            <span>{{ selectedUpgradeDetail.customer_name }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Created By</span>
+            <span>{{ selectedUpgradeDetail.created_by }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Date</span>
+            <span>{{ selectedUpgradeDetail.created_at | date:'medium' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="selectedUpgradeDetail.generated_commands">
+        <h4><mat-icon>terminal</mat-icon> Generated Commands</h4>
+        <pre class="code-block">{{ selectedUpgradeDetail.generated_commands }}</pre>
+      </div>
+
+      <div class="detail-section" *ngIf="selectedUpgradeDetail.execution_output">
+        <h4><mat-icon>output</mat-icon> Execution Output</h4>
+        <pre class="code-block">{{ selectedUpgradeDetail.execution_output }}</pre>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -6,88 +6,109 @@
     <span class="brand-sub">NOC</span> <!-- Ekin kima sous-titre (Subtitle for the platform). -->
   </div> <!-- Wfet l'bloc mta3 l'logo (End of brand section). -->
 
-  <div class="toolbar-spacer"></div> <!-- Spacer yidiz les éléments lo5rin 3al isar (Pushes the next items to the right side). -->
+  <div class="toolbar-spacer"></div>
+  <!-- Spacer yidiz les éléments lo5rin 3al isar (Pushes the next items to the right side). -->
 
   <!-- Bouton bech nbadlou el thème (Theme toggle switch button). -->
-  <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"> <!-- Bounta cliquable w traja3 el fonction toggleTheme (Clickable wrapper for the theme switch). -->
-    <div class="toggle-track" [class.toggle-track-light]="!isDarkMode"> <!-- El fond mta3 l'boutton, ytbeddel hasb e'thème (Background track of the toggle). -->
-      <div class="toggle-thumb" [class.toggle-thumb-light]="!isDarkMode"> <!-- El rondilla eli timchi w tji (The circular thumb that slides). -->
-        <mat-icon class="toggle-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon> <!-- L'icone tbeddel bin wjh l9amar wel chams (Icon switching moon/sun). -->
+  <button class="theme-toggle" (click)="toggleTheme()"
+    [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+    <!-- Bounta cliquable w traja3 el fonction toggleTheme (Clickable wrapper for the theme switch). -->
+    <div class="toggle-track" [class.toggle-track-light]="!isDarkMode">
+      <!-- El fond mta3 l'boutton, ytbeddel hasb e'thème (Background track of the toggle). -->
+      <div class="toggle-thumb" [class.toggle-thumb-light]="!isDarkMode">
+        <!-- El rondilla eli timchi w tji (The circular thumb that slides). -->
+        <mat-icon class="toggle-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
+        <!-- L'icone tbeddel bin wjh l9amar wel chams (Icon switching moon/sun). -->
       </div> <!-- Wfet el rondilla (End thumb div). -->
     </div> <!-- Wfet e'track (End track div). -->
   </button> <!-- Wfet l'boutton mta3 el thème (End theme toggle button). -->
 </mat-toolbar> <!-- Wfet el toolbar l'fou9ani (End of top toolbar). -->
 
 <!-- Container principal lli ylammid e'Sidenav wel conteneur central (Main layout holding side menu and content). -->
-<mat-sidenav-container class="app-container"> <!-- Composant Material bech y7alli layout mta3 menu (Wrapper for sidenav). -->
-  <mat-sidenav mode="side" opened class="app-sidenav"> <!-- Le menu latéral li dima ma7loul f jnab (Persistent sidebar on the left). -->
+<mat-sidenav-container class="app-container">
+  <!-- Composant Material bech y7alli layout mta3 menu (Wrapper for sidenav). -->
+  <mat-sidenav mode="side" opened class="app-sidenav">
+    <!-- Le menu latéral li dima ma7loul f jnab (Persistent sidebar on the left). -->
     <nav class="sidenav-nav"> <!-- Balise de navigation sémantique (Semantic navigation element). -->
-      
+
       <!-- Lien pour le Dashboard -->
-      <a class="nav-item" routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}"> <!-- Lien yemchi lel page loula, w ymarki rouhou ken active (Link to home page, highlights if active). -->
+      <a class="nav-item" routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
+        <!-- Lien yemchi lel page loula, w ymarki rouhou ken active (Link to home page, highlights if active). -->
         <mat-icon class="nav-icon">dashboard</mat-icon> <!-- Icone mta3 le tableau de bord (Dashboard icon). -->
         <span class="nav-label">Dashboard</span> <!-- L'étiquette du lien (Link text). -->
       </a> <!-- Wfet el lien (End link). -->
 
       <!-- Lien pour les Routers -->
-      <a class="nav-item" routerLink="/routers" routerLinkActive="nav-active"> <!-- Lien vers la liste des routeurs (Link to routers page). -->
+      <a class="nav-item" routerLink="/routers" routerLinkActive="nav-active">
+        <!-- Lien vers la liste des routeurs (Link to routers page). -->
         <mat-icon class="nav-icon">router</mat-icon> <!-- Icone routeur (Router icon). -->
         <span class="nav-label">Routers</span> <!-- Esem el lien (Link text). -->
       </a> <!-- Wfet el lien (End link). -->
 
       <!-- Lien pour les Switches -->
-      <a class="nav-item" routerLink="/switches" routerLinkActive="nav-active"> <!-- Lien lel page des switches (Link to switches page). -->
+      <a class="nav-item" routerLink="/switches" routerLinkActive="nav-active">
+        <!-- Lien lel page des switches (Link to switches page). -->
         <mat-icon class="nav-icon">device_hub</mat-icon> <!-- Icone switch/hub (Network switch icon). -->
         <span class="nav-label">Switches</span> <!-- Esem el lien (Link text). -->
       </a> <!-- Wfet el lien (End link). -->
 
       <!-- Lien pour les Backhaul Links -->
-      <a class="nav-item" routerLink="/links" routerLinkActive="nav-active"> <!-- Lien vers la page des liaisons (Link to backhaul links). -->
+      <a class="nav-item" routerLink="/links" routerLinkActive="nav-active">
+        <!-- Lien vers la page des liaisons (Link to backhaul links). -->
         <mat-icon class="nav-icon">link</mat-icon> <!-- Icone mta3 lien (Hyperlink/connection icon). -->
         <span class="nav-label">Backhaul Links</span> <!-- Esem el lien (Link text). -->
       </a> <!-- Wfet el lien (End link). -->
 
-      <div class="nav-divider"></div> <!-- Khat yefra9 bin section l'oula w thenia fil menu (Divider line between navigation groups). -->
+      <div class="nav-divider"></div>
+      <!-- Khat yefra9 bin section l'oula w thenia fil menu (Divider line between navigation groups). -->
 
       <!-- Bouton y7all w ysaker submenu mta3 Provisioning -->
-      <div class="nav-item nav-toggle" (click)="toggleProvisioning()"> <!-- Div clickable bech n7allou e'sous-menu (Clickable div to toggle dropdown). -->
+      <div class="nav-item nav-toggle" (click)="toggleProvisioning()">
+        <!-- Div clickable bech n7allou e'sous-menu (Clickable div to toggle dropdown). -->
         <mat-icon class="nav-icon">settings</mat-icon> <!-- Icone paramètres (Settings icon). -->
         <span class="nav-label">Provisioning</span> <!-- Esem e'menu (Dropdown title). -->
-        <mat-icon class="nav-chevron" [class.nav-chevron-open]="isProvisioningOpen"> <!-- Flesha tdoor kif yethal l'menu (Chevron arrow reacting to state). -->
+        <mat-icon class="nav-chevron" [class.nav-chevron-open]="isProvisioningOpen">
+          <!-- Flesha tdoor kif yethal l'menu (Chevron arrow reacting to state). -->
           expand_more <!-- Icone mta3 l'flesha (Arrow pointing down). -->
         </mat-icon> <!-- Wfa l'icone (End icon). -->
       </div> <!-- Wfa l'bouton toggle (End toggle button). -->
 
       <!-- Le sous-menu lli yt7al kif nenzelou l'fouk (The dropdown menu that appears when toggled). -->
-      <div class="nav-submenu" [class.nav-submenu-open]="isProvisioningOpen"> <!-- Ytih el menu ken l'variable true (Opens dropdown based on state variable). -->
-        
-        <a class="nav-item nav-sub-item" routerLink="/provisioning" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}"> <!-- Lien principal lel provisioning (Link to main provisioning tasks). -->
+      <div class="nav-submenu" [class.nav-submenu-open]="isProvisioningOpen">
+        <!-- Ytih el menu ken l'variable true (Opens dropdown based on state variable). -->
+
+        <a class="nav-item nav-sub-item" routerLink="/provisioning" routerLinkActive="nav-active"
+          [routerLinkActiveOptions]="{exact:true}">
+          <!-- Lien principal lel provisioning (Link to main provisioning tasks). -->
           <mat-icon class="nav-icon">folder_open</mat-icon> <!-- Icone mta3 dossier t7al (Open folder icon). -->
           <span class="nav-label">All Tasks</span> <!-- Texte mta3 lien (Link label). -->
         </a> <!-- Wfet el lien (End link). -->
-        
-        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/configure_vlan" routerLinkActive="nav-active"> <!-- Lien bech t'configuri el VLAN (Task link for VLAN config). -->
-          <mat-icon class="nav-icon">power</mat-icon> <!-- Icone (Power icon). -->
-          <span class="nav-label">task1</span> <!-- Esem e'Tache (Task name). -->
-        </a> <!-- Wfet el lien (End task link). -->
-        
-        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/firmware_upgrade" routerLinkActive="nav-active"> <!-- Lien mta3 mise à jour (Task link for firmware upgrade). -->
+
+        <a class="nav-item nav-sub-item" routerLink="/upgrade" routerLinkActive="nav-active">
+          <!-- Lien vers la page d'upgrade de bande passante (Task link for bandwidth upgrade). -->
+          <mat-icon class="nav-icon">speed</mat-icon> <!-- Icone de vitesse pour la bande passante (Speed icon). -->
+          <span class="nav-label">Upgrade / Downgrade</span> <!-- Esem e'Tache (Task name). -->
+        </a>
+
+        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/firmware_upgrade" routerLinkActive="nav-active">
+          <!-- Lien mta3 mise à jour (Task link for firmware upgrade). -->
           <mat-icon class="nav-icon">system_update</mat-icon> <!-- Icone update (System config icon). -->
           <span class="nav-label">task2</span> <!-- Esem e'Tache (Task name). -->
         </a> <!-- Wfet el lien (End task link). -->
-        
-        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/push_acl" routerLinkActive="nav-active"> <!-- Lien bech t'pushi ACL (Task link for Access Control Lists). -->
+
+        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/push_acl" routerLinkActive="nav-active">
+          <!-- Lien bech t'pushi ACL (Task link for Access Control Lists). -->
           <mat-icon class="nav-icon">security</mat-icon> <!-- Icone sécurité (Security shield icon). -->
           <span class="nav-label">task3</span> <!-- Esem e'Tache (Task name). -->
         </a> <!-- Wfet el lien (End task link). -->
-        
+
       </div> <!-- Wfa e'sous-menu (End of dropdown container). -->
     </nav> <!-- Wfet la balise nav (End of navigation bar). -->
   </mat-sidenav> <!-- Wfet la barre latérale (End of sidenav side drawer). -->
 
   <!-- Contenu principal fil wost mta3 l'écran (The main content area filling the remaining screen space). -->
   <mat-sidenav-content class="app-content"> <!-- Material directive lel content principal (Sidenav content wrapper). -->
-    <router-outlet /> <!-- El blasa win tetbadel les pages 7asb e'routeur (The injection spot for routed components). -->
+    <router-outlet />
+    <!-- El blasa win tetbadel les pages 7asb e'routeur (The injection spot for routed components). -->
   </mat-sidenav-content> <!-- Wfa bloc el content (End of main content area). -->
 </mat-sidenav-container> <!-- Wfa l'container l'kbir lli jem3a liha lkoll (End of full app wrapper container). -->
-

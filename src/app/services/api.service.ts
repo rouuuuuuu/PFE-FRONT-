@@ -8,7 +8,7 @@ const API_URL = 'http://127.0.0.1:8000/api'; // L'adresse mta3 l'backend Django 
   providedIn: 'root' // Mdisponible fil application l'koll (Service is provided at the root level, making it a singleton)
 })
 export class ApiService { // Définition mta3 l'class ApiService (Export the API service class)
-  constructor(private http: HttpClient) {} // Constructeur bech nsobbou l'HttpClient dakhil l'class (Inject HttpClient via constructor)
+  constructor(private http: HttpClient) { } // Constructeur bech nsobbou l'HttpClient dakhil l'class (Inject HttpClient via constructor)
 
   // ==========================================
   // DASHBOARD (Tableau de bord)
@@ -22,7 +22,7 @@ export class ApiService { // Définition mta3 l'class ApiService (Export the API
   // ==========================================
   getRouters(page?: number, search?: string): Observable<any> { // Fonction njibou biha liste des routeurs (Fetches the list of routers, supports pagination and search)
     let params = new HttpParams().set('limit', '500'); // N7adrou les paramètres fel GET w n7ottou limite 500 (Set custom query params, defaulting limit to 500)
-    
+
     if (page !== undefined) { // Ken 3attina page (If a specific page is requested)
       params = params.set('page', page.toString()); // Nzidou paramètre mta3 num page (Append page number to query params)
     }
@@ -35,7 +35,7 @@ export class ApiService { // Définition mta3 l'class ApiService (Export the API
 
   getSwitches(page?: number, search?: string): Observable<any> { // Fonction bech njibou e'switches (Fetches the list of switches)
     let params = new HttpParams().set('limit', '500'); // Kif kif l'limite b'500 (Initialize params with a limit of 500)
-    
+
     if (page !== undefined) { // Ken e'num page mawjoud (Check if page parameter exists)
       params = params.set('page', page.toString()); // Nzidouh lel requete (Add it to URL parameters)
     }
