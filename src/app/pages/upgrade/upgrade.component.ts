@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { interval, Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -63,8 +65,8 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   private readonly BASE_URL = 'http://127.0.0.1:8000';
   private apiUrl = `${this.BASE_URL}/api/provisioning`;
 
-  // Auto-refresh polling (every 10s)
-  private pollingInterval: any = null;
+  // Auto-refresh polling — RxJS-based so it works correctly in browser
+  private destroy$ = new Subject<void>();
   private readonly POLL_MS = 10_000;
 
   // Wizard state
@@ -116,16 +118,29 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     this.loadRouters();
     this.loadUpgrades();
 
-    // Auto-refresh history table every 10 seconds
+    // Auto-refresh history table every 10 seconds using RxJS interval
     if (isPlatformBrowser(this.platformId)) {
-      this.pollingInterval = setInterval(() => this.loadUpgrades(), this.POLL_MS);
+      interval(this.POLL_MS)
+        .pipe(
+          takeUntil(this.destroy$),
+          switchMap(() => {
+            let url = `${this.apiUrl}/bandwidth-upgrades/`;
+            if (this.filterStatus !== 'all') url += `?status=${this.filterStatus}`;
+            return this.http.get<any>(url);
+          })
+        )
+        .subscribe({
+          next: (data) => {
+            this.upgrades = Array.isArray(data) ? data : (data.results || []);
+          },
+          error: (err) => console.error('Polling error:', err)
+        });
     }
   }
 
   ngOnDestroy(): void {
-    if (this.pollingInterval) {
-      clearInterval(this.pollingInterval);
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // ─── Load routers via ApiService (same as provisioning task) ───
