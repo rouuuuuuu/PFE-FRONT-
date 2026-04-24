@@ -46,6 +46,32 @@ export class ApiService { // Définition mta3 l'class ApiService (Export the API
     return this.http.get(`${API_URL}/switches/`, { params }); // Executi l'requête GET lel switches (Send the HTTP request for switches)
   }
 
+  getAllDevices(page?: number, search?: string): Observable<any> { // Njibou el list el mwa7da mta3 les routers w switches (Fetches unified list of both device types)
+    let params = new HttpParams().set('limit', '1000'); // Limit akbar 5aterha list mwa7da (Larger limit for unified list)
+    if (page !== undefined) params = params.set('page', page.toString());
+    if (search) params = params.set('search', search);
+
+    return this.http.get(`${API_URL}/all-devices/`, { params }); // Njibouhom l'koll men fard blaza (GET from the unified endpoint)
+  }
+
+  getUnifiedDevice(ip: string): Observable<any> { // Njibou hardware data mta3 device specific men list el kbira (Extract hardware for a specific IP from the unified list)
+    return new Observable(observer => {
+      this.getAllDevices().subscribe({
+        next: (response) => {
+          const devices = Array.isArray(response) ? response : (response.results || []);
+          const found = devices.find((d: any) => d.loopback_ip === ip || d.ip_address === ip);
+          if (found) {
+            observer.next(found);
+          } else {
+            observer.error(`Device with IP ${ip} not found in unified list.`);
+          }
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
+    });
+  }
+
   // ==========================================
   // BACKHAUL LINKS (Liaisons réseau)
   // ==========================================
@@ -65,8 +91,12 @@ export class ApiService { // Définition mta3 l'class ApiService (Export the API
   // ==========================================
   // HARDWARE VERIFICATION (Vérification l'matériel)
   // ==========================================
-  verifyDevice(ip: string): Observable<any> { // N3aytou l'fonction bech ntastiw l'matériel via son IP (Run hardware verification checks)
+  verifyDevice(ip: string): Observable<any> { // N3aytou l'fonction bech ntastiw l'matériel via son IP (Run hardware verification checks for a router)
     return this.http.get(`${API_URL}/hardware/verify/${ip}/`); // Requête m3a e'IP fel lien directement (Send GET mapping IP into the URL)
+  }
+
+  verifySwitch(ip: string): Observable<any> { // Version mta3 e'switch (Run port verification checks for a switch device)
+    return this.http.get(`${API_URL}/hardware/verify-switch/${ip}/`); // Endpoint mkhsos lel switches (Dedicated switch verification endpoint)
   }
 
   // ==========================================
@@ -83,4 +113,10 @@ export class ApiService { // Définition mta3 l'class ApiService (Export the API
   getProvisioningStatus(taskId: number): Observable<any> { // Nthabbtou state mta3 tache specific (Check the status of a specific task via ID)
     return this.http.get(`${API_URL}/provisioning/status/${taskId}/`); // GET w njibou l'état actuel (Execute GET mapping the task ID into the URL)
   }
+
+  reservePort(data: any): Observable<any> {
+    return this.http.post(`${API_URL}/provisioning/reserve-port/`, data);
+  }
+  getStock() { return this.http.get(`${API_URL}/inventory/stock/`); }
+
 } // Wfa e'service (End of service class)

@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select'; // Module lel listes
 import { MatChipsModule } from '@angular/material/chips'; // Module lel chips/badges (Material chips)
 import { FormsModule } from '@angular/forms'; // Module bech nesta3mlou ngModel (Forms model binding)
 import { ApiService } from '../../services/api.service'; // L'API mte3na bech njibou données (Our injected API service)
+import { Router, RouterModule } from '@angular/router'; // Router bech nnavegiw lel switch summary (Import Router for programmatic navigation)
 
 @Component({ // Ytarki l'class kima composant (Marks this class as an Angular component)
   selector: 'app-switches', // L'esem mta3 el balise HTML (HTML tag for this component)
@@ -48,7 +49,7 @@ export class SwitchesComponent implements OnInit { // Class lli bech tgerer es's
   // EXACT match to Django JSON keys
   columns = ['name', 'loopback_ip', 'interface_sw', 'connected_router', 'interface_rt', 'model']; // L'esemi mta3 l'a3mda ta3 el tablau (Data keys corresponding to the table columns)
 
-  constructor(private api: ApiService) {} // Nejabou API Service hnéna fil awel (Constructor setting up the API)
+  constructor(private api: ApiService, private router: Router) {} // Nejabou API Service w Router hnéna (Constructor injecting API service and Router)
 
   ngOnInit() { // Fonction elli tkhdem m3a awel affichage (Run tasks during component initial load)
     // Fetch routers first to build the id→name map, then fetch switches
@@ -131,4 +132,9 @@ export class SwitchesComponent implements OnInit { // Class lli bech tgerer es's
     const start = this.currentPage * this.pageSize; // Calculate l'offset bech nwariw l'switches mté3nèh f ha'logic block iteration constraints bounds loop variable format test logic format sequence logic logic condition execution variables parameters framework assignment block reference mapping format. (Array offset indexing definition evaluation math logic sequence text syntax token parser format.)
     this.pagedSwitches = this.filteredSwitches.slice(start, start + this.pageSize); // Qoss e'tabbleu b slice bech ta3tena chouwaya akra 7aseb pagina limite bounds loop execution format definitions execution block lambda limits structure mapping bounds parser logic limits variables value assignment structure object evaluation text wrapper rules parameters syntax configuration assignment limits syntax definition limits object mapping parameter pattern configuration sequence evaluation object parsing execution variables constraints variables lambda test syntax condition parser boundaries logic mapping iteration framework. (Slice filtered content array map mapping parsing rule resolution wrapper structure assignment format parser framework logic block definitions logic configuration structure string rules reference object limits test rules.
   }
-} // Wfa el class el complet w kámil lkolhe b kolchi maktoubet w mafroozeut configuration logic limits rules bounds execution resolution definitions format context structures object logic limits logic testing syntax variables reference.
+
+  /** Navigates to the switch summary page when a row is clicked */
+  selectSwitch(sw: any) { // Wa9tli nzouzzou 3la s'tar switch (Triggered when user clicks a switch row)
+    this.router.navigate(['/switches', sw.loopback_ip]); // Nhizzouh lel page ta3 ports hetheka (Navigate to switch summary using its loopback IP)
+  }
+} // Wfa el class el complet

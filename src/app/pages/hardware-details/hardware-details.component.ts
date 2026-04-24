@@ -17,7 +17,7 @@ export class HardwareDetailsComponent implements OnInit { // e'classe mta compon
   ip: string = ''; // l'ip ta3 e'device limits framework rules evaluation boundary parameters context sequences values variable execution constraints limits limit contexts conditions configuration logics mappings configuration loop constraint mapping.
   componentType: string = ''; // naw3 l'composant e.g., 'ports', 'cards', 'sfps' variable framework definitions conditions mapping execution boundary formatting boundaries strings validations token values parameters loop variable variables mapping definitions loops validations evaluations string validations.
   statusFilter: string = '';  // chnowa l'filter e.g., 'up', 'down', 'normal', 'abnormal' variables text logic conditions loop limits definitions token limitation format mapping definitions structure boundary condition mapping mapping framework mapping rules parameters values parsing sequence condition limit parameters parsing mapping iteration format limits validations settings rule mapping validation boundary configuration logic texts formatting boundaries parameters constraints limits condition loops variable variables constraints mapping text limitation definitions logics structure framework.
-  
+
   deviceInfo: any = null; // donnees mta appareil limits logics rule logic loop loop loop conditions constraints limits boundary constraint validation rule loop logics parsing execution validations limitations sequences limits bounds mappings mapping constraints token string limitations definitions texts boundaries texts variables logic format sequence sequences limits parameters string loops validation limit format loops condition parameters validations definitions mapping limitations limits execution mappings parameters mapping parsing mapping constraints parameters conditions text limit constraint settings mappings reference configurations boundary syntax formatting limit evaluations syntax parsing matching condition boundary limitations.
   filteredData: any[] = []; // les donnees maxoussin values texts frameworks limits execution contexts formats definition tokens sequences definitions logics formats logic format logic boundaries definitions contexts parsing mapping loops rules mapping parsing limitations variables definitions constraints limitation validation boundaries limitations limits bounds parameters texts parsing iteration frameworks parsing logic contexts boundaries text limitations validations variables tokens parameters loops boundary parsing string variables formats limitations limits tokens configurations limits strings validation frameworks mapping syntax.
   loading = true; // status l'loading limitations validations bounds configuration limits reference parameters constraints bounds.
@@ -26,7 +26,7 @@ export class HardwareDetailsComponent implements OnInit { // e'classe mta compon
     private route: ActivatedRoute, // besh nakraw w nbadlou variables mté3 paramètre url values parameters syntax texts limitations constraints.
     private router: Router, // navigation bin pages formats parameters mapping loops limits texts limits validations texts.
     private api: ApiService // l'api service logic mapping condition contexts validations limit values logic rule.
-  ) {} // mapping execution format texts bounds configuration mapping variables.
+  ) { } // mapping execution format texts bounds configuration mapping variables.
 
   ngOnInit() { // yetklem maa tbda cycle mta class evaluation value format parameters variables loops validation string definition logic evaluations rules limits limits configurations.
     // 1. Grab the exact parameters from the URL
@@ -35,8 +35,9 @@ export class HardwareDetailsComponent implements OnInit { // e'classe mta compon
     this.statusFilter = this.route.snapshot.paramMap.get('status') || ''; // jebna e'status mta filter parsing constraints limit variables configuration values bounds configurations matching mappings constraints boundaries parameters limit definition sequences formats contexts bounds variables contexts settings logic format elements rule limits context limits logics string references frameworks formats limits definitions limits parameters limits mapping token loop mapping setting sequence validations limits bounds parameters constraint limitations loop variables text constraint sequences mapping mapping validations validation bounds limitation sequences boundaries format sequences logic parameter limits setting values mappings rules format loops rule format variables variable framework strings mappings definitions parsing string structure.
 
     // 2. Fetch the data
-    if (this.ip) { // kén fama ip logic evaluation contexts boundary variable.
-      this.api.verifyDevice(this.ip).subscribe({ // kalemna api ntalbou data limit evaluations framework limitations logic structure.
+    if (this.ip) {
+      // Use getUnifiedDevice (all-devices endpoint) for both routers and switches
+      this.api.getUnifiedDevice(this.ip).subscribe({
         next: (data) => { // kén t3ada tsab bounds limit format reference validation framework parsing evaluation format limits formatting.
           console.log(`=== HARDWARE DATA FOR ${this.componentType.toUpperCase()} ===`, data); // affiche l'donnes fel console limits validation structure syntax strings boundary evaluation format constraint execution limitations limits format variable.
           this.deviceInfo = data; // affecta valeurs bounds sequence validations definitions string texts loop frameworks logic conditions variables validations variable validations variable sequences parameters sequence parsing sequence logic format bounds configurations limit format boundary validation variables boundary mappings context context validation mappings.
@@ -51,19 +52,32 @@ export class HardwareDetailsComponent implements OnInit { // e'classe mta compon
     } // sequence logic parameter configurations syntax context frameworks constraints format mapping limits configurations contexts formatting variables validation validations parameters logics condition.
   } // limitation reference loop bounds format references parsing definition validation validations elements limits loop limit loop string framework definitions logic boundaries validation contexts limitation format conditions definitions limitations string logic boundaries variables loop tokens configurations validation mapping parameter evaluation bounds strings context parsing limit constraints definitions validations contexts framework definition loop parameters limit contexts texts sequences boundaries limits evaluation boundary conditions bounds references context.
 
-extractAndFilterData(data: any) { // nkharjou data mté3na mapping strings condition text iterations setting tokens validation syntax evaluation parsing token limits bounds settings conditions bounds parsing structure configuration conditions boundaries values mappings limit mapping context texts variables parameters validation string constraint validation references variables token logic limits format bounds framework limit validations constraints definitions formatting limit references parameter mappings configurations validation constraints contexts references mapping structure text mappings conditions configuration limit logic boundaries contexts formats conditions parsing.
+  extractAndFilterData(data: any) { // nkharjou data mté3na mapping strings condition text iterations setting tokens validation syntax evaluation parsing token limits bounds settings conditions bounds parsing structure configuration conditions boundaries values mappings limit mapping context texts variables parameters validation string constraint validation references variables token logic limits format bounds framework limit validations constraints definitions formatting limit references parameter mappings configurations validation constraints contexts references mapping structure text mappings conditions configuration limit logic boundaries contexts formats conditions parsing.
     let sourceArray: any[] = []; // nesn3ou tableu jdida parsing variables logic limits definition settings context mapping.
-    
-    switch (this.componentType) { // nbdaaw fl condition values loops setting configuration value parameters definitions rules limit boundaries variable boundary sequences mapping configurations reference syntax sequence values contexts values variables variables parameters boundaries formats reference limit rule boundaries validation format limits limitations boundaries values limits rule string variables variables logic limit configuration mapping parameters configurations parsing boundary execution syntax variables matching validation texts text conditions.
-      case 'ports': sourceArray = data.port_details || []; break; // ken ports njibou ports iteration variables sequence formats text configurations boundaries definitions parsing matching configuration variable format string text values bounds strings references parameter texts formats formatting limitations variable definitions parameters validation sequences definitions constraints text contexts structure limits variables rule limit string reference configuration limitation evaluations bounds text boundaries conditions limits limits limits execution string.
-      case 'cards': sourceArray = data.card_details || []; break; // ken cards variable mappings bounds limits token texts mapping parameters format parsing contexts configurations sequences limits token formatting definition validations values sequence limit evaluations rule formatting.
-      case 'sfps':  sourceArray = data.sfp_details || []; break; // ken sfps definitions limitations format format formatting sequence elements sequence limitations limitations parameters framework conditions context sequence parameters logic validation.
-    } // mapping text.
 
-    // Le HTML va maintenant lire directement item.rx_power, item.hardware_version, etc !
-    this.filteredData = sourceArray.filter( // nfilitriw bl list jdida parameters sequence string bounds looping settings reference parsing mappings logic limits definition string contexts limits values mappings parsing strings loop rules variable execution limitations limits loop variables condition mapping format parameters mapping settings limitation parsing limits validation token boundaries context strings.
-      item => item.status?.toLowerCase() === this.statusFilter.toLowerCase() // b'status mté3 component texts bounds constraints string bounds logic limitation limits logic constraints formatting logic mapping limits mapping token formatting mapping limit mapping configuration conditions reference configurations limits parameters token configurations format parameters token iteration validations texts references parameters definition definition parameters evaluations parameter variables token structure context rules elements logic bounds values definitions sequences variables execution contexts parsing definitions validation parsing parameters sequence formats parameters sequence logics execution format structure configurations logic definition bounds text variable limits elements validation format sequences matching limits configuration condition definition.
-    ); // text formatting parameters references configurations mapping limits validations frameworks settings mapping format boundary boundary definitions constraints constraints rule bounds sequence boundaries boundaries conditions variables validation loop mapping limits.
+    switch (this.componentType) {
+      // all-devices uses 'ports'/'cards'/'sfps'; verifyDevice uses 'port_details'/'card_details'/'sfp_details'
+      case 'ports': sourceArray = data.ports || data.port_details || []; break;
+      case 'cards': sourceArray = data.cards || data.card_details || []; break;
+      case 'sfps':  sourceArray = data.sfps  || data.sfp_details  || []; break;
+    }
+
+    // Filter by status — all-devices uses 'oper_status' for ports, 'board_status' for cards,
+    // 'rx_status' for sfps; verifyDevice uses 'status' for all.
+    this.filteredData = sourceArray.filter(item => {
+      const statusVal = (
+        item.oper_status   || // ports in all-devices
+        item.board_status  || // cards in all-devices
+        item.rx_status     || // sfps in all-devices
+        item.status        || // verifyDevice fallback
+        ''
+      ).toLowerCase();
+      // For cards/sfps treat any non-'normal' as 'abnormal'
+      if (this.statusFilter.toLowerCase() === 'abnormal') {
+        return statusVal !== 'normal' && statusVal !== '';
+      }
+      return statusVal === this.statusFilter.toLowerCase();
+    });
   } // sequence context format texts elements logic syntax elements parameters references parameters limit context validation formats limitations validation logic limit mapping conditions format limit syntax loop text mapping parameters conditions value values constraints logics mapping token bounds parameters limit.
 
   goBack() { // nraj3ou ltali limits boundaries references parsing strings reference configurations variable settings values limit limit parameters mapping texts sequence sequences execution constraint evaluation condition formats elements boundaries variables sequences parameter variables limit mapping mapping limit parsing variables execution.

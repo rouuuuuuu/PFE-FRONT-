@@ -54,10 +54,15 @@
 
       <!-- Lien pour les Backhaul Links -->
       <a class="nav-item" routerLink="/links" routerLinkActive="nav-active">
-        <!-- Lien vers la page des liaisons (Link to backhaul links). -->
-        <mat-icon class="nav-icon">link</mat-icon> <!-- Icone mta3 lien (Hyperlink/connection icon). -->
-        <span class="nav-label">Backhaul Links</span> <!-- Esem el lien (Link text). -->
-      </a> <!-- Wfet el lien (End link). -->
+        <mat-icon class="nav-icon">link</mat-icon>
+        <span class="nav-label">Backhaul Links</span>
+      </a>
+
+      <!-- Lien pour le Stock Inventory -->
+      <a class="nav-item" routerLink="/inventory" routerLinkActive="nav-active">
+        <mat-icon class="nav-icon">inventory_2</mat-icon>
+        <span class="nav-label">Stock Inventory</span>
+      </a>
 
       <div class="nav-divider"></div>
       <!-- Khat yefra9 bin section l'oula w thenia fil menu (Divider line between navigation groups). -->
@@ -88,6 +93,12 @@
           <!-- Lien vers la page d'upgrade de bande passante (Task link for bandwidth upgrade). -->
           <mat-icon class="nav-icon">speed</mat-icon> <!-- Icone de vitesse pour la bande passante (Speed icon). -->
           <span class="nav-label">Upgrade / Downgrade</span> <!-- Esem e'Tache (Task name). -->
+        </a>
+
+        <a class="nav-item nav-sub-item" routerLink="/provisioning/port-reservation" routerLinkActive="nav-active">
+          <!-- Lien pour la réservation des ports (Task link for port reservation). -->
+          <mat-icon class="nav-icon">cable</mat-icon> <!-- Icone de cable/port (Cable icon). -->
+          <span class="nav-label">Port Reservation</span> <!-- Esem e'Tache (Task name). -->
         </a>
 
         <a class="nav-item nav-sub-item" routerLink="/provisioning/task/firmware_upgrade" routerLinkActive="nav-active">

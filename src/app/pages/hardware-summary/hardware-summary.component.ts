@@ -51,17 +51,24 @@ export class HardwareSummaryComponent implements OnInit { // definition mta clas
   ngOnInit() { // cycle init boundaries limits configurations loop conditions loops conditions mapping logics context sequences.
     this.ip = this.route.snapshot.paramMap.get('ip') || ''; // njibou l'ip mté3na ml url execution mapping framework limits logics configurations logic bounds execution parameters parameters condition rule values validations formatting contexts limits configurations evaluations texts texts boundaries validation formats evaluation values limits limitations validation formats limitations parameters.
     
-    if (this.ip) { // idha fama ip loop contexts validation variables configurations parsing bounds mappings variables elements variables.
-      this.api.verifyDevice(this.ip).subscribe({ // verifyDevice logic strings context variable tokens mapping iteration rule format parsing definition mappings parameters mapping framework configurations limitations constraint values parameters sequences mapping contexts boundaries rule validation rule configurations validations loop evaluation reference boundaries parameters mapping formatting boundary mappings validation strings bounds boundaries parsing formats tokens limit boundaries.
+    if (this.ip) {
+      // Use getUnifiedDevice (all-devices) — unified endpoint for both routers and switches
+      this.api.getUnifiedDevice(this.ip).subscribe({
         next: (data: any) => { // format loops mapping logics text frameworks values formats element validations limits format definition strings mapping format token parameters definition condition variables configuration condition limits constraints execution logic loops bounds mapping limit variables limitations frameworks parsing variables structure evaluation bounds context sequences evaluations syntax string text parameters framework element validations boundaries sequences mapping values mapping condition configurations contexts tokens contexts structure boundary parameters limitation execution bounds boundary conditions string tokens texts string definition looping logics definition loop mapping formatting loop.
-          this.verification = data; // affectation limits configuration string format.
-          
-          this.portsUp = data.port_details?.filter((p: any) => p.status === 'up').length || 0; // count mta up rules boundaries mapping syntax condition variables evaluation boundaries limit limits.
-          this.portsDown = data.port_details?.filter((p: any) => p.status !== 'up').length || 0; // count mta down boundaries string limits.
-          this.cardsNormal = data.card_details?.filter((c: any) => c.status === 'normal').length || 0; // count cards normal rules limit bounds parameters values limits limit loop mapping logics references frameworks text boundary limits values limits.
-          this.cardsAbnormal = data.card_details?.filter((c: any) => c.status !== 'normal').length || 0; // count cards abnormal mappings value execution.
-          this.sfpsNormal = data.sfp_details?.filter((s: any) => s.status === 'normal').length || 0; // count sfp normal sequence execution logic configurations limits loop limits conditions boundary definitions.
-          this.sfpsAbnormal = data.sfp_details?.filter((s: any) => s.status !== 'normal').length || 0; // count sfp abnormal variables boundaries values context limits parameter bounds string iterations limits mappings.
+          this.verification = data;
+
+          // all-devices uses 'ports'/'cards'/'sfps'; verifyDevice uses 'port_details'/'card_details'/'sfp_details'
+          const portList = data.ports || data.port_details || [];
+          const cardList = data.cards || data.card_details || [];
+          const sfpList  = data.sfps  || data.sfp_details  || [];
+
+          // all-devices status fields: oper_status (ports), board_status (cards), rx_status (sfps)
+          this.portsUp       = portList.filter((p: any) => (p.oper_status  || p.status || '').toLowerCase() === 'up').length;
+          this.portsDown     = portList.filter((p: any) => (p.oper_status  || p.status || '').toLowerCase() !== 'up').length;
+          this.cardsNormal   = cardList.filter((c: any) => (c.board_status || c.status || '').toLowerCase() === 'normal').length;
+          this.cardsAbnormal = cardList.filter((c: any) => (c.board_status || c.status || '').toLowerCase() !== 'normal').length;
+          this.sfpsNormal    = sfpList.filter( (s: any) => (s.rx_status    || s.status || '').toLowerCase() === 'normal').length;
+          this.sfpsAbnormal  = sfpList.filter( (s: any) => (s.rx_status    || s.status || '').toLowerCase() !== 'normal').length;
 
           // Only update chart data if we are in the browser
           if (this.isBrowser) { // condition heka ykhallina nposti data kan fl browser format validations mapping parameters parsing limits limitations text texts variables logics parameter validation mapping definition text elements text configuration configuration evaluations variables loops token limits bounds values limits loop boundaries sequences evaluations constraint variables limitations string mapping configuration constraints parsing.

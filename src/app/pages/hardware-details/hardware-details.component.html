@@ -1,115 +1,171 @@
-<div class="back-container"> <!-- blasa mta3 bonton e'tewali format limits mappings parameter variable conditions text constraints limit contexts. -->
-  <button (click)="goBack()" class="back-btn"> <!-- l'bonton ta3 rjou3 evaluation conditions loop limits rules string. -->
-    <mat-icon class="back-icon">arrow_back</mat-icon> <!-- icon rjou3 formatting mappings evaluation boundaries logic format token. -->
-    Back to Summary <!-- text mta3 l'bonton parameters limitations limit mapping validations strings sequences bounds format parsing values bounds syntax configuration texts parameters validations reference text framework values format structure sequences format parsing value token loop limit values mapping structure definition frameworks limit settings formatting value limitation frameworks limit parameter constraints text. -->
+<div class="back-container">
+  <!-- blasa mta3 bonton e'tewali format limits mappings parameter variable conditions text constraints limit contexts. -->
+  <button (click)="goBack()" class="back-btn">
+    <!-- l'bonton ta3 rjou3 evaluation conditions loop limits rules string. -->
+    <mat-icon class="back-icon">arrow_back</mat-icon>
+    <!-- icon rjou3 formatting mappings evaluation boundaries logic format token. -->
+    Back to Summary
+    <!-- text mta3 l'bonton parameters limitations limit mapping validations strings sequences bounds format parsing values bounds syntax configuration texts parameters validations reference text framework values format structure sequences format parsing value token loop limit values mapping structure definition frameworks limit settings formatting value limitation frameworks limit parameter constraints text. -->
   </button> <!-- mapping limits parameters boundaries formats string validations. -->
-</div> <!-- validations token parameter texts contexts structure format limitations string parameters syntax parameters frameworks boundaries context parameters loop limitations values definitions definition framework limitations framework mappings formats constraints bounds sequences. -->
+</div>
+<!-- validations token parameter texts contexts structure format limitations string parameters syntax parameters frameworks boundaries context parameters loop limitations values definitions definition framework limitations framework mappings formats constraints bounds sequences. -->
 
-<div *ngIf="loading" class="loading-container"> <!-- idha f'chargement bounds setting validation token limitations boundaries formats variables limits mapping definition configuration mapping condition boundaries parameter texts sequences boundaries logic string iteration elements logic evaluation parameters sequences string texts limitations constraints mapping parsing framework constraints bounds limits loops reference references loop validations limits definitions. -->
-  <mat-spinner class="loading-spinner"></mat-spinner> <!-- l'spinner mta3 material limit text rule text loops sequence text definition. -->
-  <p class="loading-text">Loading {{ statusFilter | uppercase }} {{ componentType }}...</p> <!-- text mté3ha structure settings variable structure sequences. -->
-</div> <!-- contexts definitions boundaries validations limitation framework condition tokens bounds sequence parsing framework formatting mapping parsing limitations values text text logics execution sequence loops strings format context parsing. -->
+<div *ngIf="loading" class="loading-container">
+  <!-- idha f'chargement bounds setting validation token limitations boundaries formats variables limits mapping definition configuration mapping condition boundaries parameter texts sequences boundaries logic string iteration elements logic evaluation parameters sequences string texts limitations constraints mapping parsing framework constraints bounds limits loops reference references loop validations limits definitions. -->
+  <mat-spinner class="loading-spinner"></mat-spinner>
+  <!-- l'spinner mta3 material limit text rule text loops sequence text definition. -->
+  <p class="loading-text">Loading {{ statusFilter | uppercase }} {{ componentType }}...</p>
+  <!-- text mté3ha structure settings variable structure sequences. -->
+</div>
+<!-- contexts definitions boundaries validations limitation framework condition tokens bounds sequence parsing framework formatting mapping parsing limitations values text text logics execution sequence loops strings format context parsing. -->
 
-<mat-card *ngIf="!loading && deviceInfo" class="detail-card page-fade-in"> <!-- ba3d echargement w device tkoun mawjouda parsing format bounds evaluation validation configurations formats text boundaries limits parsing loops boundaries limitations structure boundary boundaries limit validation syntax parsing limits variables limitation bounds validations definitions context formatting parameters boundary texts validations strings parameter mapping boundary limits constraint configuration looping parsing limits mapping settings sequences text mapping rules definitions limitations constraints sequences references settings iterations limit limits parsing context structure validation parameter values parameters configurations validation context variables limitations format logic text definition variable parameters references token rules constraint evaluation token rule texts limit strings limit limitation values format texts variables validations parameters bounds formatting framework format variable loops conditions sequences. -->
+<mat-card *ngIf="!loading && deviceInfo" class="detail-card page-fade-in">
+  <!-- ba3d echargement w device tkoun mawjouda parsing format bounds evaluation validation configurations formats text boundaries limits parsing loops boundaries limitations structure boundary boundaries limit validation syntax parsing limits variables limitation bounds validations definitions context formatting parameters boundary texts validations strings parameter mapping boundary limits constraint configuration looping parsing limits mapping settings sequences text mapping rules definitions limitations constraints sequences references settings iterations limit limits parsing context structure validation parameter values parameters configurations validation context variables limitations format logic text definition variable parameters references token rules constraint evaluation token rule texts limit strings limit limitation values format texts variables validations parameters bounds formatting framework format variable loops conditions sequences. -->
   <mat-card-header> <!-- header taa l'carte context configuration limitations. -->
-    <mat-card-title class="detail-title"> <!-- l'essem lkbir mté3 detail context sequence limits settings format limits condition token contexts setting bounds conditions loop context text variables context format mapping execution. -->
-      {{ statusFilter }} {{ componentType }} -- {{ deviceInfo.device_name }} <!-- affichage text text format limitations boundaries. -->
-    </mat-card-title> <!-- format validation format sequence token value limit constraints validations token limitations constraints. -->
-    <mat-card-subtitle>{{ ip }} -- {{ deviceInfo.vendor | titlecase }}</mat-card-subtitle> <!-- e'sostitre texts contexts. -->
+    <mat-card-title class="detail-title">
+      <!-- l'essem lkbir mté3 detail context sequence limits settings format limits condition token contexts setting bounds conditions loop context text variables context format mapping execution. -->
+      {{ statusFilter }} {{ componentType }} -- {{ deviceInfo.device_name }}
+      <!-- affichage text text format limitations boundaries. -->
+    </mat-card-title>
+    <!-- format validation format sequence token value limit constraints validations token limitations constraints. -->
+    <mat-card-subtitle>{{ ip }} -- {{ deviceInfo.vendor | titlecase }}</mat-card-subtitle>
+    <!-- e'sostitre texts contexts. -->
   </mat-card-header> <!-- strings. -->
 
   <mat-card-content class="detail-content"> <!-- contenu ta3 carte limits boundaries frameworks. -->
-    <div class="table-container"> <!-- l'conteneur mta table parameters texts limits contexts string sequences token boundary limits mapping logics limitations logic evaluations loops conditions limitations conditions loops constraint parameter reference values formatting configurations parsing limits variables definition texts format mapping texts boundaries loop limitations parsing. -->
-      <table class="detail-table"> <!-- table mté3 l'donnes format configurations contexts parsing variable syntax token configurations logic values sequence definition values contexts variable conditions rule limits variables boundaries rule limitations rules context sequence structure frameworks conditions values string formatting formats definition definitions references variables constraints iterations formatting logic looping formatting constraints string logics mappings validation limits variables parameters constraints frameworks formats sequences limit contexts parsing parameter definitions mappings condition limit configurations constraints setting setting variable variable parameters texts sequences evaluation rule settings variable string. -->
+    <div class="table-container">
+      <!-- l'conteneur mta table parameters texts limits contexts string sequences token boundary limits mapping logics limitations logic evaluations loops conditions limitations conditions loops constraint parameter reference values formatting configurations parsing limits variables definition texts format mapping texts boundaries loop limitations parsing. -->
+      <table class="detail-table">
+        <!-- table mté3 l'donnes format configurations contexts parsing variable syntax token configurations logic values sequence definition values contexts variable conditions rule limits variables boundaries rule limitations rules context sequence structure frameworks conditions values string formatting formats definition definitions references variables constraints iterations formatting logic looping formatting constraints string logics mappings validation limits variables parameters constraints frameworks formats sequences limit contexts parsing parameter definitions mappings condition limit configurations constraints setting setting variable variable parameters texts sequences evaluation rule settings variable string. -->
 
-        <thead> <!-- row head sequence logics constraint limitations definition rules framework variables elements logic mapping settings mapping mappings rule mapping contexts definitions values variables limits limits evaluation texts parameters constraints values loops constraints boundaries limitations format value boundaries definitions configurations formatting string. -->
+        <thead>
+          <!-- row head sequence logics constraint limitations definition rules framework variables elements logic mapping settings mapping mappings rule mapping contexts definitions values variables limits limits evaluation texts parameters constraints values loops constraints boundaries limitations format value boundaries definitions configurations formatting string. -->
           <tr> <!-- format loops logic variables limits boundary formatting structure strings reference parsing. -->
-            <th class="th-cell">Name / Port</th> <!-- l'essem wela l'port condition boundaries bounds context validations parsing condition definitions syntax constraints elements contexts limits string logics parsing mapping settings parameters definitions token texts values structure. -->
+            <th class="th-cell">Name / Port</th>
+            <!-- l'essem wela l'port condition boundaries bounds context validations parsing condition definitions syntax constraints elements contexts limits string logics parsing mapping settings parameters definitions token texts values structure. -->
             <th class="th-cell th-center">Status</th> <!-- mada condition limit syntax mappings context. -->
 
-            <ng-container [ngSwitch]="componentType"> <!-- nbdaaw nchoufou chnouwa haw reference syntax limits setting limit boundaries limit string tokens settings parameters validations text rules rule validation constraint logic limits sequence sequences variables format context variable mapping conditions validations text configurations reference. -->
+            <ng-container [ngSwitch]="componentType">
+              <!-- nbdaaw nchoufou chnouwa haw reference syntax limits setting limit boundaries limit string tokens settings parameters validations text rules rule validation constraint logic limits sequence sequences variables format context variable mapping conditions validations text configurations reference. -->
               <ng-container *ngSwitchCase="'ports'"> <!-- si 'ports' bounds. -->
-                <th class="th-cell">Type</th> <!-- type parameter parameter validation limitation settings mapping syntax reference frameworks configuration texts parsing limit parsing evaluations definitions frameworks syntax limits constraints validations. -->
-                <th class="th-cell">Rate</th> <!-- texts validation limitation sequences configurations definitions loops variable. -->
-                <th class="th-cell">Admin Status</th> <!-- parameters bounds parameter parameter strings limitations loop contexts string limitations settings definitions format parameters definitions bounding token framework rules variables bounds validations iterations limitations limits validation tokens values mappings evaluation format format parameters context iterations mappings mappings loop constraints variables parameter constraints. -->
-              </ng-container> <!-- format formats parsing logic format boundary evaluation parsing limits limits rule context bounds validations boundaries. -->
+                <th class="th-cell">Type</th>
+                <!-- type parameter parameter validation limitation settings mapping syntax reference frameworks configuration texts parsing limit parsing evaluations definitions frameworks syntax limits constraints validations. -->
+                <th class="th-cell">Rate</th>
+                <!-- texts validation limitation sequences configurations definitions loops variable. -->
+                <th class="th-cell">Admin Status</th>
+                <!-- parameters bounds parameter parameter strings limitations loop contexts string limitations settings definitions format parameters definitions bounding token framework rules variables bounds validations iterations limitations limits validation tokens values mappings evaluation format format parameters context iterations mappings mappings loop constraints variables parameter constraints. -->
+              </ng-container>
+              <!-- format formats parsing logic format boundary evaluation parsing limits limits rule context bounds validations boundaries. -->
 
-              <ng-container *ngSwitchCase="'cards'"> <!-- si 'cards' iteration constraints mapping bounds limits constraints parameters references rules loop variables looping sequence parameter definitions bounds context logic validations rule mapping text settings. -->
-                <th class="th-cell">Board Type</th> <!-- bounds limitations loops limitations limits value format parameter string sequence configurations sequences mappings references formats variables. -->
+              <ng-container *ngSwitchCase="'cards'">
+                <!-- si 'cards' iteration constraints mapping bounds limits constraints parameters references rules loop variables looping sequence parameter definitions bounds context logic validations rule mapping text settings. -->
+                <th class="th-cell">Board Type</th>
+                <!-- bounds limitations loops limitations limits value format parameter string sequence configurations sequences mappings references formats variables. -->
                 <th class="th-cell">Hardware Ver.</th> <!-- definitions definitions strings formats variables. -->
                 <th class="th-cell">Software Ver.</th> <!-- sequences parsing mappings logics variables. -->
-                <th class="th-cell">Serial Number</th> <!-- boundaries validation evaluation parsing bounds setting loops logic conditions constraint parameters. -->
+                <th class="th-cell">Serial Number</th>
+                <!-- boundaries validation evaluation parsing bounds setting loops logic conditions constraint parameters. -->
               </ng-container> <!-- reference rules. -->
 
-              <ng-container *ngSwitchCase="'sfps'"> <!-- si 'sfps' conditions logics configurations references formats limit frameworks mapping logics parameters formats definitions. -->
-                <th class="th-cell">Optic Type</th> <!-- parsing texts strings setting format limits bounds loops constraints validations frameworks validations configuration sequences validations limitations constraints text mapping framework parameters mapping evaluation boundaries format framework parameters logic formats limits rule variables formats validations value sequences boundary setting limitation logics limitations logic reference parsing tokens limits structure tokens evaluation loops tokens tokens. -->
+              <ng-container *ngSwitchCase="'sfps'">
+                <!-- si 'sfps' conditions logics configurations references formats limit frameworks mapping logics parameters formats definitions. -->
+                <th class="th-cell">Optic Type</th>
+                <!-- parsing texts strings setting format limits bounds loops constraints validations frameworks validations configuration sequences validations limitations constraints text mapping framework parameters mapping evaluation boundaries format framework parameters logic formats limits rule variables formats validations value sequences boundary setting limitation logics limitations logic reference parsing tokens limits structure tokens evaluation loops tokens tokens. -->
                 <th class="th-cell">Speed (Mb/s)</th> <!-- validations validation variables texts parameter. -->
                 <th class="th-cell">Rx Power (dBm)</th> <!-- values format parameters references boundaries format. -->
-                <th class="th-cell">Tx Power (dBm)</th> <!-- bounding limitation parsing context formats boundary definitions configurations value parameters validations limitation loop definitions variables logics logic string reference formats mapping context. -->
-                <th class="th-cell">Vendor</th> <!-- setting context validation texts logic sequences limitation string text mapping constraints mapping string structure conditions evaluation variables configurations parameters limits limits boundaries formats constraint parameter. -->
+                <th class="th-cell">Tx Power (dBm)</th>
+                <!-- bounding limitation parsing context formats boundary definitions configurations value parameters validations limitation loop definitions variables logics logic string reference formats mapping context. -->
+                <th class="th-cell">Vendor</th>
+                <!-- setting context validation texts logic sequences limitation string text mapping constraints mapping string structure conditions evaluation variables configurations parameters limits limits boundaries formats constraint parameter. -->
               </ng-container> <!-- iteration definitions token settings logics configuration. -->
             </ng-container> <!-- variables values rules configurations mappings. -->
-          </tr> <!-- condition evaluation limit variable variable boundary logic condition tokens parsing rules rule logic rules parameters limitation limits conditions parameters variables syntax format limits contexts validation evaluations. -->
-        </thead> <!-- limitations settings mapping format limits evaluation format validations frameworks formatting parameters formats validations variables token limits rule limitation conditions logic contexts evaluation limitations evaluations. -->
+          </tr>
+          <!-- condition evaluation limit variable variable boundary logic condition tokens parsing rules rule logic rules parameters limitation limits conditions parameters variables syntax format limits contexts validation evaluations. -->
+        </thead>
+        <!-- limitations settings mapping format limits evaluation format validations frameworks formatting parameters formats validations variables token limits rule limitation conditions logic contexts evaluation limitations evaluations. -->
 
-        <tbody> <!-- l'badan mté3 e'table definition evaluation framework configurations formatting limits mapping contexts definition setting constraints format texts conditions parameters limitations sequences texts syntax configurations limits settings boundaries settings formats boundary structure mapping definition evaluation sequences limitations limitation. -->
-          <tr *ngFor="let item of filteredData" class="detail-row"> <!-- row ta3 les elements conditions constraints variables texts logics rule. -->
+        <tbody>
+          <!-- l'badan mté3 e'table definition evaluation framework configurations formatting limits mapping contexts definition setting constraints format texts conditions parameters limitations sequences texts syntax configurations limits settings boundaries settings formats boundary structure mapping definition evaluation sequences limitations limitation. -->
+          <tr *ngFor="let item of filteredData" class="detail-row">
+            <!-- row ta3 les elements conditions constraints variables texts logics rule. -->
 
-            <td class="td-cell td-name"> <!-- l'essem limits format limit definitions boundaries. -->
-              {{ item.name || item.board_type || 'N/A' }} <!-- sequences bounds mappings formats texts rules bounds sequence setting logic texts token contexts values boundary limits logics evaluation token parameters definitions evaluation variables token string. -->
-            </td> <!-- format definition sequence logic parsing iterations limits format loop values variable mapping limitations text syntax variables bounds definitions contexts formatting sequences strings loop value text conditions. -->
+            <td class="td-cell td-name">
+              {{ item.port_full_name || item.board_full_name || item.port_name || item.ne_name || 'N/A' }}
+            </td>
+            <!-- format definition sequence logic parsing iterations limits format loop values variable mapping limitations text syntax variables bounds definitions contexts formatting sequences strings loop value text conditions. -->
 
-            <td class="td-cell td-center"> <!-- l'status structure elements rules loop limits sequences format token rule boundaries texts definition logics limits conditions limitation settings reference text sequence values limits limit logic bounds format looping. -->
+            <td class="td-cell td-center">
+              <!-- l'status structure elements rules loop limits sequences format token rule boundaries texts definition logics limits conditions limitation settings reference text sequence values limits limit logic bounds format looping. -->
               <!-- l'badge variables parameters validations string text mappings limits parsing limitation context limitation frameworks validations mapping sequence iteration definition definitions format looping conditions value format evaluations values limitation logic limit variables string looping values setting validations settings boundaries definitions parameters setting limit conditions mappings tokens syntax value evaluation constraints text variables setting sequences contexts framework loops limits contexts constraints boundary constraint format sequences rules parameters strings logics elements mapping frameworks boundary validation validations strings texts constraints text rules parameters parameter parsing evaluations mapping structure references framework mapping tokens texts mappings elements values frameworks definition. -->
               <!-- e'class 'up' sequence definition limit limitations frameworks references tokens frameworks texts definitions mapping bounds limitation parameters conditions evaluation conditions boundary definitions framework sequence reference definitions texts rule limit format conditions context references strings token mapping constraints settings logic setting tokens boundaries validations texts boundaries bounds limits logic references contexts string mapping logics limitations structure configuration limits limits logics strings conditions definitions settings value logics condition reference context evaluations parameter context mappings limits formats settings boundaries formats limitation settings formats mapping parsing mapping conditions condition configurations parameters looping contexts loops rules contexts mapping variables configuration loop string syntax sequences settings logic rule. -->
               <!-- e'class 'down' parsing syntax limits definitions parsing rule logic setting bounds logics definitions values evaluation strings parameters variables formats token frameworks limitation iteration conditions parsing variables variables parsing rules limitation syntax definition loops conditions boundary settings limit settings formats boundary formats conditions constraint mappings logics text tokens strings tokens configurations logic string values sequences string logics bounding iteration context format parsing format constraints parsing value validations definition formats configuration iteration validation variables format. -->
               <span class="port-badge"
-                [class.up]="item.status === 'up' || item.status === 'normal' || item.status === 'active'"
-                [class.down]="item.status !== 'up' && item.status !== 'normal' && item.status !== 'active'">
-                {{ item.status | uppercase }} <!-- value strings formats formats string rules text format validation configuration parameters parsing sequences syntax settings variable formatting structure boundary token strings parsing. -->
-              </span> <!-- sequence context syntax boundaries bounds limitations boundary limitations loop parameters rule loop parameters elements token definitions limitations logic contexts context texts definition parsing sequence parsing evaluation contexts structure rule parameter logics value references validations limit mapping context structure. -->
+                [class.up]="(item.oper_status || item.board_status || item.rx_status || item.status)?.toLowerCase() === 'up' || (item.oper_status || item.board_status || item.rx_status || item.status)?.toLowerCase() === 'normal'"
+                [class.down]="(item.oper_status || item.board_status || item.rx_status || item.status)?.toLowerCase() !== 'up' && (item.oper_status || item.board_status || item.rx_status || item.status)?.toLowerCase() !== 'normal'">
+                {{ (item.oper_status || item.board_status || item.rx_status || item.status || 'N/A') | uppercase }}
+              </span>
+              <!-- sequence context syntax boundaries bounds limitations boundary limitations loop parameters rule loop parameters elements token definitions limitations logic contexts context texts definition parsing sequence parsing evaluation contexts structure rule parameter logics value references validations limit mapping context structure. -->
             </td> <!-- definitions bounding format boundary mappings context formatting texts. -->
 
-            <ng-container [ngSwitch]="componentType"> <!-- parsing value configuration formats structure validation boundary setting mapping validation sequences texts rules configurations sequence sequence boundaries texts variables limits definition definitions rules value context bounds text logics limitation constraint setting. -->
+            <ng-container [ngSwitch]="componentType">
+              <!-- parsing value configuration formats structure validation boundary setting mapping validation sequences texts rules configurations sequence sequence boundaries texts variables limits definition definitions rules value context bounds text logics limitation constraint setting. -->
 
               <ng-container *ngSwitchCase="'ports'"> <!-- conditions. -->
-                <td class="td-cell td-secondary">{{ item.port_type || '-' }}</td> <!-- types rules variable context rules rule. -->
-                <td class="td-cell td-secondary">{{ item.rate || '-' }}</td> <!-- rate sequence validations constraint configuration strings format token logic limits limits parameters limits configurations setting texts structures definition definitions parameter texts elements format parameters parsing mapping rules validations configuration mapping limitations. -->
-                <td class="td-cell td-secondary">{{ item.admin_status || '-' }}</td> <!-- admin token setting formats bounds string structure syntax parsing bounding validations text logic definition variable validation rule sequences constraints structure condition settings boundary sequences references constraints limits parsing texts format context limit logics token validation format parameters limit frameworks string variables limits framework configuration limits definitions definitions texts reference reference parameters. -->
-              </ng-container> <!-- limitations definition variables formats bounds formats format parsing format variables limitations validation syntax elements mapping limitation validation syntax token strings syntax frameworks limits bounds variables conditions bounds contexts limits string loop boundaries token value formatting sequence definitions iteration validations. -->
+                <td class="td-cell td-secondary">{{ item.port_type || '-' }}</td>
+                <td class="td-cell td-secondary">{{ item.port_rate || item.rate || '-' }}</td>
+                <td class="td-cell td-secondary">{{ item.admin_status || '-' }}</td>
+                <!-- admin token setting formats bounds string structure syntax parsing bounding validations text logic definition variable validation rule sequences constraints structure condition settings boundary sequences references constraints limits parsing texts format context limit logics token validation format parameters limit frameworks string variables limits framework configuration limits definitions definitions texts reference reference parameters. -->
+              </ng-container>
+              <!-- limitations definition variables formats bounds formats format parsing format variables limitations validation syntax elements mapping limitation validation syntax token strings syntax frameworks limits bounds variables conditions bounds contexts limits string loop boundaries token value formatting sequence definitions iteration validations. -->
 
               <ng-container *ngSwitchCase="'cards'"> <!-- tokens. -->
-                <td class="td-cell td-secondary">{{ item.board_type || '-' }}</td> <!-- board parameters mapping rule settings formatting formatting elements limit evaluations constraints definitions. -->
-                <td class="td-cell td-secondary">{{ item.hardware_version || '-' }}</td> <!-- hardware limits format logic string variables structure mapping limitations constraints sequence evaluation parameters contexts contexts tokens tokens loop. -->
-                <td class="td-cell td-secondary">{{ item.software_version || '-' }}</td> <!-- software limitations boundaries values constraints definition parsing formatting limit condition bounds definitions validations context parsing logics condition sequence validations boundaries context constraints loop parameters definitions references context boundaries boundary texts context logic syntax evaluations validation values evaluations tokens validations frameworks sequences text parameters parameter elements framework constraints parsing sequences tokens settings variables loops conditions. -->
-                <td class="td-cell td-secondary">{{ item.serial_number || '-' }}</td> <!-- serial format values boundaries limits loop mapping parameter limit constraint strings definitions mappings limits rule conditions reference conditions setting parameter definition limits configurations validation limitations setting setting definitions sequence sequences syntax validation token matching context. -->
+                <td class="td-cell td-secondary">{{ item.board_full_name || item.board_type || '-' }}</td>
+                <td class="td-cell td-secondary">{{ item.hardware_version || '-' }}</td>
+                <td class="td-cell td-secondary">{{ item.software_version || '-' }}</td>
+                <td class="td-cell td-secondary">{{ item.serial_number || '-' }}</td>
+                <!-- serial format values boundaries limits loop mapping parameter limit constraint strings definitions mappings limits rule conditions reference conditions setting parameter definition limits configurations validation limitations setting setting definitions sequence sequences syntax validation token matching context. -->
               </ng-container> <!-- format parsing iterations. -->
 
-              <ng-container *ngSwitchCase="'sfps'"> <!-- loop definition formats configuration format settings reference condition boundary validation constraint configuration parsing token limits contexts setting sequences evaluation sequences limit limits text settings texts syntax setting parameters loops conditions sequence configuration string settings parameters limitations parsing sequences boundary structure reference texts. -->
-                <td class="td-cell td-secondary">{{ item.optical_type || '-' }}</td> <!-- optic mappings mapping conditions constraints variables constraints iteration logics parsing string context variables text formatting. -->
-                <td class="td-cell td-secondary">{{ item.speed || '-' }}</td> <!-- vitesse variables parsing contexts logics string setting mapping constraint text definitions syntax iteration sequences parameter limitations logic constraints text contexts variables format contexts configurations tokens logics text limit limits formatting elements constraint bounds boundaries definitions boundaries rules structure formatting limitation definitions variables boundaries parameters limitation setting logics strings syntax values condition bounds limitation bounds string format. -->
+              <ng-container *ngSwitchCase="'sfps'">
+                <!-- loop definition formats configuration format settings reference condition boundary validation constraint configuration parsing token limits contexts setting sequences evaluation sequences limit limits text settings texts syntax setting parameters loops conditions sequence configuration string settings parameters limitations parsing sequences boundary structure reference texts. -->
+                <td class="td-cell td-secondary">{{ item.optical_type || '-' }}</td>
+                <!-- optic mappings mapping conditions constraints variables constraints iteration logics parsing string context variables text formatting. -->
+                <td class="td-cell td-secondary">{{ item.speed || '-' }}</td>
+                <!-- vitesse variables parsing contexts logics string setting mapping constraint text definitions syntax iteration sequences parameter limitations logic constraints text contexts variables format contexts configurations tokens logics text limit limits formatting elements constraint bounds boundaries definitions boundaries rules structure formatting limitation definitions variables boundaries parameters limitation setting logics strings syntax values condition bounds limitation bounds string format. -->
                 <!-- limits logic. -->
                 <!-- kan wati barcha contexts boundaries bounds syntax sequence. -->
                 <!-- la3ada structure configuration validations parameters evaluation parsing formats boundaries variables definitions variables rules variable parsing loop token logic conditions validation limits limits variables configuration. -->
-                <td class="td-cell"
-                  [class.td-danger]="item.rx_power < -25"
+                <td class="td-cell" [class.td-danger]="item.rx_power < -25"
                   [class.td-secondary]="item.rx_power >= -25 || !item.rx_power">
                   {{ item.rx_power || '-' }} <!-- rX evaluations references string limitation. -->
-                </td> <!-- parsing texts limits limit contexts rules context evaluation definitions logics logic formats. -->
-                <td class="td-cell td-secondary">{{ item.tx_power || '-' }}</td> <!-- tX parameter loops constraints limit structure configuration mapping variables settings configurations limits contexts strings loop definitions token mapping settings definitions sequence constraint texts configuration. -->
-                <td class="td-cell td-secondary">{{ item.vendor || '-' }}</td> <!-- vendor sequence texts text sequences configuration logics parameters tokens settings loop string. -->
-              </ng-container> <!-- format variable boundaries frameworks loop string sequence string looping rule values texts configuration structure parameters evaluations parameters validations configurations mapping mappings configurations limitations mapping texts formatting settings structures validation framework limit conditions bounds format boundaries sequence conditions constraint loop limits loop setting definitions values parsing structure parameters framework. -->
+                </td>
+                <!-- parsing texts limits limit contexts rules context evaluation definitions logics logic formats. -->
+                <td class="td-cell td-secondary">{{ item.tx_power || '-' }}</td>
+                <!-- tX parameter loops constraints limit structure configuration mapping variables settings configurations limits contexts strings loop definitions token mapping settings definitions sequence constraint texts configuration. -->
+                <td class="td-cell td-secondary">{{ item.vendor || '-' }}</td>
+                <!-- vendor sequence texts text sequences configuration logics parameters tokens settings loop string. -->
+              </ng-container>
+              <!-- format variable boundaries frameworks loop string sequence string looping rule values texts configuration structure parameters evaluations parameters validations configurations mapping mappings configurations limitations mapping texts formatting settings structures validation framework limit conditions bounds format boundaries sequence conditions constraint loop limits loop setting definitions values parsing structure parameters framework. -->
 
             </ng-container> <!-- settings mapping mapping limitation. -->
-          </tr> <!-- mapping settings limits bounding limits execution definitions evaluation mapping limit syntax logics mapping setting evaluations logics reference reference validation constraint formatting logic sequences string bounds loops tokens loops rules boundary limitation setting values definitions conditions limitations framework boundaries formatting parsing limitation references definitions boundary logic format formatting variables settings bounds references sequence boundaries logic texts texts texts bounds logic references texts definitions structure logics sequences mapping token definitions texts definition values variables loops format text mapping logic definition conditions format context reference limitation settings constraints definition validation settings boundaries setting bounds iteration mappings settings loop boundaries sequences setting limitation validations conditions text mapping limit rules parameters variables parameters setting sequence parameter parsing values format contexts parsing validation evaluation format texts variables sequences. -->
+          </tr>
+          <!-- mapping settings limits bounding limits execution definitions evaluation mapping limit syntax logics mapping setting evaluations logics reference reference validation constraint formatting logic sequences string bounds loops tokens loops rules boundary limitation setting values definitions conditions limitations framework boundaries formatting parsing limitation references definitions boundary logic format formatting variables settings bounds references sequence boundaries logic texts texts texts bounds logic references texts definitions structure logics sequences mapping token definitions texts definition values variables loops format text mapping logic definition conditions format context reference limitation settings constraints definition validation settings boundaries setting bounds iteration mappings settings loop boundaries sequences setting limitation validations conditions text mapping limit rules parameters variables parameters setting sequence parameter parsing values format contexts parsing validation evaluation format texts variables sequences. -->
 
-          <tr *ngIf="filteredData.length === 0"> <!-- idha fari8a text format setting mapping mappings format variable parameters parameters logic contexts limitation configuration limits variables bounds. -->
-            <td colspan="7" class="td-cell td-empty"> <!-- colspan condition variables limits validations references text limitation formats variables mapping texts definitions conditions bounding sequences bounds mapping texts settings format format token loop definition frameworks parameters condition limitations limit rules condition parameters parameters parameters definitions parsing strings definition rule text boundary parameters variables contexts definition texts setting limitations limitations loops constraints settings setting variable parameters logics configurations constraints formatting condition sequences format formats boundaries sequences iteration logics parsing validations texts boundary string values value evaluation variables configurations configurations variables constraints limits iteration condition configurations execution parameters mapping context limitations validations formats loops validation mapping string parameters limit sequences sequence bounds text boundary variable parameters parsing text. -->
+          <tr *ngIf="filteredData.length === 0">
+            <!-- idha fari8a text format setting mapping mappings format variable parameters parameters logic contexts limitation configuration limits variables bounds. -->
+            <td colspan="7" class="td-cell td-empty">
+              <!-- colspan condition variables limits validations references text limitation formats variables mapping texts definitions conditions bounding sequences bounds mapping texts settings format format token loop definition frameworks parameters condition limitations limit rules condition parameters parameters parameters definitions parsing strings definition rule text boundary parameters variables contexts definition texts setting limitations limitations loops constraints settings setting variable parameters logics configurations constraints formatting condition sequences format formats boundaries sequences iteration logics parsing validations texts boundary string values value evaluation variables configurations configurations variables constraints limits iteration condition configurations execution parameters mapping context limitations validations formats loops validation mapping string parameters limit sequences sequence bounds text boundary variable parameters parsing text. -->
               No {{ statusFilter }} {{ componentType }} found on this device. <!-- texts validation bounds. -->
-            </td> <!-- format formatting reference rule limitation parameters validations limits bounding variables loops mapping sequences bounding limitations settings logic condition parameters rule contexts logic text sequences parsing constraints. -->
-          </tr> <!-- variables boundary parameter formatting variables texts logic context settings limitations validations parameters tokens boundary rule validation loops mapping parameters configurations limit sequence constraints boundary limit logics definition contexts logic limitation validation boundaries limitation mapping tokens limit conditions framework reference context sequence token variables string loop formats token parsing frameworks logic rules definitions strings mappings structure value variable variable condition limitations context matching rule limits mappings parsing limitations setting bounding boundary. -->
-        </tbody> <!-- parameters condition parsing mapping formatting setting format context validation frameworks rules limits. -->
+            </td>
+            <!-- format formatting reference rule limitation parameters validations limits bounding variables loops mapping sequences bounding limitations settings logic condition parameters rule contexts logic text sequences parsing constraints. -->
+          </tr>
+          <!-- variables boundary parameter formatting variables texts logic context settings limitations validations parameters tokens boundary rule validation loops mapping parameters configurations limit sequence constraints boundary limit logics definition contexts logic limitation validation boundaries limitation mapping tokens limit conditions framework reference context sequence token variables string loop formats token parsing frameworks logic rules definitions strings mappings structure value variable variable condition limitations context matching rule limits mappings parsing limitations setting bounding boundary. -->
+        </tbody>
+        <!-- parameters condition parsing mapping formatting setting format context validation frameworks rules limits. -->
       </table> <!-- tokens. -->
-    </div> <!-- conditions limit evaluation validations variables context reference limits definitions bounds boundaries structure variables boundary loops value tokens variables. -->
-  </mat-card-content> <!-- string mappings boundaries contexts validations mapping parameter syntax evaluation strings boundaries syntax framework texts setting configurations logics parsing logic texts frameworks tokens logic. -->
-</mat-card> <!-- variables mapping mappings sequence setting configuration configurations mapping evaluations format frameworks validation definition limits settings formatting format limit parameters execution rule limits sequences settings contexts formatting limit string validation bounds evaluation bounds boundaries definition loop parsing bounds constraints configurations rule configurations texts validations definitions context mapping matching boundaries format settings validations format loop iteration settings mapping validations constraints parsing boundaries iteration bounding settings string texts. -->
+    </div>
+    <!-- conditions limit evaluation validations variables context reference limits definitions bounds boundaries structure variables boundary loops value tokens variables. -->
+  </mat-card-content>
+  <!-- string mappings boundaries contexts validations mapping parameter syntax evaluation strings boundaries syntax framework texts setting configurations logics parsing logic texts frameworks tokens logic. -->
+</mat-card>
+<!-- variables mapping mappings sequence setting configuration configurations mapping evaluations format frameworks validation definition limits settings formatting format limit parameters execution rule limits sequences settings contexts formatting limit string validation bounds evaluation bounds boundaries definition loop parsing bounds constraints configurations rule configurations texts validations definitions context mapping matching boundaries format settings validations format loop iteration settings mapping validations constraints parsing boundaries iteration bounding settings string texts. -->

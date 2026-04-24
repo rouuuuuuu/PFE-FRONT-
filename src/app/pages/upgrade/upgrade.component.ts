@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { interval, Subject } from 'rxjs';
@@ -9,26 +9,28 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService } from '../../services/api.service';
-import { forkJoin } from 'rxjs';
 
-interface Router {
+interface Device {
   device_id: number;
   ne_name: string;
   ip_address: string;
   vendor: string;
+  device_type: string;
+  ports?: any[];
 }
 
-interface DeviceInterface {
-  interface: string;
-  base_interface?: string;
-  vlan?: string;
+interface PortOption {
+  label: string;         // display: "GigabitEthernet0/1/0 — TO_CLIENT_FO"
+  interface: string;     // base interface name
+  vlan: string;
   description: string;
-  client_name: string;
-  status: string;
-  is_available: boolean;
+  admin_status: string;
+  oper_status: string;
 }
 
 interface Upgrade {
@@ -53,72 +55,70 @@ interface Upgrade {
   selector: 'app-upgrade',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, MatIconModule, MatProgressSpinnerModule,
-    MatCardModule, MatFormFieldModule, MatInputModule, MatTableModule,
-    MatAutocompleteModule
+    CommonModule, FormsModule,
+    MatIconModule, MatProgressSpinnerModule,
+    MatCardModule, MatFormFieldModule, MatInputModule,
+    MatSelectModule, MatTableModule,
+    MatAutocompleteModule, MatTooltipModule
   ],
   templateUrl: './upgrade.component.html',
   styleUrls: ['./upgrade.component.css']
 })
 export class UpgradeComponent implements OnInit, OnDestroy {
-  // API URL
   private readonly BASE_URL = 'http://127.0.0.1:8000';
   private apiUrl = `${this.BASE_URL}/api/provisioning`;
-
-  // Auto-refresh polling — RxJS-based so it works correctly in browser
   private destroy$ = new Subject<void>();
   private readonly POLL_MS = 10_000;
 
-  // Wizard state
-  step: 'device' | 'interface' | 'configure' = 'device';
-
-  // Selected data
-  selectedRouter: Router | null = null;
-  selectedInterface: DeviceInterface | null = null;
-
-  // Form data
-  customerName = '';
-  oldBandwidth: number | null = null;
-  newBandwidth: number | null = null;
-
-  // Table columns
-  columns: string[] = ['upgrade_id', 'device_name', 'interface', 'customer_name', 'bandwidth', 'is_upgrade', 'status', 'created_at', 'actions'];
-
-  // Data arrays
-  allRouters: Router[] = [];
-  filteredRoutersList: Router[] = [];
-  interfaces: DeviceInterface[] = [];
-  upgrades: Upgrade[] = [];
-
-  // Pagination for router grid
-  routerPage = 1;
-  routerPageSize = 12;
-
-  // Loading states
-  loadingRouters = false;
-  loadingInterfaces = false;
-  submitting = false;
-
-  // Filters
-  filterStatus = 'all';
+  // ─── Device search ───
   searchQuery = '';
-  searchHistoryQuery = '';
+  allDevices: Device[] = [];
+  filteredDevicesList: Device[] = [];
+  loadingDevices = false;
 
-  // Detail modal
+  // ─── Selected device & sync ───
+  selectedDevice: Device | null = null;
+  syncingRouter = false;
+  syncDone = false;
+
+  // ─── Interface dropdown ───
+  portOptions: PortOption[] = [];
+  selectedPort: PortOption | null = null;
+
+  // ─── Bandwidth ───
+  newBandwidth: number | null = null;
+  knownOldBandwidth: number | null = null;
+
+  // ─── Submission ───
+  submitting = false;
+  message = '';
+  messageType: 'success' | 'error' | '' = '';
+
+  // ─── History ───
+  upgrades: Upgrade[] = [];
+  filterStatus = 'all';
+  searchHistoryQuery = '';
+  columns: string[] = [
+    'upgrade_id', 'device_name', 'interface',
+    'customer_name', 'bandwidth', 'is_upgrade',
+    'status', 'created_at', 'swan_ticket', 'download'
+  ];
+
+  // ─── Detail modal ───
   showDetailModal = false;
   selectedUpgradeDetail: Upgrade | null = null;
 
   constructor(
     private http: HttpClient,
     private api: ApiService,
+    private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    this.loadRouters();
+    this.loadDevices();
     this.loadUpgrades();
 
-    // Auto-refresh history table every 10 seconds using RxJS interval
     if (isPlatformBrowser(this.platformId)) {
       interval(this.POLL_MS)
         .pipe(
@@ -132,6 +132,7 @@ export class UpgradeComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (data) => {
             this.upgrades = Array.isArray(data) ? data : (data.results || []);
+            this.cdr.detectChanges(); // keep table live during polling
           },
           error: (err) => console.error('Polling error:', err)
         });
@@ -143,298 +144,283 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ─── Load routers via ApiService (same as provisioning task) ───
-  loadRouters(): void {
-    this.loadingRouters = true;
-
-    forkJoin({
-      routers: this.api.getRouters(),
-    }).subscribe({
+  // ─── Load routers only ───
+  loadDevices(): void {
+    this.loadingDevices = true;
+    this.api.getAllDevices().subscribe({
       next: (data: any) => {
-        const raw = Array.isArray(data.routers)
-          ? data.routers
-          : (data.routers.results || []);
-
-        this.allRouters = raw.map((d: any) => ({
-          device_id: d.id ?? d.device_id ?? 0,
-          ne_name: d.name ?? d.ne_name ?? '',
-          ip_address: d.loopback_ip ?? d.ip_address ?? '',
-          vendor: d.vendor ?? ''
-        }));
-
-        this.filteredRoutersList = [...this.allRouters];
-        this.loadingRouters = false;
+        const raw = Array.isArray(data) ? data : (data.results || []);
+        this.allDevices = raw
+          .filter((d: any) => (d.device_type || '').toLowerCase() === 'router')
+          .map((d: any) => ({
+            device_id:   d.id ?? d.device_id ?? 0,
+            ne_name:     d.name ?? d.ne_name ?? '',
+            ip_address:  d.loopback_ip ?? d.ip_address ?? '',
+            vendor:      d.vendor ?? '',
+            device_type: d.device_type ?? 'Router',
+            ports:       d.ports || []
+          }));
+        this.filteredDevicesList = [...this.allDevices];
+        this.loadingDevices = false;
       },
-      error: (err) => {
-        console.error('Error loading routers:', err);
-        this.loadingRouters = false;
+      error: () => { this.loadingDevices = false; }
+    });
+  }
+
+  // ─── Autocomplete ───
+  filterDevices(searchTerm: string): void {
+    this.syncDone = false;
+    this.portOptions = [];
+    this.selectedPort = null;
+    if (!searchTerm) {
+      this.filteredDevicesList = [...this.allDevices];
+      return;
+    }
+    const term = searchTerm.toLowerCase();
+    this.filteredDevicesList = this.allDevices.filter(d =>
+      d.ne_name.toLowerCase().includes(term) ||
+      d.ip_address.includes(term)
+    );
+  }
+
+  onDeviceAutoSelected(event: any): void {
+    const name = event.option.value as string;
+    const device = this.allDevices.find(d => d.ne_name === name);
+    if (device) {
+      this.selectedDevice = device;
+      this.searchQuery = device.ne_name;
+      this.syncDone = false;
+      this.portOptions = [];
+      this.selectedPort = null;
+      this.newBandwidth = null;
+      this.message = '';
+    }
+  }
+
+  // ─── Sync router — fetch interfaces from all-devices data ───
+  syncRouter(): void {
+    if (!this.selectedDevice) return;
+    this.syncingRouter = true;
+    this.syncDone = false;
+    this.portOptions = [];
+    this.selectedPort = null;
+
+    // Use getUnifiedDevice to get up-to-date port data
+    this.api.getUnifiedDevice(this.selectedDevice.ip_address).subscribe({
+      next: (data: any) => {
+        const ports: any[] = data.ports || data.port_details || [];
+        this.portOptions = ports.map(p => {
+          const ifName  = p.port_full_name || p.name || '';
+          const desc    = p.port_description || p.description || '';
+          const adminSt = p.admin_status || '-';
+          const operSt  = p.oper_status  || p.status || '-';
+          return {
+            label:        desc ? `${ifName} — ${desc}` : ifName,
+            interface:    ifName.split('.')[0],
+            vlan:         ifName.includes('.') ? ifName.split('.')[1] : '',
+            description:  desc,
+            admin_status: adminSt,
+            oper_status:  operSt
+          } as PortOption;
+        });
+        this.syncDone = true;
+        this.syncingRouter = false;
+        if (this.portOptions.length === 0) {
+          this.message = 'No interfaces found for this router.';
+          this.messageType = 'error';
+        }
+      },
+      error: () => {
+        this.message = 'Failed to sync router interfaces.';
+        this.messageType = 'error';
+        this.syncingRouter = false;
       }
     });
   }
 
-  loadUpgrades(): void {
-    let url = `${this.apiUrl}/bandwidth-upgrades/`;
-    if (this.filterStatus !== 'all') {
-      url += `?status=${this.filterStatus}`;
-    }
-
-    this.http.get<Upgrade[]>(url)
-      .subscribe({
-        next: (data) => {
-          this.upgrades = Array.isArray(data) ? data : ((data as any).results || []);
-        },
-        error: (err) => { console.error('Error loading upgrades:', err); }
-      });
+  /** When a port is selected, look up the last known bandwidth from history */
+  onPortSelected(): void {
+    if (!this.selectedPort || !this.selectedDevice) return;
+    const iface = this.selectedPort.interface;
+    // Find most recent completed upgrade for this device + interface
+    const match = this.upgrades
+      .filter(u => u.device_name === this.selectedDevice!.ne_name && u.interface === iface)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+    this.knownOldBandwidth = match ? match.new_bandwidth_mbps : null;
   }
 
-  // ─── Autocomplete filter (called on every keystroke) ───
-  filterRouters(searchTerm: string): void {
-    this.routerPage = 1; // reset pagination on new search
-    if (!searchTerm) {
-      this.filteredRoutersList = [...this.allRouters];
-      return;
-    }
-    const term = searchTerm.toLowerCase();
-    this.filteredRoutersList = this.allRouters.filter(r =>
-      r.ne_name.toLowerCase().includes(term) ||
-      r.ip_address.includes(term)
-    );
-  }
-
-  // ─── Pagination helpers ───
-  get paginatedRouters(): Router[] {
-    const start = (this.routerPage - 1) * this.routerPageSize;
-    return this.filteredRoutersList.slice(start, start + this.routerPageSize);
-  }
-
-  get totalRouterPages(): number {
-    return Math.ceil(this.filteredRoutersList.length / this.routerPageSize) || 1;
-  }
-
-  prevRouterPage(): void {
-    if (this.routerPage > 1) this.routerPage--;
-  }
-
-  nextRouterPage(): void {
-    if (this.routerPage < this.totalRouterPages) this.routerPage++;
-  }
-
-  /** Filtered list for history table */
-  get filteredUpgrades(): Upgrade[] {
-    if (!this.searchHistoryQuery) return this.upgrades;
-    const query = this.searchHistoryQuery.toLowerCase();
-    return this.upgrades.filter(u =>
-      u.device_name.toLowerCase().includes(query) ||
-      u.customer_name.toLowerCase().includes(query) ||
-      u.interface.toLowerCase().includes(query) ||
-      u.device_ip.includes(query)
-    );
-  }
-
-  /** Called when user picks a router from the autocomplete dropdown */
-  onRouterAutoSelected(event: any): void {
-    const selectedName = event.option.value as string;
-    const router = this.allRouters.find(r => r.ne_name === selectedName);
-    if (router) {
-      this.selectRouter(router);
-    }
-  }
-
-  selectRouter(router: Router): void {
-    this.selectedRouter = router;
-    this.step = 'interface';
-    this.fetchInterfaces();
-  }
-
-  fetchInterfaces(): void {
-    if (!this.selectedRouter) return;
-
-    this.loadingInterfaces = true;
-
-    const payload: any = {
-      device_id: this.selectedRouter.device_id,
-      device_name: this.selectedRouter.ne_name,
-      device_ip: this.selectedRouter.ip_address
-    };
-
-    this.http.post<any>(`${this.apiUrl}/fetch-interfaces/`, payload)
-      .subscribe({
-        next: (response) => {
-          if (response.status === 'success') {
-            // Backend may return a pre-parsed array OR raw text in 'data'
-            if (Array.isArray(response.interfaces) && response.interfaces.length > 0) {
-              this.interfaces = response.interfaces;
-            } else if (response.data) {
-              // Parse the raw text table from Celery:
-              // "Interface    Status    Description\nGE0/0/1  Up  To_Core\n..."
-              this.interfaces = this.parseInterfaceText(response.data);
-            } else {
-              this.interfaces = [];
-            }
-          } else {
-            alert(`Error: ${response.message || 'Unknown error'}`);
-            this.interfaces = [];
-          }
-          this.loadingInterfaces = false;
-        },
-        error: (err) => {
-          console.error('Error fetching interfaces:', err);
-          alert('Failed to retrieve interfaces. Please check the backend connection.');
-          this.loadingInterfaces = false;
-        }
-      });
-  }
-
-  /** Parse raw text table from backend into DeviceInterface objects */
-  private parseInterfaceText(rawText: string): DeviceInterface[] {
-    const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-    if (lines.length <= 1) return []; // header only or empty
-
-    // Skip the header line (first line)
-    const dataLines = lines.slice(1);
-
-    return dataLines.map(line => {
-      // Split on 2+ spaces (columns are separated by multiple spaces)
-      const parts = line.split(/\s{2,}/);
-      const ifaceName = parts[0] || '';
-      const status = parts[1] || '';
-      const description = parts.slice(2).join(' ') || '';
-      const isUp = status.toLowerCase().includes('up');
-
-      return {
-        interface: ifaceName,
-        base_interface: ifaceName.split('.')[0], // e.g. GE0/0/1.100 → GE0/0/1
-        vlan: ifaceName.includes('.') ? ifaceName.split('.')[1] : undefined,
-        description: description,
-        client_name: description, // use description as client hint
-        status: status,
-        is_available: isUp
-      } as DeviceInterface;
-    });
-  }
-
-  selectInterface(iface: DeviceInterface): void {
-    if (!iface.is_available) return;
-
-    this.selectedInterface = iface;
-
-    if (iface.client_name) {
-      this.customerName = iface.client_name;
-    }
-
-    this.step = 'configure';
+  // ─── Submit ───
+  get canSubmit(): boolean {
+    return !!this.selectedDevice && !!this.selectedPort && !!this.newBandwidth && this.newBandwidth > 0;
   }
 
   submitUpgrade(): void {
-    if (!this.selectedRouter || !this.selectedInterface || !this.newBandwidth || !this.customerName) {
-      alert('Please fill in all required fields');
-      return;
-    }
-
-    if (this.newBandwidth <= 0) {
-      alert('Bandwidth must be greater than 0');
-      return;
-    }
+    if (!this.canSubmit) return;
 
     this.submitting = true;
+    this.message = '';
+
+    const isUpgrade = this.knownOldBandwidth !== null
+      ? this.newBandwidth! > this.knownOldBandwidth
+      : null;
 
     const payload = {
-      device_id: this.selectedRouter.device_id,
-      device_name: this.selectedRouter.ne_name,
-      device_ip: this.selectedRouter.ip_address,
-      interface: this.selectedInterface.base_interface || this.selectedInterface.interface,
-      vlan: this.selectedInterface.vlan || '',
-      customer_name: this.customerName,
+      device_id:          this.selectedDevice!.device_id,
+      device_name:        this.selectedDevice!.ne_name,
+      device_ip:          this.selectedDevice!.ip_address,
+      interface:          this.selectedPort!.interface,
+      vlan:               this.selectedPort!.vlan || '',
+      customer_name:      this.selectedPort!.description || this.selectedPort!.interface,
       new_bandwidth_mbps: this.newBandwidth,
-      old_bandwidth_mbps: this.oldBandwidth
+      old_bandwidth_mbps: this.knownOldBandwidth  // send known old BW so backend stores is_upgrade
     };
 
-    this.http.post<any>(`${this.apiUrl}/bandwidth-upgrade/`, payload)
-      .subscribe({
-        next: (response) => {
-          alert(`✅ Upgrade initiated!\nID: ${response.upgrade_id}\nTask: ${response.celery_task_id}`);
-          this.resetForm();
-          this.loadUpgrades();
-          this.submitting = false;
-        },
-        error: (err) => {
-          console.error('Error submitting upgrade:', err);
-          alert(`❌ Failed: ${err.error?.error || 'Unknown error'}`);
-          this.submitting = false;
-        }
-      });
+    this.http.post<any>(`${this.apiUrl}/bandwidth-upgrade/`, payload).subscribe({
+      next: (res) => {
+        this.message = `Task queued — ID: ${res.upgrade_id} | Ticket: SWAN-${this.formatDateForTicket(new Date())}-${res.upgrade_id.toString().padStart(4, '0')}`;
+        this.messageType = 'success';
+        this.submitting = false;
+        this.resetForm();
+        this.loadUpgrades(); // backend has already saved the record — fetch immediately
+      },
+      error: (err) => {
+        this.message = `Failed: ${err.error?.error || 'Unknown error'}`;
+        this.messageType = 'error';
+        this.submitting = false;
+      }
+    });
   }
 
   resetForm(): void {
-    this.step = 'device';
-    this.selectedRouter = null;
-    this.selectedInterface = null;
-    this.customerName = '';
-    this.oldBandwidth = null;
+    this.selectedDevice = null;
+    this.selectedPort = null;
     this.newBandwidth = null;
-    this.interfaces = [];
+    this.knownOldBandwidth = null;
+    this.portOptions = [];
+    this.syncDone = false;
     this.searchQuery = '';
-    this.routerPage = 1;
-    this.filteredRoutersList = [...this.allRouters];
+    this.filteredDevicesList = [...this.allDevices];
   }
 
-  goBack(): void {
-    if (this.step === 'configure') {
-      this.step = 'interface';
-    } else if (this.step === 'interface') {
-      this.step = 'device';
-      this.interfaces = [];
-    }
+  // ─── History ───
+  loadUpgrades(): void {
+    let url = `${this.apiUrl}/bandwidth-upgrades/`;
+    if (this.filterStatus !== 'all') url += `?status=${this.filterStatus}`;
+    this.http.get<Upgrade[]>(url).subscribe({
+      next: (data) => {
+        this.upgrades = Array.isArray(data) ? data : ((data as any).results || []);
+        this.cdr.detectChanges(); // ensure table re-renders immediately
+      },
+      error: (err) => console.error('Error loading upgrades:', err)
+    });
   }
 
-  onFilterChange(): void {
-    this.loadUpgrades();
+  onFilterChange(): void { this.loadUpgrades(); }
+
+  get filteredUpgrades(): Upgrade[] {
+    if (!this.searchHistoryQuery) return this.upgrades;
+    const q = this.searchHistoryQuery.toLowerCase();
+    return this.upgrades.filter(u =>
+      u.device_name.toLowerCase().includes(q) ||
+      u.customer_name?.toLowerCase().includes(q) ||
+      u.interface.toLowerCase().includes(q) ||
+      u.device_ip.includes(q)
+    );
   }
 
+  // ─── SWAN Ticket helpers ───
+  private formatDateForTicket(d: Date): string {
+    return d.getFullYear().toString() +
+      (d.getMonth() + 1).toString().padStart(2, '0') +
+      d.getDate().toString().padStart(2, '0');
+  }
+
+  generateSwanTicket(upgrade: Upgrade): string {
+    const d = new Date(upgrade.created_at);
+    return `SWAN-${this.formatDateForTicket(d)}-${upgrade.upgrade_id.toString().padStart(4, '0')}`;
+  }
+
+  // ─── Download config.txt ───
+  downloadConfig(upgrade: Upgrade): void {
+    const ticket  = this.generateSwanTicket(upgrade);
+    const oldBw   = upgrade.old_bandwidth_mbps !== null ? `${upgrade.old_bandwidth_mbps} Mbps` : 'Unknown';
+    const newBw   = `${upgrade.new_bandwidth_mbps} Mbps`;
+    const dir     = upgrade.is_upgrade === null ? 'N/A' : upgrade.is_upgrade ? 'Upgrade ↑' : 'Downgrade ↓';
+    const date    = new Date(upgrade.created_at).toLocaleString();
+
+    const content = [
+      `========================================`,
+      `  BANDWIDTH CHANGE CONFIGURATION`,
+      `========================================`,
+      ``,
+      `SWAN Ticket  : ${ticket}`,
+      ``,
+      `--- Device ---`,
+      `Router       : ${upgrade.device_name}`,
+      `IP Address   : ${upgrade.device_ip}`,
+      `Vendor       : ${upgrade.vendor || 'N/A'}`,
+      ``,
+      `--- Service ---`,
+      `Interface    : ${upgrade.interface}${upgrade.vlan ? '.' + upgrade.vlan : ''}`,
+      `Customer     : ${upgrade.customer_name || 'N/A'}`,
+      ``,
+      `--- Bandwidth Change ---`,
+      `Direction    : ${dir}`,
+      `Old Bandwidth: ${oldBw}`,
+      `New Bandwidth: ${newBw}`,
+      ``,
+      `--- Task Info ---`,
+      `Status       : ${upgrade.status.toUpperCase()}`,
+      `Requested On : ${date}`,
+      `Requested By : ${upgrade.created_by || 'N/A'}`,
+      ``,
+      `--- Generated Commands ---`,
+      upgrade.generated_commands || '(no commands recorded)',
+      ``,
+      `--- Execution Output ---`,
+      upgrade.execution_output || '(no output recorded)',
+      ``,
+      `========================================`,
+    ].join('\n');
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `${ticket}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ─── Status helpers ───
   getStatusClass(status: string): string {
-    switch (status) {
-      case 'completed':   return 'status-completed';
-      case 'in_progress': return 'status-in-progress';
-      case 'pending':     return 'status-pending';
-      case 'failed':      return 'status-failed';
-      default:            return '';
-    }
-  }
-
-  getStatusLabel(status: string): string {
-    switch (status) {
-      case 'completed':   return 'Completed';
-      case 'in_progress': return 'In Progress';
-      case 'pending':     return 'Pending';
-      case 'failed':      return 'Failed';
-      default:            return status;
-    }
+    const map: any = {
+      completed:   'status-completed',
+      in_progress: 'status-in-progress',
+      pending:     'status-pending',
+      failed:      'status-failed'
+    };
+    return map[status] || '';
   }
 
   getStatusIcon(status: string): string {
-    switch (status) {
-      case 'completed':   return 'check_circle';
-      case 'in_progress': return 'sync';
-      case 'pending':     return 'schedule';
-      case 'failed':      return 'error';
-      default:            return 'help';
-    }
+    const map: any = {
+      completed:   'check_circle',
+      in_progress: 'sync',
+      pending:     'schedule',
+      failed:      'error'
+    };
+    return map[status] || 'help';
   }
 
-  retryUpgrade(upgradeId: number): void {
-    if (!confirm('Retry this upgrade?')) return;
+  getBandwidthChangeIcon(u: Upgrade): string {
+    if (u.is_upgrade === null) return 'swap_horiz';
+    return u.is_upgrade ? 'trending_up' : 'trending_down';
+  }
 
-    this.http.post(`${this.apiUrl}/bandwidth-upgrades/${upgradeId}/retry/`, {})
-      .subscribe({
-        next: () => {
-          alert('✅ Retry initiated');
-          this.loadUpgrades();
-        },
-        error: (err) => {
-          console.error('Error retrying:', err);
-          alert('❌ Retry failed');
-        }
-      });
+  getBandwidthChangeClass(u: Upgrade): string {
+    if (u.is_upgrade === null) return 'neutral';
+    return u.is_upgrade ? 'upgrade' : 'downgrade';
   }
 
   viewDetails(upgrade: Upgrade): void {
@@ -447,22 +433,11 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     this.selectedUpgradeDetail = null;
   }
 
-  getVendorIcon(vendor: string): string {
-    if (!vendor) return 'router';
-    const v = vendor.toLowerCase();
-    if (v.includes('huawei'))  return 'router';
-    if (v.includes('cisco'))   return 'settings_ethernet';
-    if (v.includes('juniper')) return 'hub';
-    return 'router';
-  }
-
-  getBandwidthChangeIcon(upgrade: Upgrade): string {
-    if (upgrade.is_upgrade === null) return 'swap_horiz';
-    return upgrade.is_upgrade ? 'trending_up' : 'trending_down';
-  }
-
-  getBandwidthChangeClass(upgrade: Upgrade): string {
-    if (upgrade.is_upgrade === null) return 'neutral';
-    return upgrade.is_upgrade ? 'upgrade' : 'downgrade';
+  retryUpgrade(upgradeId: number): void {
+    if (!confirm('Retry this upgrade?')) return;
+    this.http.post(`${this.apiUrl}/bandwidth-upgrades/${upgradeId}/retry/`, {}).subscribe({
+      next: () => { this.loadUpgrades(); },
+      error: (err) => console.error('Retry failed', err)
+    });
   }
 }

@@ -1,0 +1,135 @@
+<!-- Back Button -->
+<div class="back-container">
+  <button (click)="goBack()" class="back-btn">
+    <mat-icon class="back-icon">arrow_back</mat-icon>
+    Back to Switches
+  </button>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner class="loading-spinner"></mat-spinner>
+  <p class="loading-text">Fetching hardware status for {{ ip }}...</p>
+</div>
+
+<!-- Content -->
+<div *ngIf="!loading && verification" class="page-fade-in">
+  <h2 class="device-name">{{ verification.name || verification.device_name }}</h2>
+  <p class="device-meta">{{ ip }} &mdash; {{ verification.vendor | titlecase }}</p>
+
+  <div class="hardware-grid">
+
+    <!-- Ports Card -->
+    <mat-card class="hw-card hw-card--blue">
+      <mat-card-content class="hw-card-content">
+        <h3 class="hw-card-title">
+          <mat-icon class="hw-title-icon">settings_ethernet</mat-icon>
+          Ports
+        </h3>
+
+        <!-- Chart or no-data -->
+        <ng-container *ngIf="(portsUp + portsDown) > 0; else noPorts">
+          <div class="chart-wrapper" *ngIf="isBrowser">
+            <canvas baseChart [data]="portsChartData" [options]="chartOptions" type="doughnut"></canvas>
+            <div class="chart-center-text">{{ portsUp + portsDown }}</div>
+          </div>
+        </ng-container>
+        <ng-template #noPorts>
+          <div class="no-hw-data">
+            <mat-icon>info_outline</mat-icon>
+            <span>No port data available</span>
+          </div>
+        </ng-template>
+
+        <!-- UP / DOWN Buttons -->
+        <div class="status-btns">
+          <div (click)="goToDetails('up')" class="status-btn up-btn">
+            <div class="btn-label">UP</div>
+            <div class="btn-value">{{ portsUp }}</div>
+          </div>
+          <div (click)="goToDetails('down')" class="status-btn down-btn">
+            <div class="btn-label">DOWN</div>
+            <div class="btn-value">{{ portsDown }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Cards Card -->
+    <mat-card class="hw-card hw-card--orange">
+      <mat-card-content class="hw-card-content">
+        <h3 class="hw-card-title">
+          <mat-icon class="hw-title-icon">memory</mat-icon>
+          Cards
+        </h3>
+
+        <ng-container *ngIf="(cardsNormal + cardsAbnormal) > 0; else noCards">
+          <div class="chart-wrapper" *ngIf="isBrowser">
+            <canvas baseChart [data]="cardsChartData" [options]="chartOptions" type="doughnut"></canvas>
+            <div class="chart-center-text">{{ cardsNormal + cardsAbnormal }}</div>
+          </div>
+        </ng-container>
+        <ng-template #noCards>
+          <div class="no-hw-data">
+            <mat-icon>info_outline</mat-icon>
+            <span>No card data available</span>
+          </div>
+        </ng-template>
+
+        <!-- NORMAL / ABNORMAL Buttons -->
+        <div class="status-btns">
+          <div class="status-btn up-btn">
+            <div class="btn-label">NORMAL</div>
+            <div class="btn-value">{{ cardsNormal }}</div>
+          </div>
+          <div class="status-btn down-btn">
+            <div class="btn-label">ABNORMAL</div>
+            <div class="btn-value">{{ cardsAbnormal }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- SFPs Card -->
+    <mat-card class="hw-card hw-card--dark">
+      <mat-card-content class="hw-card-content">
+        <h3 class="hw-card-title">
+          <mat-icon class="hw-title-icon">flash_on</mat-icon>
+          SFPs
+        </h3>
+
+        <ng-container *ngIf="(sfpsNormal + sfpsAbnormal) > 0; else noSfps">
+          <div class="chart-wrapper" *ngIf="isBrowser">
+            <canvas baseChart [data]="sfpsChartData" [options]="chartOptions" type="doughnut"></canvas>
+            <div class="chart-center-text">{{ sfpsNormal + sfpsAbnormal }}</div>
+          </div>
+        </ng-container>
+        <ng-template #noSfps>
+          <div class="no-hw-data">
+            <mat-icon>info_outline</mat-icon>
+            <span>No SFP data available</span>
+          </div>
+        </ng-template>
+
+        <!-- NORMAL / ABNORMAL Buttons -->
+        <div class="status-btns">
+          <div class="status-btn up-btn">
+            <div class="btn-label">NORMAL</div>
+            <div class="btn-value">{{ sfpsNormal }}</div>
+          </div>
+          <div class="status-btn down-btn">
+            <div class="btn-label">ABNORMAL</div>
+            <div class="btn-value">{{ sfpsAbnormal }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>
+
+<!-- No data fallback -->
+<div *ngIf="!loading && !verification" class="no-data">
+  <mat-icon class="no-data-icon">error_outline</mat-icon>
+  <p>Could not retrieve hardware data for <strong>{{ ip }}</strong>.</p>
+</div>

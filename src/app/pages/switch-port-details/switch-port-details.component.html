@@ -1,0 +1,76 @@
+<!-- Back Button -->
+<div class="back-container">
+  <button (click)="goBack()" class="back-btn">
+    <mat-icon class="back-icon">arrow_back</mat-icon>
+    Back to Summary
+  </button>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner class="loading-spinner"></mat-spinner>
+  <p class="loading-text">Loading {{ statusFilter | uppercase }} ports...</p>
+</div>
+
+<!-- Detail Card -->
+<mat-card *ngIf="!loading && deviceInfo" class="detail-card page-fade-in">
+  <mat-card-header>
+    <mat-card-title class="detail-title">
+      {{ statusFilter | uppercase }} Ports &mdash; {{ deviceInfo.device_name }}
+    </mat-card-title>
+    <mat-card-subtitle>{{ ip }} &mdash; {{ deviceInfo.vendor | titlecase }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content class="detail-content">
+    <div class="table-container">
+      <table class="detail-table">
+
+        <thead>
+          <tr>
+            <th class="th-cell">Port Name</th>
+            <th class="th-cell th-center">Status</th>
+            <th class="th-cell">Type</th>
+            <th class="th-cell">Rate</th>
+            <th class="th-cell">Admin Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let port of filteredPorts" class="detail-row">
+
+            <!-- Name -->
+            <td class="td-cell td-name">{{ port.port_full_name || port.name || 'N/A' }}</td>
+
+            <!-- Status Badge -->
+            <td class="td-cell td-center">
+              <span class="port-badge"
+                [class.up]="(port.oper_status || port.status)?.toLowerCase() === 'up'"
+                [class.down]="(port.oper_status || port.status)?.toLowerCase() !== 'up'">
+                {{ (port.oper_status || port.status || 'N/A') | uppercase }}
+              </span>
+            </td>
+
+            <!-- Type -->
+            <td class="td-cell td-secondary">{{ port.port_type || '-' }}</td>
+
+            <!-- Rate -->
+            <td class="td-cell td-secondary">{{ port.port_rate || port.rate || '-' }}</td>
+
+            <!-- Admin Status -->
+            <td class="td-cell td-secondary">{{ port.admin_status || '-' }}</td>
+
+          </tr>
+
+          <!-- Empty state -->
+          <tr *ngIf="filteredPorts.length === 0">
+            <td colspan="5" class="td-cell td-empty">
+              <mat-icon class="empty-icon">info_outline</mat-icon>
+              <p>No {{ statusFilter }} ports found on this device.</p>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

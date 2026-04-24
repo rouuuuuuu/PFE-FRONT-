@@ -1,0 +1,158 @@
+/* ============================================================
+   SWITCH PORT DETAILS — Dark Detail Table
+   ============================================================ */
+
+/* --- Back Button --- */
+.back-container {
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--primary-orange);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  padding: 6px 0;
+  transition: opacity var(--transition-fast);
+}
+
+.back-btn:hover {
+  opacity: 0.8;
+}
+
+.back-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* --- Loading --- */
+.loading-container {
+  text-align: center;
+  padding: 60px 40px;
+}
+
+.loading-spinner {
+  margin: auto;
+}
+
+.loading-text {
+  color: var(--text-secondary);
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+/* --- Detail Card --- */
+.detail-card {
+  border-top: 3px solid var(--status-blue) !important;
+}
+
+.detail-title {
+  text-transform: capitalize;
+}
+
+.detail-content {
+  padding-top: 16px;
+}
+
+/* --- Table Container --- */
+.table-container {
+  overflow-x: auto;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+/* --- Table Header --- */
+.th-cell {
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--glass-border);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.th-center {
+  text-align: center;
+}
+
+/* --- Table Rows --- */
+.detail-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background var(--transition-fast);
+}
+
+.detail-row:hover {
+  background: var(--glass-hover);
+}
+
+/* --- Table Cells --- */
+.td-cell {
+  padding: 12px 16px;
+}
+
+.td-name {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.td-center {
+  text-align: center;
+}
+
+.td-secondary {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+/* --- Empty State --- */
+.td-empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+  opacity: 0.4;
+  display: block;
+  margin-inline: auto;
+}
+
+/* --- Port Badge --- */
+.port-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.port-badge.up {
+  background: var(--status-green-bg);
+  color: var(--status-green);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.port-badge.down {
+  background: var(--status-red-bg);
+  color: var(--status-red);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+}

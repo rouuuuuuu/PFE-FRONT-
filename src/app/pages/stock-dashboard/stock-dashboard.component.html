@@ -1,0 +1,198 @@
+<!-- ── Page Header ── -->
+<div class="page-header">
+  <div class="header-left">
+    <mat-icon class="header-icon">inventory_2</mat-icon>
+    <div>
+      <h1 class="page-title">Stock Dashboard</h1>
+      <p class="page-subtitle">Inventory Management — Network Equipment</p>
+    </div>
+  </div>
+  <button class="refresh-btn" (click)="loadStock()" matTooltip="Refresh stock data" id="refresh-stock-btn">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
+
+<!-- ── Loading ── -->
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner diameter="48" class="loading-spinner"></mat-spinner>
+  <p class="loading-text">Loading inventory...</p>
+</div>
+
+<!-- ── Error ── -->
+<div *ngIf="error && !loading" class="error-banner">
+  <mat-icon>error_outline</mat-icon>
+  {{ error }}
+</div>
+
+<!-- ── Content ── -->
+<div *ngIf="!loading && !error" class="page-fade-in">
+
+  <!-- ── Summary Cards ── -->
+  <div class="stats-grid">
+    <div class="stat-card" (click)="setFilter('all')" [class.stat-active]="activeFilter === 'all'" id="filter-all">
+      <mat-icon class="stat-icon stat-blue">category</mat-icon>
+      <div class="stat-body">
+        <div class="stat-value">{{ totalItems }}</div>
+        <div class="stat-label">Total References</div>
+      </div>
+    </div>
+
+    <div class="stat-card" (click)="setFilter('all')" id="stat-total-stock">
+      <mat-icon class="stat-icon stat-green">inventory</mat-icon>
+      <div class="stat-body">
+        <div class="stat-value">{{ totalStock | number }}</div>
+        <div class="stat-label">Total Units in Stock</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-card-danger" (click)="setFilter('out_of_stock')" [class.stat-active]="activeFilter === 'out_of_stock'" id="filter-rupture">
+      <mat-icon class="stat-icon stat-red">remove_shopping_cart</mat-icon>
+      <div class="stat-body">
+        <div class="stat-value">{{ outOfStock }}</div>
+        <div class="stat-label">Out of Stock</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-card-orange" (click)="setFilter('movement')" [class.stat-active]="activeFilter === 'movement'" id="filter-movement">
+      <mat-icon class="stat-icon stat-orange">swap_horiz</mat-icon>
+      <div class="stat-body">
+        <div class="stat-value">{{ withMovement }}</div>
+        <div class="stat-label">Items in Transfer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Search + Filter ── -->
+  <mat-card class="table-card">
+    <div class="table-toolbar">
+      <mat-form-field appearance="outline" class="search-field" floatLabel="always">
+        <mat-label>Search inventory</mat-label>
+        <mat-icon matPrefix class="search-prefix">search</mat-icon>
+        <input matInput
+               id="stock-search-input"
+               [(ngModel)]="searchValue"
+               (ngModelChange)="applySearch($event)"
+               placeholder="Reference, name, classification, vendor...">
+        <button *ngIf="searchValue" matSuffix mat-icon-button (click)="clearSearch()" class="clear-btn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div class="filter-chips">
+        <button class="chip-btn" [class.chip-active]="activeFilter === 'all'" (click)="setFilter('all')">
+          <mat-icon class="chip-icon">list</mat-icon> All
+        </button>
+        <button class="chip-btn chip-danger" [class.chip-active]="activeFilter === 'out_of_stock'" (click)="setFilter('out_of_stock')">
+          <mat-icon class="chip-icon">remove_shopping_cart</mat-icon> Out of Stock ({{ outOfStock }})
+        </button>
+        <button class="chip-btn chip-orange" [class.chip-active]="activeFilter === 'movement'" (click)="setFilter('movement')">
+          <mat-icon class="chip-icon">swap_horiz</mat-icon> In Transfer ({{ withMovement }})
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Table ── -->
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" matSort class="stock-table">
+
+        <!-- Reference -->
+        <ng-container matColumnDef="reference">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="header-accent">Ref.</th>
+          <td mat-cell *matCellDef="let item" class="td-ref">{{ item.reference }}</td>
+        </ng-container>
+
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="header-accent">Name / Description</th>
+          <td mat-cell *matCellDef="let item" class="td-name" [matTooltip]="item.name">
+            {{ item.name | slice:0:45 }}{{ item.name.length > 45 ? '…' : '' }}
+          </td>
+        </ng-container>
+
+        <!-- Classification -->
+        <ng-container matColumnDef="classification">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="header-accent">Classification</th>
+          <td mat-cell *matCellDef="let item">
+            <span class="classification-badge">{{ item.classification }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Vendor -->
+        <ng-container matColumnDef="vendor">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="header-accent">Vendor</th>
+          <td mat-cell *matCellDef="let item" class="td-vendor">{{ item.vendor }}</td>
+        </ng-container>
+
+        <!-- Stock Qty -->
+        <ng-container matColumnDef="stock_qte">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="header-accent th-right">Stock</th>
+          <td mat-cell *matCellDef="let item" class="td-right">
+            <!-- Out of stock badge -->
+            <span *ngIf="item.stock_qte === 0" class="rupture-badge">
+              <mat-icon class="badge-icon">remove_shopping_cart</mat-icon>
+              Out of Stock
+            </span>
+            <!-- Low stock warning -->
+            <span *ngIf="item.stock_qte > 0 && item.stock_qte <= 10" class="stock-low"
+                  [matTooltip]="'Low stock: ' + item.stock_qte + ' units'">
+              <mat-icon class="badge-icon-sm">warning</mat-icon>
+              {{ item.stock_qte }}
+            </span>
+            <!-- Normal stock -->
+            <span *ngIf="item.stock_qte > 10" class="stock-ok">{{ item.stock_qte }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Transfer Qty -->
+        <ng-container matColumnDef="transfert_qte">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="header-accent th-right">Transfer (Qty)</th>
+          <td mat-cell *matCellDef="let item" class="td-right"
+              [class.td-transfer-active]="item.transfert_qte > 0">
+            <span *ngIf="item.transfert_qte > 0" class="transfer-badge"
+                  [matTooltip]="item.transfert_nbr_u + ' transfer order(s)'">
+              <mat-icon class="badge-icon-sm">swap_horiz</mat-icon>
+              {{ item.transfert_qte }}
+            </span>
+            <span *ngIf="item.transfert_qte === 0" class="td-muted">—</span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            class="table-row"
+            [class]="getStockClass(row)"></tr>
+
+        <!-- No data -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data-cell" colspan="6">
+            <mat-icon class="no-data-icon">search_off</mat-icon>
+            <p>No items match your search "<strong>{{ searchValue }}</strong>"</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ── Hidden Paginator ── -->
+    <mat-paginator
+      [pageSizeOptions]="[25]"
+      pageSize="25"
+      style="display: none;">
+    </mat-paginator>
+
+    <!-- ── Custom Pagination ── -->
+    <div class="pagination-container">
+      <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0">
+        Previous
+      </button>
+
+      <span class="page-info">
+        Page {{ currentPage + 1 }} of {{ totalPages }}
+      </span>
+
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
+        Next
+      </button>
+    </div>
+
+  </mat-card>
+</div>

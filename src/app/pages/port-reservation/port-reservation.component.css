@@ -1,0 +1,310 @@
+/* ============================================================
+   PORT RESERVATION — Glassmorphic Dark Theme
+   ============================================================ */
+
+.page-container {
+  padding: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.header-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  color: var(--primary-orange);
+}
+
+.page-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* ── Steps Container ── */
+.flow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.step-card {
+  background: var(--glass-bg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: var(--radius-md) !important;
+  transition: all var(--transition-normal);
+  overflow: hidden;
+}
+
+.step-active {
+  border-color: rgba(255, 94, 0, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 94, 0, 0.1) !important;
+}
+
+.step-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(100%);
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.step-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #333;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+}
+
+.step-completed {
+  background: var(--status-green);
+  color: #000;
+}
+
+.step-active .step-number:not(.step-completed) {
+  background: var(--primary-orange);
+  color: #fff;
+}
+
+.step-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ── Forms ── */
+.full-width {
+  width: 100%;
+}
+
+.mt-16 { margin-top: 16px; }
+.mr-8 { margin-right: 8px; }
+
+.router-ip {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.loading-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  padding: 16px 0;
+}
+
+/* ── Ports Table ── */
+.table-container {
+  overflow-x: auto;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+.ports-table {
+  width: 100%;
+  background: transparent !important;
+}
+
+.header-accent {
+  color: var(--primary-orange) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.text-right { text-align: right !important; }
+
+.port-row {
+  transition: background var(--transition-fast);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.port-row:hover:not(.row-disabled) {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.row-disabled {
+  opacity: 0.4;
+}
+
+.row-selected {
+  background: rgba(255, 94, 0, 0.08) !important;
+}
+
+.td-port-name {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.port-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+}
+
+/* ── Status Badges ── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-up {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--status-green);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.badge-down {
+  background: rgba(244, 67, 54, 0.15);
+  color: var(--status-red);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* ── Buttons ── */
+.btn-select-down {
+  background: rgba(255, 94, 0, 0.15) !important;
+  color: var(--primary-orange) !important;
+  border: 1px solid var(--primary-orange);
+}
+
+.btn-select-down:hover {
+  background: var(--primary-orange) !important;
+  color: #fff !important;
+}
+
+.row-selected .btn-select-down {
+  background: var(--primary-orange) !important;
+  color: #fff !important;
+}
+
+.btn-disabled {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-muted) !important;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Selected Summary ── */
+.selected-port-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--status-green);
+  font-size: 14px;
+}
+
+.summary-icon {
+  color: var(--status-green);
+}
+
+/* ── Submit Container ── */
+.submit-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.btn-submit {
+  background: var(--primary-orange) !important;
+  color: #fff !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 600 !important;
+  padding: 8px 32px !important;
+  font-size: 16px !important;
+  border-radius: var(--radius-sm) !important;
+  height: 48px;
+  min-width: 240px;
+}
+
+.btn-submit:hover:not([disabled]) {
+  background: var(--secondary-orange) !important;
+  box-shadow: var(--shadow-orange);
+}
+
+.btn-submit[disabled] {
+  background: rgba(255, 94, 0, 0.3) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.btn-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Global Snackbar classes for success/error */
+::ng-deep .success-snackbar {
+  background: var(--status-green) !important;
+  color: #000 !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+}
+
+::ng-deep .success-snackbar .mat-mdc-button {
+  color: #000 !important;
+}
+
+::ng-deep .error-snackbar {
+  background: var(--status-red) !important;
+  color: #fff !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+}
+
+::ng-deep .error-snackbar .mat-mdc-button {
+  color: #fff !important;
+}
