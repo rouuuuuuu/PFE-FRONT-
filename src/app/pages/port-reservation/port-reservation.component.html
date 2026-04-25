@@ -21,7 +21,7 @@
           <span>Fetching routers...</span>
         </div>
         
-        <mat-form-field *ngIf="!loadingRouters" appearance="outline" class="full-width">
+        <mat-form-field *ngIf="!loadingRouters" appearance="outline" class="full-width" floatLabel="always">
           <mat-label>Search and select a Router</mat-label>
           <input type="text"
                  matInput
@@ -30,7 +30,7 @@
                  (ngModelChange)="filterRouters($event)">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayRouter" (optionSelected)="onRouterSelected($event.option.value)">
             <mat-option *ngFor="let router of filteredRouters" [value]="router">
-              {{ router.ne_name || router.device_name || router.ip_address }} 
+              {{ router.name || router.ne_name || router.device_name || router.ip_address }}
               <span class="router-ip">({{ router.loopback_ip || router.ip_address }})</span>
             </mat-option>
           </mat-autocomplete>
@@ -130,7 +130,7 @@
           <span>Port <strong>{{ selectedPort.port_full_name || selectedPort.interface }}</strong> selected for reservation.</span>
         </div>
         
-        <mat-form-field appearance="outline" class="full-width mt-16">
+        <mat-form-field appearance="outline" class="full-width mt-16" floatLabel="always">
           <mat-label>Reservation Description</mat-label>
           <input matInput [(ngModel)]="description" placeholder="e.g. Reserved for B2B Client XYZ connection" required>
           <mat-icon matPrefix class="text-muted mr-8">edit_note</mat-icon>
@@ -139,13 +139,11 @@
     </mat-card>
 
     <!-- Step 5: Submit -->
-    <div class="submit-container" *ngIf="selectedPort && description.trim().length > 0">
-      <button mat-flat-button class="btn-submit" (click)="reservePort()" [disabled]="submitting">
-        <div class="btn-content" *ngIf="!submitting">
-          <mat-icon>power_settings_new</mat-icon>
-          Reserve & Bring Up Port
-        </div>
-        <mat-spinner *ngIf="submitting" diameter="24" color="accent"></mat-spinner>
+    <div class="form-actions" *ngIf="selectedPort && description.trim().length > 0">
+      <button class="run-btn" (click)="reservePort()" [disabled]="submitting">
+        <mat-icon class="run-icon" *ngIf="!submitting">power_settings_new</mat-icon>
+        <mat-spinner *ngIf="submitting" diameter="18" class="btn-spinner"></mat-spinner>
+        <span>{{ submitting ? 'Reserving...' : 'Reserve & Bring Up Port' }}</span>
       </button>
     </div>
 

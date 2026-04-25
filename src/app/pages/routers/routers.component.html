@@ -1,4 +1,11 @@
-<h2 class="page-title">Routers</h2> <!-- Titre d'la page (Page title header) -->
+<div class="page-header">
+  <mat-icon class="header-icon">router</mat-icon>
+  <div>
+    <h1 class="page-title">Routers</h1>
+    <p class="page-subtitle">All network routers · search and filter below</p>
+  </div>
+</div>
+
 
 <div class="filters-row"> <!-- L'kollha fi ligne we7ed bech n7ottou l'kwaritt d'filtres (Flex row for search/filter inputs) -->
   <mat-form-field appearance="outline" class="search-field" floatLabel="always"> <!-- Bloc mta3 recherche bil contour Material (Material outline form field for text search) -->
@@ -6,7 +13,7 @@
     <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="ex: TUN_0001 or 10.51.2.1" /> <!-- Champ lil ktiba mrabout bil variable w ydewwer fonction mba3d change (Input field bound to searchTerm model triggering applyFilter) -->
   </mat-form-field> <!-- Wfa bloc el recherche (End search field) -->
 
-  <mat-form-field appearance="outline" class="filter-field"> <!-- Bloc theni lel select box (Material outline form field for select dropdown) -->
+  <mat-form-field appearance="outline" class="filter-field" floatLabel="always"> <!-- Bloc theni lel select box (Material outline form field for select dropdown) -->
     <mat-label>Filter by vendor</mat-label> <!-- L'etiquette (Dropdown label) -->
     <mat-select [(ngModel)]="vendorFilter" (ngModelChange)="applyFilter()"> <!-- L'liste dropdown litbadel el vendorFilter (Material select component bound to vendorFilter) -->
       <mat-option value="">All</mat-option> <!-- Choix ywarri l'koll (Option for no filtering / all vendors) -->

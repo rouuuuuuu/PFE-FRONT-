@@ -7,12 +7,66 @@
   background: var(--bg-surface) !important;
   border-bottom: 1px solid var(--glass-border);
   height: 56px;
-  padding: 0 24px;
+  padding: 0 16px 0 8px;
   display: flex;
   align-items: center;
   position: relative;
   z-index: 10;
 }
+
+/* ── Hamburger toggle button ────────────────────────── */
+.menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  margin-right: 8px;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.menu-toggle:hover {
+  background: var(--glass-hover);
+}
+
+.hamburger-bar {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text-secondary);
+  border-radius: 2px;
+  transform-origin: center;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity   0.2s ease,
+    width     0.3s ease,
+    background 0.2s ease;
+}
+
+.menu-toggle:hover .hamburger-bar {
+  background: var(--primary-orange);
+}
+
+/* Morph into X when open */
+.hamburger-bar:nth-child(1).bar-open {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-bar:nth-child(2).bar-open {
+  opacity: 0;
+  width: 0;
+}
+.hamburger-bar:nth-child(3).bar-open {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 
 .app-toolbar::after {
   content: '';
@@ -51,6 +105,90 @@
   color: var(--text-secondary);
   letter-spacing: 1.5px;
   text-transform: uppercase;
+}
+
+/* ── Toolbar quick-nav ─────────────────────────────────── */
+.toolbar-quicknav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 16px;
+  padding: 0 8px;
+  border-left: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+}
+
+.quicknav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: all var(--transition-fast);
+  position: relative;
+  white-space: nowrap;
+}
+
+.quicknav-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: color var(--transition-fast);
+}
+
+.quicknav-btn:hover {
+  background: var(--glass-hover);
+  color: var(--text-primary);
+}
+
+.quicknav-btn:hover mat-icon {
+  color: var(--primary-orange);
+}
+
+/* Active state — orange underline pill */
+.quicknav-active {
+  color: var(--primary-orange) !important;
+  background: var(--orange-glow) !important;
+}
+
+.quicknav-active mat-icon {
+  color: var(--primary-orange) !important;
+}
+
+.quicknav-active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--primary-orange);
+}
+
+/* Provisioning dropdown trigger — same look as quicknav-btn links */
+.quicknav-menu-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.quicknav-chevron {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  vertical-align: middle;
+  margin-left: 2px;
+  opacity: 0.7;
 }
 
 /* --- Container --- */

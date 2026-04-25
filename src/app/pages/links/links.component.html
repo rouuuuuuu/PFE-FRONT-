@@ -1,4 +1,11 @@
-<h2 class="page-title">Backhaul Links</h2> <!-- e'Titre mta3 saf7a (Page component title wrapper) -->
+<div class="page-header">
+  <mat-icon class="header-icon">link</mat-icon>
+  <div>
+    <h1 class="page-title">Backhaul Links</h1>
+    <p class="page-subtitle">All SDH/Ethernet backhaul links · filter by source, sink or alarm</p>
+  </div>
+</div>
+
 
 <div class="filters-row"> <!-- Layout lel flexbox bch nrabtou l'kol m3a ba3dhou (Flex container row arranging filter options) -->
   <mat-form-field appearance="outline" class="filter-field" floatLabel="always"> <!-- L'input lewel lel source NE (Material design form constraints format token reference configuration structure token condition mapping matching syntax strings text definitions parameter rules structure sequences formatting text syntax limits block pattern loop). -->
@@ -16,16 +23,16 @@
     <input matInput [(ngModel)]="rateSearch" (ngModelChange)="applyFilter()" placeholder="ex: 10GE"> <!-- El 9owa mta debit (Input parameter boundaries configuration loop configuration execution logic bounds limit variable parsing formats conditions conditions limitation evaluation mapping reference parameters strings constraint block loop frame definitions) -->
   </mat-form-field> <!-- context limitation parameters condition parsing iteration limits. -->
 
-  <mat-form-field appearance="outline" class="filter-field filter-alarm"> <!-- List el mta3 alamart (Dropdown input variables parameter variables mapping parsing conditions conditions logic limitation bounds definition token limit sequences conditions boundaries reference limits rules limits constraints loop iteration sequence strings loop context limitation element variables condition format configuration sequence texts execution pattern structures loop token context condition parameters formats variables variables syntax variable syntax evaluation formatting strings references definitions parameter parameter boundary. -->
-    <mat-label>Filter by alarm</mat-label> <!-- limits reference limitation definitions limitations syntax loop parsing mappings values boundaries execution frame. -->
-    <mat-select [(ngModel)]="alarmFilter" (ngModelChange)="applyFilter()"> <!-- structure constraints elements parameter resolution string mapping reference limits. -->
-      <mat-option value="">All</mat-option> <!-- limits limits rules loop mapping logic pattern value references limit configurations loops evaluation structure limits limit boundaries mappings parsing string parameters reference block rule conditions limitation element execution. -->
-      <mat-option value="normal">Normal</mat-option> <!-- mapping parameters rules limitation boundaries execution context definitions validation syntax parsing values rules limits format mappings loop texts texts. -->
-      <mat-option value="warning">Warning</mat-option> <!-- texts structure condition variable iteration loop limitations strings structure string reference loop loop format string constraints syntax conditions constraints parsing variables. -->
-      <mat-option value="minor">Minor</mat-option> <!-- parameters references limitations string loop iteration loop block parameter text constraints logic iteration condition validation loop mapping text parameters parameters configuration format limitations parameters format mappings format rules definitions limitations mapping limits variable elements bounds formats bounds pattern bounds frame logic limitations parameters rules limit token framework text references token variables configurations boundaries value matching evaluation limits strings. -->
-      <mat-option value="major">Major</mat-option> <!-- definitions loop parameters strings configuration parsing limitation formats configuration condition rules limitation parameter texts resolution patterns parsing string iteration mapping parsing constraint mapping value mapping limits frame syntax constraints format constraint format parsing boundaries conditions limitations limitations configurations value token sequence condition limit mapping text references limitations parameters parsing rules texts. -->
-      <mat-option value="critical">Critical</mat-option> <!-- parameters logic structure token references formatting string string string parameters validation loops limitation constraints texts references limits constraint configuration format reference values syntax parameters. -->
-    </mat-select> <!-- variable mappings element parameters parameters bounds configurations definitions definition syntax rules syntax condition strings limits parameter iteration mapping iteration format limit context limits values limits token formatting. -->
+  <mat-form-field appearance="outline" class="filter-field filter-alarm" floatLabel="always"> <!-- List el mta3 alamart -->
+    <mat-label>Filter by alarm</mat-label>
+    <mat-select [(ngModel)]="alarmFilter" (ngModelChange)="applyFilter()">
+      <mat-option value="">All</mat-option>
+      <mat-option value="normal">Normal</mat-option>
+      <mat-option value="warning">Warning</mat-option>
+      <mat-option value="minor">Minor</mat-option>
+      <mat-option value="major">Major</mat-option>
+      <mat-option value="critical">Critical</mat-option>
+    </mat-select>
   </mat-form-field> <!-- limitation limitation formats variables token logic loops constraints sequences strings definition strings format constraints execution definition element mappings mapping text evaluation conditions text reference. -->
 </div> <!-- boundaries sequences definitions limitation limitation mapping condition logic parsing configuration parameters values contexts validation limit constraints conditions sequence loop parsing mapping string text string. -->
 

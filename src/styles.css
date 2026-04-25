@@ -97,10 +97,53 @@ body { /* comment ta3 design système wé layout limit boundaries definitions va
   -moz-osx-font-smoothing: grayscale; /* comment ta3 design système wé layout limit boundaries definitions variables */
 } 
 /* Smooth transition when switching themes */
-body, /* comment ta3 design système wé layout limit boundaries definitions variables */
-body * { /* comment ta3 design système wé layout limit boundaries definitions variables */
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* comment ta3 design système wé layout limit boundaries definitions variables */
-} 
+body,
+body * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ── Global page-header utility ─────────────────────────────────────────
+   Every page uses:
+     <div class="page-header">
+       <mat-icon class="header-icon">icon</mat-icon>
+       <div>
+         <h1 class="page-title">Name</h1>
+         <p class="page-subtitle">Description</p>
+       </div>
+     </div>
+   ─────────────────────────────────────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.page-header .header-icon {
+  font-size: 36px !important;
+  width: 36px !important;
+  height: 36px !important;
+  color: var(--primary-orange) !important;
+  flex-shrink: 0;
+}
+
+.page-header .page-title {
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+}
+
+.page-header .page-subtitle {
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 13px !important;
+  color: var(--text-muted) !important;
+  margin: 3px 0 0 !important;
+}
+
+
 /* Light theme scrollbar */
 body.light-theme ::-webkit-scrollbar-thumb { /* comment ta3 design système wé layout limit boundaries definitions variables */
   background: #ccc; /* comment ta3 design système wé layout limit boundaries definitions variables */
@@ -204,6 +247,17 @@ body.light-theme .mat-mdc-cell { /* comment ta3 design système wé layout limit
 /* Form Fields */
 .mat-mdc-form-field { /* comment ta3 design système wé layout limit boundaries definitions variables */
   color: var(--text-primary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+}
+
+/* ── Label overlap fix (global) ─────────────────────────────────────────────
+   Angular Material MDC sets max-width on the notch to match the label width
+   at the moment the field renders. When floatLabel="always" or the label is
+   long, the notch stays too narrow and the label text overlaps the border.
+   Removing the max-width cap lets the notch open to whatever size it needs.
+   ───────────────────────────────────────────────────────────────────────── */
+.mdc-notched-outline__notch {
+  max-width: unset !important;
+  border-right: none !important; /* prevents double-border on the notch side  */
 }
 
 /* Placeholder — visible in dark mode */
@@ -314,13 +368,59 @@ body.light-theme .mat-mdc-cell { /* comment ta3 design système wé layout limit
   animation: pageFadeIn 0.4s ease-out; /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
-@keyframes pageFadeIn { /* comment ta3 design système wé layout limit boundaries definitions variables */
-  from { /* comment ta3 design système wé layout limit boundaries definitions variables */
-    opacity: 0; /* comment ta3 design système wé layout limit boundaries definitions variables */
-    transform: translateY(8px); /* comment ta3 design système wé layout limit boundaries definitions variables */
-  } /* comment ta3 design système wé layout limit boundaries definitions variables */
-  to { /* comment ta3 design système wé layout limit boundaries definitions variables */
-    opacity: 1; /* comment ta3 design système wé layout limit boundaries definitions variables */
-    transform: translateY(0); /* comment ta3 design système wé layout limit boundaries definitions variables */
-    }
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Mat-Menu dark theme (CDK overlay lives outside component scope) ── */
+.mat-mdc-menu-panel {
+  background: var(--bg-elevated, #1a1a2e) !important;
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.08)) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+  min-width: 200px !important;
+  overflow: hidden !important;
+}
+
+.mat-mdc-menu-content {
+  padding: 4px 0 !important;
+  background: transparent !important;
+}
+
+.mat-mdc-menu-item {
+  color: var(--text-secondary, #ccc) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 14px !important;
+  height: 44px !important;
+  transition: background 0.15s ease, color 0.15s ease !important;
+}
+
+.mat-mdc-menu-item:hover {
+  background: var(--glass-hover, rgba(255,121,0,0.08)) !important;
+  color: var(--primary-orange, #FF7900) !important;
+}
+
+.mat-mdc-menu-item .mat-icon {
+  color: var(--text-muted, #888) !important;
+  margin-right: 12px !important;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  transition: color 0.15s ease !important;
+}
+
+.mat-mdc-menu-item:hover .mat-icon {
+  color: var(--primary-orange, #FF7900) !important;
+}
+
+/* Fix the menu trigger ripple to orange */
+.mat-mdc-menu-trigger .mat-ripple-element {
+  background: rgba(255, 121, 0, 0.12) !important;
 }

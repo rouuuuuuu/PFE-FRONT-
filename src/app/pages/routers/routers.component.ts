@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select'; // Module lel listes
 import { FormsModule } from '@angular/forms'; // Module mta3 ngModel (Import to use ngModel for two-way binding)
 import { ApiService } from '../../services/api.service'; // Service mte3na w bech nkalmou API (Our custom service to fetch data)
 import { Router } from '@angular/router'; // <-- Router imported bech nbadlou e'route (Import Router for programmatic navigation)
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({ // Décorateur jdid lli ykhalliha composant (Decorates class as a component)
   selector: 'app-routers', // Nom de balise bech nhottouh fl HTML (The tag used to embed this component)
@@ -17,7 +18,7 @@ import { Router } from '@angular/router'; // <-- Router imported bech nbadlou e'
   imports: [ // L'imports l'koll bech nesta3mlouhom houni (Array of modules used in this template)
     CommonModule, MatTableModule, MatCardModule, // Modules base wel layout (Base and layout modules)
     MatChipsModule, MatInputModule, MatFormFieldModule, // Modules des formulaires (Form and input modules)
-    MatProgressSpinnerModule, MatSelectModule, FormsModule, // Modules des selecteurs wel spinners (Select, spinner, and forms modules)
+    MatProgressSpinnerModule, MatSelectModule, FormsModule, MatIconModule, // Modules des selecteurs wel spinners (Select, spinner, and forms modules)
   ],
   templateUrl: './routers.component.html', // Fichier HTML associé (Link to the HTML structure file)
   styleUrl: './routers.component.css' // Fichier CSS lel styling (Link to the CSS styling file)

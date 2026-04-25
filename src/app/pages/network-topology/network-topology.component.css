@@ -1,0 +1,316 @@
+/* ============================================================
+   NETWORK TOPOLOGY — Full-screen force-directed graph
+   ============================================================ */
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.topo-shell {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);   /* subtract toolbar height */
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.topo-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 14px 24px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.topo-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.topo-header-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: var(--primary-orange);
+}
+
+.topo-title {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.topo-subtitle {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── Stat pills ──────────────────────────────────────────── */
+.stat-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+  transition: all 0.3s;
+}
+
+.stat-pill .pill-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.pill-value {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.pill-label { color: var(--text-muted); }
+
+.pill-warn-active {
+  border-color: rgba(255, 193, 7, 0.5);
+  background: rgba(255, 193, 7, 0.08);
+  color: #ffc107;
+}
+.pill-warn-active .pill-value,
+.pill-warn-active .pill-icon { color: #ffc107; }
+
+.pill-crit-active {
+  border-color: rgba(255, 23, 68, 0.5);
+  background: rgba(255, 23, 68, 0.08);
+}
+.pill-crit-active .pill-value,
+.pill-crit-active .pill-icon { color: #ff1744; }
+
+/* ── Legend ──────────────────────────────────────────────── */
+.legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.hint-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── Canvas area ─────────────────────────────────────────── */
+.topo-canvas-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.topo-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.topo-svg:active { cursor: grabbing; }
+
+/* ── Loading / Error states ──────────────────────────────── */
+.topo-loading,
+.topo-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+}
+
+.topo-error mat-icon { font-size: 48px; width: 48px; height: 48px; color: #f44336; }
+
+/* ── Side detail panel ───────────────────────────────────── */
+.side-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--glass-border);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.side-panel-open { transform: translateX(0); }
+
+.side-panel-inner { padding: 0; height: 100%; display: flex; flex-direction: column; }
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  border-bottom: 1px solid var(--glass-border);
+  flex-shrink: 0;
+  background: var(--bg-elevated);
+}
+
+.panel-alarm-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.panel-name {
+  flex: 1;
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.panel-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  display: flex;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.panel-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+/* Panel body */
+.panel-body { flex: 1; padding: 16px; overflow-y: auto; }
+
+.panel-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--glass-border);
+  font-size: 13px;
+}
+
+.panel-key { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.panel-val { color: var(--text-primary); font-weight: 500; }
+
+.vendor-badge { text-transform: capitalize; font-weight: 700; }
+
+.panel-links-title {
+  margin: 16px 0 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary-orange);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+}
+
+.panel-link-list { display: flex; flex-direction: column; gap: 6px; }
+
+.panel-link-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.link-alarm-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.link-peers {
+  flex: 1;
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.link-rate {
+  color: var(--text-muted);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.no-links { color: var(--text-muted); font-size: 12px; }
+
+.panel-detail-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  padding: 10px 16px;
+  background: var(--primary-orange);
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.panel-detail-btn:hover { background: var(--secondary-orange); }
+
+/* ── Pulse animation for critical nodes ──────────────────── */
+@keyframes pulseRing {
+  0%   { stroke-opacity: 0.8; r: 18; }
+  50%  { stroke-opacity: 0.2; r: 24; }
+  100% { stroke-opacity: 0.8; r: 18; }
+}
+
+:host ::ng-deep .pulse-ring {
+  animation: pulseRing 1.5s ease-in-out infinite;
+}

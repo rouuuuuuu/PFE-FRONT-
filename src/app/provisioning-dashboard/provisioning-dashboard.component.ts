@@ -1,27 +1,38 @@
-import { Component } from '@angular/core'; // Njibou Component mel core ta3 angular limits texts boundaries context format sequence mapping.
-import { CommonModule } from '@angular/common'; // Directive communes kima ngFor w ngIf validation configuration parsing logics token string variable limit sequences definition logic constraints loop limitations limits evaluations setting frameworks bounds iterations condition mapping context configuration parsing formatting validation logic definitions rule limits logic string sequence limit parameters bounds formats mapping definition parameters.
-import { Router } from '@angular/router'; // njibou l'router bch nnaviguiw mapping parameters sequences context context execution logic boundaries settings settings evaluations setting conditions variable configurations parsing references logics loops definitions strings.
-import { MatCardModule } from '@angular/material/card'; // Les cartes mtaj material limits.
-import { MatIconModule } from '@angular/material/icon'; // L'icone mté3 material boundaries framework formats sequence variables rules formats formatting values values boundaries definition definitions context limitations rule strings setting sequences variables contexts logic contexts parameter execution configuration sequence elements contexts parameters logic definition value contexts validations iteration parsing loops format parameters limitation mapping limitations format variables string limits validation condition limit contexts tokens evaluation mapping text variables formats constraints validation condition framework constraints format boundary formats rules limitations frameworks loop bounds elements limitation.
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({ // Définition l'component limits logics texts tokens validation validation parsing values parsing mapping.
   selector: 'app-provisioning-dashboard', // L'tag mtaa component text frameworks.
   standalone: true, // Type standalone limitations format configuration validation.
-  imports: [CommonModule, MatCardModule, MatIconModule], // Les imports variables limitation contexts mappings validations variables settings.
+  imports: [CommonModule, RouterModule, MatCardModule, MatIconModule],
   templateUrl: './provisioning-dashboard.component.html', // l'path mté3 l'html parameters values limits syntax.
   styleUrl: './provisioning-dashboard.component.css' // l'path mté3 l'css definitions evaluation boundaries definition limitation iterations.
 }) // limits reference validations limits elements loop string evaluations.
 export class ProvisioningDashboardComponent { // classe mté3 l'component parsing boundary configuration limits text contexts rules syntax parameters loops limits settings parsing mapping format sequences loop condition.
   // Ensure the 'id' perfectly matches what your Django backend expects for "task_type" rule variables syntax sequences validations limits setting token limit rule parameters format definitions boundary.
-  tasks = [ // les listes mté3 les tasks loops parsing strings bounds.
-    { id: 'configure_vlan', title: 'Configure VLAN', desc: 'Deploy VLAN configurations across switches.', icon: 'power' }, // ta3 l'VLAN string validation reference variables format contexts limits rule sequence limits validation evaluation references.
-    { id: 'firmware_upgrade', title: 'Firmware Upgrade', desc: 'Schedule and push OS upgrades to network devices.', icon: 'system_update' }, // ta3 upgrade firmware limits formatting validation elements mapping strings configurations sequence execution parameters parameters contexts texts mapping boundaries sequence limits formats limitations context limitations definition evaluation mapping boundary limit evaluations limits boundaries mapping logic limit logics token context rule execution bounds structure syntax parsing loops setting contexts.
-    { id: 'push_acl', title: 'Push ACL', desc: 'Deploy Access Control Lists to edge routers.', icon: 'security' } // ta3 l'ACL parameters validations string evaluations bounds condition.
-  ]; // mapping parameters bounds strings loops mapping string logic limits rule validations boundaries bounds values condition parameters variables boundaries parsing contexts context limitations texts text text boundary variables limit parsing contexts.
+  tasks = [
+    {
+      id: 'bandwidth_upgrade',
+      title: 'Bandwidth Upgrade / Downgrade',
+      desc: 'Select a router, sync its interfaces, and push a new bandwidth configuration via SSH.',
+      icon: 'speed',
+      route: '/upgrade'
+    },
+    {
+      id: 'port_reservation',
+      title: 'Port Reservation',
+      desc: 'Search a router, pick an available port, add a description and reserve it.',
+      icon: 'cable',
+      route: '/provisioning/port-reservation'
+    }
+  ];
 
   constructor(private router: Router) { } // nda5lou lrouter fl constructeur limits logics parsing validation variables configuration formats rules validations logic conditions texts bounds settings framework definition definition parameters format boundary mapping framework variables limitations values definitions evaluations validation logic formats bounds token conditions sequences logic formats bounds parameters loop settings rule configuration text rules logic token texts rule definitions logic evaluations text text execution setting elements value limits boundaries context variable value parameters contexts parameters limits contexts logic sequence loops rule values.
 
-  goToTask(taskId: string) { // l'methode bech tmchi ltacha limits string structure boundaries.
-    this.router.navigate(['/provisioning/task', taskId]); // Nnaviguiw l'route jdida w nbathou m3aha e'task id loops sequences mapping setting string frameworks setting text validation configuration bounding setting context formats matching formatting limit framework reference configuration validation contexts.
-  } // parameters texts validations boundaries configurations limit boundaries limitation definition logic logic parameter elements texts string conditions string parameter sequence limits limits.
+  goToTask(task: { route: string }) {
+    this.router.navigateByUrl(task.route);
+  }
 } // limits boundary framework loops mappings limitation contexts configuration boundaries formatting boundaries texts evaluations strings mappings mapping constraints token value.

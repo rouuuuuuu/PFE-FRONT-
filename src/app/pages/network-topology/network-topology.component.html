@@ -1,0 +1,136 @@
+<div class="topo-shell">
+
+  <!-- ── Top bar ─────────────────────────────────────────────────────── -->
+  <div class="topo-header">
+    <div class="topo-title-group">
+      <mat-icon class="topo-header-icon">hub</mat-icon>
+      <div>
+        <h1 class="topo-title">Live Network Topology</h1>
+        <p class="topo-subtitle">Force-directed graph · auto-refreshes every 30 s</p>
+      </div>
+    </div>
+
+    <!-- Stat pills -->
+    <div class="stat-pills" *ngIf="!loading">
+      <div class="stat-pill">
+        <mat-icon class="pill-icon">router</mat-icon>
+        <span class="pill-value">{{ statsNodes }}</span>
+        <span class="pill-label">Nodes</span>
+      </div>
+      <div class="stat-pill">
+        <mat-icon class="pill-icon">linear_scale</mat-icon>
+        <span class="pill-value">{{ statsLinks }}</span>
+        <span class="pill-label">Links</span>
+      </div>
+      <div class="stat-pill pill-warn" [class.pill-warn-active]="statsAlarms > 0">
+        <mat-icon class="pill-icon">warning_amber</mat-icon>
+        <span class="pill-value">{{ statsAlarms }}</span>
+        <span class="pill-label">Active alarms</span>
+      </div>
+      <div class="stat-pill pill-crit" [class.pill-crit-active]="statsCritical > 0">
+        <mat-icon class="pill-icon">crisis_alert</mat-icon>
+        <span class="pill-value">{{ statsCritical }}</span>
+        <span class="pill-label">Critical / Major</span>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend" *ngIf="!loading">
+      <span class="legend-item" *ngFor="let entry of [
+        {label:'Normal',   color:'#4caf50'},
+        {label:'Warning',  color:'#ffc107'},
+        {label:'Minor',    color:'#ff9800'},
+        {label:'Major',    color:'#f44336'},
+        {label:'Critical', color:'#ff1744'}
+      ]">
+        <span class="legend-dot" [style.background]="entry.color"></span>
+        {{ entry.label }}
+      </span>
+    </div>
+
+    <div class="hint-text" *ngIf="!loading">
+      <mat-icon style="font-size:14px;vertical-align:middle">info</mat-icon>
+      Drag nodes · Scroll to zoom · Click a node for details
+    </div>
+  </div>
+
+  <!-- ── Canvas area ──────────────────────────────────────────────────── -->
+  <div class="topo-canvas-wrap">
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="topo-loading">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Building topology graph…</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !loading" class="topo-error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- SVG Graph -->
+    <svg #svgContainer class="topo-svg" *ngIf="!loading && !error"></svg>
+
+    <!-- ── Node detail side panel ──────────────────────────────────── -->
+    <div class="side-panel" [class.side-panel-open]="selectedNode !== null">
+      <div class="side-panel-inner" *ngIf="selectedNode">
+
+        <div class="panel-header">
+          <div class="panel-alarm-dot" [style.background]="alarmColor(selectedNode.alarm)"></div>
+          <h2 class="panel-name">{{ selectedNode.name }}</h2>
+          <button class="panel-close" (click)="closePanel()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="panel-body">
+          <div class="panel-row">
+            <span class="panel-key">IP</span>
+            <span class="panel-val">{{ selectedNode.ip || '—' }}</span>
+          </div>
+          <div class="panel-row">
+            <span class="panel-key">Vendor</span>
+            <span class="panel-val vendor-badge"
+              [style.color]="selectedNode.vendor === 'huawei' ? '#FF7900' : '#5b9bf8'">
+              {{ selectedNode.vendor || 'Unknown' }}
+            </span>
+          </div>
+          <div class="panel-row">
+            <span class="panel-key">Alarm</span>
+            <span class="panel-val"
+              [style.color]="alarmColor(selectedNode.alarm)"
+              style="font-weight:700;text-transform:uppercase;font-size:12px">
+              {{ selectedNode.alarm }}
+            </span>
+          </div>
+
+          <div class="panel-links-title">
+            <mat-icon style="font-size:14px;vertical-align:middle">linear_scale</mat-icon>
+            Connected Links ({{ selectedNodeLinks.length }})
+          </div>
+
+          <div class="panel-link-list">
+            <div class="panel-link-item" *ngFor="let l of selectedNodeLinks">
+              <span class="link-alarm-dot" [style.background]="alarmColor(l.alarm)"></span>
+              <span class="link-peers">
+                {{ getLinkPeer(l.source) }} → {{ getLinkPeer(l.target) }}
+              </span>
+              <span class="link-rate">{{ l.rate }}</span>
+            </div>
+            <p *ngIf="selectedNodeLinks.length === 0" class="no-links">No links found.</p>
+          </div>
+
+          <a class="panel-detail-btn"
+            [routerLink]="['/routers', selectedNode.ip]"
+            *ngIf="selectedNode.ip">
+            <mat-icon>open_in_new</mat-icon>
+            View Hardware Details
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /canvas-wrap -->
+</div>

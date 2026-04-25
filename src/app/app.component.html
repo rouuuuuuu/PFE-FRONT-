@@ -1,42 +1,100 @@
 <!-- Toolbar de l'application (Header bar) -->
-<mat-toolbar class="app-toolbar"> <!-- Njibou el toolbar men Material bech nasn3ou entête. -->
-  <div class="toolbar-brand"> <!-- Div ylammid l'logo wel esem (Container for branding). -->
-    <span class="brand-text">Orange</span> <!-- Esem e'charika (Company name). -->
-    <span class="brand-divider"></span> <!-- Khat sghir yefra9 binaton (Separator line between text). -->
-    <span class="brand-sub">NOC</span> <!-- Ekin kima sous-titre (Subtitle for the platform). -->
-  </div> <!-- Wfet l'bloc mta3 l'logo (End of brand section). -->
+<mat-toolbar class="app-toolbar">
+
+  <!-- Hamburger menu toggle -->
+  <button class="menu-toggle" (click)="toggleSidenav()" [attr.aria-label]="sidenavOpen ? 'Close menu' : 'Open menu'">
+    <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
+    <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
+    <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
+  </button>
+
+  <div class="toolbar-brand">
+    <span class="brand-text">Orange</span>
+    <span class="brand-divider"></span>
+    <span class="brand-sub">NOC</span>
+  </div>
+
+  <!-- ── Quick-access nav pills ─────────────────────────────── -->
+  <div class="toolbar-quicknav">
+
+    <a class="quicknav-btn" routerLink="/dashboard" routerLinkActive="quicknav-active"
+       [routerLinkActiveOptions]="{exact:true}" matTooltip="Dashboard" matTooltipPosition="below">
+      <mat-icon>dashboard</mat-icon>
+      <span class="quicknav-label">Dashboard</span>
+    </a>
+
+    <a class="quicknav-btn" routerLink="/" routerLinkActive="quicknav-active"
+       [routerLinkActiveOptions]="{exact:true}" matTooltip="Network Topology" matTooltipPosition="below">
+      <mat-icon>hub</mat-icon>
+      <span class="quicknav-label">Topology</span>
+    </a>
+
+    <a class="quicknav-btn" routerLink="/routers" routerLinkActive="quicknav-active"
+       matTooltip="Routers" matTooltipPosition="below">
+      <mat-icon>router</mat-icon>
+      <span class="quicknav-label">Routers</span>
+    </a>
+
+    <!-- Provisioning with dropdown -->
+    <button class="quicknav-btn quicknav-menu-trigger" [matMenuTriggerFor]="provMenu"
+            matTooltip="Provisioning tasks" matTooltipPosition="below">
+      <mat-icon>settings</mat-icon>
+      <span class="quicknav-label">Provisioning <mat-icon class="quicknav-chevron">arrow_drop_down</mat-icon></span>
+    </button>
+    <mat-menu #provMenu="matMenu" class="quicknav-dropdown">
+      <a mat-menu-item routerLink="/provisioning">
+        <mat-icon>folder_open</mat-icon> All Tasks
+      </a>
+      <a mat-menu-item routerLink="/upgrade">
+        <mat-icon>speed</mat-icon> Bandwidth Upgrade
+      </a>
+      <a mat-menu-item routerLink="/provisioning/port-reservation">
+        <mat-icon>cable</mat-icon> Port Reservation
+      </a>
+    </mat-menu>
+
+    <a class="quicknav-btn" routerLink="/inventory" routerLinkActive="quicknav-active"
+       matTooltip="Stock Inventory" matTooltipPosition="below">
+      <mat-icon>inventory_2</mat-icon>
+      <span class="quicknav-label">Stock</span>
+    </a>
+
+  </div>
 
   <div class="toolbar-spacer"></div>
-  <!-- Spacer yidiz les éléments lo5rin 3al isar (Pushes the next items to the right side). -->
 
-  <!-- Bouton bech nbadlou el thème (Theme toggle switch button). -->
+  <!-- Theme toggle -->
   <button class="theme-toggle" (click)="toggleTheme()"
     [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
-    <!-- Bounta cliquable w traja3 el fonction toggleTheme (Clickable wrapper for the theme switch). -->
     <div class="toggle-track" [class.toggle-track-light]="!isDarkMode">
-      <!-- El fond mta3 l'boutton, ytbeddel hasb e'thème (Background track of the toggle). -->
       <div class="toggle-thumb" [class.toggle-thumb-light]="!isDarkMode">
-        <!-- El rondilla eli timchi w tji (The circular thumb that slides). -->
         <mat-icon class="toggle-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
-        <!-- L'icone tbeddel bin wjh l9amar wel chams (Icon switching moon/sun). -->
-      </div> <!-- Wfet el rondilla (End thumb div). -->
-    </div> <!-- Wfet e'track (End track div). -->
-  </button> <!-- Wfet l'boutton mta3 el thème (End theme toggle button). -->
-</mat-toolbar> <!-- Wfet el toolbar l'fou9ani (End of top toolbar). -->
+      </div>
+    </div>
+  </button>
+
+</mat-toolbar>
+
 
 <!-- Container principal lli ylammid e'Sidenav wel conteneur central (Main layout holding side menu and content). -->
 <mat-sidenav-container class="app-container">
   <!-- Composant Material bech y7alli layout mta3 menu (Wrapper for sidenav). -->
-  <mat-sidenav mode="side" opened class="app-sidenav">
+  <mat-sidenav mode="side" [opened]="sidenavOpen" class="app-sidenav">
     <!-- Le menu latéral li dima ma7loul f jnab (Persistent sidebar on the left). -->
     <nav class="sidenav-nav"> <!-- Balise de navigation sémantique (Semantic navigation element). -->
 
-      <!-- Lien pour le Dashboard -->
+      <!-- Lien pour Network Topology (default page) -->
       <a class="nav-item" routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
-        <!-- Lien yemchi lel page loula, w ymarki rouhou ken active (Link to home page, highlights if active). -->
-        <mat-icon class="nav-icon">dashboard</mat-icon> <!-- Icone mta3 le tableau de bord (Dashboard icon). -->
-        <span class="nav-label">Dashboard</span> <!-- L'étiquette du lien (Link text). -->
-      </a> <!-- Wfet el lien (End link). -->
+        <mat-icon class="nav-icon">hub</mat-icon>
+        <span class="nav-label">Network Topology</span>
+      </a>
+
+      <!-- Lien pour le Dashboard -->
+      <a class="nav-item" routerLink="/dashboard" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
+        <mat-icon class="nav-icon">dashboard</mat-icon>
+        <span class="nav-label">Dashboard</span>
+      </a>
+
 
       <!-- Lien pour les Routers -->
       <a class="nav-item" routerLink="/routers" routerLinkActive="nav-active">
@@ -57,6 +115,7 @@
         <mat-icon class="nav-icon">link</mat-icon>
         <span class="nav-label">Backhaul Links</span>
       </a>
+
 
       <!-- Lien pour le Stock Inventory -->
       <a class="nav-item" routerLink="/inventory" routerLinkActive="nav-active">
@@ -90,30 +149,16 @@
         </a> <!-- Wfet el lien (End link). -->
 
         <a class="nav-item nav-sub-item" routerLink="/upgrade" routerLinkActive="nav-active">
-          <!-- Lien vers la page d'upgrade de bande passante (Task link for bandwidth upgrade). -->
-          <mat-icon class="nav-icon">speed</mat-icon> <!-- Icone de vitesse pour la bande passante (Speed icon). -->
-          <span class="nav-label">Upgrade / Downgrade</span> <!-- Esem e'Tache (Task name). -->
+          <mat-icon class="nav-icon">speed</mat-icon>
+          <span class="nav-label">Upgrade / Downgrade</span>
         </a>
 
         <a class="nav-item nav-sub-item" routerLink="/provisioning/port-reservation" routerLinkActive="nav-active">
-          <!-- Lien pour la réservation des ports (Task link for port reservation). -->
-          <mat-icon class="nav-icon">cable</mat-icon> <!-- Icone de cable/port (Cable icon). -->
-          <span class="nav-label">Port Reservation</span> <!-- Esem e'Tache (Task name). -->
+          <mat-icon class="nav-icon">cable</mat-icon>
+          <span class="nav-label">Port Reservation</span>
         </a>
 
-        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/firmware_upgrade" routerLinkActive="nav-active">
-          <!-- Lien mta3 mise à jour (Task link for firmware upgrade). -->
-          <mat-icon class="nav-icon">system_update</mat-icon> <!-- Icone update (System config icon). -->
-          <span class="nav-label">task2</span> <!-- Esem e'Tache (Task name). -->
-        </a> <!-- Wfet el lien (End task link). -->
-
-        <a class="nav-item nav-sub-item" routerLink="/provisioning/task/push_acl" routerLinkActive="nav-active">
-          <!-- Lien bech t'pushi ACL (Task link for Access Control Lists). -->
-          <mat-icon class="nav-icon">security</mat-icon> <!-- Icone sécurité (Security shield icon). -->
-          <span class="nav-label">task3</span> <!-- Esem e'Tache (Task name). -->
-        </a> <!-- Wfet el lien (End task link). -->
-
-      </div> <!-- Wfa e'sous-menu (End of dropdown container). -->
+      </div>
     </nav> <!-- Wfet la balise nav (End of navigation bar). -->
   </mat-sidenav> <!-- Wfet la barre latérale (End of sidenav side drawer). -->
 

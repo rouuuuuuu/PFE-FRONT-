@@ -12,10 +12,12 @@ import { SwitchPortDetailsComponent } from './pages/switch-port-details/switch-p
 import { UpgradeComponent } from './pages/upgrade/upgrade.component';
 import { StockDashboardComponent } from './pages/stock-dashboard/stock-dashboard.component';
 import { PortReservationComponent } from './pages/port-reservation/port-reservation.component';
+import { NetworkTopologyComponent } from './pages/network-topology/network-topology.component';
 
-export const routes: Routes = [ // Ndefniou tableau mta3 thneyet (Define our array of routes matching URLs to components)
-  { path: '',             component: DashboardComponent }, // Ken l'URL feragh, y هزna lel dashboard (Empty path loads dashboard by default)
-  { path: 'routers',     component: RoutersComponent }, // Cheman /routers yemchi lel page des routeurs (Path for router list)
+export const routes: Routes = [
+  { path: '',          component: NetworkTopologyComponent }, // Default → topology
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'routers',   component: RoutersComponent },
   { path: 'switches', component: SwitchesComponent }, // Cheman /switches ytalla3 page mta3 switches (Path for switches list)
   { path: 'switches/:ip', component: SwitchSummaryComponent }, // Cheman /switches/:ip ytalla3 kholassa mta3 ports (Summary page for a single switch)
   { path: 'switches/:ip/ports/:status', component: SwitchPortDetailsComponent }, // Tafasil mta3 ports b'status (Filtered ports detail page)
@@ -23,7 +25,7 @@ export const routes: Routes = [ // Ndefniou tableau mta3 thneyet (Define our arr
   { path: 'routers/:ip/:component/:status', component: HardwareDetailsComponent }, // Cheman akthar tafasil m3a type u statut (Deep link into hardware statuses)
   { path: 'links',       component: LinksComponent }, // Cheman lel backhaul links (Path for all links)
   { path: 'upgrade',    component: UpgradeComponent },
-  { path: 'inventory',  component: StockDashboardComponent }, 
+  { path: 'inventory',  component: StockDashboardComponent },
 
   { 
     path: 'provisioning', // Cheman parent mta3 el provisioning (Parent path for provisioning area)

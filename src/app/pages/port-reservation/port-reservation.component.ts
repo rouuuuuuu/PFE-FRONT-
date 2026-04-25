@@ -84,7 +84,7 @@ export class PortReservationComponent implements OnInit {
     }
     const search = searchStr.toLowerCase();
     this.filteredRouters = this.routers.filter(r => {
-      const name = (r.ne_name || r.device_name || '').toLowerCase();
+      const name = (r.name || r.ne_name || r.device_name || '').toLowerCase();
       const ip = (r.loopback_ip || r.ip_address || '').toLowerCase();
       return name.includes(search) || ip.includes(search);
     });
@@ -92,7 +92,7 @@ export class PortReservationComponent implements OnInit {
 
   displayRouter(router: any): string {
     if (!router) return '';
-    const name = router.ne_name || router.device_name || router.ip_address;
+    const name = router.name || router.ne_name || router.device_name || router.ip_address;
     const ip = router.loopback_ip || router.ip_address;
     return `${name} (${ip})`;
   }

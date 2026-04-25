@@ -2,37 +2,6 @@
    UPGRADE COMPONENT — Provisioning-style flat form + history
    ============================================================ */
 
-/* --- Back / Header --- */
-.back-container {
-  margin-bottom: 4px;
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
-  color: var(--primary-orange);
-  cursor: default;
-  font-size: 20px;
-  font-weight: 700;
-  font-family: 'Outfit', sans-serif;
-  padding: 0;
-}
-
-.back-icon {
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
-}
-
-.page-subtitle {
-  color: var(--text-muted);
-  margin-bottom: 24px;
-  font-size: 14px;
-  font-family: 'Outfit', sans-serif;
-}
 
 /* --- Form Card --- */
 .form-card {
