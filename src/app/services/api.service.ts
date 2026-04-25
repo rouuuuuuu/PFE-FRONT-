@@ -117,6 +117,14 @@ export class ApiService { // Définition mta3 l'class ApiService (Export the API
   reservePort(data: any): Observable<any> {
     return this.http.post(`${API_URL}/provisioning/reserve-port/`, data);
   }
+
+  // Resolve real DB integer PK for a port by router ID + port name
+getPortId(routerId: number, portName: string): Observable<any> {
+  return this.http.get(`${API_URL}/port-id/`, {
+    params: new HttpParams().set('router_id', routerId.toString()).set('port_name', portName)
+  });
+}
+
   getStock() { return this.http.get(`${API_URL}/inventory/stock/`); }
 
 } // Wfa e'service (End of service class)

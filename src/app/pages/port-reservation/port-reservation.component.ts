@@ -143,35 +143,38 @@ export class PortReservationComponent implements OnInit {
   }
 
   reservePort(): void {
-    if (!this.selectedRouter || !this.selectedPort || !this.description.trim()) {
-      return;
-    }
+    if (!this.selectedRouter || !this.selectedPort || !this.description.trim()) return;
 
     this.submitting = true;
-    
-    // Construct payload strictly mapping what the user requested, with fallbacks to known properties
-    const payload = {
-      router_id: this.selectedRouter.id || this.selectedRouter.device_id,
-      port_id: this.selectedPort.id || this.selectedPort.port_full_name || this.selectedPort.interface,
-      description: this.description.trim()
-    };
 
-    this.api.reservePort(payload).subscribe({
-      next: (res) => {
-        this.submitting = false;
-        this.snackBar.open('✅ Port reserved successfully. Background configuration started.', 'Close', { 
-          duration: 5000,
-          panelClass: ['success-snackbar']
+    // Step 1: Resolve the real DB port ID (hardware data doesn't carry the integer PK)
+    const routerId  = this.selectedRouter.id || this.selectedRouter.device_id;
+    const portName  = this.selectedPort.port_full_name || this.selectedPort.interface || this.selectedPort.name;
+
+    this.api.getPortId(routerId, portName).subscribe({
+      next: (res: any) => {
+        const payload = {
+          router_id:   routerId,
+          port_id:     res.port_id,   // real integer DB PK
+          description: this.description.trim()
+        };
+
+        // Step 2: Submit the reservation
+        this.api.reservePort(payload).subscribe({
+          next: () => {
+            this.submitting = false;
+            this.snackBar.open('✅ Port reserved. Background configuration started.', 'Close', { duration: 5000 });
+            this.resetForm();
+          },
+          error: (err) => {
+            this.submitting = false;
+            this.snackBar.open(`❌ ${err.error?.message || err.error?.error || 'Failed to reserve port.'}`, 'Close', { duration: 5000 });
+          }
         });
-        this.resetForm();
       },
-      error: (err) => {
+      error: () => {
         this.submitting = false;
-        const errorMessage = err.error?.error || 'Failed to reserve port.';
-        this.snackBar.open(`❌ Error: ${errorMessage}`, 'Close', { 
-          duration: 5000,
-          panelClass: ['error-snackbar']
-        });
+        this.snackBar.open('❌ Could not find port in database. Check port name mapping.', 'Close', { duration: 5000 });
       }
     });
   }

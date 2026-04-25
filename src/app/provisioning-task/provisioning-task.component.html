@@ -1,91 +1,161 @@
-<div class="back-container"> <!-- l'conteneur mta rjou3 sequence parameters variables configurations mapping definition syntax logic. -->
-  <button (click)="goBack()" class="back-btn"> <!-- boutton l'rjou3 logic format execution. -->
-    <mat-icon class="back-icon">arrow_back</mat-icon> <!-- icone l'rjou3 condition strings value format frameworks boundary text. -->
-    Back to Dashboard <!-- l'katba mapping syntax structure formats texts parameters boundaries definition logic sequence boundaries boundaries parameters evaluation mapping limits variable variables tokens loop mapping sequences texts frameworks formatting texts limits logic limit variable structure logics validation limitations format string limits. -->
-  </button> <!-- mapping rules validation execution limits text evaluation boundaries definition mapping strings validation mapping validation evaluations configurations validations definitions logic parameters definitions structure mapping bounds variables variable limitations variables texts boundaries constraints configuration formats formats. -->
-</div> <!-- validation limit tokens bounds format parameters references tokens limitations. -->
+<div class="back-container">
+  <button (click)="goBack()" class="back-btn">
+    <mat-icon class="back-icon">arrow_back</mat-icon>
+    Back to Dashboard
+  </button>
+</div>
 
-<h2 class="page-title">Execute: {{ taskDisplayName }}</h2> <!-- titre kbir framework settings token variable boundary mapping syntax bounds bounds parameters loop rule loops parameters framework rule structure rule limit setting. -->
-<p class="page-subtitle">Search for a device below to queue this automation task.</p> <!-- titre sghir sequences parsing parsing matching parameters tokens limitations limits setting boundaries variables condition text execution logic validation validation condition bounds mapping definitions parsing configuration setting settings contexts strings definitions strings references parsing syntax parsing parameters formats bounds format frameworks syntax conditions. -->
+<h2 class="page-title">Execute: {{ taskDisplayName }}</h2>
+<p class="page-subtitle">Search for a device below to queue this automation task.</p>
 
-<mat-card class="form-card"> <!-- el carta mté3na text mappings references definitions parameters formats string bounds parsing formats parsing parameters format contexts string validations sequence mapping limit syntax strings rule definition parameters loop contexts elements references definitions definitions contexts loop logics condition text contexts validation setting loop configurations rule. -->
-  <mat-card-content class="form-content"> <!-- contenu string definitions structures limits parsing limits mappings limits limitations texts condition mapping condition parameters mapping boundary framework. -->
+<mat-card class="form-card">
+  <mat-card-content class="form-content">
 
-    <div class="form-row"> <!-- e'ster values rules parsing loops sequence parsing validation limit limits logics rules contexts boundaries limits variables token context boundaries value mappings logics structure bounds text conditions. -->
+    <div class="form-row">
 
-      <mat-form-field appearance="outline" class="form-field" floatLabel="always"> <!-- champ texts conditions variable definition limit. -->
-        <mat-label>Device Name (Start typing to search...)</mat-label> <!-- lebel texts loops limitations texts validation boundary validations strings rules mapping logic text evaluations variables structure parameters format strings settings boundary frameworks boundaries syntax validations parameters loop token parsing parameters boundary validation structure context configuration definitions loop loops definitions conditions mappings syntax context strings texts texts limits limits mappings parameter strings boundaries syntax. -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Device Name (Start typing to search...)</mat-label>
         <input type="text" matInput [(ngModel)]="form.device_name" (ngModelChange)="filterDevices($event)"
-          [matAutocomplete]="auto" placeholder="ex: ARI_0008_"> <!-- l'autocomplete mapping bounding conditions conditions token sequences boundaries definitions configuration texts parameters setting variables contexts bounds. -->
+          [matAutocomplete]="auto" placeholder="ex: ARI_0008_">
 
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onDeviceSelected($event)"> <!-- auto elements limits boundary setting variable values condition loop iteration texts mapping condition texts string references limitation token. -->
-          <mat-option *ngFor="let dev of filteredDevices" [value]="dev.name"> <!-- options mté3ha parameter formats constraints values limits mapping limit logic contexts token bounding conditions validations definitions. -->
-            <span class="autocomplete-name">{{ dev.name }}</span> <!-- essem string evaluation limit evaluation parsing limits formatting definitions rules token limits format structure constraints execution token definitions parameters loops limits variables mapping format limit string sequence structures sequences. -->
-            <span class="autocomplete-ip">({{ dev.loopback_ip }})</span> <!-- ip strings rule evaluation definition definitions logics limits configuration limits constraints loops syntax limit string. -->
-          </mat-option> <!-- variables structure bounds parameters configuration variables token conditions frameworks setting limits string framework constraints definition limitation bounds format iterations parameter bounds iterations iterations parsing. -->
-        </mat-autocomplete> <!-- variables texts references limit logics limitations execution mapping variables parameters contexts evaluation boundary syntax conditions parsing formats values syntax text configuration settings context. -->
-      </mat-form-field> <!-- strings text evaluation text logic formatting string sequences settings bounds syntax token condition texts definitions constraints syntax parsing string boundary context validations loop parameters loops tokens evaluations evaluation references rule structure conditions configurations format logic limits conditions formats definitions texts values variables contexts variables parsing variables variables constraint parameters limits settings validations parsing syntax conditions values formats constraints reference strings. -->
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onDeviceSelected($event)">
+          <mat-option *ngFor="let dev of filteredDevices" [value]="dev.name">
+            <span class="autocomplete-name">{{ dev.name }}</span>
+            <span class="autocomplete-ip">({{ dev.loopback_ip }})</span>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
 
-      <mat-form-field appearance="outline" class="form-field" floatLabel="always"> <!-- l'ip string boundaries condition configuration loop rules reference limit syntax boundaries. -->
-        <mat-label>Device IP</mat-label> <!-- label boundaries limitations setting limit settings variables sequence limitation definition syntax boundary strings strings definition formats boundaries condition structure contexts validations rule constraints syntax definition context format texts limitations token limits formatting token definitions mapping condition loop bounds format text evaluations bounds tokens. -->
-        <input matInput [(ngModel)]="form.device_ip" placeholder="ex: 10.51.2.14"> <!-- l'input parameters rule evaluations formatting formats string bounds structures formats limitations evaluations setting reference formats limits limits bounds variables iterations logic matching logic reference string constraints iteration strings variables validations parsing definition boundaries variable bounds text definition evaluation conditions references context parameters context parsing context bounding texts evaluation evaluations constraint variable parsing parameters mapping parameters texts limits variables. -->
-      </mat-form-field> <!-- condition definitions formatting evaluation limits definition logic limits configurations mapping boundary limits texts bounding limit formatting limitations definition variables configurations formats contexts parsing constraints parameters settings parameters condition definitions. -->
-    </div> <!-- limits texts configurations. -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Device IP</mat-label>
+        <input matInput [(ngModel)]="form.device_ip" placeholder="ex: 10.51.2.14">
+      </mat-form-field>
+    </div>
 
     <div *ngIf="message" class="message-banner"
       [class.message-success]="messageType === 'success'"
       [class.message-error]="messageType === 'error'">
-      <mat-icon class="message-icon">{{ messageType === 'success' ? 'check_circle' : 'error' }}</mat-icon> <!-- icone limitations text mapping conditions configuration iterations. -->
-      {{ message }} <!-- e'message framework validations parameters parameter condition boundaries texts constraints definitions limitations bounds loops boundary bounds limits reference boundary texts condition syntax format boundary validations rule constraints evaluation frameworks text parameter. -->
-    </div> <!-- text parameters limit limits sequences framework formats definition rule evaluation values sequences formatting values syntax definition parameter constraint bounds text bounds boundaries logic loops limit variable contexts limit texts parameter configuration variables validation iterations limits configuration mapping limit mappings constraints format token validation values. -->
+      <mat-icon class="message-icon">{{ messageType === 'success' ? 'check_circle' : 'error' }}</mat-icon>
+      {{ message }}
+    </div>
 
-    <div class="form-actions"> <!-- les actions frameworks variable limit syntax settings parsing. -->
+    <div class="form-actions">
       <button class="run-btn"
-        [disabled]="submitting || !form.device_name" (click)="startProvisioning()">
-        <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon> <!-- l'icone validation validations settings limits text evaluation tokens texts formats definition text boundaries structure limitation parameters. -->
-        <span *ngIf="!submitting">Run {{ taskDisplayName }}</span> <!-- text contexts limits parsing loop limitations formats definitions values boundaries values boundaries text limits string structure texts definition parameters validations parameters parsing text definition boundary references setting mappings structure logics bounds conditions limitations loop constraints texts limitations configurations boundaries. -->
-        <span *ngIf="submitting">Running...</span> <!-- chargement definition strings limits strings references. -->
-      </button> <!-- mapping limitation definitions string configurations rules limits values validations boundaries contexts mapping setting rule parameters validations texts condition contexts texts values limits strings limitations parameters mapping structures boundaries context iteration parameters sequence strings condition limitation mapping tokens conditions limits condition variable text condition variables strings context. -->
-    </div> <!-- conditions logic evaluation boundaries strings validations frameworks limit reference syntax condition parameters. -->
-  </mat-card-content> <!-- string references boundaries parameters formatting evaluation boundary sequences boundaries setting variable frameworks limits definitions format string mappings. -->
-</mat-card> <!-- variables rules mapping limitations parsing parameters rule. -->
+        [disabled]="submitting || isPolling || !form.device_name" (click)="startProvisioning()">
+        <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon>
+        <span *ngIf="!submitting">Run {{ taskDisplayName }}</span>
+        <span *ngIf="submitting">Submitting...</span>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
 
-<h3 class="history-title">Recent {{ taskDisplayName }} History</h3> <!-- titre mté3 l'historique condition mapping evaluations mapping limits limit logics parameter limit limits limits strings contexts condition format contexts mappings validations structure bounds logics bounds value loops values variables matching value sequences validations texts string logics format variables looping limitations logic definitions token setting limitations configurations format context variables references constraints constraints contexts constraints framework syntax constraint text elements logic definitions sequence contexts constraints limits sequences parsing syntax validation bounds bounding syntax rules texts string settings evaluation parameters settings syntax limitations frameworks tokens configurations parameters limits logic validations values contexts validations values logics format boundary constraints logics execution. -->
+<!-- ─── LIVE STATUS PANEL ─────────────────────────────────────────────────── -->
+<div *ngIf="activeTaskId !== null" class="live-panel">
 
-<div *ngIf="loadingTasks" class="loading-container"> <!-- l'chargement ta tasks logic variables matching limitations limit evaluations validations mappings condition references parsing validations variables validation format boundaries variables settings contexts formats format parsing values framework string frameworks formatting boundaries limits boundary token bounds syntax. -->
-  <mat-spinner diameter="40" class="loading-spinner"></mat-spinner> <!-- l'spinner strings definition conditions mapping configurations limit evaluation. -->
-</div> <!-- boundaries parsing limits loop logic values validation texts configuration loops. -->
+  <!-- Header row: task ID + animated status badge -->
+  <div class="live-header">
+    <span class="live-task-label">Task #{{ activeTaskId }}</span>
 
-<mat-card *ngIf="!loadingTasks" class="history-card"> <!-- mté3 lhistorique texts formatting loop token conditions framework token condition parameters mapping configurations loop formatting definition variable validation validations mappings. -->
-  <table mat-table [dataSource]="tasks" class="full-width-table"> <!-- tabla parsing mapping values parsing evaluation limits string constraints format format string contexts formatting token format evaluation context parameter validations mapping rules limits settings formats string sequences loop mapping string rules context mapping. -->
+    <span class="live-badge"
+      [class.badge-queued]="liveStatus === 'queued'"
+      [class.badge-running]="liveStatus === 'running'"
+      [class.badge-completed]="liveStatus === 'completed'"
+      [class.badge-failed]="liveStatus === 'failed'">
+      <mat-icon class="badge-icon" [class.spin]="liveStatus === 'running'">{{ getStatusIcon(liveStatus) }}</mat-icon>
+      {{ liveStatus | uppercase }}
+    </span>
 
-    <ng-container matColumnDef="device_name"> <!-- colon validations elements context definition bounds condition token variable text boundaries values mappings limits validation texts parameter boundary text evaluation definitions logic configurations variables context rules bounds logics parameters string variable values formatting context boundary conditions formats logics execution mapping limitations parsing strings value limit formatting texts texts limits matching parameters loops boundaries mapping boundaries boundaries definition constraints syntax limits context texts framework loops tokens frameworks reference format limitations format bounding sequence logics. -->
-      <th mat-header-cell *matHeaderCellDef class="header-accent"> Device </th> <!-- head parsing bounds boundaries condition limitations parsing context loop limitations parsing boundaries texts validations settings texts variables sequence limits setting limitation framework parameters strings parsing boundary limit formatting bounds boundaries elements execution framework mappings setting condition validations text configuration setting frameworks configuration parameters validation framework references token limits framework value setting definitions parameters limits sequences configurations mapping limits definition bounds iteration structure mapping logics formatting syntax rule condition constraints references sequences references bounds parameters sequences iteration logics texts logics variables limit contexts limitations iterations values string token evaluation variable settings variables conditions condition limit bounding parameter configurations structure logics bounds bounding evaluation token syntax values. -->
-      <td mat-cell *matCellDef="let t" class="td-bold"> {{ t.device_name }} </td> <!-- td token condition limit limit texts reference variable frameworks. -->
-    </ng-container> <!-- loop settings tokens validation condition evaluation structures limits constraint mapping format execution configurations rules syntax boundaries references variable syntax formats parameters configuration evaluation sequence contexts bounds parameter context mapping limit definition limits mappings limitation evaluation validations logics formats settings limitation format configuration limits rules syntax texts bounds context constraint parameters variables settings logic constraints framework text reference strings evaluation validations bounds sequence definition string definition tokens contexts token references limits bounds settings configurations condition. -->
+    <!-- Compact spinner while polling -->
+    <mat-spinner *ngIf="isPolling" diameter="18" class="poll-spinner"></mat-spinner>
+  </div>
 
-    <ng-container matColumnDef="status"> <!-- colon status limits framework definition definition limits structure sequence constraints rules syntax formats. -->
-      <th mat-header-cell *matHeaderCellDef class="header-accent th-center"> Status </th> <!-- mapping limit mappings variable format sequence texts conditions validation boundaries format settings parsing sequences. -->
-      <td mat-cell *matCellDef="let t" class="td-center"> <!-- validations. -->
-        <span [style.color]="getStatusColor(t.status)"
-          class="status-text">
-          {{ t.status }} <!-- text limitations configurations rules logics. -->
-        </span> <!-- values validations loops. -->
-      </td> <!-- mappings mappings formats. -->
-    </ng-container> <!-- limitations variables frameworks conditions setting variables limits formatting settings limitations bounds strings. -->
+  <!-- Timestamps -->
+  <div class="live-timestamps" *ngIf="liveStartedAt || liveCompletedAt">
+    <span *ngIf="liveStartedAt" class="ts-item">
+      <mat-icon class="ts-icon">play_circle_outline</mat-icon>
+      Started: {{ liveStartedAt | date:'medium' }}
+    </span>
+    <span *ngIf="liveCompletedAt" class="ts-item">
+      <mat-icon class="ts-icon">flag</mat-icon>
+      Finished: {{ liveCompletedAt | date:'medium' }}
+    </span>
+  </div>
 
-    <ng-container matColumnDef="created_at"> <!-- date limits sequence format boundaries constraints rules condition boundaries. -->
-      <th mat-header-cell *matHeaderCellDef class="header-accent"> Requested On </th> <!-- head limitation sequences references formats formats format contexts validations. -->
-      <td mat-cell *matCellDef="let t" class="td-secondary"> {{ t.created_at | date:'medium' }} </td> <!-- values bounds string bounds boundaries variables limitations formatting evaluation boundaries values limits loop rule limit iteration. -->
-    </ng-container> <!-- reference limitations constraints setting. -->
+  <!-- Step progress track -->
+  <div class="live-steps">
+    <div class="step" [class.step-done]="['running','completed','failed'].includes(liveStatus)">
+      <div class="step-dot"></div>
+      <span class="step-label">Queued</span>
+    </div>
+    <div class="step-line" [class.line-done]="['running','completed','failed'].includes(liveStatus)"></div>
 
-    <tr mat-header-row *matHeaderRowDef="columns"></tr> <!-- loop texts limit texts. -->
-    <tr mat-row *matRowDef="let row; columns: columns;"></tr> <!-- condition mapping values mapping validations syntax structure. -->
+    <div class="step" [class.step-active]="liveStatus === 'running'"
+                      [class.step-done]="['completed','failed'].includes(liveStatus)">
+      <div class="step-dot"></div>
+      <span class="step-label">Running</span>
+    </div>
+    <div class="step-line" [class.line-done]="['completed','failed'].includes(liveStatus)"></div>
+
+    <div class="step"
+      [class.step-done]="liveStatus === 'completed'"
+      [class.step-failed]="liveStatus === 'failed'">
+      <div class="step-dot"></div>
+      <span class="step-label">{{ liveStatus === 'failed' ? 'Failed' : 'Done' }}</span>
+    </div>
+  </div>
+
+  <!-- Output / result log -->
+  <div *ngIf="liveOutput" class="live-output">
+    <div class="output-header">
+      <mat-icon class="output-icon">terminal</mat-icon>
+      <span>Task Output</span>
+    </div>
+    <pre class="output-pre">{{ liveOutput }}</pre>
+  </div>
+
+  <p *ngIf="!liveOutput && isPolling" class="waiting-text">
+    <mat-icon class="waiting-icon">hourglass_top</mat-icon>
+    Waiting for device response...
+  </p>
+</div>
+<!-- ────────────────────────────────────────────────────────────────────────── -->
+
+<h3 class="history-title">Recent {{ taskDisplayName }} History</h3>
+
+<div *ngIf="loadingTasks" class="loading-container">
+  <mat-spinner diameter="40" class="loading-spinner"></mat-spinner>
+</div>
+
+<mat-card *ngIf="!loadingTasks" class="history-card">
+  <table mat-table [dataSource]="tasks" class="full-width-table">
+
+    <ng-container matColumnDef="device_name">
+      <th mat-header-cell *matHeaderCellDef class="header-accent"> Device </th>
+      <td mat-cell *matCellDef="let t" class="td-bold"> {{ t.device_name }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center"> Status </th>
+      <td mat-cell *matCellDef="let t" class="td-center">
+        <span [style.color]="getStatusColor(t.status)" class="status-text">
+          {{ t.status }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="created_at">
+      <th mat-header-cell *matHeaderCellDef class="header-accent"> Requested On </th>
+      <td mat-cell *matCellDef="let t" class="td-secondary"> {{ t.created_at | date:'medium' }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;"></tr>
 
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell td-empty" colspan="3"> <!-- row mté3na syntax format boundary reference loops structure definition. -->
-        No history found for {{ taskDisplayName }}. <!-- text format parsing formats text limits contexts sequences bounds mapping contexts token configuration. -->
-      </td> <!-- mapping. -->
-    </tr> <!-- limits values. -->
-  </table> <!-- strings variables logic contexts validations sequences syntax logics reference. -->
-</mat-card> <!-- context mapping logic limitations string variables. -->
+      <td class="mat-cell td-empty" colspan="3">
+        No history found for {{ taskDisplayName }}.
+      </td>
+    </tr>
+  </table>
+</mat-card>
