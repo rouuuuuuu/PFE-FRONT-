@@ -15,8 +15,8 @@ import { PortReservationComponent } from './pages/port-reservation/port-reservat
 import { NetworkTopologyComponent } from './pages/network-topology/network-topology.component';
 
 export const routes: Routes = [
-  { path: '',          component: NetworkTopologyComponent }, // Default → topology
-  { path: 'dashboard', component: DashboardComponent },
+  { path: '',          component: DashboardComponent }, // Default → dashboard
+  { path: 'topology',  component: NetworkTopologyComponent },
   { path: 'routers',   component: RoutersComponent },
   { path: 'switches', component: SwitchesComponent }, // Cheman /switches ytalla3 page mta3 switches (Path for switches list)
   { path: 'switches/:ip', component: SwitchSummaryComponent }, // Cheman /switches/:ip ytalla3 kholassa mta3 ports (Summary page for a single switch)

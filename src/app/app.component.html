@@ -17,13 +17,13 @@
   <!-- ── Quick-access nav pills ─────────────────────────────── -->
   <div class="toolbar-quicknav">
 
-    <a class="quicknav-btn" routerLink="/dashboard" routerLinkActive="quicknav-active"
+    <a class="quicknav-btn" routerLink="/" routerLinkActive="quicknav-active"
        [routerLinkActiveOptions]="{exact:true}" matTooltip="Dashboard" matTooltipPosition="below">
       <mat-icon>dashboard</mat-icon>
       <span class="quicknav-label">Dashboard</span>
     </a>
 
-    <a class="quicknav-btn" routerLink="/" routerLinkActive="quicknav-active"
+    <a class="quicknav-btn" routerLink="/topology" routerLinkActive="quicknav-active"
        [routerLinkActiveOptions]="{exact:true}" matTooltip="Network Topology" matTooltipPosition="below">
       <mat-icon>hub</mat-icon>
       <span class="quicknav-label">Topology</span>
@@ -83,17 +83,18 @@
     <!-- Le menu latéral li dima ma7loul f jnab (Persistent sidebar on the left). -->
     <nav class="sidenav-nav"> <!-- Balise de navigation sémantique (Semantic navigation element). -->
 
-      <!-- Lien pour Network Topology (default page) -->
+      <!-- Lien pour le Dashboard (default page) -->
       <a class="nav-item" routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
+        <mat-icon class="nav-icon">dashboard</mat-icon>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <!-- Lien pour Network Topology -->
+      <a class="nav-item" routerLink="/topology" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
         <mat-icon class="nav-icon">hub</mat-icon>
         <span class="nav-label">Network Topology</span>
       </a>
 
-      <!-- Lien pour le Dashboard -->
-      <a class="nav-item" routerLink="/dashboard" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
-        <mat-icon class="nav-icon">dashboard</mat-icon>
-        <span class="nav-label">Dashboard</span>
-      </a>
+  
 
 
       <!-- Lien pour les Routers -->
