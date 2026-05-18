@@ -96,6 +96,10 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   searchHistoryQuery = '';
   historyColumns: string[] = ['task_id', 'device_name', 'client_name', 'vlan', 'debit_mbps', 'status', 'created_at'];
 
+  // ── Pagination ────────────────────────────────────────────
+  historyPage = 0;
+  historyPageSize = 10;
+
   readonly subnetTypes = ['/31', '/29'];
 
   constructor(
@@ -320,6 +324,23 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
       );
     }
     return list;
+  }
+
+  get paginatedHistory(): any[] {
+    const start = this.historyPage * this.historyPageSize;
+    return this.filteredHistory.slice(start, start + this.historyPageSize);
+  }
+
+  get totalHistoryPages(): number {
+    return Math.max(1, Math.ceil(this.filteredHistory.length / this.historyPageSize));
+  }
+
+  prevHistoryPage(): void {
+    if (this.historyPage > 0) this.historyPage--;
+  }
+
+  nextHistoryPage(): void {
+    if (this.historyPage < this.totalHistoryPages - 1) this.historyPage++;
   }
 
   // ── Status helpers ────────────────────────────────────────

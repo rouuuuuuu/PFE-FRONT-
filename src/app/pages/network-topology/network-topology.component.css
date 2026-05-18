@@ -55,6 +55,55 @@
   color: var(--text-muted);
 }
 
+/* ── Search ── */
+.topo-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  width: 200px;
+  transition: border-color 0.3s;
+}
+.topo-search:focus-within {
+  border-color: var(--primary-orange);
+}
+.topo-search .search-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+}
+.topo-search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  outline: none;
+  min-width: 0;
+}
+.topo-search .clear-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.topo-search .clear-btn mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+.topo-search .clear-btn:hover {
+  color: var(--text-primary);
+}
+
 /* ── Stat pills ──────────────────────────────────────────── */
 .stat-pills {
   display: flex;
@@ -130,9 +179,22 @@
 }
 
 .hint-text {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
   color: var(--text-muted);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 4px 10px;
   white-space: nowrap;
+  pointer-events: none;
+  backdrop-filter: blur(6px);
 }
 
 /* ── Canvas area ─────────────────────────────────────────── */
@@ -313,4 +375,13 @@
 
 :host ::ng-deep .pulse-ring {
   animation: pulseRing 1.5s ease-in-out infinite;
+}
+
+/* ── D3 Search Highlight ── */
+:host ::ng-deep .search-highlight circle:first-child {
+  stroke: #ffffff !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+  r: 22 !important;
+  transition: all 0.3s ease;
 }

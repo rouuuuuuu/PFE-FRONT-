@@ -10,6 +10,26 @@
       </div>
     </div>
 
+    <!-- ── Search ── -->
+    <div class="topo-search">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input type="text" 
+             [(ngModel)]="searchQuery" 
+             (ngModelChange)="onSearchChange()"
+             (keyup.enter)="onSearchNode()" 
+             [matAutocomplete]="topoAuto"
+             placeholder="Search router...">
+      <mat-autocomplete #topoAuto="matAutocomplete" (optionSelected)="onAutoSelected($event)">
+        <mat-option *ngFor="let node of filteredSearchNodes" [value]="node.name">
+          <span style="font-weight:600">{{ node.name }}</span>
+          <span style="font-size:12px; color:var(--text-secondary); margin-left:8px">({{ node.ip || 'no IP' }})</span>
+        </mat-option>
+      </mat-autocomplete>
+      <button *ngIf="searchQuery" class="clear-btn" (click)="searchQuery=''; onSearchChange(); onSearchNode()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
     <!-- Stat pills -->
     <div class="stat-pills" *ngIf="!loading">
       <div class="stat-pill">
@@ -48,14 +68,17 @@
       </span>
     </div>
 
-    <div class="hint-text" *ngIf="!loading">
-      <mat-icon style="font-size:14px;vertical-align:middle">info</mat-icon>
-      Drag nodes · Scroll to zoom · Click a node for details
-    </div>
+
   </div>
 
   <!-- ── Canvas area ──────────────────────────────────────────────────── -->
   <div class="topo-canvas-wrap">
+
+    <!-- Hint overlay — bottom left of map -->
+    <div class="hint-text" *ngIf="!loading">
+      <mat-icon style="font-size:13px;vertical-align:middle;margin-right:4px">info</mat-icon>
+      Drag nodes · Scroll to zoom · Click a node for details
+    </div>
 
     <!-- Loading -->
     <div *ngIf="loading" class="topo-loading">

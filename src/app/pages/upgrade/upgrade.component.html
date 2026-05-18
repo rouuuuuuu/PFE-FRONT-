@@ -165,7 +165,7 @@
 </div>
 
 <mat-card class="history-card">
-  <table mat-table [dataSource]="filteredUpgrades" class="full-width-table">
+  <table mat-table [dataSource]="paginatedUpgrades" class="full-width-table">
 
     <!-- ID -->
     <ng-container matColumnDef="upgrade_id">
@@ -266,6 +266,19 @@
       <td class="mat-cell td-empty" colspan="9">No upgrade history found.</td>
     </tr>
   </table>
+
+  <!-- Custom Pagination -->
+  <div class="pagination-container" *ngIf="filteredUpgrades.length > 0">
+    <button class="page-btn" (click)="prevHistoryPage()" [disabled]="historyPage === 0">
+      Previous
+    </button>
+    <span class="page-info">
+      Page {{ historyPage + 1 }} of {{ totalHistoryPages }}
+    </span>
+    <button class="page-btn" (click)="nextHistoryPage()" [disabled]="historyPage >= totalHistoryPages - 1">
+      Next
+    </button>
+  </div>
 </mat-card>
 
 <!-- ── Detail Modal ── -->

@@ -60,21 +60,23 @@
 }
 
 /* --- Card Border Accents --- */
-.border-orange {
-  border-top: 3px solid var(--primary-orange) !important;
-}
+.border-orange { border-top: 3px solid #FF7900 !important; }
+.border-indigo  { border-top: 3px solid #5c6bc0 !important; }
+.border-green   { border-top: 3px solid #4caf50 !important; }
+.border-red     { border-top: 3px solid #f44336 !important; }
+.border-blue    { border-top: 3px solid #1e88e5 !important; }
+.border-amber   { border-top: 3px solid #ffb300 !important; }
+.border-cyan    { border-top: 3px solid #26c6da !important; }
+.border-purple  { border-top: 3px solid #ab47bc !important; }
 
-.border-dark {
-  border-top: 3px solid #333 !important;
-}
-
-.border-green {
-  border-top: 3px solid var(--status-green) !important;
-}
-
-.border-red {
-  border-top: 3px solid var(--status-red) !important;
-}
+/* --- Icon accent colors (match card border) --- */
+.icon-orange { color: #FF7900  !important; opacity: 0.85; }
+.icon-indigo  { color: #7986cb !important; opacity: 0.85; }
+.icon-green   { color: #66bb6a !important; opacity: 0.85; }
+.icon-blue    { color: #64b5f6 !important; opacity: 0.85; }
+.icon-amber   { color: #ffca28 !important; opacity: 0.85; }
+.icon-cyan    { color: #4dd0e1 !important; opacity: 0.85; }
+.icon-purple  { color: #ce93d8 !important; opacity: 0.85; }
 
 /* --- Clickable Cards --- */
 .clickable {
@@ -127,12 +129,22 @@
 
 .sub-stat {
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 2px;
+  gap: 5px;
+}
+
+.filter-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-right: 2px;
 }
 
 /* --- Status Dots --- */
@@ -171,17 +183,37 @@
 }
 
 /* --- Text Colors --- */
-.text-orange {
-  color: var(--primary-orange);
+.text-orange { color: var(--primary-orange); }
+.text-red    { color: var(--status-red); }
+.text-green  { color: var(--status-green); }
+
+/* --- Chip pills (match card + pie chart colors) --- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.2px;
+  font-family: 'Outfit', sans-serif;
+  white-space: nowrap;
 }
 
-.text-red {
-  color: var(--status-red);
-}
-
-.text-green {
-  color: var(--status-green);
-}
+/* Routers: Huawei=green, Cisco=yellow, Juniper=blue */
+.chip--green  { background: rgba(76,175,80,0.13);  color:#66bb6a; border:1px solid rgba(76,175,80,0.25); }
+.chip--yellow { background: rgba(255,193,7,0.13);  color:#ffd54f; border:1px solid rgba(255,193,7,0.25); }
+.chip--blue   { background: rgba(30,136,229,0.13); color:#64b5f6; border:1px solid rgba(30,136,229,0.25); }
+/* Switches */
+.chip--indigo { background: rgba(92,107,192,0.13); color:#9fa8da; border:1px solid rgba(92,107,192,0.25); }
+/* Cards */
+.chip--amber  { background: rgba(255,179,0,0.13);  color:#ffca28; border:1px solid rgba(255,179,0,0.25); }
+/* SFPs */
+.chip--cyan   { background: rgba(38,198,218,0.13); color:#4dd0e1; border:1px solid rgba(38,198,218,0.25); }
+/* SubCards */
+.chip--purple { background: rgba(171,71,188,0.13); color:#ce93d8; border:1px solid rgba(171,71,188,0.25); }
+/* Shared error */
+.chip--red    { background: rgba(244,67,54,0.10);  color:#ef9a9a; border:1px solid rgba(244,67,54,0.22); }
 
 /* --- Chart Expansion --- */
 .chart-expansion {
@@ -215,6 +247,7 @@
     transform: translateY(-10px);
     max-height: 0;
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -227,11 +260,14 @@
   .dashboard-row {
     flex-direction: column;
   }
+
   .stat-card {
     min-width: 100%;
   }
+
   .canvas-wrapper {
     width: 240px;
     height: 240px;
   }
 }
+

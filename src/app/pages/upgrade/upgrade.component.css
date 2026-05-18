@@ -596,3 +596,46 @@
 .retry-btn:hover {
   background: rgba(244,67,54,0.2);
 }
+
+/* ── Custom Pagination ── */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--glass-border, #2a2a2a);
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: var(--primary-orange);
+  color: white;
+  border: none;
+  padding: 8px 22px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: var(--secondary-orange);
+  box-shadow: var(--shadow-orange);
+}
+
+.page-btn:disabled {
+  background: var(--bg-elevated, #2a2a2a);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.page-info {
+  color: var(--text-secondary);
+  font-size: 13px;
+  white-space: nowrap;
+}

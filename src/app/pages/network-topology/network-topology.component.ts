@@ -2,10 +2,12 @@ import {
   Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, NgZone, Inject, PLATFORM_ID
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ApiService } from '../../services/api.service';
 import { forkJoin } from 'rxjs';
 import type * as D3 from 'd3';
@@ -32,7 +34,7 @@ interface TopoLink {
 @Component({
   selector: 'app-network-topology',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule],
   templateUrl: './network-topology.component.html',
   styleUrl:    './network-topology.component.css'
 })
@@ -47,6 +49,9 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   selectedNode: TopoNode | null = null;
   selectedNodeLinks: TopoLink[] = [];
 
+  searchQuery: string = '';
+  filteredSearchNodes: TopoNode[] = [];
+
   totalNodes    = 0;
   totalLinks    = 0;
   activeAlarms  = 0;
@@ -55,6 +60,7 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   private simulation: any;
   private refreshTimer: any;
   private ro: ResizeObserver | null = null;
+  private nodeEl: any = null;  // D3 selection of node <g> groups
 
   readonly ALARM_COLORS: Record<string, string> = {
     normal:   '#4caf50',
@@ -242,6 +248,9 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
             (typeof l.target === 'string' ? l.target : (l.target as TopoNode).id) === d.id
           );
         });
+        // Highlight clicked node
+        nodeEl.classed('search-highlight', false);
+        d3.select(_.currentTarget).classed('search-highlight', true);
       });
 
     // Glow ring
@@ -276,11 +285,88 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
           .attr('x2', (d: any) => d.target.x).attr('y2', (d: any) => d.target.y);
         nodeEl.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
       });
+
+    // Store reference for search highlight
+    this.nodeEl = nodeEl;
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   alarmColor(alarm: string) { return this.ALARM_COLORS[alarm] || '#555'; }
-  closePanel()              { this.selectedNode = null; }
+  closePanel() { 
+    this.selectedNode = null;
+    if (this.nodeEl) {
+      this.nodeEl.classed('search-highlight', false);
+    }
+  }
+
+  onSearchChange() {
+    const q = this.searchQuery.toLowerCase().trim();
+    if (!q) {
+      this.filteredSearchNodes = [];
+      return;
+    }
+    this.filteredSearchNodes = this.nodes.filter(n =>
+      n.id.toLowerCase().includes(q) || 
+      n.name.toLowerCase().includes(q) || 
+      (n.ip && n.ip.includes(q))
+    ).slice(0, 10);
+  }
+
+  onAutoSelected(event: any) {
+    this.searchQuery = event.option.value;
+    this.onSearchNode();
+  }
+
+  onSearchNode() {
+    if (!this.searchQuery.trim()) {
+      this.closePanel();
+      return;
+    }
+    const q = this.searchQuery.toLowerCase().trim();
+    // Find matching node by id, name, or ip
+    const found = this.nodes.find(n => 
+      n.id.toLowerCase().includes(q) || 
+      n.name.toLowerCase().includes(q) || 
+      (n.ip && n.ip.includes(q))
+    );
+
+    if (found) {
+      this.searchQuery = found.name;
+      this.selectedNode = found;
+      this.selectedNodeLinks = this.links.filter((l: any) =>
+        (typeof l.source === 'string' ? l.source : (l.source as TopoNode).id) === found.id ||
+        (typeof l.target === 'string' ? l.target : (l.target as TopoNode).id) === found.id
+      );
+      
+      // Highlight the node in D3
+      if (this.nodeEl) {
+        this.nodeEl.classed('search-highlight', false);
+        this.nodeEl.filter((d: any) => d && d.id === found.id).classed('search-highlight', true);
+      }
+
+      // Pan to node using D3 if possible
+      if (this.svgRef && found.x != null && found.y != null) {
+        import('d3').then(d3 => {
+          const container = this.svgRef.nativeElement.parentElement!;
+          const W = container.clientWidth || 900;
+          const H = container.clientHeight || 600;
+          
+          const svg = d3.select(this.svgRef.nativeElement);
+          const zoomBehavior = d3.zoom<SVGElement, unknown>();
+          
+          // Center the node
+          const scale = 1.5;
+          const x = W / 2 - found.x! * scale;
+          const y = H / 2 - found.y! * scale;
+          
+          svg.transition().duration(750).call(
+            zoomBehavior.transform as any, 
+            d3.zoomIdentity.translate(x, y).scale(scale)
+          );
+        });
+      }
+    }
+  }
 
   getLinkPeer(peer: string | TopoNode | null | undefined): string {
     if (!peer) return '?';

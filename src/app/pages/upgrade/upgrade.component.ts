@@ -108,6 +108,10 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   showDetailModal = false;
   selectedUpgradeDetail: Upgrade | null = null;
 
+  // ─── Pagination ───
+  historyPage = 0;
+  historyPageSize = 10;
+
   constructor(
     private http: HttpClient,
     private api: ApiService,
@@ -315,17 +319,43 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     });
   }
 
-  onFilterChange(): void { this.loadUpgrades(); }
+  onFilterChange(): void {
+    this.historyPage = 0;
+    this.loadUpgrades();
+  }
 
   get filteredUpgrades(): Upgrade[] {
-    if (!this.searchHistoryQuery) return this.upgrades;
-    const q = this.searchHistoryQuery.toLowerCase();
-    return this.upgrades.filter(u =>
-      u.device_name.toLowerCase().includes(q) ||
-      u.customer_name?.toLowerCase().includes(q) ||
-      u.interface.toLowerCase().includes(q) ||
-      u.device_ip.includes(q)
-    );
+    let list = this.upgrades;
+    if (this.filterStatus !== 'all') {
+      list = list.filter(u => u.status === this.filterStatus);
+    }
+    if (this.searchHistoryQuery) {
+      const q = this.searchHistoryQuery.toLowerCase();
+      list = list.filter(u =>
+        u.device_name.toLowerCase().includes(q) ||
+        u.customer_name?.toLowerCase().includes(q) ||
+        u.interface.toLowerCase().includes(q) ||
+        u.device_ip.includes(q)
+      );
+    }
+    return list;
+  }
+
+  get paginatedUpgrades(): Upgrade[] {
+    const start = this.historyPage * this.historyPageSize;
+    return this.filteredUpgrades.slice(start, start + this.historyPageSize);
+  }
+
+  get totalHistoryPages(): number {
+    return Math.max(1, Math.ceil(this.filteredUpgrades.length / this.historyPageSize));
+  }
+
+  prevHistoryPage(): void {
+    if (this.historyPage > 0) this.historyPage--;
+  }
+
+  nextHistoryPage(): void {
+    if (this.historyPage < this.totalHistoryPages - 1) this.historyPage++;
   }
 
   // ─── SWAN Ticket helpers ───

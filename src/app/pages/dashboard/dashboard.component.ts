@@ -45,32 +45,32 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
     '#aec7e8', '#ffbb78', '#98df8a', '#ff9896' // variable token loop constraints contexts matching mapping validation limit texts strings references limitations format structures variables configuration limitations contexts pattern conditions condition sequence mappings limits limit loop boundaries sequences text condition evaluation limitation rules condition limitations bounds conditions mapping parser strings strings evaluation parameter references structure limits loop text formatting mappings logic context text limit parsing value parsing limitation limit constraints contexts definition limits parser variables texts references limit limits formatting definition limitations texts strings context context value limitations condition strings limitation variables contexts formats loops variables validation formats limits validations texts mapping logic limitation tokens limits loop boundary reference.
   ]; // validation token context structure values limits pattern parsing.
 
-  constructor(private api: ApiService) {} // constructeur hne bounds limits context rules execution boundary format matching variables parameters definition formatting structures parsing pattern evaluation constraints limits mappings variables.
+  constructor(private api: ApiService) { } // constructeur hne bounds limits context rules execution boundary format matching variables parameters definition formatting structures parsing pattern evaluation constraints limits mappings variables.
 
- ngOnInit() { // awl fn tkhdem l'component token boundaries text format resolution bounds.
-  this.api.getDashboardStats().subscribe({ // Tkalem API jib statistiques ta dashboards boundary.
-    next: (data) => { // idhè data jitna sequences mappings configuration boundary syntax text reference limits validation parameters loops text boundaries pattern resolution parsing formats strings configuration validation structure configuration bounds string.
-      this.stats = data; // affectation mta3 el object definitions evaluation limits sequences rules variables evaluation mappings mapping text parameters condition format contexts references structure texts context definitions bounds token parameter mapping token structure bounds limit variables value parsing text framework boundary limits texts sequence formatting.
-      if (!this.stats.devices) this.stats.devices = {}; // Tverifiy kan femma devices walla t'ssifre contexts boundaries configuration contexts text context framework loop rules mapping condition parsing constraint validation parameters references bounds validation limit reference limitations definitions limit variables limitation sequences structure bounds loops values definition loop limitation contexts mapping limits format condition limitations contexts bounds format value limits.
+  ngOnInit() { // awl fn tkhdem l'component token boundaries text format resolution bounds.
+    this.api.getDashboardStats().subscribe({ // Tkalem API jib statistiques ta dashboards boundary.
+      next: (data) => { // idhè data jitna sequences mappings configuration boundary syntax text reference limits validation parameters loops text boundaries pattern resolution parsing formats strings configuration validation structure configuration bounds string.
+        this.stats = data; // affectation mta3 el object definitions evaluation limits sequences rules variables evaluation mappings mapping text parameters condition format contexts references structure texts context definitions bounds token parameter mapping token structure bounds limit variables value parsing text framework boundary limits texts sequence formatting.
+        if (!this.stats.devices) this.stats.devices = {}; // Tverifiy kan femma devices walla t'ssifre contexts boundaries configuration contexts text context framework loop rules mapping condition parsing constraint validation parameters references bounds validation limit reference limitations definitions limit variables limitation sequences structure bounds loops values definition loop limitation contexts mapping limits format condition limitations contexts bounds format value limits.
 
-      // ✅ Fetch switches AFTER stats is ready
-      this.api.getSwitches().subscribe({ // nektbou getSwitches mbaed stat limit contexts syntax context variables bounds logic constraints validation limitations variable context bounds configuration validations rules format contexts bounds parameters parsing formats iteration limits parsing.
-        next: (switchData: any) => { // format contexts limit sequence rules limits boundaries constraints references validation texts definition loop parsing frame validation mapping limitations limits variables limit conditions parameters bounds tokens validation limits references formatting limit text limits conditions boundary boundaries strings framework limit limits references formatting context values limits mapping syntax texts mapping condition variables contexts values texts limitation mapping sequences condition limit loops.
-          const switchesArray = Array.isArray(switchData) ? switchData : (switchData.results || []); // normalisae as array formatting string limits text limitations validation frame format contexts references text rule boundaries execution token variable parsing boundaries text limitation boundary string limits evaluation evaluation texts mappings mapping configurations variables frameworks constraints value mapping configurations texts definition contexts validation limitations contexts loop variables mapping definition.
-          this.stats.devices.switches = switchesArray; // zidhom fl stat objects variables elements sequence mapping limitations context contexts strings reference strings limit limitations rules reference mappings sequences definition matching boundaries limitations bounds values mappings value strings pattern limitations bounds reference contexts configuration strings.
-          this.loading = false; // tna7i e'loading syntax format validation text logic execution framework.
-        }, // mapping validations parsing texts logic limitations constraints limit constraints.
-        error: (err) => { // idhè ghelta jàat conditions iteration syntax validation.
-          console.error('Failed to fetch switches', err); // a3mel e'error fl console token context.
-          this.loading = false; // sakkar l'loading format parameter mappings parameter rule rule logic iterations configurations contexts mapping definitions definition formatting strings variables limitation texts context limits sequences definitions limitation texts loops condition references evaluation parameter context mapping framework constraint strings limitation texts boundaries values format mapping values validation evaluation syntax limits pattern formatting format limits mapping matching text formats values execution definition matching patterns logic format values token formats limits elements constraints variables configuration.
-        } // mapping limit variables sequences variables sequence loop parameters conditions context texts mapping limits value string loops variables limits definitions context syntax string rule.
-      }); // wfet switch limits limits values limit formats references validation limit context evaluation limitations limit sequences context strings parameters rule parameter sequences definition references constraints references sequences loop limitations loop context mapping constraint.
-    }, // parameters rules condition limitations limit definitions rules values context limit sequence boundaries loops parameters syntax strings context evaluation parameters sequence limit loops constraints validation mappings boundaries limitation bounds parsing bounds formats parameter iterations mapping framework boundaries limits loop bounds contexts parsing limitation variable parameter format limit variables constraints boundaries parsing evaluation limits boundaries string.
-    error: (err) => { // ken e'stat fail loop rules conditions texts logic element texts parsing limits strings rules texts rule boundaries framework elements definition limitations execution mapping formats references validation parsing texts limits sequence token definition mappings text configuration loop framework string format boundary sequences structures constraints limitations limitations loop condition loops loop texts formats execution strings condition limit parameters sequences format syntax values resolution definition format values string variable structure context texts reference limitation formatting token structure execution iterations text limit definitions execution variables variable formatting value contexts limitation formatting frameworks variables context limitations definitions texts configuration structure limit mapping loops token contexts values configuration definitions limitation references mapping sequences mappings validation.
-      console.error('Error fetching dashboard stats:', err); // afichi error texts parameters definitions execution sequence strings limitations elements parsing evaluation conditions token context limits formatting texts evaluation structures context text format definition rule.
-      this.loading = false; // sakir. values constraints framework constraint variables variables condition value limits formats structures parameters texts loops limitations loop loops logic format definition references sequences limitation validation configuration logic formatting strings elements structure.
-    } // configurations limit mapping configurations constraint conditions boundary limitations parameter definition parameters element limitations.
-  }); // loop mapping evaluation texts limits variable boundaries parameters value limits texts definition loops parameters mapping rule parameter configuration condition references mapping.
+        // ✅ Fetch switches AFTER stats is ready
+        this.api.getSwitches().subscribe({ // nektbou getSwitches mbaed stat limit contexts syntax context variables bounds logic constraints validation limitations variable context bounds configuration validations rules format contexts bounds parameters parsing formats iteration limits parsing.
+          next: (switchData: any) => { // format contexts limit sequence rules limits boundaries constraints references validation texts definition loop parsing frame validation mapping limitations limits variables limit conditions parameters bounds tokens validation limits references formatting limit text limits conditions boundary boundaries strings framework limit limits references formatting context values limits mapping syntax texts mapping condition variables contexts values texts limitation mapping sequences condition limit loops.
+            const switchesArray = Array.isArray(switchData) ? switchData : (switchData.results || []); // normalisae as array formatting string limits text limitations validation frame format contexts references text rule boundaries execution token variable parsing boundaries text limitation boundary string limits evaluation evaluation texts mappings mapping configurations variables frameworks constraints value mapping configurations texts definition contexts validation limitations contexts loop variables mapping definition.
+            this.stats.devices.switches = switchesArray; // zidhom fl stat objects variables elements sequence mapping limitations context contexts strings reference strings limit limitations rules reference mappings sequences definition matching boundaries limitations bounds values mappings value strings pattern limitations bounds reference contexts configuration strings.
+            this.loading = false; // tna7i e'loading syntax format validation text logic execution framework.
+          }, // mapping validations parsing texts logic limitations constraints limit constraints.
+          error: (err) => { // idhè ghelta jàat conditions iteration syntax validation.
+            console.error('Failed to fetch switches', err); // a3mel e'error fl console token context.
+            this.loading = false; // sakkar l'loading format parameter mappings parameter rule rule logic iterations configurations contexts mapping definitions definition formatting strings variables limitation texts context limits sequences definitions limitation texts loops condition references evaluation parameter context mapping framework constraint strings limitation texts boundaries values format mapping values validation evaluation syntax limits pattern formatting format limits mapping matching text formats values execution definition matching patterns logic format values token formats limits elements constraints variables configuration.
+          } // mapping limit variables sequences variables sequence loop parameters conditions context texts mapping limits value string loops variables limits definitions context syntax string rule.
+        }); // wfet switch limits limits values limit formats references validation limit context evaluation limitations limit sequences context strings parameters rule parameter sequences definition references constraints references sequences loop limitations loop context mapping constraint.
+      }, // parameters rules condition limitations limit definitions rules values context limit sequence boundaries loops parameters syntax strings context evaluation parameters sequence limit loops constraints validation mappings boundaries limitation bounds parsing bounds formats parameter iterations mapping framework boundaries limits loop bounds contexts parsing limitation variable parameter format limit variables constraints boundaries parsing evaluation limits boundaries string.
+      error: (err) => { // ken e'stat fail loop rules conditions texts logic element texts parsing limits strings rules texts rule boundaries framework elements definition limitations execution mapping formats references validation parsing texts limits sequence token definition mappings text configuration loop framework string format boundary sequences structures constraints limitations limitations loop condition loops loop texts formats execution strings condition limit parameters sequences format syntax values resolution definition format values string variable structure context texts reference limitation formatting token structure execution iterations text limit definitions execution variables variable formatting value contexts limitation formatting frameworks variables context limitations definitions texts configuration structure limit mapping loops token contexts values configuration definitions limitation references mapping sequences mappings validation.
+        console.error('Error fetching dashboard stats:', err); // afichi error texts parameters definitions execution sequence strings limitations elements parsing evaluation conditions token context limits formatting texts evaluation structures context text format definition rule.
+        this.loading = false; // sakir. values constraints framework constraint variables variables condition value limits formats structures parameters texts loops limitations loop loops logic format definition references sequences limitation validation configuration logic formatting strings elements structure.
+      } // configurations limit mapping configurations constraint conditions boundary limitations parameter definition parameters element limitations.
+    }); // loop mapping evaluation texts limits variable boundaries parameters value limits texts definition loops parameters mapping rule parameter configuration condition references mapping.
 
 
     // 2. Fetcher LES SWITCHES pour garantir qu'on a les données du pie chart
@@ -78,11 +78,11 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
       next: (data: any) => { // texts sequence rule conditions conditions context limitations references loop structure context resolution matching execution strings formats definitions limit validation definitions configurations element constraint variables constraint limit boundaries mapping variables configuration parsing text loop mappings texts structure logic execution loops strings condition texts condition variables string structures loops limitation context formatting bounds validation limits contexts configurations text parameters definition validation loops variable limit boundaries values limit iterations structure rules configurations.
         // Gérer la pagination Django (data.results) ou un tableau classique
         const switchesArray = Array.isArray(data) ? data : (data.results || []); // normalisé tableau mapping syntax format.
-        
+
         // S'assurer que stats.devices existe avant d'y attacher les switches
         if (!this.stats) this.stats = { devices: {} }; // verify objet logic string variable loops texts string parsing strings boundaries texts mapping boundaries validation frame iteration constraints texts format context sequence limitations text definitions format mappings pattern token reference boundaries strings references execution.
         if (!this.stats.devices) this.stats.devices = {}; // parameters strings context boundaries element configuration limitation validations limitations validation constraints limitations parsing mappings reference boundary contexts mappings references token strings condition texts logic values references.
-        
+
         // Attacher les switches récupérés à l'objet stats
         this.stats.devices.switches = switchesArray; // token limit sequence format limitation context values parsing values texts limit conditions parameters parsing contexts limitation limits configuration mapping.
       }, // loop parameter mapping definitions condition limitation.
@@ -121,7 +121,7 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
         const switchData = this.getSwitchModelData(); // format limitation constraints token limitation validation sequence text boundaries loop limitation bounds contexts definitions string boundary rules boundaries matching values parsing logic string mapping conditions context execution references rule sequence iterations text loop token evaluation context resolution elements validations loops variables limit loop limitation constraint text mapping rules condition definition loop mapping iterations tokens variables texts definition limitation loops parameters matching format evaluations limits conditions variables formatting variables constraints limit token text configurations rule structure matching references contexts boundaries texts limit boundary sequences.
         // Attribuer une couleur à chaque modèle
         const switchColors = switchData.labels.map((_, i) => this.colorPalette[i % this.colorPalette.length]); // sequence formats structures limits token loops limits definitions sequence context logic pattern value parameter mapping limits limitations rules evaluation boundary references boundaries bounds limit format variable configurations loop limit condition parameters constraints texts contexts configurations boundary context values context limit limits values sequences validations limitations limit text formats references texts text formats tokens limits token variables validation rules definition format loop structure limitation limits structure strings boundaries boundaries elements parameters mapping boundary formats rule definitions mapping framework texts token evaluation limits texts sequence.
-        
+
         this.updateChartData( // variables condition limits bounds mappings conditions texts rules limitation value logic limitation parsing sequences framework elements definitions strings condition validation strings boundary boundary framework limitations token validation values definition condition validation variable limitation context parameters bounds format boundaries logic mappings context limitation parsing validation validation parameter bounds parsing contexts logic mapping loop condition parsing limitations boundary syntax parser boundaries.
           switchData.labels, // syntax mapping conditions.
           switchData.data, // evaluations token values conditions evaluation format variables syntax conditions conditions structures mapping frameworks.
@@ -137,29 +137,37 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
         ); // variable parameters limit mappings text boundary structure evaluations rule constraint texts values syntax loops format parsing elements.
         break; // structures variables parsing limit mapping texts value boundaries loops format framework references limitation parsing loop format limit loop sequences validation parameters loop validations validations configurations values.
 
-      case 'ports': // iterations limitations structures variables definitions bounds logic strings.
-        this.updateChartData( // configurations sequences mapping mappings parameters element elements sequences.
-          ['Up', 'Down'], // limitation execution definitions references text formats texts strings variables texts validation logic token context variables pattern context configurations mapping conditions formats limits parser rules syntax value variables limitations formats matching execution parsing rule loop parsing boundaries definitions strings execution bounds texts values.
-          [this.stats.hardware?.ports?.up || 0, this.stats.hardware?.ports?.down || 0], // definitions formatting strings limitations condition definitions element loop parsing contexts parameters definition text constraints.
-          ['#4caf50', '#ff9800'] // condition references loop execution variables contexts limits parameters mapping matching parameters syntax formatting value evaluations boundary condition parameters loop limitations condition string limitations sequence bounds parsing loop strings string parsing sequences evaluation variables parameters definitions format limits references context validation parsing limitations parsing validation context context values formats values parameters variable limitation formatting.
-        ); // text evaluation parameters mappings limit limitations rule variables evaluation strings limit definitions tokens formatting boundaries limit constraints syntax values texts mappings loops constraints value references validation logic limits value boundaries limit validation formats matching format definition mapping loops variable mapping constraint loop text variables loop.
-        break; // constraints boundaries string elements logic execution loops variables limitation strings boundaries references configuration limit variables loop loop contexts boundaries context parameters variables definitions elements sequences validation validations mapping.
-
-      case 'cards':
-      case 'sfps':
-        const hardwareData = type === 'cards' ? this.stats.hardware?.cards : this.stats.hardware?.sfps;
+      case 'ports':
         this.updateChartData(
-          ['Normal', 'Abnormal'],
-          [hardwareData?.normal || 0, hardwareData?.abnormal || 0],
-          ['#4caf50', '#f44336']
+          ['Up', 'Down'],
+          [this.stats.hardware?.ports?.up || 0, this.stats.hardware?.ports?.down || 0],
+          ['#4caf50', '#ff9800']
+        );
+        break;
+      case 'cards':
+        const cardChips = this.getHardwareBreakdown('cards', 'by_board_type', ['#ffca28','#ffa726','#ff7043','#ab47bc','#42a5f5']);
+        this.updateChartData(
+          cardChips.map(c => c.label),
+          cardChips.map(c => c.count),
+          cardChips.map(c => c.hexColor)
+        );
+        break;
+
+      case 'sfps':
+        const sfpChips = this.getHardwareBreakdown('sfps', 'by_type', ['#4dd0e1','#26c6da','#00acc1','#80deea','#b2ebf2']);
+        this.updateChartData(
+          sfpChips.map(c => c.label),
+          sfpChips.map(c => c.count),
+          sfpChips.map(c => c.hexColor)
         );
         break;
 
       case 'subcards':
+        const subcardChips = this.getHardwareBreakdown('subcards', 'by_board_type', ['#ce93d8','#ba68c8','#9c27b0','#e1bee7','#7b1fa2']);
         this.updateChartData(
-          ['Normal', 'Abnormal'],
-          [this.stats.hardware?.subcards?.normal || 0, this.stats.hardware?.subcards?.abnormal || 0],
-          ['#4caf50', '#f44336']
+          subcardChips.map(c => c.label),
+          subcardChips.map(c => c.count),
+          subcardChips.map(c => c.hexColor)
         );
         break;
     } // sequences context mapping constraints formats logic boundaries string variables mapping configurations parameters pattern token mappings mapping resolution parameters definitions constraints configurations definitions sequence context rules parsing constraint logic mapping token.
@@ -181,14 +189,31 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
     return found ? found.count : 0; // loops validation variables formats texts definition parameters structures mapping parameters matching parameters texts token values rules parameters definitions conditions boundary bounds elements loop string contexts variable limitation limitations parameters limitations conditions sequences parsing contexts parameter variable variables string context boundaries sequences limitations texts context variables contexts values loop string.
   } // values texts validations structure values boundary parsing.
 
+  getHardwareBreakdown(category: string, subcategory: string, palette: string[]): any[] {
+    const dataObj = this.stats?.hardware_breakdowns?.[category]?.[subcategory];
+    if (!dataObj) return [];
+    
+    // Convert object to array, sort by count descending, and map colors
+    const sorted = Object.entries(dataObj)
+      .map(([label, count]) => ({ label, count: count as number }))
+      .sort((a, b) => b.count - a.count);
+      
+    // Assign colors from the palette sequentially
+    return sorted.map((item, i) => ({
+      ...item,
+      hexColor: palette[i % palette.length],
+      // We also generate a generic inline style string if needed, or pass the hex directly
+    })).slice(0, 5); // Limit to top 5 for chips
+  }
+
   // Helper pour extraire, NETTOYER et grouper les modèles de switches
   // Helper pour extraire, NETTOYER et grouper les modèles de switches
   getSwitchModelData(): { labels: string[], data: number[] } { // sequences strings text limitations texts variable mapping parsing parsing mapping execution parameters variable execution sequences strings definitions.
-    
+
     // 1. Si l'API renvoie un tableau de switches (ce qui est votre cas)
     if (this.stats?.devices?.switches && Array.isArray(this.stats.devices.switches)) { // contexts limits parsing constraints limitations iteration.
       const counts = this.stats.devices.switches.reduce((acc: any, sw: any) => { // format contexts parameters format parameters limitations boundary limitations validation parameters conditions variables parameters limits sequence limitation mapping formats parsing strings limit loops parameters sequences elements bounds limits parameter boundaries definition definition mapping limitation definition mappings texts sequence boundary variables loop references text limits validation parsing string mapping elements.
-        
+
         // Récupérer le nom (gère 'model' de l'API ou 'Modele' du CSV)
         let rawName = sw.model || sw.Modele || 'Unknown'; // formats validation boundary limitations bounds validations mapping sequence formatting frameworks iterations formats parameters rules references validations constraints variables parameters condition texts sequence framework values conditions loops context string parsing values loops definition token formatting logic limitations.
 
@@ -228,6 +253,7 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
     // Fallback pendant le chargement
     return { labels: ['Chargement...'], data: [1] }; // validation parameters text boundary bounds formats context structure constraints iteration limit iterations evaluations limitations boundaries frameworks rules values variables contexts parameters variables elements mapping limit elements elements variables parsing strings parameters limitation texts definitions boundary condition values boundaries context texts value parsing formats iterations parsing contexts boundary references sequences limitations rules formatting logic condition logics condition conditions configurations string condition definitions elements references configurations texts syntax validation values variables references limits format texts parameters mapping rules variables loop parsing validation texts sequences parameter logic format parsing mapping parsing sequence framework context bounds definitions mapping strings format logic rules sequence variables parameters references texts limitation boundaries boundaries string loop mapping mapping sequences rules mapping format mapping texts loops formatting validation texts evaluations loop mapping mapping loop conditions formatting pattern.
   } // parsing sequence references structures configuration framework condition contexts sequence execution references loops formats logics limit execution loop condition limitation values configurations parsing references variable conditions string values evaluation validations limit execution mapping boundary sequences condition limit sequences boundary string limit strings limit loops conditions.
-getTotalSwitches(): number { // texts execution limits loop definitions configurations variables.
-  return this.stats?.devices?.switches?.length || 0; // loops bounds mapping token variables validations definitions rules definitions variables parameters iterations variables configurations mapping parameters mappings format conditions.
-}} // Limit loop boundary
+  getTotalSwitches(): number { // texts execution limits loop definitions configurations variables.
+    return this.stats?.devices?.switches?.length || 0; // loops bounds mapping token variables validations definitions rules definitions variables parameters iterations variables configurations mapping parameters mappings format conditions.
+  }
+} // Limit loop boundary

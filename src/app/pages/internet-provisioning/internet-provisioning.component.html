@@ -218,7 +218,7 @@
       <button *ngFor="let f of ['all','completed','in_progress','pending','failed']"
               class="filter-tab"
               [class.active]="filterStatus === f"
-              (click)="filterStatus = f; loadHistory()">
+              (click)="filterStatus = f; historyPage = 0; loadHistory()">
         {{ f === 'in_progress' ? 'In Progress' : (f | titlecase) }}
       </button>
     </div>
@@ -235,7 +235,7 @@
     Loading history…
   </div>
 
-  <table mat-table [dataSource]="filteredHistory" class="full-width-table" *ngIf="filteredHistory.length">
+  <table mat-table [dataSource]="paginatedHistory" class="full-width-table" *ngIf="filteredHistory.length">
 
     <!-- ID -->
     <ng-container matColumnDef="task_id">
@@ -302,4 +302,17 @@
     <tr mat-header-row *matHeaderRowDef="historyColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: historyColumns;" class="table-row"></tr>
   </table>
+
+  <!-- Custom Pagination -->
+  <div class="pagination-container" *ngIf="filteredHistory.length > 0">
+    <button class="page-btn" (click)="prevHistoryPage()" [disabled]="historyPage === 0">
+      Previous
+    </button>
+    <span class="page-info">
+      Page {{ historyPage + 1 }} of {{ totalHistoryPages }}
+    </span>
+    <button class="page-btn" (click)="nextHistoryPage()" [disabled]="historyPage >= totalHistoryPages - 1">
+      Next
+    </button>
+  </div>
 </mat-card>

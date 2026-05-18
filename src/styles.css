@@ -260,11 +260,28 @@ body.light-theme .mat-mdc-cell { /* comment ta3 design système wé layout limit
   border-right: none !important; /* prevents double-border on the notch side  */
 }
 
-/* Placeholder — visible in dark mode */
-::placeholder, /* comment ta3 design système wé layout limit boundaries definitions variables */
-.mat-mdc-input-element::placeholder { /* comment ta3 design système wé layout limit boundaries definitions variables */
-  color: var(--text-secondary) !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
-  opacity: 1 !important; /* comment ta3 design système wé layout limit boundaries definitions variables */
+/* Placeholder — visible in both dark and light mode */
+::placeholder,
+.mat-mdc-input-element::placeholder,
+input[matInput]::placeholder,
+textarea[matInput]::placeholder,
+.mdc-text-field__input::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text-muted) !important;
+}
+
+/* Mat-select placeholder text */
+.mat-mdc-select-placeholder {
+  color: var(--text-muted) !important;
+  -webkit-text-fill-color: var(--text-muted) !important;
+}
+
+/* Mat input value text — ensure visible */
+.mat-mdc-input-element,
+.mdc-text-field__input {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
 }
 
 .mdc-text-field--outlined .mdc-notched-outline__leading, /* comment ta3 design système wé layout limit boundaries definitions variables */
