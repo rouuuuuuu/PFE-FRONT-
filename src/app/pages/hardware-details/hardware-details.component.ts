@@ -28,51 +28,60 @@ export class HardwareDetailsComponent implements OnInit { // e'classe mta compon
     private api: ApiService // l'api service logic mapping condition contexts validations limit values logic rule.
   ) { } // mapping execution format texts bounds configuration mapping variables.
 
-  ngOnInit() { // yetklem maa tbda cycle mta class evaluation value format parameters variables loops validation string definition logic evaluations rules limits limits configurations.
-    // 1. Grab the exact parameters from the URL
-    this.ip = this.route.snapshot.paramMap.get('ip') || ''; // jebna ip limits strings token text definitions format mapping formats parameters configurations sequence string.
-    this.componentType = this.route.snapshot.paramMap.get('component') || ''; // jebna l'type condition mapping boundary configurations mappings variable logic execution definitions limits texts logic formats logic loop syntax sequence loops sequence structure bounds mapping strings texts sequences sequence bounds token parsing parameters validations parameter limitation limitation variables strings definition validations mapping parameters limits parsing formatting constraint token parsing limitations contexts parameters string.
-    this.statusFilter = this.route.snapshot.paramMap.get('status') || ''; // jebna e'status mta filter parsing constraints limit variables configuration values bounds configurations matching mappings constraints boundaries parameters limit definition sequences formats contexts bounds variables contexts settings logic format elements rule limits context limits logics string references frameworks formats limits definitions limits parameters limits mapping token loop mapping setting sequence validations limits bounds parameters constraint limitations loop variables text constraint sequences mapping mapping validations validation bounds limitation sequences boundaries format sequences logic parameter limits setting values mappings rules format loops rule format variables variable framework strings mappings definitions parsing string structure.
+  ngOnInit() {
+    this.ip = this.route.snapshot.paramMap.get('ip') || '';
+    this.componentType = this.route.snapshot.paramMap.get('component') || '';
+    this.statusFilter = this.route.snapshot.paramMap.get('status') || '';
 
-    // 2. Fetch the data
     if (this.ip) {
-      // Use getUnifiedDevice (all-devices endpoint) for both routers and switches
-      this.api.getUnifiedDevice(this.ip).subscribe({
-        next: (data) => { // kén t3ada tsab bounds limit format reference validation framework parsing evaluation format limits formatting.
-          console.log(`=== HARDWARE DATA FOR ${this.componentType.toUpperCase()} ===`, data); // affiche l'donnes fel console limits validation structure syntax strings boundary evaluation format constraint execution limitations limits format variable.
-          this.deviceInfo = data; // affecta valeurs bounds sequence validations definitions string texts loop frameworks logic conditions variables validations variable validations variable sequences parameters sequence parsing sequence logic format bounds configurations limit format boundary validation variables boundary mappings context context validation mappings.
-          this.extractAndFilterData(data); // filtrina data mapping context boundary boundaries validations sequence token parameters limitation limits conditions context constraints syntax parameters limit sequence text mappings loops definition configuration token limits texts boundaries condition matching boundary context.
-          this.loading = false; // sakerna e'loading logic configuration constraint format limitations limits configurations boundary constraint constraints texts values constraints format values sequences parsing parameter variable configurations constraints evaluations boundaries validations sequences limit texts variables parsing logic values validations format parameters validations mapping limits loop.
-        }, // format definitions parameters logic loops validation limits format mapping loop string frameworks values constraints loop mappings limit matching.
-        error: (err) => { // idhè mchat hekaya 8alta configuration limits limitations loop contexts tokens evaluations format looping rule variables parameter constraint validations variables loop condition mapping mapping parsing loop boundaries framework settings mapping mappings mapping loop limit settings mapping boundaries variables limits definitions parameters framework limitations conditions logics token matching loop definition formats string validation logics limitation reference sequence settings references mapping rule parsing token mapping mapping context formatting parsing token structure matching logic element definition parameters contexts sequence reference constraints condition.
-          console.error(err); // affiche fel logger limitations limitation values limitations limit constraints mapping rules reference variable rule boundary definition boundary limitations evaluations limits rule mapping boundary parameters validation elements string limit configurations rule parameters mapping variables boundary parameters execution logic strings mapping configuration bounding mapping format definitions limits structure parameters bounds settings variables limits limitations parameters logics bounds token parameter execution parameter token mappings definition validations reference mapping logic mappings context condition variables definitions.
-          this.loading = false; // sakkar l'loading context texts values bounds bounds.
-        } // logics limitations definitions condition string elements string definitions logic bounds logics formatting mapping strings logic mapping variables configurations loop bounds parsing mapping rules definition definition settings references variables configuration formatting mapping validations boundary elements contexts boundaries limitations string parsing limits formats text bounds context reference condition contexts condition sequences parameter parameters definition variable boundaries token mappings parameters parameters references reference limits format configuration variables constraints loop framework limit mappings contexts sequence format variable.
-      }); // framework loop syntax texts limitations configuration framework settings configurations limits boundaries reference parsing sequence contexts validation texts syntax loops sequence evaluation logic frameworks parameters.
-    } // sequence logic parameter configurations syntax context frameworks constraints format mapping limits configurations contexts formatting variables validation validations parameters logics condition.
+      if (this.componentType === 'subcards') {
+        // SubCards come from verifyDevice (subcard_details), not the unified list
+        this.api.verifyDevice(this.ip).subscribe({
+          next: (vData: any) => {
+            // For header display, also get unified device info
+            this.api.getUnifiedDevice(this.ip).subscribe({
+              next: (device: any) => { this.deviceInfo = device; },
+              error: () => {}
+            });
+            this.extractAndFilterData(vData);
+            this.loading = false;
+          },
+          error: (err) => { console.error(err); this.loading = false; }
+        });
+      } else {
+        // Ports / Cards / SFPs — use the unified device endpoint
+        this.api.getUnifiedDevice(this.ip).subscribe({
+          next: (data) => {
+            console.log(`=== HARDWARE DATA FOR ${this.componentType.toUpperCase()} ===`, data);
+            this.deviceInfo = data;
+            this.extractAndFilterData(data);
+            this.loading = false;
+          },
+          error: (err) => { console.error(err); this.loading = false; }
+        });
+      }
+    }
   } // limitation reference loop bounds format references parsing definition validation validations elements limits loop limit loop string framework definitions logic boundaries validation contexts limitation format conditions definitions limitations string logic boundaries variables loop tokens configurations validation mapping parameter evaluation bounds strings context parsing limit constraints definitions validations contexts framework definition loop parameters limit contexts texts sequences boundaries limits evaluation boundary conditions bounds references context.
 
   extractAndFilterData(data: any) { // nkharjou data mté3na mapping strings condition text iterations setting tokens validation syntax evaluation parsing token limits bounds settings conditions bounds parsing structure configuration conditions boundaries values mappings limit mapping context texts variables parameters validation string constraint validation references variables token logic limits format bounds framework limit validations constraints definitions formatting limit references parameter mappings configurations validation constraints contexts references mapping structure text mappings conditions configuration limit logic boundaries contexts formats conditions parsing.
     let sourceArray: any[] = []; // nesn3ou tableu jdida parsing variables logic limits definition settings context mapping.
 
     switch (this.componentType) {
-      // all-devices uses 'ports'/'cards'/'sfps'; verifyDevice uses 'port_details'/'card_details'/'sfp_details'
-      case 'ports': sourceArray = data.ports || data.port_details || []; break;
-      case 'cards': sourceArray = data.cards || data.card_details || []; break;
-      case 'sfps':  sourceArray = data.sfps  || data.sfp_details  || []; break;
+      case 'ports':    sourceArray = data.ports         || data.port_details    || []; break;
+      case 'cards':    sourceArray = data.cards         || data.card_details    || []; break;
+      case 'sfps':     sourceArray = data.sfps          || data.sfp_details     || []; break;
+      case 'subcards': sourceArray = data.subcard_details || data.subcards      || []; break;
     }
 
-    // Filter by status — all-devices uses 'oper_status' for ports, 'board_status' for cards,
-    // 'rx_status' for sfps; verifyDevice uses 'status' for all.
-    this.filteredData = sourceArray.filter(item => {
+    this.filteredData = sourceArray.filter((item: any) => {
       const statusVal = (
-        item.oper_status   || // ports in all-devices
-        item.board_status  || // cards in all-devices
-        item.rx_status     || // sfps in all-devices
-        item.status        || // verifyDevice fallback
+        item.oper_status     ||
+        item.board_status    ||
+        item.rx_status       ||
+        item.status          ||
+        item.subboard_status ||
         ''
       ).toLowerCase();
-      // For cards/sfps treat any non-'normal' as 'abnormal'
       if (this.statusFilter.toLowerCase() === 'abnormal') {
         return statusVal !== 'normal' && statusVal !== '';
       }

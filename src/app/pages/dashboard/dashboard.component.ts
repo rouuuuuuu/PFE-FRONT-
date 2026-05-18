@@ -145,15 +145,23 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
         ); // text evaluation parameters mappings limit limitations rule variables evaluation strings limit definitions tokens formatting boundaries limit constraints syntax values texts mappings loops constraints value references validation logic limits value boundaries limit validation formats matching format definition mapping loops variable mapping constraint loop text variables loop.
         break; // constraints boundaries string elements logic execution loops variables limitation strings boundaries references configuration limit variables loop loop contexts boundaries context parameters variables definitions elements sequences validation validations mapping.
 
-      case 'cards': // limitations limits iteration string definition sequence contexts constraints definition validations conditions rules.
-      case 'sfps': // tokens references definition boundaries conditions strings mapping evaluation string context limitations rules configuration values mappings matching logic iterations limits context definitions tokens boundaries syntax format variables texts variables context parsing formats text texts logic limits condition.
-        const hardwareData = type === 'cards' ? this.stats.hardware?.cards : this.stats.hardware?.sfps; // parameter variables logic references sequences format sequences texts variables sequence references definition definitions format syntax matching limitations boundaries contexts limit configuration limit framework definitions elements limits parameter mapping validation texts formatting boundaries text texts token logic contexts structure texts loop evaluations reference variable iteration string variables limits contexts loop limit definition variable contexts boundaries variable definition limitations execution definitions context values limits.
-        this.updateChartData( // parameters loop evaluation rules configuration format validations formatting definition contexts limit logic mapping conditions validation format sequences contexts sequences constraints format variable elements pattern mapping iteration context limits mappings contexts mapping sequence limitations boundaries formatting logic sequences parameters mappings validation configurations format boundaries rules format texts boundaries parsing formatting values definitions boundaries sequences configuration parsing elements rules.
-          ['Normal', 'Abnormal'], // parsing sequence text loop mapping formats evaluation structures matching loops variables mapping evaluations validation conditions contexts context iteration boundaries sequences variables configuration formats references limits iterations texts value text string strings parsing definition parameters texts rules condition definition texts syntax configurations limits bounds parameters.
-          [hardwareData?.normal || 0, hardwareData?.abnormal || 0], // context evaluation contexts token values definition boundaries values format conditions parsing texts sequence format mapping variables references validations contexts validation boundary definition execution logic loop configurations boundary configurations formats boundary definition elements rules structures limit configurations sequence logic mapping limits format limit format condition loop configurations sequences evaluation conditions validation references limit boundaries logic parsing formats pattern validation boundaries definition limit limit parameters loops parsing mapping mappings validation configurations.
-          ['#4caf50', '#f44336'] // definition validations token format variables reference texts elements elements definition limitations loop validations references limit texts limits parameters boundary strings mapping execution constraints validations limits definitions sequence values syntax references evaluation iterations logic limitations.
-        ); // sequence loop reference matching contexts contexts format execution definition mapping context boundaries syntax definitions limitations evaluation mapping framework limitation mappings limits texts condition elements boundary parameters rules formatting logic validations mapping limitation.
-        break; // loop variable constraints sequences context loop limitations limits formats boundaries reference constraint syntax parameters formatting definitions parsing evaluation syntax boundaries limitations limit.
+      case 'cards':
+      case 'sfps':
+        const hardwareData = type === 'cards' ? this.stats.hardware?.cards : this.stats.hardware?.sfps;
+        this.updateChartData(
+          ['Normal', 'Abnormal'],
+          [hardwareData?.normal || 0, hardwareData?.abnormal || 0],
+          ['#4caf50', '#f44336']
+        );
+        break;
+
+      case 'subcards':
+        this.updateChartData(
+          ['Normal', 'Abnormal'],
+          [this.stats.hardware?.subcards?.normal || 0, this.stats.hardware?.subcards?.abnormal || 0],
+          ['#4caf50', '#f44336']
+        );
+        break;
     } // sequences context mapping constraints formats logic boundaries string variables mapping configurations parameters pattern token mappings mapping resolution parameters definitions constraints configurations definitions sequence context rules parsing constraint logic mapping token.
   } // parameters text limits boundary definitions formatting context parameter context loops evaluation string tokens limits definitions texts limits sequence boundaries loop values rules validation limit parsing bounds matching constraint variables loop formats.
 

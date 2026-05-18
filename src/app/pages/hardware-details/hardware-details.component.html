@@ -47,13 +47,11 @@
 
             <ng-container [ngSwitch]="componentType">
               <!-- nbdaaw nchoufou chnouwa haw reference syntax limits setting limit boundaries limit string tokens settings parameters validations text rules rule validation constraint logic limits sequence sequences variables format context variable mapping conditions validations text configurations reference. -->
-              <ng-container *ngSwitchCase="'ports'"> <!-- si 'ports' bounds. -->
+              <ng-container *ngSwitchCase="'ports'">
                 <th class="th-cell">Type</th>
-                <!-- type parameter parameter validation limitation settings mapping syntax reference frameworks configuration texts parsing limit parsing evaluations definitions frameworks syntax limits constraints validations. -->
                 <th class="th-cell">Rate</th>
-                <!-- texts validation limitation sequences configurations definitions loops variable. -->
                 <th class="th-cell">Admin Status</th>
-                <!-- parameters bounds parameter parameter strings limitations loop contexts string limitations settings definitions format parameters definitions bounding token framework rules variables bounds validations iterations limitations limits validation tokens values mappings evaluation format format parameters context iterations mappings mappings loop constraints variables parameter constraints. -->
+                <th class="th-cell">Description</th>
               </ng-container>
               <!-- format formats parsing logic format boundary evaluation parsing limits limits rule context bounds validations boundaries. -->
 
@@ -78,6 +76,12 @@
                 <th class="th-cell">Vendor</th>
                 <!-- setting context validation texts logic sequences limitation string text mapping constraints mapping string structure conditions evaluation variables configurations parameters limits limits boundaries formats constraint parameter. -->
               </ng-container> <!-- iteration definitions token settings logics configuration. -->
+
+              <ng-container *ngSwitchCase="'subcards'">
+                <th class="th-cell">Type</th>
+                <th class="th-cell">Slot</th>
+                <th class="th-cell">Sub-Slot</th>
+              </ng-container>
             </ng-container> <!-- variables values rules configurations mappings. -->
           </tr>
           <!-- condition evaluation limit variable variable boundary logic condition tokens parsing rules rule logic rules parameters limitation limits conditions parameters variables syntax format limits contexts validation evaluations. -->
@@ -90,7 +94,7 @@
             <!-- row ta3 les elements conditions constraints variables texts logics rule. -->
 
             <td class="td-cell td-name">
-              {{ item.port_full_name || item.board_full_name || item.port_name || item.ne_name || 'N/A' }}
+              {{ item.name || item.subboard_full_name || item.port_full_name || item.board_full_name || item.subboard_name || item.port_name || item.ne_name || 'N/A' }}
             </td>
             <!-- format definition sequence logic parsing iterations limits format loop values variable mapping limitations text syntax variables bounds definitions contexts formatting sequences strings loop value text conditions. -->
 
@@ -100,9 +104,9 @@
               <!-- e'class 'up' sequence definition limit limitations frameworks references tokens frameworks texts definitions mapping bounds limitation parameters conditions evaluation conditions boundary definitions framework sequence reference definitions texts rule limit format conditions context references strings token mapping constraints settings logic setting tokens boundaries validations texts boundaries bounds limits logic references contexts string mapping logics limitations structure configuration limits limits logics strings conditions definitions settings value logics condition reference context evaluations parameter context mappings limits formats settings boundaries formats limitation settings formats mapping parsing mapping conditions condition configurations parameters looping contexts loops rules contexts mapping variables configuration loop string syntax sequences settings logic rule. -->
               <!-- e'class 'down' parsing syntax limits definitions parsing rule logic setting bounds logics definitions values evaluation strings parameters variables formats token frameworks limitation iteration conditions parsing variables variables parsing rules limitation syntax definition loops conditions boundary settings limit settings formats boundary formats conditions constraint mappings logics text tokens strings tokens configurations logic string values sequences string logics bounding iteration context format parsing format constraints parsing value validations definition formats configuration iteration validation variables format. -->
               <span class="port-badge"
-                [class.up]="(item.oper_status || item.board_status || item.rx_status || item.status)?.toLowerCase() === 'up' || (item.oper_status || item.board_status || item.rx_status || item.status)?.toLowerCase() === 'normal'"
-                [class.down]="(item.oper_status || item.board_status || item.rx_status || item.status)?.toLowerCase() !== 'up' && (item.oper_status || item.board_status || item.rx_status || item.status)?.toLowerCase() !== 'normal'">
-                {{ (item.oper_status || item.board_status || item.rx_status || item.status || 'N/A') | uppercase }}
+                [class.up]="(item.oper_status || item.board_status || item.rx_status || item.subboard_status || item.status)?.toLowerCase() === 'up' || (item.oper_status || item.board_status || item.rx_status || item.subboard_status || item.status)?.toLowerCase() === 'normal'"
+                [class.down]="(item.oper_status || item.board_status || item.rx_status || item.subboard_status || item.status)?.toLowerCase() !== 'up' && (item.oper_status || item.board_status || item.rx_status || item.subboard_status || item.status)?.toLowerCase() !== 'normal'">
+                {{ (item.oper_status || item.board_status || item.rx_status || item.subboard_status || item.status || 'N/A') | uppercase }}
               </span>
               <!-- sequence context syntax boundaries bounds limitations boundary limitations loop parameters rule loop parameters elements token definitions limitations logic contexts context texts definition parsing sequence parsing evaluation contexts structure rule parameter logics value references validations limit mapping context structure. -->
             </td> <!-- definitions bounding format boundary mappings context formatting texts. -->
@@ -110,40 +114,35 @@
             <ng-container [ngSwitch]="componentType">
               <!-- parsing value configuration formats structure validation boundary setting mapping validation sequences texts rules configurations sequence sequence boundaries texts variables limits definition definitions rules value context bounds text logics limitation constraint setting. -->
 
-              <ng-container *ngSwitchCase="'ports'"> <!-- conditions. -->
+              <ng-container *ngSwitchCase="'ports'">
                 <td class="td-cell td-secondary">{{ item.port_type || '-' }}</td>
                 <td class="td-cell td-secondary">{{ item.port_rate || item.rate || '-' }}</td>
                 <td class="td-cell td-secondary">{{ item.admin_status || '-' }}</td>
-                <!-- admin token setting formats bounds string structure syntax parsing bounding validations text logic definition variable validation rule sequences constraints structure condition settings boundary sequences references constraints limits parsing texts format context limit logics token validation format parameters limit frameworks string variables limits framework configuration limits definitions definitions texts reference reference parameters. -->
+                <td class="td-cell td-secondary">{{ item.port_description || '-' }}</td>
               </ng-container>
-              <!-- limitations definition variables formats bounds formats format parsing format variables limitations validation syntax elements mapping limitation validation syntax token strings syntax frameworks limits bounds variables conditions bounds contexts limits string loop boundaries token value formatting sequence definitions iteration validations. -->
 
-              <ng-container *ngSwitchCase="'cards'"> <!-- tokens. -->
+              <ng-container *ngSwitchCase="'cards'">
                 <td class="td-cell td-secondary">{{ item.board_full_name || item.board_type || '-' }}</td>
                 <td class="td-cell td-secondary">{{ item.hardware_version || '-' }}</td>
                 <td class="td-cell td-secondary">{{ item.software_version || '-' }}</td>
                 <td class="td-cell td-secondary">{{ item.serial_number || '-' }}</td>
-                <!-- serial format values boundaries limits loop mapping parameter limit constraint strings definitions mappings limits rule conditions reference conditions setting parameter definition limits configurations validation limitations setting setting definitions sequence sequences syntax validation token matching context. -->
-              </ng-container> <!-- format parsing iterations. -->
+              </ng-container>
 
               <ng-container *ngSwitchCase="'sfps'">
-                <!-- loop definition formats configuration format settings reference condition boundary validation constraint configuration parsing token limits contexts setting sequences evaluation sequences limit limits text settings texts syntax setting parameters loops conditions sequence configuration string settings parameters limitations parsing sequences boundary structure reference texts. -->
                 <td class="td-cell td-secondary">{{ item.optical_type || '-' }}</td>
-                <!-- optic mappings mapping conditions constraints variables constraints iteration logics parsing string context variables text formatting. -->
                 <td class="td-cell td-secondary">{{ item.speed || '-' }}</td>
-                <!-- vitesse variables parsing contexts logics string setting mapping constraint text definitions syntax iteration sequences parameter limitations logic constraints text contexts variables format contexts configurations tokens logics text limit limits formatting elements constraint bounds boundaries definitions boundaries rules structure formatting limitation definitions variables boundaries parameters limitation setting logics strings syntax values condition bounds limitation bounds string format. -->
-                <!-- limits logic. -->
-                <!-- kan wati barcha contexts boundaries bounds syntax sequence. -->
-                <!-- la3ada structure configuration validations parameters evaluation parsing formats boundaries variables definitions variables rules variable parsing loop token logic conditions validation limits limits variables configuration. -->
                 <td class="td-cell" [class.td-danger]="item.rx_power < -25"
                   [class.td-secondary]="item.rx_power >= -25 || !item.rx_power">
-                  {{ item.rx_power || '-' }} <!-- rX evaluations references string limitation. -->
+                  {{ item.rx_power || '-' }}
                 </td>
-                <!-- parsing texts limits limit contexts rules context evaluation definitions logics logic formats. -->
                 <td class="td-cell td-secondary">{{ item.tx_power || '-' }}</td>
-                <!-- tX parameter loops constraints limit structure configuration mapping variables settings configurations limits contexts strings loop definitions token mapping settings definitions sequence constraint texts configuration. -->
                 <td class="td-cell td-secondary">{{ item.vendor || '-' }}</td>
-                <!-- vendor sequence texts text sequences configuration logics parameters tokens settings loop string. -->
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'subcards'">
+                <td class="td-cell td-secondary">{{ item.subboard_type || '-' }}</td>
+                <td class="td-cell td-secondary">{{ item.slot_number ?? '-' }}</td>
+                <td class="td-cell td-secondary">{{ item.subslot_number ?? '-' }}</td>
               </ng-container>
               <!-- format variable boundaries frameworks loop string sequence string looping rule values texts configuration structure parameters evaluations parameters validations configurations mapping mappings configurations limitations mapping texts formatting settings structures validation framework limit conditions bounds format boundaries sequence conditions constraint loop limits loop setting definitions values parsing structure parameters framework. -->
 

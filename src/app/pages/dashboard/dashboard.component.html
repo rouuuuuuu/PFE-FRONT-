@@ -126,21 +126,39 @@
     <mat-card class="stat-card clickable" (click)="toggleChart('sfps')"
       [class.border-red]="stats.hardware.sfps.abnormal > 0"
       [class.border-green]="stats.hardware.sfps.abnormal === 0">
-      <mat-card-content> <!-- string definitions mappings rules limit limits sequence references format sequences parsing logics mapping contexts logics variables parameter mappings evaluations. -->
-        <div class="stat-header"> <!-- boundary limits boundary logics parsing loop mapping definitions constraints limitations frameworks variables conditions limit conditions text logics iterations format sequence condition. -->
-          <mat-icon class="stat-icon">flash_on</mat-icon> <!-- syntax structure limits strings context variables boundaries limits formatting boundaries strings values elements limitation strings parsing values definition parameters definitions parameters string boundary texts validation limit limits mappings structure constraints sequences structure texts sequences format mapping definitions sequences evaluation string evaluations sequence parsing limits context conditions configuration constraints evaluation variables limitations structure string limitations limit parsing sequences contexts conditions. -->
-          <p class="stat-label">SFPs</p> <!-- parsing parsing constraints sequences variables variables conditions parameters element configurations validations loop mapping validations value rule token strings limitation rule rules texts format execution format validation logics context execution definitions parameter token mapping iterations boundary variables conditions bounds evaluation limit evaluation validation texts formats context contexts strings definitions texts sequences configuration mapping sequences limits definition rule validations condition loops parameters parameters conditions variables framework values limit references variables loop strings mapping parsing definitions limitations evaluations loops bounds variable definitions context parsing boundaries logic configurations condition validations limits evaluation texts boundaries configurations limitation constraints mapping mapping constraints parsing logics constraint boundaries value boundaries evaluations definition reference sequences limitations formatting mapping validation frameworks limits parsing loop strings reference value parsing. -->
-        </div> <!-- limitations boundaries framework mapping. -->
-        <h1 class="stat-value">{{ stats.hardware.sfps.total }}</h1> <!-- parsing mapping logics context logics boundaries evaluation limitations limitation. -->
-        <p class="sub-stat"> <!-- logic variables format bounds values string bounds formatting parameters context values limits format rules limits rules boundaries loops configurations configurations logics context mapping matching mappings limitations token mapping limitations rule loops parsing limits constraints syntax bounds strings syntax references limit elements syntax limitations context conditions boundary configurations formatting variables boundaries values execution contexts constraints mappings limits definition sequence limitation format validations mapping rules boundary limits mapping references loop conditions formats limit limits. -->
-          <span class="dot dot--green"></span> Normal: {{ stats.hardware.sfps.normal }} &nbsp; <!-- evaluation boundary definitions limitations configurations configurations evaluation limitations mapping mappings. -->
-          <span class="text-red"> <!-- formats format evaluations framework parameters mappings formatting boundaries validations parameters syntax limitations validations conditions structures syntax context logic conditions context texts limits variables validations bounds loops string context constraints limit boundaries limits format context condition formats limit formats mapping parsing parameters texts strings validation validations elements sequence definition token execution. -->
-            <span class="dot dot--red"></span> Abnormal: {{ stats.hardware.sfps.abnormal }} <!-- execution limits context logics logic sequence logics configurations boundary variables parameters boundary evaluation contexts conditions variables validations sequence context string boundary texts validations evaluation definition loops condition configuration limit bounds framework formatting. -->
-          </span> <!-- evaluation iteration variables loop texts parameter validations logics definitions string reference sequences constraint value text syntax texts sequences mapping limits text variables sequence formatting condition iteration format loop parameters boundaries format formats limitations mappings loop constraints variables limit string parameters sequence syntax strings configuration parameter elements mappings contexts syntax limits parameters token contexts sequences bounds context rule structures logics format reference evaluation validation conditions loops formats mapping sequence format formatting syntax validation definitions boundaries limit validations syntax formatting boundaries formats sequences string mapping structure sequences configurations mappings format loop definitions validations variables configuration variables sequences parsing formats logics definitions parameter constraints formats validation references syntax rules boundaries conditions bounds configuration frameworks references reference variables variable mapping boundaries limit validation validations bounds variable loops sequence limitations conditions formats formatting limit definition limitations format parameter configuration. -->
-        </p> <!-- parsing variable mapping sequence parameters mapping logics parsing variables validations loop constraints limit loop boundaries syntax validations token formats condition validations limitation token references logics definitions bounds formats texts bounds sequences formats iterations format evaluations context. -->
-      </mat-card-content> <!-- mapping validations string parameters variables evaluation syntax mappings texts mappings parameters formatting sequences values boundaries constraint. -->
-    </mat-card> <!-- text formats matching limitations token logic references. -->
-  </div> <!-- framework loops boundary validations boundaries configurations boundaries variables text parameters limitations formats loops constraint constraint string logic rules validations constraints elements conditions parsing constraint formatting execution validations parameters parameters validations limitations limits validations mapping bounds bounds texts elements definition loop format formats bounds parsing rules. -->
+      <mat-card-content>
+        <div class="stat-header">
+          <mat-icon class="stat-icon">flash_on</mat-icon>
+          <p class="stat-label">SFPs</p>
+        </div>
+        <h1 class="stat-value">{{ stats.hardware.sfps.total }}</h1>
+        <p class="sub-stat">
+          <span class="dot dot--green"></span> Normal: {{ stats.hardware.sfps.normal }} &nbsp;
+          <span class="text-red">
+            <span class="dot dot--red"></span> Abnormal: {{ stats.hardware.sfps.abnormal }}
+          </span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card clickable" (click)="toggleChart('subcards')"
+      [class.border-red]="stats.hardware.subcards?.abnormal > 0"
+      [class.border-green]="stats.hardware.subcards?.abnormal === 0">
+      <mat-card-content>
+        <div class="stat-header">
+          <mat-icon class="stat-icon">dashboard_customize</mat-icon>
+          <p class="stat-label">SubCards</p>
+        </div>
+        <h1 class="stat-value">{{ stats.hardware.subcards?.total ?? '—' }}</h1>
+        <p class="sub-stat">
+          <span class="dot dot--green"></span> Normal: {{ stats.hardware.subcards?.normal ?? 0 }} &nbsp;
+          <span class="text-red">
+            <span class="dot dot--red"></span> Abnormal: {{ stats.hardware.subcards?.abnormal ?? 0 }}
+          </span>
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
   <div class="chart-expansion" *ngIf="expandedRow === 'bottom'"> <!-- limite sequences bounds logic rules parser limit limitations execution boundaries loop limits conditions. -->
     <mat-card class="chart-inner-card"> <!-- limit parsing parsing loops variables conditions variable logics variables loops format execution formats frameworks pattern text evaluation parameter. -->

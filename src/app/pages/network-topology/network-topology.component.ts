@@ -8,8 +8,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ApiService } from '../../services/api.service';
 import { forkJoin } from 'rxjs';
-
-// D3 types only (no runtime import at top level — avoids SSR navigator errors)
 import type * as D3 from 'd3';
 
 interface TopoNode {

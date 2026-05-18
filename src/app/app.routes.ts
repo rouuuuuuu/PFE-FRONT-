@@ -13,6 +13,7 @@ import { UpgradeComponent } from './pages/upgrade/upgrade.component';
 import { StockDashboardComponent } from './pages/stock-dashboard/stock-dashboard.component';
 import { PortReservationComponent } from './pages/port-reservation/port-reservation.component';
 import { NetworkTopologyComponent } from './pages/network-topology/network-topology.component';
+import { InternetProvisioningComponent } from './pages/internet-provisioning/internet-provisioning.component';
 
 export const routes: Routes = [
   { path: '',          component: DashboardComponent }, // Default → dashboard
@@ -32,7 +33,8 @@ export const routes: Routes = [
     children: [ // El routage louled lli ta7tou (Child routes block)
       { path: '', component: ProvisioningDashboardComponent }, // Ken ma famech chay ba3edha ytala3 menu (Default route inside provisioning shows the cards)
       { path: 'task/:taskType', component: ProvisioningTaskComponent }, // yit7all l'formulaire selon l'esem mta3 e'Tache (Dynamic path for each individual provisioning task)
-      { path: 'port-reservation', component: PortReservationComponent } // Nouveau cheman lel reservation des ports
+      { path: 'port-reservation', component: PortReservationComponent }, // Nouveau cheman lel reservation des ports
+      { path: 'internet-service', component: InternetProvisioningComponent } // Internet service provisioning wizard
     ] 
   } 
 

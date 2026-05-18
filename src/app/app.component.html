@@ -14,7 +14,7 @@
     <span class="brand-sub">NOC</span>
   </div>
 
-  <!-- ── Quick-access nav pills ─────────────────────────────── -->
+  <!-- ── Quick-access nav pills ── -->
   <div class="toolbar-quicknav">
 
     <a class="quicknav-btn" routerLink="/" routerLinkActive="quicknav-active"
@@ -34,7 +34,11 @@
       <mat-icon>router</mat-icon>
       <span class="quicknav-label">Routers</span>
     </a>
-
+    <a class="quicknav-btn" routerLink="/inventory" routerLinkActive="quicknav-active"
+       matTooltip="Stock Inventory" matTooltipPosition="below">
+      <mat-icon>inventory_2</mat-icon>
+      <span class="quicknav-label">Stock</span>
+    </a>
     <!-- Provisioning with dropdown -->
     <button class="quicknav-btn quicknav-menu-trigger" [matMenuTriggerFor]="provMenu"
             matTooltip="Provisioning tasks" matTooltipPosition="below">
@@ -51,13 +55,12 @@
       <a mat-menu-item routerLink="/provisioning/port-reservation">
         <mat-icon>cable</mat-icon> Port Reservation
       </a>
+      <a mat-menu-item routerLink="/provisioning/internet-service">
+        <mat-icon>wifi</mat-icon> Internet Service
+      </a>
     </mat-menu>
 
-    <a class="quicknav-btn" routerLink="/inventory" routerLinkActive="quicknav-active"
-       matTooltip="Stock Inventory" matTooltipPosition="below">
-      <mat-icon>inventory_2</mat-icon>
-      <span class="quicknav-label">Stock</span>
-    </a>
+    
 
   </div>
 
@@ -102,14 +105,14 @@
         <!-- Lien vers la liste des routeurs (Link to routers page). -->
         <mat-icon class="nav-icon">router</mat-icon> <!-- Icone routeur (Router icon). -->
         <span class="nav-label">Routers</span> <!-- Esem el lien (Link text). -->
-      </a> <!-- Wfet el lien (End link). -->
+      </a> 
 
       <!-- Lien pour les Switches -->
       <a class="nav-item" routerLink="/switches" routerLinkActive="nav-active">
         <!-- Lien lel page des switches (Link to switches page). -->
         <mat-icon class="nav-icon">device_hub</mat-icon> <!-- Icone switch/hub (Network switch icon). -->
         <span class="nav-label">Switches</span> <!-- Esem el lien (Link text). -->
-      </a> <!-- Wfet el lien (End link). -->
+      </a> 
 
       <!-- Lien pour les Backhaul Links -->
       <a class="nav-item" routerLink="/links" routerLinkActive="nav-active">
@@ -147,7 +150,7 @@
           <!-- Lien principal lel provisioning (Link to main provisioning tasks). -->
           <mat-icon class="nav-icon">folder_open</mat-icon> <!-- Icone mta3 dossier t7al (Open folder icon). -->
           <span class="nav-label">All Tasks</span> <!-- Texte mta3 lien (Link label). -->
-        </a> <!-- Wfet el lien (End link). -->
+        </a> 
 
         <a class="nav-item nav-sub-item" routerLink="/upgrade" routerLinkActive="nav-active">
           <mat-icon class="nav-icon">speed</mat-icon>
@@ -159,13 +162,18 @@
           <span class="nav-label">Port Reservation</span>
         </a>
 
+        <a class="nav-item nav-sub-item" routerLink="/provisioning/internet-service" routerLinkActive="nav-active">
+          <mat-icon class="nav-icon">wifi</mat-icon>
+          <span class="nav-label">Internet Service</span>
+        </a>
+
       </div>
-    </nav> <!-- Wfet la balise nav (End of navigation bar). -->
-  </mat-sidenav> <!-- Wfet la barre latérale (End of sidenav side drawer). -->
+    </nav> 
+  </mat-sidenav> 
 
   <!-- Contenu principal fil wost mta3 l'écran (The main content area filling the remaining screen space). -->
   <mat-sidenav-content class="app-content"> <!-- Material directive lel content principal (Sidenav content wrapper). -->
     <router-outlet />
     <!-- El blasa win tetbadel les pages 7asb e'routeur (The injection spot for routed components). -->
-  </mat-sidenav-content> <!-- Wfa bloc el content (End of main content area). -->
-</mat-sidenav-container> <!-- Wfa l'container l'kbir lli jem3a liha lkoll (End of full app wrapper container). -->
+  </mat-sidenav-content> 
+</mat-sidenav-container> 

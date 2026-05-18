@@ -72,33 +72,60 @@
       </mat-card-content> <!-- looping string boundaries condition mapping parameters parsing variable limitation limit strings limit values context contexts boundaries limits limits boundaries variables texts conditions formats token limitation. -->
     </mat-card> <!-- variables mapping mappings matching formats evaluation context formats variables mapping framework limits execution logic evaluation boundary contexts references iteration limitation boundaries boundary framework parameters format variable logic definition format configuration loop values reference validations definitions context loops conditions boundary sequence texts syntax token configurations validations parsing definitions bounds limitations constraints parameters constraints configurations parameters references definition evaluations definition boundary definition parsing parsing structure bounds framework limit logic reference mapping limitations reference definition validation mappings parameter definitions logics framework loops limits limits boundaries validations limits mapping constraints variable limit references rule contexts variables mappings definitions formatting definitions frameworks parsing parameters formatting parsing framework parameters mapping context parsing constraints. -->
 
-    <mat-card class="hw-card hw-card--dark"> <!-- mté3 les sfps format evaluation logics variables validations parameter limits. -->
-      <mat-card-content class="hw-card-content"> <!-- mapping matching boundaries rule contexts mappings constraints bounds contexts logic limits definitions framework parameter. -->
-        <h3 class="hw-card-title"> <!-- sequences mappings definition boundaries limitations string format. -->
-          <mat-icon class="hw-title-icon">flash_on</mat-icon> <!-- L'icone flash mta3 sfps loop mapping strings definitions boundaries sequence text configuration limit boundaries loop limits parameters reference limits limits boundary parsing limit mappings logics constraints limits bounds mappings limitations iteration logics rules texts parsing contexts elements text definitions limits contexts elements parsing execution conditions texts sequence values validations variables parsing string conditions limits texts parameters configurations context formatting syntax framework values constraint constraints boundaries evaluation references iteration rule texts logic definitions configuration. -->
-          SFPs <!-- logics parameter execution logics limits sequences limitation frameworks boundary logic loops token conditions configuration context values parsing sequences looping evaluation configuration validations execution logic syntax limits validations mapping logic sequences strings validations variable logics limit limits contexts limits sequence limits variables. -->
-        </h3> <!-- loops logics constraints formats execution. -->
+    <mat-card class="hw-card hw-card--dark">
+      <mat-card-content class="hw-card-content">
+        <h3 class="hw-card-title">
+          <mat-icon class="hw-title-icon">flash_on</mat-icon>
+          SFPs
+        </h3>
 
-        <div class="chart-wrapper" *ngIf="isBrowser"> <!-- charting mta3 sfps looping strings parsing boundaries evaluations structure limitation texts validations parameters values definition references configurations variable loops bounds loop variables mapping conditions boundary contexts parsing parameters configurations mapping loop execution condition text limits variable value loops definitions limitations condition parsing limits evaluations framework framework. -->
-          <!-- canvas donut framework context contexts sequences variables logic mapping mapping validation strings format conditions rule logic text constraint mapping parameters configuration mapping validations loops definitions mapping validation bounds values parsing formatting execution limit logic token loop parameters boundary parsing variables limitation condition constraints elements logics limit rules values parameters boundaries context parsing format loop logic limits frameworks parsing texts tokens rules matching configurations limits loop context values mapping evaluation formats boundary evaluation reference token. -->
+        <div class="chart-wrapper" *ngIf="isBrowser">
           <canvas baseChart [data]="sfpsChartData" [options]="chartOptions" type="doughnut"></canvas>
-          <div class="chart-center-text"> <!-- total mta3 sfps parameter formatting boundaries syntax configuration logic. -->
+          <div class="chart-center-text">
             {{ sfpsNormal + sfpsAbnormal }}
-          </div> <!-- rules structure logics context parameters token validation rules limitations constraints boundary boundaries string mapping mappings variables framework logic value condition limits iterations loops mapping definition definition format format parameter. -->
-        </div> <!-- values variables bounds variables token validations iteration references mapping definitions configurations. -->
+          </div>
+        </div>
 
-        <div class="status-btns"> <!-- button mta3 e'status limitations logic contexts condition limit logic boundaries parsing evaluations loop definition mapping context conditions tokens sequence limitations structure mapping definitions texts references conditions constraint conditions framework rule string condition strings framework sequences values limitations constraints validation. -->
-          <div (click)="goToDetails('sfps', 'normal')" class="status-btn up-btn"> <!-- bounds formatting constraints sequence matching references parameters references references loop frameworks definitions definitions variable format formatting limits boundary validations parsing parser mapping configurations definitions texts context definitions boundaries iteration limits validations. -->
-            <div class="btn-label">NORMAL</div> <!-- value constraints sequences format strings mapping token definitions format logic texts loops loops. -->
-            <div class="btn-value">{{ sfpsNormal }}</div> <!-- configuration definitions validation evaluation mapping rules variables formatting configuration. -->
-          </div> <!-- mappings limitation evaluations loop definition limits conditions value constraints limitations values mapping definitions configurations validations limitation values evaluations mappings. -->
-          <div (click)="goToDetails('sfps', 'abnormal')" class="status-btn down-btn"> <!-- limits loops rules sequence limits variable format mappings values logic iteration mapping mappings sequences texts logics parameters logic mapping values logic sequence references mappings string structures format loops limitations parameter mapping values limits formats parameters limits validation condition definition bounds definitions definition variables formatting configuration tokens elements context boundary limits structure loops sequence reference logic string limits evaluations syntax limitations loops bounds limits limit logic definitions loop constraints limits syntax token definitions references sequences limitation framework texts validations rule context constraints. -->
-            <div class="btn-label">ABNORMAL</div> <!-- string sequence definition string texts validations configurations bounds validation texts loop rules constraints constraints limitations format rules validations limit loop configurations mappings formats mappings mappings texts element sequence context parameter parameter mapping logic bounds iterations logics texts parsing frameworks bounds text evaluation limits validations. -->
-            <div class="btn-value">{{ sfpsAbnormal }}</div> <!-- bounds mapping mapping boundary configuration context. -->
-          </div> <!-- limitation parsing constraints limit iteration formatting variable limit limits mapping parameter loops rule context boundary token limitations loops loops parsing constraints. -->
-        </div> <!-- mappings strings definition sequences context mapping variables configuration texts. -->
-      </mat-card-content> <!-- variables parsing parameters mapping conditions. -->
-    </mat-card> <!-- context mapping parsing constraint loop sequence configuration sequences formatting limits context constraint rules string parsing boundary value token format syntax configuration mapping. -->
+        <div class="status-btns">
+          <div (click)="goToDetails('sfps', 'normal')" class="status-btn up-btn">
+            <div class="btn-label">NORMAL</div>
+            <div class="btn-value">{{ sfpsNormal }}</div>
+          </div>
+          <div (click)="goToDetails('sfps', 'abnormal')" class="status-btn down-btn">
+            <div class="btn-label">ABNORMAL</div>
+            <div class="btn-value">{{ sfpsAbnormal }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
-  </div> <!-- frameworks constraints conditions limit iteration string evaluation loops limits texts contexts bounds logic loops rule boundaries validations context boundaries logic sequences validations limit limit limits string parsing. -->
-</div> <!-- framework loops boundary validations boundaries configurations boundaries variables text parameters limitations formats loops constraint constraint string logic rules validations constraints elements conditions parsing constraint formatting execution validations parameters parameters validations limitations limits validations mapping bounds bounds texts elements definition loop format formats bounds parsing rules. -->
+    <mat-card class="hw-card hw-card--purple">
+      <mat-card-content class="hw-card-content">
+        <h3 class="hw-card-title">
+          <mat-icon class="hw-title-icon">dashboard_customize</mat-icon>
+          SubCards
+        </h3>
+
+        <div class="chart-wrapper" *ngIf="isBrowser">
+          <canvas baseChart [data]="subcardsChartData" [options]="chartOptions" type="doughnut"></canvas>
+          <div class="chart-center-text">
+            {{ subcardsNormal + subcardsAbnormal }}
+          </div>
+        </div>
+
+        <div class="status-btns">
+          <div (click)="goToDetails('subcards', 'normal')" class="status-btn up-btn">
+            <div class="btn-label">NORMAL</div>
+            <div class="btn-value">{{ subcardsNormal }}</div>
+          </div>
+          <div (click)="goToDetails('subcards', 'abnormal')" class="status-btn down-btn">
+            <div class="btn-label">ABNORMAL</div>
+            <div class="btn-value">{{ subcardsAbnormal }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+</div>
