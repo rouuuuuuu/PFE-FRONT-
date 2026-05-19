@@ -538,3 +538,18 @@
   font-size: 13px;
   white-space: nowrap;
 }
+
+/* ── NAT Mode Styles ── */
+.nat-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+::ng-deep .nat-radio-group .mdc-form-field > label,
+::ng-deep .nat-radio-group .mat-radio-label-content,
+::ng-deep .nat-radio-group .mdc-label {
+  color: var(--text-primary) !important;
+  font-family: 'Outfit', sans-serif;
+}

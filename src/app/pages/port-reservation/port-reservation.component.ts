@@ -101,32 +101,34 @@ export class PortReservationComponent implements OnInit {
     this.selectedRouter = router;
     this.selectedPort = null;
     this.description = '';
+    this.ports = [];
+  }
+
+  syncRouter(): void {
+    if (!this.selectedRouter) return;
     
-    if (this.selectedRouter) {
-      // Step 2: Load ports for the selected router
-      // Assuming the API includes a nested 'ports' array, or we fetch them
-      if (this.selectedRouter.ports && Array.isArray(this.selectedRouter.ports)) {
-        this.ports = this.selectedRouter.ports;
-      } else if (this.selectedRouter.interfaces && Array.isArray(this.selectedRouter.interfaces)) {
-        // Fallback to interfaces if ports array isn't named 'ports'
-        this.ports = this.selectedRouter.interfaces;
-      } else {
-        // If not nested, fetch device hardware details
-        this.loadingPorts = true;
-        this.api.getUnifiedDevice(this.selectedRouter.loopback_ip || this.selectedRouter.ip_address).subscribe({
-          next: (device) => {
-            this.ports = device.ports || device.interfaces || [];
-            this.loadingPorts = false;
-          },
-          error: (err) => {
-            console.error('Failed to load port details', err);
-            this.snackBar.open('Failed to load ports for this router.', 'Close', { duration: 3000 });
-            this.loadingPorts = false;
-          }
-        });
-      }
+    this.loadingPorts = true;
+    this.ports = [];
+    this.selectedPort = null;
+
+    if (this.selectedRouter.ports && Array.isArray(this.selectedRouter.ports)) {
+      this.ports = this.selectedRouter.ports;
+      this.loadingPorts = false;
+    } else if (this.selectedRouter.interfaces && Array.isArray(this.selectedRouter.interfaces)) {
+      this.ports = this.selectedRouter.interfaces;
+      this.loadingPorts = false;
     } else {
-      this.ports = [];
+      this.api.getUnifiedDevice(this.selectedRouter.loopback_ip || this.selectedRouter.ip_address).subscribe({
+        next: (device) => {
+          this.ports = device.ports || device.interfaces || [];
+          this.loadingPorts = false;
+        },
+        error: (err) => {
+          console.error('Failed to load port details', err);
+          this.snackBar.open('Failed to load ports for this router.', 'Close', { duration: 3000 });
+          this.loadingPorts = false;
+        }
+      });
     }
   }
 

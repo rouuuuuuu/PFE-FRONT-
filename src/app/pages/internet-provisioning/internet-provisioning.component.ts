@@ -101,6 +101,7 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   historyPageSize = 10;
 
   readonly subnetTypes = ['/31', '/29'];
+  readonly natModes = ['Sans NAT avec CPE', 'Sans NAT sans CPE'];
 
   constructor(
     private fb: FormBuilder,
@@ -158,7 +159,31 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
       debit_mbps:    [null, [Validators.required, Validators.min(1)]],
       pe_ip_address: ['',   [Validators.required, ipAddressValidator]],
       subnet_mask:   ['',   [Validators.required, ipAddressValidator]],
-      subnet_type:   ['',   Validators.required]
+      subnet_type:   ['',   Validators.required],
+      nat_mode:      ['',   Validators.required],
+      ce_ip_address: [''],
+      customer_lan_prefix: [''],
+      customer_lan_cidr: ['']
+    });
+
+    this.step4Form.get('nat_mode')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(mode => {
+      const isCpe = mode === 'Sans NAT avec CPE';
+      const controls = ['ce_ip_address', 'customer_lan_prefix', 'customer_lan_cidr'];
+      
+      controls.forEach(ctrlName => {
+        const ctrl = this.step4Form.get(ctrlName);
+        if (isCpe) {
+          if (ctrlName === 'ce_ip_address') {
+            ctrl?.setValidators([Validators.required, ipAddressValidator]);
+          } else {
+            ctrl?.setValidators([Validators.required]);
+          }
+        } else {
+          ctrl?.clearValidators();
+          ctrl?.setValue('');
+        }
+        ctrl?.updateValueAndValidity();
+      });
     });
 
     this.step5Form = this.fb.group({
@@ -264,7 +289,14 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
         debit_mbps:    Number(this.step4Form.value.debit_mbps),
         pe_ip_address: this.step4Form.value.pe_ip_address,
         subnet_mask:   this.step4Form.value.subnet_mask,
-        subnet_type:   this.step4Form.value.subnet_type
+        subnet_type:   this.step4Form.value.subnet_type,
+        
+        nat_mode:            this.step4Form.value.nat_mode,
+        ...(this.step4Form.value.nat_mode === 'Sans NAT avec CPE' ? {
+          ce_ip_address:       this.step4Form.value.ce_ip_address,
+          customer_lan_prefix: this.step4Form.value.customer_lan_prefix,
+          customer_lan_cidr:   this.step4Form.value.customer_lan_cidr
+        } : {})
       }
     };
 

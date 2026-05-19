@@ -142,7 +142,41 @@
         </mat-select>
         <mat-error>Required</mat-error>
       </mat-form-field>
+    </div>
 
+    <!-- NAT & Routing -->
+    <div class="section-divider"></div>
+    <div class="section-label">NAT &amp; Routing</div>
+    <div class="form-row" [formGroup]="step4Form" style="flex-direction: column; gap: 16px;">
+      <mat-radio-group formControlName="nat_mode" class="nat-radio-group">
+        <mat-radio-button *ngFor="let mode of natModes" [value]="mode" style="margin-right: 16px;">{{ mode }}</mat-radio-button>
+      </mat-radio-group>
+
+      <div class="form-row" *ngIf="step4Form.value.nat_mode === 'Sans NAT avec CPE'" style="width: 100%; margin-top: 8px;">
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>CE IP Address</mat-label>
+          <input matInput formControlName="ce_ip_address" placeholder="e.g. 10.0.0.2">
+          <mat-error *ngIf="step4Form.get('ce_ip_address')?.hasError('required')">Required</mat-error>
+          <mat-error *ngIf="step4Form.get('ce_ip_address')?.hasError('invalidIp')">Invalid IPv4</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>Customer LAN Prefix</mat-label>
+          <input matInput formControlName="customer_lan_prefix" placeholder="e.g. X.X.X.0 255.255.255.0">
+          <mat-error>Required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>Customer LAN CIDR</mat-label>
+          <input matInput formControlName="customer_lan_cidr" placeholder="e.g. X.X.X.0/24">
+          <mat-error>Required</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+    <div class="section-label">Client Information</div>
+    <div class="form-row">
       <!-- Client Name -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always" [formGroup]="step5Form">
         <mat-label>Client Name</mat-label>
@@ -183,7 +217,12 @@
         <mat-icon class="chip-icon">speed</mat-icon>
         {{ step4Form.value.debit_mbps }} Mbps
       </span>
-      <mat-icon class="arrow-icon" *ngIf="step4Form.value.debit_mbps && step5Form.value.client_name">arrow_forward</mat-icon>
+      <mat-icon class="arrow-icon" *ngIf="step4Form.value.debit_mbps && step4Form.value.nat_mode">arrow_forward</mat-icon>
+      <span class="chip" *ngIf="step4Form.value.nat_mode">
+        <mat-icon class="chip-icon">router</mat-icon>
+        {{ step4Form.value.nat_mode }}
+      </span>
+      <mat-icon class="arrow-icon" *ngIf="step4Form.value.nat_mode && step5Form.value.client_name">arrow_forward</mat-icon>
       <span class="chip chip-client" *ngIf="step5Form.value.client_name">
         <mat-icon class="chip-icon">person</mat-icon>
         {{ step5Form.value.client_name }}
@@ -196,7 +235,7 @@
               [disabled]="!canProvision || submitting"
               (click)="provision()"
               id="btn-provision">
-        <mat-icon class="run-icon" *ngIf="!submitting">rocket_launch</mat-icon>
+        <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon>
         <mat-spinner *ngIf="submitting" diameter="18" class="btn-spinner"></mat-spinner>
         <span>{{ submitting ? 'Provisioning…' : 'Provision Service' }}</span>
       </button>

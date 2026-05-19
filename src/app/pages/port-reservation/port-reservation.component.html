@@ -1,151 +1,101 @@
-<div class="page-container">
-  <div class="page-header">
-    <mat-icon class="header-icon">cable</mat-icon>
-    <div>
-      <h1 class="page-title">Automated Port Reservation</h1>
-      <p class="page-subtitle">Reserve and bring up inactive router ports </p>
-    </div>
+<div class="page-header">
+  <mat-icon class="header-icon">cable</mat-icon>
+  <div>
+    <h1 class="page-title">Automated Port Reservation</h1>
+    <p class="page-subtitle">Reserve and bring up inactive router ports</p>
   </div>
+</div>
 
-  <div class="flow-container">
+<mat-card class="form-card">
+  <mat-card-content class="form-content">
     
-    <!-- Step 1: Choose Router -->
-    <mat-card class="step-card" [class.step-active]="!selectedRouter">
-      <div class="step-header">
-        <div class="step-number" [class.step-completed]="selectedRouter">1</div>
-        <h2 class="step-title">Choose Router</h2>
-      </div>
-      <mat-card-content>
-        <div *ngIf="loadingRouters" class="loading-inline">
-          <mat-spinner diameter="24"></mat-spinner>
-          <span>Fetching routers...</span>
-        </div>
-        
-        <mat-form-field *ngIf="!loadingRouters" appearance="outline" class="full-width" floatLabel="always">
-          <mat-label>Search and select a Router</mat-label>
-          <input type="text"
-                 matInput
-                 [matAutocomplete]="auto"
-                 [(ngModel)]="routerSearchTerm"
-                 (ngModelChange)="filterRouters($event)">
-          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayRouter" (optionSelected)="onRouterSelected($event.option.value)">
-            <mat-option *ngFor="let router of filteredRouters" [value]="router">
-              {{ router.name || router.ne_name || router.device_name || router.ip_address }}
-              <span class="router-ip">({{ router.loopback_ip || router.ip_address }})</span>
-            </mat-option>
-          </mat-autocomplete>
-          <mat-icon matSuffix class="text-muted">search</mat-icon>
-        </mat-form-field>
-      </mat-card-content>
-    </mat-card>
+    <!-- Row 1: Router search -->
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Router (start typing to search...)</mat-label>
+        <input type="text" matInput
+               [matAutocomplete]="auto"
+               [(ngModel)]="routerSearchTerm"
+               (ngModelChange)="filterRouters($event)"
+               placeholder="Search and select a Router">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayRouter" (optionSelected)="onRouterSelected($event.option.value)">
+          <mat-option *ngFor="let router of filteredRouters" [value]="router">
+            <span class="autocomplete-name">{{ router.name || router.ne_name || router.device_name || router.ip_address }}</span>
+            <span class="autocomplete-ip">({{ router.loopback_ip || router.ip_address }})</span>
+          </mat-option>
+        </mat-autocomplete>
+        <mat-icon matSuffix *ngIf="loadingRouters">hourglass_empty</mat-icon>
+      </mat-form-field>
 
-    <!-- Step 2 & 3: View & Choose a Down Port -->
-    <mat-card class="step-card" [class.step-disabled]="!selectedRouter" [class.step-active]="selectedRouter && !selectedPort">
-      <div class="step-header">
-        <div class="step-number" [class.step-completed]="selectedPort">2</div>
-        <h2 class="step-title">Select a Down Port</h2>
-      </div>
-      <mat-card-content *ngIf="selectedRouter">
-        
-        <div *ngIf="loadingPorts" class="loading-inline">
-          <mat-spinner diameter="24"></mat-spinner>
-          <span>Fetching ports...</span>
-        </div>
+      <!-- Sync Router button -->
+      <button class="sync-btn"
+              [disabled]="!selectedRouter || loadingPorts"
+              (click)="syncRouter()"
+              [matTooltip]="'Fetch ports for ' + (selectedRouter?.name || selectedRouter?.ne_name || 'selected router')">
+        <mat-icon class="sync-icon" [class.spinning]="loadingPorts">sync</mat-icon>
+        <span>{{ loadingPorts ? 'Syncing...' : 'Sync Router' }}</span>
+      </button>
+    </div>
 
-        <div *ngIf="!loadingPorts && ports.length === 0" class="empty-state">
-          No ports found for this router.
-        </div>
+    <!-- Row 2: Port select and Description -->
+    <div class="form-row">
+      <!-- Port dropdown -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Select a Down Port</mat-label>
+        <mat-select [(ngModel)]="selectedPort"
+                    [disabled]="!selectedRouter || loadingPorts || ports.length === 0"
+                    placeholder="Select a port...">
+          <mat-option *ngFor="let p of ports" [value]="p" [disabled]="!isPortDown(p)">
+            <span class="iface-label">{{ p.port_full_name || p.interface || p.name }}</span>
+            <span class="iface-status"
+                  [class.iface-up]="!isPortDown(p)"
+                  [class.iface-down]="isPortDown(p)">
+              ● {{ p.oper_status || p.status || 'UNKNOWN' | uppercase }}
+            </span>
+          </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="loadingPorts">Fetching ports...</mat-hint>
+        <mat-hint *ngIf="!loadingPorts && selectedRouter && ports.length > 0">
+          {{ ports.length }} ports found
+        </mat-hint>
+        <mat-hint *ngIf="!loadingPorts && selectedRouter && ports.length === 0" class="hint-warn">No ports found</mat-hint>
+      </mat-form-field>
 
-        <div *ngIf="!loadingPorts && ports.length > 0" class="table-container">
-          <table mat-table [dataSource]="ports" class="ports-table">
-            
-            <!-- Port Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef class="header-accent">Port</th>
-              <td mat-cell *matCellDef="let port" class="td-port-name">
-                <mat-icon class="port-icon">settings_ethernet</mat-icon>
-                {{ port.port_full_name || port.interface || port.name }}
-              </td>
-            </ng-container>
+      <!-- Description input -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Reservation Description</mat-label>
+        <input matInput [(ngModel)]="description" placeholder="e.g. Reserved for B2B Client XYZ">
+      </mat-form-field>
+    </div>
 
-            <!-- Operational Status Column -->
-            <ng-container matColumnDef="oper_status">
-              <th mat-header-cell *matHeaderCellDef class="header-accent">Oper Status</th>
-              <td mat-cell *matCellDef="let port">
-                <span class="status-badge" 
-                      [class.badge-up]="!isPortDown(port)" 
-                      [class.badge-down]="isPortDown(port)">
-                  {{ port.oper_status || port.status || 'Unknown' }}
-                </span>
-              </td>
-            </ng-container>
+    <!-- Selected summary chip (before execute) -->
+    <div *ngIf="selectedRouter && selectedPort" class="selection-summary">
+      <span class="chip">
+        <mat-icon class="chip-icon">router</mat-icon>
+        {{ selectedRouter.name || selectedRouter.ne_name || selectedRouter.device_name || selectedRouter.ip_address }}
+      </span>
+      <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+      <span class="chip">
+        <mat-icon class="chip-icon">settings_ethernet</mat-icon>
+        {{ selectedPort.port_full_name || selectedPort.interface || selectedPort.name }}
+      </span>
+      <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+      <span class="chip chip-desc">
+        <mat-icon class="chip-icon">edit_note</mat-icon>
+        {{ description || 'No Description' }}
+      </span>
+    </div>
 
-            <!-- Admin Status Column -->
-            <ng-container matColumnDef="admin_status">
-              <th mat-header-cell *matHeaderCellDef class="header-accent">Admin Status</th>
-              <td mat-cell *matCellDef="let port">
-                <span class="status-badge" 
-                      [class.badge-up]="(port.admin_status || '').toLowerCase() === 'up'" 
-                      [class.badge-down]="(port.admin_status || '').toLowerCase() === 'down'">
-                  {{ port.admin_status || 'Unknown' }}
-                </span>
-              </td>
-            </ng-container>
-
-            <!-- Action Column -->
-            <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef class="header-accent text-right">Action</th>
-              <td mat-cell *matCellDef="let port" class="text-right">
-                <button mat-flat-button 
-                        [class.btn-select-down]="isPortDown(port)"
-                        [class.btn-disabled]="!isPortDown(port)"
-                        [disabled]="!isPortDown(port)"
-                        (click)="selectPort(port)"
-                        [matTooltip]="!isPortDown(port) ? 'Cannot reserve an active port' : 'Select this port'">
-                  {{ selectedPort === port ? 'Selected' : 'Select' }}
-                </button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
-                class="port-row" 
-                [class.row-disabled]="!isPortDown(row)"
-                [class.row-selected]="selectedPort === row">
-            </tr>
-          </table>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <!-- Step 4: Write Description -->
-    <mat-card class="step-card" [class.step-disabled]="!selectedPort" [class.step-active]="selectedPort">
-      <div class="step-header">
-        <div class="step-number" [class.step-completed]="description.length > 0">3</div>
-        <h2 class="step-title">Reservation Details</h2>
-      </div>
-      <mat-card-content *ngIf="selectedPort">
-        <div class="selected-port-summary">
-          <mat-icon class="summary-icon">check_circle</mat-icon>
-          <span>Port <strong>{{ selectedPort.port_full_name || selectedPort.interface }}</strong> selected for reservation.</span>
-        </div>
-        
-        <mat-form-field appearance="outline" class="full-width mt-16" floatLabel="always">
-          <mat-label>Reservation Description</mat-label>
-          <input matInput [(ngModel)]="description" placeholder="e.g. Reserved for B2B Client XYZ connection" required>
-          <mat-icon matPrefix class="text-muted mr-8">edit_note</mat-icon>
-        </mat-form-field>
-      </mat-card-content>
-    </mat-card>
-
-    <!-- Step 5: Submit -->
-    <div class="form-actions" *ngIf="selectedPort && description.trim().length > 0">
-      <button class="run-btn" (click)="reservePort()" [disabled]="submitting">
-        <mat-icon class="run-icon" *ngIf="!submitting">power_settings_new</mat-icon>
+    <!-- Execute button -->
+    <div class="form-actions">
+      <button class="run-btn"
+              [disabled]="!selectedRouter || !selectedPort || !description.trim() || submitting"
+              (click)="reservePort()">
+        <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon>
         <mat-spinner *ngIf="submitting" diameter="18" class="btn-spinner"></mat-spinner>
         <span>{{ submitting ? 'Reserving...' : 'Reserve & Bring Up Port' }}</span>
       </button>
     </div>
 
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>

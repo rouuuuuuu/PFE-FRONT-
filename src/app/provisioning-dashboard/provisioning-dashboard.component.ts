@@ -27,6 +27,13 @@ export class ProvisioningDashboardComponent { // classe mté3 l'component parsin
       desc: 'Search a router, pick an available port, add a description and reserve it.',
       icon: 'cable',
       route: '/provisioning/port-reservation'
+    },
+    {
+      id: 'internet_provisioning',
+      title: 'Internet Provisioning',
+      desc: 'Configure internet service including VRF, physical interfaces, and sub-interfaces.',
+      icon: 'public',
+      route: '/provisioning/internet-service'
     }
   ];
 
