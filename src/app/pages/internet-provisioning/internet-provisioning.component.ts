@@ -15,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { ApiService } from '../../services/api.service';
 import { HttpClient } from '@angular/common/http';
@@ -60,6 +61,7 @@ interface PortInterface {
     MatSnackBarModule,
     MatTableModule,
     MatTooltipModule,
+    MatCheckboxModule,
   ],
   templateUrl: './internet-provisioning.component.html',
   styleUrls: ['./internet-provisioning.component.css']
@@ -100,8 +102,8 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   historyPage = 0;
   historyPageSize = 10;
 
-  readonly subnetTypes = ['/31', '/29'];
-  readonly natModes = ['Sans NAT avec CPE', 'Sans NAT sans CPE'];
+  readonly subnetTypes = ['/31', '/30', '/29'];
+  readonly natModes = ['No NAT with CPE', 'No NAT without CPE'];
 
   constructor(
     private fb: FormBuilder,
@@ -160,14 +162,29 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
       pe_ip_address: ['',   [Validators.required, ipAddressValidator]],
       subnet_mask:   ['',   [Validators.required, ipAddressValidator]],
       subnet_type:   ['',   Validators.required],
+      has_switch:    [false],
+      switch_ip:     [''],
       nat_mode:      ['',   Validators.required],
       ce_ip_address: [''],
       customer_lan_prefix: [''],
       customer_lan_cidr: ['']
     });
 
+    // Dynamic validators for switch_ip based on has_switch
+    this.step4Form.get('has_switch')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(hasSwitch => {
+      const switchIpCtrl = this.step4Form.get('switch_ip');
+      if (hasSwitch) {
+        switchIpCtrl?.setValidators([Validators.required, ipAddressValidator]);
+      } else {
+        switchIpCtrl?.clearValidators();
+        switchIpCtrl?.setValue('');
+      }
+      switchIpCtrl?.updateValueAndValidity();
+    });
+
+    // Dynamic validators for NAT-mode dependent fields
     this.step4Form.get('nat_mode')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(mode => {
-      const isCpe = mode === 'Sans NAT avec CPE';
+      const isCpe = mode === 'No NAT with CPE';
       const controls = ['ce_ip_address', 'customer_lan_prefix', 'customer_lan_cidr'];
       
       controls.forEach(ctrlName => {
@@ -279,6 +296,15 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.message = '';
 
+    // Map connection_type UI value (FO/FH) → backend media_type (fo/fh)
+    const mediaType = (this.step1Form.value.connection_type as string).toLowerCase() as 'fo' | 'fh';
+
+    // Map NAT mode UI label → backend enum string
+    const natModeUi: string = this.step4Form.value.nat_mode;
+    const natModeBackend = natModeUi === 'No NAT with CPE' ? 'sans_nat_avec_cpe' : 'sans_nat_sans_cpe';
+
+    const hasSwitch: boolean = !!this.step4Form.value.has_switch;
+
     const payload = {
       device_name: this.step2Form.value.device_name,
       task_type:   'internet_service',
@@ -290,9 +316,11 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
         pe_ip_address: this.step4Form.value.pe_ip_address,
         subnet_mask:   this.step4Form.value.subnet_mask,
         subnet_type:   this.step4Form.value.subnet_type,
-        
-        nat_mode:            this.step4Form.value.nat_mode,
-        ...(this.step4Form.value.nat_mode === 'Sans NAT avec CPE' ? {
+        media_type:    mediaType,
+        has_switch:    hasSwitch,
+        ...(hasSwitch ? { switch_ip: this.step4Form.value.switch_ip } : {}),
+        nat_mode:      natModeBackend,
+        ...(natModeBackend === 'sans_nat_avec_cpe' ? {
           ce_ip_address:       this.step4Form.value.ce_ip_address,
           customer_lan_prefix: this.step4Form.value.customer_lan_prefix,
           customer_lan_cidr:   this.step4Form.value.customer_lan_cidr

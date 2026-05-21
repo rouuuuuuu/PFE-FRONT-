@@ -553,3 +553,29 @@
   color: var(--text-primary) !important;
   font-family: 'Outfit', sans-serif;
 }
+
+/* ── Network Topology — Checkbox dark-mode overrides ── */
+::ng-deep mat-checkbox .mdc-label,
+::ng-deep mat-checkbox .mdc-form-field > label {
+  color: var(--text-primary) !important;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+}
+
+/* Unchecked border */
+::ng-deep mat-checkbox .mdc-checkbox__background {
+  border-color: #555 !important;
+}
+
+/* Checked state — use primary-orange */
+::ng-deep mat-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__background {
+  background-color: var(--primary-orange) !important;
+  border-color: var(--primary-orange) !important;
+}
+
+/* Ripple / focus ring */
+::ng-deep mat-checkbox .mat-mdc-checkbox-ripple .mat-ripple-element,
+::ng-deep mat-checkbox .mdc-checkbox__ripple {
+  background-color: var(--primary-orange) !important;
+  opacity: 0.12;
+}

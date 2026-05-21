@@ -18,7 +18,7 @@
              (click)="step1Form.get('connection_type')!.setValue('FO')">
         <mat-icon class="conn-icon">fiber_manual_record</mat-icon>
         <div>
-          <div class="conn-label">Fibre Optique</div>
+          <div class="conn-label">Optic Fiber </div>
           <div class="conn-sub">FO — Single-mode / Multi-mode</div>
         </div>
       </label>
@@ -26,7 +26,7 @@
              (click)="step1Form.get('connection_type')!.setValue('FH')">
         <mat-icon class="conn-icon">settings_input_antenna</mat-icon>
         <div>
-          <div class="conn-label">Faisceau Hertzien</div>
+          <div class="conn-label">Microwave Link</div>
           <div class="conn-sub">FH — Microwave / P2P radio</div>
         </div>
       </label>
@@ -144,6 +144,25 @@
       </mat-form-field>
     </div>
 
+    <!-- Topology / Switch -->
+    <div class="section-divider"></div>
+    <div class="section-label">Network Topology</div>
+    <div [formGroup]="step4Form" style="padding: 4px 0 8px;">
+      <mat-checkbox formControlName="has_switch" id="check-has-switch" color="primary">
+        Connection passes through an access switch?
+      </mat-checkbox>
+
+      <div class="form-row" *ngIf="step4Form.value.has_switch" style="margin-top: 16px;">
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>Switch IP</mat-label>
+          <input matInput formControlName="switch_ip"
+                 id="input-switch-ip" placeholder="e.g. 10.0.0.5">
+          <mat-error *ngIf="step4Form.get('switch_ip')?.hasError('required')">Required</mat-error>
+          <mat-error *ngIf="step4Form.get('switch_ip')?.hasError('invalidIp')">Invalid IPv4 address</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
     <!-- NAT & Routing -->
     <div class="section-divider"></div>
     <div class="section-label">NAT &amp; Routing</div>
@@ -152,7 +171,7 @@
         <mat-radio-button *ngFor="let mode of natModes" [value]="mode" style="margin-right: 16px;">{{ mode }}</mat-radio-button>
       </mat-radio-group>
 
-      <div class="form-row" *ngIf="step4Form.value.nat_mode === 'Sans NAT avec CPE'" style="width: 100%; margin-top: 8px;">
+      <div class="form-row" *ngIf="step4Form.value.nat_mode === 'No NAT with CPE'" style="width: 100%; margin-top: 8px;">
         <mat-form-field appearance="outline" class="form-field" floatLabel="always">
           <mat-label>CE IP Address</mat-label>
           <input matInput formControlName="ce_ip_address" placeholder="e.g. 10.0.0.2">
