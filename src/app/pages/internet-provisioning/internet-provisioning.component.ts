@@ -129,7 +129,7 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (data) => {
             const all = Array.isArray(data) ? data : (data.results || []);
-            this.historyTasks = all.filter((t: any) => t.task_type === 'internet_service');
+            this.historyTasks = all.filter((t: any) => t.task_type === 'internet');
             this.cdr.detectChanges();
           },
           error: (err) => console.error('Polling error:', err)
@@ -305,9 +305,15 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
 
     const hasSwitch: boolean = !!this.step4Form.value.has_switch;
 
+    // Resolve the full router object to extract its management IP
+    const selectedRouter = this.routers.find(
+      r => r.ne_name === this.step2Form.value.device_name
+    );
+
     const payload = {
       device_name: this.step2Form.value.device_name,
-      task_type:   'internet_service',
+      device_ip:   selectedRouter?.ip_address ?? '',
+      task_type:   'internet',
       parameters: {
         port_id:       Number(this.step3Form.value.port_id),
         client_name:   this.step5Form.value.client_name,
@@ -362,7 +368,7 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
     this.api.getProvisioningTasks().subscribe({
       next: (data: any) => {
         const all = Array.isArray(data) ? data : (data.results || []);
-        this.historyTasks = all.filter((t: any) => t.task_type === 'internet_service');
+        this.historyTasks = all.filter((t: any) => t.task_type === 'internet');
         this.historyLoading = false;
         this.cdr.detectChanges();
       },
