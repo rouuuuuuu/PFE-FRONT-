@@ -1,0 +1,145 @@
+<!-- ── Floating Action Button ── -->
+<button
+  class="ai-fab"
+  [class.fab-open]="isOpen"
+  (click)="toggle()"
+  matTooltip="AI Provisioning Assistant"
+  matTooltipPosition="left"
+  aria-label="Open AI Provisioning Assistant">
+  <mat-icon class="fab-icon">{{ isOpen ? 'close' : 'smart_toy' }}</mat-icon>
+  <!-- Pulse ring when closed -->
+  <span class="fab-pulse" *ngIf="!isOpen"></span>
+</button>
+
+<!-- ── Floating Panel ── -->
+<div class="ai-panel" [class.panel-open]="isOpen">
+
+  <!-- Header -->
+  <div class="panel-header">
+    <div class="header-left">
+      <mat-icon class="header-icon">smart_toy</mat-icon>
+      <div>
+        <p class="header-title">AI Provisioning</p>
+        <p class="header-sub">Powered by Gemini</p>
+      </div>
+    </div>
+    <button class="close-btn" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="panel-tabs">
+    <button
+      class="tab-btn"
+      [class.tab-active]="activeTab === 'chat'"
+      (click)="activeTab = 'chat'">
+      <mat-icon>chat</mat-icon>
+      Chat
+    </button>
+    <button
+      class="tab-btn"
+      [class.tab-active]="activeTab === 'form'"
+      (click)="activeTab = 'form'">
+      <mat-icon>assignment</mat-icon>
+      Form
+      <span class="tab-badge" *ngIf="filledCount > 0">{{ filledCount }}</span>
+    </button>
+  </div>
+
+  <!-- ── CHAT TAB ── -->
+  <div class="tab-content" *ngIf="activeTab === 'chat'">
+
+    <div class="widget-messages">
+      <div
+        *ngFor="let msg of messages"
+        class="bubble"
+        [class.bubble-assistant]="msg.role === 'assistant'"
+        [class.bubble-user]="msg.role === 'user'">
+        <pre class="bubble-text">{{ msg.text }}</pre>
+      </div>
+      <div class="bubble bubble-assistant" *ngIf="loading">
+        <span class="typing-dots">
+          <span></span><span></span><span></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="widget-input">
+      <textarea
+        class="widget-textarea"
+        [(ngModel)]="userInput"
+        (keydown)="onKeyDown($event)"
+        placeholder="Describe the service... (Enter to send)"
+        rows="2">
+      </textarea>
+      <button
+        class="widget-send-btn"
+        (click)="sendMessage()"
+        [disabled]="loading || !userInput.trim()">
+        <mat-icon *ngIf="!loading">send</mat-icon>
+        <mat-icon *ngIf="loading" class="spin-icon">autorenew</mat-icon>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ── FORM TAB ── -->
+  <div class="tab-content form-tab" *ngIf="activeTab === 'form'">
+
+    <div class="form-scroll">
+
+      <div class="field-group">
+        <label class="field-label">Client Name</label>
+        <input class="field-input" [(ngModel)]="form.client_name" placeholder="e.g. Ooredoo" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">PE Router IP</label>
+        <input class="field-input" [(ngModel)]="form.pe_ip" placeholder="e.g. 10.51.2.4" />
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">VLAN ID</label>
+          <input class="field-input" [(ngModel)]="form.vlan_id" type="number" placeholder="200" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Bandwidth (Mbps)</label>
+          <input class="field-input" [(ngModel)]="form.bandwidth_mbps" type="number" placeholder="100" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Service Type</label>
+        <select class="field-input field-select" [(ngModel)]="form.service_type">
+          <option value="">— Select —</option>
+          <option value="Internet">Internet</option>
+          <option value="MPLS">MPLS</option>
+          <option value="Port reservation">Port reservation</option>
+          <option value="VoiP">VoiP</option>
+          <option value="Bandwidth upgrade">Bandwidth upgrade</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Notes</label>
+        <textarea class="field-input" [(ngModel)]="form.notes" placeholder="Additional info..." rows="2"></textarea>
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+      <button class="back-btn" (click)="activeTab = 'chat'">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Chat
+      </button>
+      <button class="submit-btn" (click)="submitProvisioning()" [disabled]="!formFilled">
+        <mat-icon>rocket_launch</mat-icon>
+        Submit
+      </button>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,157 @@
+<!-- Page Header — matches app-wide convention -->
+<div class="page-header">
+  <mat-icon class="header-icon">smart_toy</mat-icon>
+  <div>
+    <h1 class="page-title">AI Provisioning Assistant</h1>
+    <p class="page-subtitle">Describe the service in natural language · the AI extracts parameters automatically</p>
+  </div>
+</div>
+
+<!-- Two-panel layout -->
+<div class="nlp-layout page-fade-in">
+
+  <!-- ── LEFT: Chat panel ──────────────────────────── -->
+  <div class="panel chat-panel">
+
+    <div class="panel-header">
+      <mat-icon class="panel-icon-mat">chat</mat-icon>
+      <div>
+        <p class="panel-title">Conversation</p>
+        <p class="panel-sub">English · French · Arabic</p>
+      </div>
+    </div>
+
+    <div class="chat-messages" #chatBox>
+      <div
+        *ngFor="let msg of messages"
+        class="bubble"
+        [class.bubble-assistant]="msg.role === 'assistant'"
+        [class.bubble-user]="msg.role === 'user'">
+        <pre class="bubble-text">{{ msg.text }}</pre>
+      </div>
+
+      <!-- Typing indicator -->
+      <div class="bubble bubble-assistant" *ngIf="loading">
+        <span class="typing-dots">
+          <span></span><span></span><span></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <textarea
+        [(ngModel)]="userInput"
+        (keydown)="onKeyDown($event)"
+        placeholder="e.g. New L2VPN for Ooredoo, VLAN 200, PE 10.51.2.4, 100 Mbps..."
+        rows="3"
+        class="chat-textarea">
+      </textarea>
+      <button
+        class="send-btn"
+        (click)="sendMessage()"
+        [disabled]="loading || !userInput.trim()">
+        <mat-icon *ngIf="!loading">send</mat-icon>
+        <mat-icon *ngIf="loading" class="spin-icon">autorenew</mat-icon>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ── RIGHT: Auto-filled form panel ───────────────── -->
+  <div class="panel form-panel">
+
+    <div class="panel-header">
+      <mat-icon class="panel-icon-mat">assignment</mat-icon>
+      <div>
+        <p class="panel-title">Provisioning Form</p>
+        <p class="panel-sub">Auto-filled by AI — review before submitting</p>
+      </div>
+    </div>
+
+    <div class="form-fields">
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Client Name</label>
+          <input
+            class="field-input"
+            [(ngModel)]="form.client_name"
+            placeholder="e.g. Ooredoo" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">PE Router IP</label>
+          <input
+            class="field-input"
+            [(ngModel)]="form.pe_ip"
+            placeholder="e.g. 10.51.2.4" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">VLAN ID</label>
+          <input
+            class="field-input"
+            [(ngModel)]="form.vlan_id"
+            type="number"
+            placeholder="e.g. 200" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Bandwidth (Mbps)</label>
+          <input
+            class="field-input"
+            [(ngModel)]="form.bandwidth_mbps"
+            type="number"
+            placeholder="e.g. 100" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Service Type</label>
+        <select class="field-select" [(ngModel)]="form.service_type">
+          <option value="">— Select service type —</option>
+          <option value="Internet">Internet</option>
+          <option value="MPLS">MPLS</option>
+          <option value="Port reservation">Port reservation</option>
+          <option value="VoiP">VoiP</option>
+          <option value="Bandwidth upgrade">Bandwidth upgrade</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Notes</label>
+        <textarea
+          class="field-input field-textarea"
+          [(ngModel)]="form.notes"
+          placeholder="Additional information..."
+          rows="3">
+        </textarea>
+      </div>
+
+    </div>
+
+    <!-- Status chips when form is filled -->
+    <div class="form-status" *ngIf="formFilled">
+      <span class="status-chip chip-green">
+        <mat-icon class="chip-icon">check_circle</mat-icon>
+        Parameters Extracted
+      </span>
+      <span class="status-chip chip-orange" *ngIf="form.service_type">
+        <mat-icon class="chip-icon">lan</mat-icon>
+        {{ form.service_type }}
+      </span>
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="submit-btn"
+        (click)="submitProvisioning()"
+        [disabled]="!formFilled">
+        <mat-icon>rocket_launch</mat-icon>
+        Submit Provisioning
+      </button>
+    </div>
+
+  </div>
+
+</div>

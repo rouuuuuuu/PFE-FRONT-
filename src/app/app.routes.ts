@@ -14,12 +14,15 @@ import { StockDashboardComponent } from './pages/stock-dashboard/stock-dashboard
 import { PortReservationComponent } from './pages/port-reservation/port-reservation.component';
 import { NetworkTopologyComponent } from './pages/network-topology/network-topology.component';
 import { InternetProvisioningComponent } from './pages/internet-provisioning/internet-provisioning.component';
+import { NlpProvisioningComponent } from './pages/nlp-provisioning/nlp-provisioning.component';
+
 
 export const routes: Routes = [
   { path: '',          component: DashboardComponent }, // Default → dashboard
   { path: 'topology',  component: NetworkTopologyComponent },
   { path: 'routers',   component: RoutersComponent },
   { path: 'switches', component: SwitchesComponent }, // Cheman /switches ytalla3 page mta3 switches (Path for switches list)
+  { path: 'nlp-provisioning', component: NlpProvisioningComponent },
   { path: 'switches/:ip', component: SwitchSummaryComponent }, // Cheman /switches/:ip ytalla3 kholassa mta3 ports (Summary page for a single switch)
   { path: 'switches/:ip/ports/:status', component: SwitchPortDetailsComponent }, // Tafasil mta3 ports b'status (Filtered ports detail page)
   { path: 'routers/:ip', component: HardwareSummaryComponent }, // Cheman yemchi l detail mta3 routeur wa7ad w na3tiweh l'IP (Parametrised path for router summary)

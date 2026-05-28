@@ -1,11 +1,24 @@
-import { Component, OnInit } from '@angular/core'; // Njibou e'decorateur w cycle de vie mel base mta3 angular (Import core component decorators)
-import { CommonModule } from '@angular/common'; // El common module lel ngIf w ngFor (Include standard directives scope)
-import { MatCardModule } from '@angular/material/card'; // Module lel cartes eli nhotttou fihoum dashboard cards (Material cards layout)
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Module e'spinner mta3 loading t'chargement (Material loading spinners)
-import { MatIconModule } from '@angular/material/icon'; // Module tsawer e'sghar kima router icon (Material icons support)
-import { ApiService } from '../../services/api.service'; // E'service mté3na bech nkalmou serveur l'backend (Custom API handler service)
-import { NgChartsModule } from 'ng2-charts'; // Module ng2-charts bech narsmou biha diagrammes (Chart.js wrapper module)
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js'; // L'objets l'asaseya mta3 chart l'diagrammes (Core chartjs typings)
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ApiService } from '../../services/api.service';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { AlarmService } from '../../services/alarm.service';
+
+interface ParsedReport {
+  criticalAlarms: number;
+  normalAlarms: number;
+  totalAlarms: number;
+  linkType: string;
+  affectedNodes: { name: string; role: string }[];
+  actions: string[];
+  sections: { number: number; title: string; icon: string; body: string }[];
+  healthPct: number;
+}
 
 @Component({ // Ngoulou hetha composant lel angular (Define component parameters)
   selector: 'app-dashboard', // E'tag fl html eli bech nfichiw bih e'composant (HTML rendering selector string name format configuration)
@@ -43,9 +56,201 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
     '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', // limits token string texts variables contexts variables context loop execution definitions mappings references reference context strings variables limit contexts limit iterations mapping formatting limits format execution iteration configurations parsing references variables sequence boundaries parsing patterns logic string definitions text constraints constraint mappings sequence formats reference variables limitation boundaries parsing references bounds definition boundaries rule conditions limitations variables condition formats texts texts validation contexts boundary texts variables configurations texts limits context configuration.
     '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', // elements syntax conditions evaluation limitations variables definition reference logic loop parameters boundaries parameters loop logic references references parameters execution format boundaries text variable syntax definitions logic text mapping conditions token resolution syntax evaluation limit rule text configuration text condition structure mapping texts references values mapping.
     '#aec7e8', '#ffbb78', '#98df8a', '#ff9896' // variable token loop constraints contexts matching mapping validation limit texts strings references limitations format structures variables configuration limitations contexts pattern conditions condition sequence mappings limits limit loop boundaries sequences text condition evaluation limitation rules condition limitations bounds conditions mapping parser strings strings evaluation parameter references structure limits loop text formatting mappings logic context text limit parsing value parsing limitation limit constraints contexts definition limits parser variables texts references limit limits formatting definition limitations texts strings context context value limitations condition strings limitation variables contexts formats loops variables validation formats limits validations texts mapping logic limitation tokens limits loop boundary reference.
-  ]; // validation token context structure values limits pattern parsing.
+  ]; // validation token context structure values limits pattern pa  // ── Analysis state ──────────────────────────────────────────────────
+  analysis    = '';
+  analysisHtml: SafeHtml = '';
+  alarmCount  = 0;
+  totalLinks  = 0;
+  analysisLoading = false;
+  parsedReport: ParsedReport | null = null;
 
-  constructor(private api: ApiService) { } // constructeur hne bounds limits context rules execution boundary format matching variables parameters definition formatting structures parsing pattern evaluation constraints limits mappings variables.
+  // ── Alarm donut chart ────────────────────────────────────────────────
+  alarmChartData: ChartData<'doughnut'> = { labels: [], datasets: [] };
+  alarmChartType: ChartType = 'doughnut';
+  alarmChartOptions: any = {
+    responsive: true,
+    cutout: '72%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx: any) => ` ${ctx.label}: ${ctx.raw}`
+        }
+      }
+    },
+    animation: { duration: 800 }
+  };
+
+  constructor(private api: ApiService, private alarmService: AlarmService, private sanitizer: DomSanitizer) { }
+
+  loadAnalysis() {
+    this.analysisLoading = true;
+    this.parsedReport = null;
+    this.alarmService.getAnalysis().subscribe({
+      next: (res) => {
+        this.analysis   = res.analysis;
+        this.alarmCount = res.active_alarms_count;
+        this.totalLinks = res.total_links;
+        this.parsedReport = this.parseReport(res.analysis);
+        this.alarmChartData = {
+          labels: ['Critical', 'Normal'],
+          datasets: [{
+            data: [this.parsedReport.criticalAlarms, this.parsedReport.normalAlarms],
+            backgroundColor: ['rgba(239,83,80,0.85)', 'rgba(102,187,106,0.75)'],
+            borderColor:     ['#ef5350', '#66bb6a'],
+            borderWidth: 2,
+            hoverOffset: 6
+          }]
+        };
+        this.analysisHtml = this.sanitizer.bypassSecurityTrustHtml(this.renderAnalysis(res.analysis));
+        this.analysisLoading = false;
+      },
+      error: (err) => {
+        console.error('Alarm analysis error:', err);
+        this.analysisLoading = false;
+      }
+    });
+  }
+
+  /** Parse raw AI text into a structured report object */
+  private parseReport(text: string): ParsedReport {
+    // ── Alarm counts ────────────────────────────────
+    const critMatch = text.match(/(\d+)\s*critical/i);
+    const normMatch = text.match(/(\d+)\s*normal/i);
+    const criticalAlarms = critMatch ? +critMatch[1] : 0;
+    const normalAlarms   = normMatch ? +normMatch[1] : 0;
+
+    // ── Link type ───────────────────────────────────
+    const linkMatch = text.match(/\b(\d+GE|\d+G)\b/i);
+    const linkType  = linkMatch?.[1]?.toUpperCase() ?? 'Link';
+
+    // ── Affected nodes ──────────────────────────────
+    const nodeRe = /\b([A-Z]{2,6}_\d{3,4}_[A-Z]{1,4}_[A-Z0-9]+_\d{3,4})\b/g;
+    const rawNodes = [...new Set([...text.matchAll(nodeRe)].map(m => m[1]))];
+    const affectedNodes = rawNodes.map(n => {
+      const parts = n.split('_');
+      return { name: n, role: parts[2] ?? 'NODE' };
+    });
+
+    // ── Priority actions ────────────────────────────
+    // Find the RECOMMENDED ACTIONS section and pull lines that look like steps
+    const actionsSection = text.match(/RECOMMENDED ACTIONS[\s\S]*?(?=\n\d+\.|$)/i)?.[0] ?? '';
+    const actionLines = actionsSection
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 12 && !/^(RECOMMENDED|Priority steps)/i.test(l));
+    // Strip leading "Verb phrase:" → keep full line; strip bullet/number prefix
+    const actions = actionLines
+      .map(l => l.replace(/^[-•*\d.]+\s*/, '').trim())
+      .filter(l => l.length > 8);
+
+    // ── Numbered sections ────────────────────────────
+    const sectionRe = /^(\d+)\.\s+([A-Z][A-Z\s]+)$/gm;
+    const sectionMatches = [...text.matchAll(sectionRe)];
+    const sections: ParsedReport['sections'] = sectionMatches.map((m, i) => {
+      const next  = sectionMatches[i + 1];
+      const start = (m.index ?? 0) + m[0].length;
+      const end   = next?.index ?? text.length;
+      const body  = text.slice(start, end).trim();
+      const iconMap: Record<string, string> = {
+        '1': 'summarize', '2': 'device_hub', '3': 'manage_search',
+        '4': 'checklist', '5': 'monitor_heart'
+      };
+      return {
+        number: +m[1],
+        title:  m[2].trim(),
+        icon:   iconMap[m[1]] ?? 'info',
+        body
+      };
+    });
+
+    // ── Health percentage ────────────────────────────
+    const total   = criticalAlarms + normalAlarms;
+    const healthPct = total > 0 ? Math.round((normalAlarms / total) * 100) : 100;
+
+    return { criticalAlarms, normalAlarms, totalAlarms: total, linkType, affectedNodes, actions, sections, healthPct };
+  }
+
+  /** Converts AI plain-text response into rich HTML for full detail view */
+  private renderAnalysis(text: string): string {
+    if (!text) return '';
+    const lines = text.split('\n');
+    let html = '';
+    let inList = false;
+
+    const closeList = () => {
+      if (inList) { html += '</ul>'; inList = false; }
+    };
+
+    const statusBadge = (word: string): string => {
+      const w = word.toLowerCase().replace(/[^a-z]/g, '');
+      if (['alarm','alarms','alert','alerts','critical','down','fault'].includes(w))
+        return `<span class="ai-badge badge-red">${word}</span>`;
+      if (['normal','ok','healthy','up','good','stable'].includes(w))
+        return `<span class="ai-badge badge-green">${word}</span>`;
+      if (['warning','degraded','slow','high','moderate'].includes(w))
+        return `<span class="ai-badge badge-yellow">${word}</span>`;
+      return word;
+    };
+
+    const highlightLine = (line: string): string =>
+      line
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`(.+?)`/g, '<code class="ai-code">$1</code>')
+        .replace(/(\b\d+([.,]\d+)?\s*(%|Mbps|Gbps|ms|links?|alarm[s]?|router[s]?|switch|switches|port[s]?))/gi,
+          '<span class="ai-num">$1</span>')
+        .replace(/\b(alarm[s]?|critical|fault[s]?|down|normal|ok|healthy|up|good|stable|warning|degraded)\b/gi,
+          (m) => statusBadge(m));
+
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) { closeList(); html += '<div class="ai-spacer"></div>'; continue; }
+
+      if (/^#{1,3}\s/.test(line)) {
+        closeList();
+        const text = line.replace(/^#+\s*/, '');
+        html += `<div class="ai-section-title"><span>${highlightLine(text)}</span></div>`;
+        continue;
+      }
+
+      if (/^\*\*[^*]+\*\*:?$/.test(line) || /^[A-Z][A-Z\s]{4,}:$/.test(line)) {
+        closeList();
+        const text = line.replace(/\*\*/g, '').replace(/:$/, '');
+        html += `<div class="ai-section-title"><span>${text}</span></div>`;
+        continue;
+      }
+
+      const kvMatch = line.match(/^([\w\s\/()–-]{2,40}):\s+(.+)$/);
+      if (kvMatch && !line.startsWith('-') && !line.startsWith('•')) {
+        closeList();
+        html += `<div class="ai-kv-row">
+          <span class="ai-kv-key">${kvMatch[1].trim()}</span>
+          <span class="ai-kv-val">${highlightLine(kvMatch[2].trim())}</span>
+        </div>`;
+        continue;
+      }
+
+      if (/^[-•*]\s/.test(line)) {
+        if (!inList) { html += '<ul class="ai-list">'; inList = true; }
+        const content = line.replace(/^[-•*]\s+/, '');
+        html += `<li class="ai-list-item">${highlightLine(content)}</li>`;
+        continue;
+      }
+
+      if (/^\d+\.\s/.test(line)) {
+        if (!inList) { html += '<ul class="ai-list ai-list-num">'; inList = true; }
+        const content = line.replace(/^\d+\.\s+/, '');
+        html += `<li class="ai-list-item">${highlightLine(content)}</li>`;
+        continue;
+      }
+
+      closeList();
+      html += `<p class="ai-para">${highlightLine(line)}</p>`;
+    }
+
+    closeList();
+    return html;
+  }
 
   ngOnInit() { // awl fn tkhdem l'component token boundaries text format resolution bounds.
     this.api.getDashboardStats().subscribe({ // Tkalem API jib statistiques ta dashboards boundary.

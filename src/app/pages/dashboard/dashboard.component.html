@@ -168,5 +168,142 @@
     </mat-card>
   </div>
 
+<!-- ── AI Network Analysis panel ─────────────────────────────────────── -->
+<div class="ai-analysis-card">
+  <div class="ai-card-header">
+    <div class="ai-card-title-group">
+      <mat-icon class="ai-icon">auto_awesome</mat-icon>
+      <div>
+        <p class="ai-card-title">AI Network Analysis</p>
+        <p class="ai-card-sub">Gemini-powered alarm and link health summary</p>
+      </div>
+    </div>
+    <button class="analyze-btn" (click)="loadAnalysis()" [disabled]="analysisLoading">
+      <mat-icon *ngIf="!analysisLoading">play_arrow</mat-icon>
+      <mat-icon *ngIf="analysisLoading" class="spin-icon">autorenew</mat-icon>
+      <span *ngIf="!analysisLoading">Analyze Now</span>
+      <span *ngIf="analysisLoading">Analyzing...</span>
+    </button>
+  </div>
+
+  <!-- Stats row -->
+  <div class="ai-stats-row" *ngIf="totalLinks > 0">
+    <div class="ai-stat-chip">
+      <mat-icon class="ai-chip-icon">link</mat-icon>
+      <span class="ai-chip-label">Total Links</span>
+      <strong class="ai-chip-value">{{ totalLinks }}</strong>
+    </div>
+    <div class="ai-stat-chip" [class.chip-alarm]="alarmCount > 0">
+      <mat-icon class="ai-chip-icon">notifications_active</mat-icon>
+      <span class="ai-chip-label">Active Alarms</span>
+      <strong class="ai-chip-value">{{ alarmCount }}</strong>
+    </div>
+  </div>
+
+  <!-- Skeleton loader while fetching -->
+  <div class="ai-skeleton" *ngIf="analysisLoading">
+    <div class="skeleton-line sk-title"></div>
+    <div class="skeleton-line sk-long"></div>
+    <div class="skeleton-line sk-medium"></div>
+    <div class="skeleton-line sk-short"></div>
+    <div class="skeleton-line sk-long"></div>
+    <div class="skeleton-line sk-medium"></div>
+  </div>
+
+  <!-- Structured Analysis Result -->
+  <div class="ai-structured-result" *ngIf="parsedReport && !analysisLoading">
+    
+    <!-- Top row: Health & Chart -->
+    <div class="ai-report-header">
+      <div class="ai-report-health">
+        <div class="health-ring" [style.--pct]="parsedReport.healthPct">
+          <span class="health-val">{{ parsedReport.healthPct }}%</span>
+          <span class="health-lbl">Health</span>
+        </div>
+        <div class="health-meta">
+          <div class="hm-row crit">
+            <span class="hm-dot"></span>
+            <span class="hm-val">{{ parsedReport.criticalAlarms }}</span> Critical
+          </div>
+          <div class="hm-row norm">
+            <span class="hm-dot"></span>
+            <span class="hm-val">{{ parsedReport.normalAlarms }}</span> Normal
+          </div>
+        </div>
+      </div>
+      
+      <div class="ai-report-chart">
+        <canvas baseChart 
+          [data]="alarmChartData"
+          [options]="alarmChartOptions"
+          [type]="alarmChartType">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Affected Nodes & Link Type -->
+    <div class="ai-report-context">
+      <div class="ctx-item">
+        <mat-icon>router</mat-icon>
+        <div class="ctx-content">
+          <span class="ctx-lbl">Link Type</span>
+          <span class="ctx-val">{{ parsedReport.linkType }}</span>
+        </div>
+      </div>
+      <div class="ctx-item nodes-list">
+        <mat-icon>hub</mat-icon>
+        <div class="ctx-content">
+          <span class="ctx-lbl">Affected Nodes ({{ parsedReport.affectedNodes.length }})</span>
+          <div class="nodes-chips">
+            <span class="node-chip" *ngFor="let node of parsedReport.affectedNodes">
+              {{ node.name }} <span class="node-role">{{ node.role }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Priority Actions -->
+    <div class="ai-report-actions" *ngIf="parsedReport.actions.length > 0">
+      <div class="actions-header">
+        <mat-icon>assignment_late</mat-icon>
+        <span>Priority Actions</span>
+      </div>
+      <ul class="actions-list">
+        <li *ngFor="let action of parsedReport.actions; let i = index">
+          <span class="action-num">{{ i + 1 }}</span>
+          <span class="action-txt">{{ action }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sections (The rest of the report) -->
+    <div class="ai-report-sections">
+      <div class="report-section" *ngFor="let sec of parsedReport.sections">
+        <div class="sec-header">
+          <mat-icon>{{ sec.icon }}</mat-icon>
+          <span>{{ sec.title }}</span>
+        </div>
+        <div class="sec-body">{{ sec.body }}</div>
+      </div>
+    </div>
+
+    <!-- Full Detail View -->
+    <div class="ai-full-detail">
+      <div class="detail-header">
+        <mat-icon>subject</mat-icon>
+        <span>Full Detailed Report</span>
+      </div>
+      <div class="ai-result" [innerHTML]="analysisHtml"></div>
+    </div>
+
+  </div>
+
+  <!-- Empty state -->
+  <div class="ai-empty" *ngIf="!parsedReport && !analysisLoading">
+    <mat-icon class="ai-empty-icon">tips_and_updates</mat-icon>
+    <p>Click <strong>Analyze Now</strong> to get an AI-generated summary of your network health.</p>
+  </div>
+</div>
 
 </div>

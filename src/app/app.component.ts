@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list'; // MatListModule bech na
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { AiChatWidgetComponent } from './ai-chat-widget/ai-chat-widget.component';
 
 @Component({ // Hedhi décorateur y9oul l'Angular elli l'class hedhi rahi composant (This marks the class as an Angular Component)
   selector: 'app-root', // L'esem mta3 balise HTML bech n3aytou lel composant hedha (The HTML tag for this component)
@@ -16,6 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
     RouterOutlet, RouterLink, RouterLinkActive, // Nécessaires pour el routing wel navigation (Allows the app to have different URLs)
     MatSidenavModule, MatToolbarModule,
     MatListModule, MatIconModule, MatTooltipModule, MatMenuModule,
+    AiChatWidgetComponent,
   ],
   templateUrl: './app.component.html', // Fichier HTML elli fih l'interface mta3 l'composant (Path to the HTML template)
   styleUrl: './app.component.css' // Fichier CSS bech nzaynou l'composant (Path to the CSS file)
