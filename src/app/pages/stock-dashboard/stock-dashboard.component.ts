@@ -24,6 +24,8 @@ export interface StockItem {
   transfert_qte: number;
 }
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-stock-dashboard',
   standalone: true,
@@ -32,7 +34,7 @@ export interface StockItem {
     MatTableModule, MatPaginatorModule, MatSortModule,
     MatFormFieldModule, MatInputModule, MatIconModule,
     MatCardModule, MatChipsModule, MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule, TranslateModule
   ],
   templateUrl: './stock-dashboard.component.html',
   styleUrls: ['./stock-dashboard.component.css']

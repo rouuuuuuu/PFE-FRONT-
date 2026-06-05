@@ -9,6 +9,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../services/api.service';
 import { forkJoin, Subscription, interval } from 'rxjs';
 import { switchMap, takeWhile, tap } from 'rxjs/operators';
@@ -17,10 +19,17 @@ import { switchMap, takeWhile, tap } from 'rxjs/operators';
   selector: 'app-provisioning-task',
   standalone: true,
   imports: [
-    CommonModule, MatCardModule, MatFormFieldModule,
-    MatInputModule, MatTableModule,
-    MatProgressSpinnerModule, FormsModule,
-    MatAutocompleteModule, MatIconModule
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatAutocompleteModule,
+    MatSnackBarModule,
+    TranslateModule
   ],
   templateUrl: './provisioning-task.component.html',
   styleUrl: './provisioning-task.component.css'

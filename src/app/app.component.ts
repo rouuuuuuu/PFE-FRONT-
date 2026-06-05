@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list'; // MatListModule bech na
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component';
 
 @Component({ // Hedhi décorateur y9oul l'Angular elli l'class hedhi rahi composant (This marks the class as an Angular Component)
@@ -17,6 +18,7 @@ import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.componen
     RouterOutlet, RouterLink, RouterLinkActive, // Nécessaires pour el routing wel navigation (Allows the app to have different URLs)
     MatSidenavModule, MatToolbarModule,
     MatListModule, MatIconModule, MatTooltipModule, MatMenuModule,
+    TranslateModule,
     AiAssistantComponent,
   ],
   templateUrl: './app.component.html', // Fichier HTML elli fih l'interface mta3 l'composant (Path to the HTML template)
@@ -27,10 +29,17 @@ export class AppComponent implements OnInit { // Définition mta3 l'class w n'im
   isDarkMode = true;
   sidenavOpen = true;
   isAiDrawerOpen = false; // Controls the AI right-side drawer
+  currentLang = 'en';
   private isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { // Constructeur bech n'injectiwo el PLATFORM_ID (Constructor with Dependency Injection)
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private translate: TranslateService
+  ) { // Constructeur bech n'injectiwo el PLATFORM_ID (Constructor with Dependency Injection)
     this.isBrowser = isPlatformBrowser(this.platformId); // Nvériwiw si l'app texecuti fil browser, bech l'localStorage tekhdem (Avoid SSR errors with localStorage)
+    
+    // Set default and active languages
+    this.translate.setDefaultLang('en');
   }
 
   ngOnInit() {
@@ -43,6 +52,22 @@ export class AppComponent implements OnInit { // Définition mta3 l'class w n'im
       // Restore sidebar preference (default open)
       const savedSidenav = localStorage.getItem('noc-sidenav');
       if (savedSidenav === 'closed') this.sidenavOpen = false;
+
+      // Restore language preference
+      const savedLang = localStorage.getItem('noc-lang');
+      if (savedLang) {
+        this.currentLang = savedLang;
+      }
+      this.translate.use(this.currentLang);
+    }
+  }
+
+  // Language toggle
+  toggleLanguage() {
+    this.currentLang = this.currentLang === 'en' ? 'fr' : 'en';
+    this.translate.use(this.currentLang);
+    if (this.isBrowser) {
+      localStorage.setItem('noc-lang', this.currentLang);
     }
   }
 

@@ -1,29 +1,26 @@
 <div class="page-header">
   <mat-icon class="header-icon">settings</mat-icon>
   <div>
-    <h1 class="page-title">Provisioning</h1>
-    <p class="page-subtitle">Select a task below to start an automation workflow</p>
+    <h1 class="page-title">{{ 'PROV_DASH.TITLE' | translate }}</h1>
+    <p class="page-subtitle">{{ 'PROV_DASH.SUBTITLE' | translate }}</p>
   </div>
 </div>
 
-
-<div class="task-grid"> <!-- l'grid elli nhetou fiha les cartes limits values. -->
-
+<div class="task-grid">
   <mat-card *ngFor="let task of tasks" (click)="goToTask(task)" class="task-card">
-    <mat-card-header class="task-header"> <!-- header ta3 carte boundaries limitations rules string text. -->
-      <div class="task-icon-container"> <!-- l'conteneur d'icon configuration limitations settings texts strings parameters evaluation settings loop logics validation configuration format formatting limitations validations context strings texts variables. -->
-        <mat-icon class="task-icon">{{ task.icon }}</mat-icon> <!-- l'icone variables string boundaries limitation definition framework syntax parameters validation texts values definition limits rule parameter evaluation context limit texts limits bounds setting boundaries values variables. -->
-      </div> <!-- variables loop parameters syntax string bounds format definitions validations validation execution conditions configuration matching element iteration contexts limits mappings tokens token parameters texts loop contexts loop. -->
-      <mat-card-title class="task-title">{{ task.title }}</mat-card-title> <!-- titre e'task condition parsing constraint evaluation context settings validations logics contexts condition iteration validation reference texts mapping limit matching parameter limitations texts logic boundaries rules formats string token variables condition context logic loops loop boundaries string token format mapping limit bounds limits variable validation framework variables constraints boundary limits mapping definition limits configurations limits texts sequences. -->
-    </mat-card-header> <!-- configurations setting configurations constraints logic limits parameters variables loops validation. -->
+    <mat-card-header class="task-header">
+      <div class="task-icon-container">
+        <mat-icon class="task-icon">{{ task.icon }}</mat-icon>
+      </div>
+      <mat-card-title class="task-title">{{ 'PROV_DASH.TASKS.' + task.id + '_TITLE' | translate }}</mat-card-title>
+    </mat-card-header>
 
-    <mat-card-content> <!-- le contenue format boundary definitions. -->
-      <p class="task-desc">{{ task.desc }}</p> <!-- details condition validation boundaries limit sequences token mapping constraint syntax texts parsing boundaries rule syntax configurations definitions variables formatting formats texts definition format values. -->
-    </mat-card-content> <!-- variables mappings boundaries parsing mapping mapping syntax logic evaluations texts parameters tokens evaluations evaluations contexts conditions limits validation limitations iteration context string format logic references texts rule constraints elements parameters structure bounding validations string texts mapping tokens variable parsing context boundary limitation boundaries loops definition evaluations parameters parsing tokens texts variables definition limit format rule tokens framework configuration mapping logic text parsing. -->
+    <mat-card-content>
+      <p class="task-desc">{{ 'PROV_DASH.TASKS.' + task.id + '_DESC' | translate }}</p>
+    </mat-card-content>
 
-    <div class="task-arrow"> <!-- blasa d'arrow format parsing. -->
-      <mat-icon>arrow_forward</mat-icon> <!-- l'icone ymin syntax configuration boundaries mapping. -->
-    </div> <!-- format limitations string reference tokens validations parsing mapping variables rules formatting logics references logic variable reference value parsing contexts definition rule limitation values limits formats limits structure contexts logic mapping format limit execution configuration bounds loop texts bounds rules texts sequences limitations parameter validation logic configurations syntax string configurations evaluations formats evaluations parsing iteration definition evaluations boundaries syntax boundary mappings limits logics logics values syntax element boundary boundary evaluation. -->
-  </mat-card> <!-- logic structures mapping matching configuration contexts reference parameters variables boundary condition values values limits validations limits conditions setting validations constraints limits rule sequence bounds configurations logic context iterations token definitions limitation matching token validation boundary. -->
-
-</div> <!-- bounds limits strings parameters configuration configurations limitations sequence matching constraint syntax formatting. -->
+    <div class="task-arrow">
+      <mat-icon>arrow_forward</mat-icon>
+    </div>
+  </mat-card>
+</div>

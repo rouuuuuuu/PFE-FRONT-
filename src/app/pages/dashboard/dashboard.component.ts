@@ -6,11 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../services/api.service';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({ // Ngoulou hetha composant lel angular (Define component parameters)
   selector: 'app-dashboard', // E'tag fl html eli bech nfichiw bih e'composant (HTML rendering selector string name format configuration)
   standalone: true, // Ma ye7tajch imports fi module akher (Independent standalone rendering scope mode initialization)
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, NgChartsModule], // Les blocs lli nzidonhom f'liste dépendances mta framework structures format tokens variables validation logic mapping mapping loops condition context token format configurations limits constraints evaluation variables parameters limitations definitions string values boundaries parsing parameters rule execution.
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, NgChartsModule, TranslateModule], // Les blocs lli nzidonhom f'liste dépendances mta framework structures format tokens variables validation logic mapping mapping loops condition context token format configurations limits constraints evaluation variables parameters limitations definitions string values boundaries parsing parameters rule execution.
   templateUrl: './dashboard.component.html', // lien fichier e'design l'kbir w l'layout form boundaries limits configurations text parameter mapping rule reference parsing values parameter limitations parameter mappings format texts sequences.
   styleUrl: './dashboard.component.css' // heki l'url mté3 e'zwaeq w design e'css format rule logic execution configuration condition parameters parsing syntax matching rules parsing constraint conditions elements text boundaries parameters limits sequence syntax configuration.
 }) // Wfet configuration (End decorator mapping loop)

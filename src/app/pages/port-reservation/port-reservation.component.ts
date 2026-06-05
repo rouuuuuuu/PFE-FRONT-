@@ -14,6 +14,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ApiService } from '../../services/api.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-port-reservation',
@@ -31,7 +32,8 @@ import { ApiService } from '../../services/api.service';
     MatSnackBarModule,
     MatTableModule,
     MatTooltipModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    TranslateModule
   ],
   templateUrl: './port-reservation.component.html',
   styleUrls: ['./port-reservation.component.css']

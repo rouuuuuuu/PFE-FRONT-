@@ -12,6 +12,8 @@ import { ApiService } from '../../services/api.service'; // L'API mte3na bech nj
 import { Router, RouterModule } from '@angular/router'; // Router bech nnavegiw lel switch summary (Import Router for programmatic navigation)
 import { MatIconModule } from '@angular/material/icon';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({ // Ytarki l'class kima composant (Marks this class as an Angular component)
   selector: 'app-switches', // L'esem mta3 el balise HTML (HTML tag for this component)
   standalone: true, // Ma ye7tajech NgModule w ijjib koul chay wa7dou (A standalone component structure)
@@ -26,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatChipsModule, // Chips zghar (Chips)
     FormsModule, // Forms
     MatIconModule,
+    TranslateModule,
   ],
   templateUrl: './switches.component.html', // Fichier l'HTML elli yest3amlou (HTML template path)
   styleUrl: './switches.component.css' // Fichier ej'Jamaleya w dZign (CSS template path)

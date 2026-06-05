@@ -1,8 +1,8 @@
 <div class="page-header">
   <mat-icon class="header-icon">cable</mat-icon>
   <div>
-    <h1 class="page-title">Automated Port Reservation</h1>
-    <p class="page-subtitle">Reserve and bring up inactive router ports</p>
+    <h1 class="page-title">{{ 'PORT_RESERVATION.TITLE' | translate }}</h1>
+    <p class="page-subtitle">{{ 'PORT_RESERVATION.SUBTITLE' | translate }}</p>
   </div>
 </div>
 
@@ -12,12 +12,12 @@
     <!-- Row 1: Router search -->
     <div class="form-row">
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>Router (start typing to search...)</mat-label>
+        <mat-label>{{ 'PORT_RESERVATION.ROUTER_LABEL' | translate }}</mat-label>
         <input type="text" matInput
                [matAutocomplete]="auto"
                [(ngModel)]="routerSearchTerm"
                (ngModelChange)="filterRouters($event)"
-               placeholder="Search and select a Router">
+               [placeholder]="'PORT_RESERVATION.ROUTER_PLACEHOLDER' | translate">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayRouter" (optionSelected)="onRouterSelected($event.option.value)">
           <mat-option *ngFor="let router of filteredRouters" [value]="router">
             <span class="autocomplete-name">{{ router.name || router.ne_name || router.device_name || router.ip_address }}</span>
@@ -31,9 +31,9 @@
       <button class="sync-btn"
               [disabled]="!selectedRouter || loadingPorts"
               (click)="syncRouter()"
-              [matTooltip]="'Fetch ports for ' + (selectedRouter?.name || selectedRouter?.ne_name || 'selected router')">
+              [matTooltip]="'PORT_RESERVATION.SYNC_TOOLTIP' | translate">
         <mat-icon class="sync-icon" [class.spinning]="loadingPorts">sync</mat-icon>
-        <span>{{ loadingPorts ? 'Syncing...' : 'Sync Router' }}</span>
+        <span>{{ loadingPorts ? ('PORT_RESERVATION.SYNCING' | translate) : ('PORT_RESERVATION.SYNC_ROUTER' | translate) }}</span>
       </button>
     </div>
 
@@ -41,10 +41,10 @@
     <div class="form-row">
       <!-- Port dropdown -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>Select a Down Port</mat-label>
+        <mat-label>{{ 'PORT_RESERVATION.SELECT_PORT' | translate }}</mat-label>
         <mat-select [(ngModel)]="selectedPort"
                     [disabled]="!selectedRouter || loadingPorts || ports.length === 0"
-                    placeholder="Select a port...">
+                    [placeholder]="'PORT_RESERVATION.SELECT_PORT_PLACEHOLDER' | translate">
           <mat-option *ngFor="let p of ports" [value]="p" [disabled]="!isPortDown(p)">
             <span class="iface-label">{{ p.port_full_name || p.interface || p.name }}</span>
             <span class="iface-status"
@@ -54,17 +54,17 @@
             </span>
           </mat-option>
         </mat-select>
-        <mat-hint *ngIf="loadingPorts">Fetching ports...</mat-hint>
+        <mat-hint *ngIf="loadingPorts">{{ 'PORT_RESERVATION.FETCHING_PORTS' | translate }}</mat-hint>
         <mat-hint *ngIf="!loadingPorts && selectedRouter && ports.length > 0">
-          {{ ports.length }} ports found
+          {{ ports.length }} {{ 'PORT_RESERVATION.PORTS_FOUND' | translate }}
         </mat-hint>
-        <mat-hint *ngIf="!loadingPorts && selectedRouter && ports.length === 0" class="hint-warn">No ports found</mat-hint>
+        <mat-hint *ngIf="!loadingPorts && selectedRouter && ports.length === 0" class="hint-warn">{{ 'PORT_RESERVATION.NO_PORTS_FOUND' | translate }}</mat-hint>
       </mat-form-field>
 
       <!-- Description input -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>Reservation Description</mat-label>
-        <input matInput [(ngModel)]="description" placeholder="e.g. Reserved for B2B Client XYZ">
+        <mat-label>{{ 'PORT_RESERVATION.DESC_LABEL' | translate }}</mat-label>
+        <input matInput [(ngModel)]="description" [placeholder]="'PORT_RESERVATION.DESC_PLACEHOLDER' | translate">
       </mat-form-field>
     </div>
 
@@ -82,7 +82,7 @@
       <mat-icon class="arrow-icon">arrow_forward</mat-icon>
       <span class="chip chip-desc">
         <mat-icon class="chip-icon">edit_note</mat-icon>
-        {{ description || 'No Description' }}
+        {{ description || ('PORT_RESERVATION.NO_DESC' | translate) }}
       </span>
     </div>
 
@@ -93,7 +93,7 @@
               (click)="reservePort()">
         <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon>
         <mat-spinner *ngIf="submitting" diameter="18" class="btn-spinner"></mat-spinner>
-        <span>{{ submitting ? 'Reserving...' : 'Reserve & Bring Up Port' }}</span>
+        <span>{{ submitting ? ('PORT_RESERVATION.RESERVING' | translate) : ('PORT_RESERVATION.RESERVE_BTN' | translate) }}</span>
       </button>
     </div>
 

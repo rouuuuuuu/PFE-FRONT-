@@ -2,8 +2,8 @@
 <div class="page-header">
   <mat-icon class="header-icon">bolt</mat-icon>
   <div>
-    <h1 class="page-title">Bandwidth Upgrade / Downgrade</h1>
-    <p class="page-subtitle">Select a router, sync its interfaces, set the new bandwidth and execute</p>
+    <h1 class="page-title">{{ 'UPGRADE.TITLE' | translate }}</h1>
+    <p class="page-subtitle">{{ 'UPGRADE.SUBTITLE' | translate }}</p>
   </div>
 </div>
 
@@ -14,12 +14,12 @@
     <!-- Row 1: Router search + Sync button -->
     <div class="form-row">
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>Router (start typing to search...)</mat-label>
+        <mat-label>{{ 'UPGRADE.ROUTER' | translate }}</mat-label>
         <input type="text" matInput
                [(ngModel)]="searchQuery"
                (ngModelChange)="filterDevices($event)"
                [matAutocomplete]="routerAuto"
-               placeholder="ex: ARI_0008_NE8000_M8_0139"
+               [placeholder]="'UPGRADE.ROUTER_PLACEHOLDER' | translate"
                id="router-search-input">
         <mat-autocomplete #routerAuto="matAutocomplete" (optionSelected)="onDeviceAutoSelected($event)">
           <mat-option *ngFor="let dev of filteredDevicesList" [value]="dev.ne_name">
@@ -27,7 +27,7 @@
             <span class="autocomplete-ip">({{ dev.ip_address }})</span>
           </mat-option>
           <mat-option *ngIf="filteredDevicesList.length === 0" disabled>
-            No routers found
+            {{ 'UPGRADE.NO_ROUTERS' | translate }}
           </mat-option>
         </mat-autocomplete>
         <mat-icon matSuffix *ngIf="loadingDevices">hourglass_empty</mat-icon>
@@ -37,10 +37,10 @@
       <button class="sync-btn"
               [disabled]="!selectedDevice || syncingRouter"
               (click)="syncRouter()"
-              [matTooltip]="'Fetch interfaces for ' + (selectedDevice?.ne_name || 'selected router')"
+              [matTooltip]="('UPGRADE.SYNC_ROUTER' | translate)"
               id="sync-router-btn">
         <mat-icon class="sync-icon" [class.spinning]="syncingRouter">sync</mat-icon>
-        <span>{{ syncingRouter ? 'Syncing...' : 'Sync Router' }}</span>
+        <span>{{ syncingRouter ? ('UPGRADE.SYNCING' | translate) : ('UPGRADE.SYNC_ROUTER' | translate) }}</span>
       </button>
     </div>
 
@@ -49,11 +49,11 @@
 
       <!-- Interface dropdown -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>Interface</mat-label>
+        <mat-label>{{ 'UPGRADE.INTERFACE' | translate }}</mat-label>
         <mat-select [(ngModel)]="selectedPort"
                     (ngModelChange)="onPortSelected()"
                     [disabled]="!syncDone || portOptions.length === 0"
-                    placeholder="Sync router first"
+                    [placeholder]="'UPGRADE.SYNC_FIRST' | translate"
                     id="interface-select">
           <mat-option *ngFor="let p of portOptions" [value]="p">
             <span class="iface-label">{{ p.interface }}</span>
@@ -66,24 +66,24 @@
           </mat-option>
         </mat-select>
         <mat-hint *ngIf="syncDone && portOptions.length > 0">
-          {{ portOptions.length }} interfaces loaded
+          {{ portOptions.length }} {{ 'UPGRADE.IFACES_LOADED' | translate }}
         </mat-hint>
-        <mat-hint *ngIf="syncDone && portOptions.length === 0" class="hint-warn">No interfaces found</mat-hint>
+        <mat-hint *ngIf="syncDone && portOptions.length === 0" class="hint-warn">{{ 'UPGRADE.NO_IFACES' | translate }}</mat-hint>
       </mat-form-field>
 
       <!-- New Bandwidth with old BW hint -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>New Bandwidth (Mbps)</mat-label>
+        <mat-label>{{ 'UPGRADE.NEW_BW' | translate }}</mat-label>
         <input matInput type="number" min="1"
                [(ngModel)]="newBandwidth"
-               placeholder="ex: 100"
+               [placeholder]="'UPGRADE.EX_BW' | translate"
                id="new-bandwidth-input">
         <span matSuffix class="bw-suffix">Mbps</span>
         <mat-hint *ngIf="knownOldBandwidth !== null" class="hint-old-bw">
-          Current: {{ knownOldBandwidth }} Mbps (from last recorded upgrade)
+          {{ 'UPGRADE.CURRENT_BW' | translate:{bw: knownOldBandwidth} }}
         </mat-hint>
         <mat-hint *ngIf="selectedPort && knownOldBandwidth === null" class="hint-warn">
-          No previous bandwidth record found
+          {{ 'UPGRADE.NO_PREV_BW' | translate }}
         </mat-hint>
       </mat-form-field>
     </div>
@@ -122,7 +122,7 @@
           <mat-icon class="chip-icon">
             {{ newBandwidth > knownOldBandwidth ? 'trending_up' : newBandwidth < knownOldBandwidth ? 'trending_down' : 'trending_flat' }}
           </mat-icon>
-          {{ newBandwidth > knownOldBandwidth ? 'Upgrade' : newBandwidth < knownOldBandwidth ? 'Downgrade' : 'No Change' }}
+          {{ newBandwidth > knownOldBandwidth ? ('UPGRADE.UPGRADE' | translate) : newBandwidth < knownOldBandwidth ? ('UPGRADE.DOWNGRADE' | translate) : ('UPGRADE.NO_CHANGE' | translate) }}
         </span>
       </ng-container>
     </div>
@@ -135,7 +135,7 @@
               id="execute-task-btn">
         <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon>
         <mat-spinner *ngIf="submitting" diameter="18" class="btn-spinner"></mat-spinner>
-        <span>{{ submitting ? 'Executing...' : 'Execute Task' }}</span>
+        <span>{{ submitting ? ('UPGRADE.EXECUTING' | translate) : ('UPGRADE.EXECUTE_TASK' | translate) }}</span>
       </button>
     </div>
 
@@ -144,12 +144,12 @@
 
 <!-- ── History Section ── -->
 <div class="history-header">
-  <h3 class="history-title">Bandwidth Upgrade History</h3>
+  <h3 class="history-title">{{ 'UPGRADE.HISTORY_TITLE' | translate }}</h3>
   <div class="history-controls">
     <!-- Search -->
     <mat-form-field appearance="outline" class="history-search" floatLabel="always">
-      <mat-label>Search</mat-label>
-      <input matInput [(ngModel)]="searchHistoryQuery" placeholder="Router, customer, interface...">
+      <mat-label>{{ 'UPGRADE.SEARCH' | translate }}</mat-label>
+      <input matInput [(ngModel)]="searchHistoryQuery" [placeholder]="'UPGRADE.SEARCH_PLACEHOLDER' | translate">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
     <!-- Filter -->
@@ -158,7 +158,7 @@
               class="filter-tab"
               [class.active]="filterStatus === f"
               (click)="filterStatus = f; onFilterChange()">
-        {{ f === 'in_progress' ? 'In Progress' : (f | titlecase) }}
+        {{ 'PROVISIONING.STATUS_' + (f | uppercase) | translate }}
       </button>
     </div>
   </div>
@@ -169,13 +169,13 @@
 
     <!-- ID -->
     <ng-container matColumnDef="upgrade_id">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">#ID</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'UPGRADE.COL_ID' | translate }}</th>
       <td mat-cell *matCellDef="let u" class="td-id">{{ u.upgrade_id }}</td>
     </ng-container>
 
     <!-- Device -->
     <ng-container matColumnDef="device_name">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">Router</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'UPGRADE.COL_ROUTER' | translate }}</th>
       <td mat-cell *matCellDef="let u" class="td-bold">
         <div class="device-cell">
           <mat-icon class="cell-icon">router</mat-icon>
@@ -189,7 +189,7 @@
 
     <!-- Interface -->
     <ng-container matColumnDef="interface">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">Interface</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'UPGRADE.COL_INTERFACE' | translate }}</th>
       <td mat-cell *matCellDef="let u" class="td-secondary">
         {{ u.interface }}{{ u.vlan ? '.' + u.vlan : '' }}
       </td>
@@ -197,13 +197,13 @@
 
     <!-- Customer -->
     <ng-container matColumnDef="customer_name">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">Customer</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'UPGRADE.COL_CUSTOMER' | translate }}</th>
       <td mat-cell *matCellDef="let u" class="td-secondary">{{ u.customer_name || '-' }}</td>
     </ng-container>
 
     <!-- Bandwidth -->
     <ng-container matColumnDef="bandwidth">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">Bandwidth</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'UPGRADE.COL_BANDWIDTH' | translate }}</th>
       <td mat-cell *matCellDef="let u">
         <div class="bw-cell">
           <span class="bw-old">{{ u.old_bandwidth_mbps !== null ? u.old_bandwidth_mbps + ' Mbps' : 'N/A' }}</span>
@@ -215,40 +215,40 @@
 
     <!-- Direction -->
     <ng-container matColumnDef="is_upgrade">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">Type</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'UPGRADE.COL_TYPE' | translate }}</th>
       <td mat-cell *matCellDef="let u">
         <span class="type-badge" [class.upgrade]="u.is_upgrade === true" [class.downgrade]="u.is_upgrade === false">
-          {{ u.is_upgrade === null ? 'N/A' : u.is_upgrade ? 'Upgrade' : 'Downgrade' }}
+          {{ u.is_upgrade === null ? 'N/A' : u.is_upgrade ? ('UPGRADE.UPGRADE' | translate) : ('UPGRADE.DOWNGRADE' | translate) }}
         </span>
       </td>
     </ng-container>
 
     <!-- Status -->
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">Status</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">{{ 'UPGRADE.COL_STATUS' | translate }}</th>
       <td mat-cell *matCellDef="let u" class="td-center">
         <span class="status-badge" [class]="getStatusClass(u.status)">
           <mat-icon class="status-icon-sm">{{ getStatusIcon(u.status) }}</mat-icon>
-          {{ u.status | titlecase }}
+          {{ 'PROVISIONING.STATUS_' + (u.status | uppercase) | translate }}
         </span>
       </td>
     </ng-container>
 
     <!-- Date -->
     <ng-container matColumnDef="created_at">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">Requested On</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'UPGRADE.COL_DATE' | translate }}</th>
       <td mat-cell *matCellDef="let u" class="td-secondary small">{{ u.created_at | date:'dd/MM/yy HH:mm' }}</td>
     </ng-container>
 
     <!-- SWAN Ticket -->
     <ng-container matColumnDef="swan_ticket">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">SWAN Ticket</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'UPGRADE.COL_TICKET' | translate }}</th>
       <td mat-cell *matCellDef="let u" class="td-ticket">{{ generateSwanTicket(u) }}</td>
     </ng-container>
 
     <!-- Download Config -->
     <ng-container matColumnDef="download">
-      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">Config</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">{{ 'UPGRADE.COL_CONFIG' | translate }}</th>
       <td mat-cell *matCellDef="let u" class="td-center">
         <button class="dl-btn"
                 (click)="downloadConfig(u)"
@@ -263,20 +263,20 @@
     <tr mat-row *matRowDef="let row; columns: columns;" class="table-row"></tr>
 
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell td-empty" colspan="9">No upgrade history found.</td>
+      <td class="mat-cell td-empty" colspan="9">{{ 'UPGRADE.NO_HISTORY' | translate }}</td>
     </tr>
   </table>
 
   <!-- Custom Pagination -->
   <div class="pagination-container" *ngIf="filteredUpgrades.length > 0">
     <button class="page-btn" (click)="prevHistoryPage()" [disabled]="historyPage === 0">
-      Previous
+      {{ 'UPGRADE.PREVIOUS' | translate }}
     </button>
     <span class="page-info">
-      Page {{ historyPage + 1 }} of {{ totalHistoryPages }}
+      {{ 'UPGRADE.PAGE_INFO' | translate:{current: historyPage + 1, total: totalHistoryPages} }}
     </span>
     <button class="page-btn" (click)="nextHistoryPage()" [disabled]="historyPage >= totalHistoryPages - 1">
-      Next
+      {{ 'UPGRADE.NEXT' | translate }}
     </button>
   </div>
 </mat-card>
@@ -292,26 +292,26 @@
     </div>
     <div class="modal-body" *ngIf="selectedUpgradeDetail">
       <div class="detail-grid">
-        <div class="detail-item"><span class="detail-label">Router</span><span>{{ selectedUpgradeDetail.device_name }}</span></div>
+        <div class="detail-item"><span class="detail-label">{{ 'UPGRADE.COL_ROUTER' | translate }}</span><span>{{ selectedUpgradeDetail.device_name }}</span></div>
         <div class="detail-item"><span class="detail-label">IP</span><span>{{ selectedUpgradeDetail.device_ip }}</span></div>
-        <div class="detail-item"><span class="detail-label">Interface</span><span>{{ selectedUpgradeDetail.interface }}</span></div>
-        <div class="detail-item"><span class="detail-label">Customer</span><span>{{ selectedUpgradeDetail.customer_name }}</span></div>
-        <div class="detail-item"><span class="detail-label">Old BW</span><span>{{ selectedUpgradeDetail.old_bandwidth_mbps ?? 'N/A' }} Mbps</span></div>
-        <div class="detail-item"><span class="detail-label">New BW</span><span>{{ selectedUpgradeDetail.new_bandwidth_mbps }} Mbps</span></div>
-        <div class="detail-item"><span class="detail-label">Status</span><span>{{ selectedUpgradeDetail.status | titlecase }}</span></div>
-        <div class="detail-item"><span class="detail-label">Date</span><span>{{ selectedUpgradeDetail.created_at | date:'medium' }}</span></div>
+        <div class="detail-item"><span class="detail-label">{{ 'UPGRADE.COL_INTERFACE' | translate }}</span><span>{{ selectedUpgradeDetail.interface }}</span></div>
+        <div class="detail-item"><span class="detail-label">{{ 'UPGRADE.COL_CUSTOMER' | translate }}</span><span>{{ selectedUpgradeDetail.customer_name }}</span></div>
+        <div class="detail-item"><span class="detail-label">{{ 'UPGRADE.OLD_BW' | translate }}</span><span>{{ selectedUpgradeDetail.old_bandwidth_mbps ?? 'N/A' }} Mbps</span></div>
+        <div class="detail-item"><span class="detail-label">{{ 'UPGRADE.NEW_BW' | translate }}</span><span>{{ selectedUpgradeDetail.new_bandwidth_mbps }} Mbps</span></div>
+        <div class="detail-item"><span class="detail-label">{{ 'UPGRADE.COL_STATUS' | translate }}</span><span>{{ 'PROVISIONING.STATUS_' + (selectedUpgradeDetail.status | uppercase) | translate }}</span></div>
+        <div class="detail-item"><span class="detail-label">{{ 'UPGRADE.COL_DATE' | translate }}</span><span>{{ selectedUpgradeDetail.created_at | date:'medium' }}</span></div>
       </div>
       <div class="detail-commands">
-        <div class="detail-label">Generated Commands</div>
+        <div class="detail-label">{{ 'UPGRADE.GENERATED_CMD' | translate }}</div>
         <pre class="commands-pre">{{ selectedUpgradeDetail.generated_commands || '(none)' }}</pre>
       </div>
       <div class="modal-footer">
         <button class="run-btn" (click)="downloadConfig(selectedUpgradeDetail)">
-          <mat-icon>download</mat-icon> Download Config
+          <mat-icon>download</mat-icon> {{ 'UPGRADE.DOWNLOAD_CONFIG' | translate }}
         </button>
         <button class="retry-btn" *ngIf="selectedUpgradeDetail.status === 'failed'"
                 (click)="retryUpgrade(selectedUpgradeDetail.upgrade_id); closeDetailModal()">
-          <mat-icon>refresh</mat-icon> Retry
+          <mat-icon>refresh</mat-icon> {{ 'UPGRADE.RETRY' | translate }}
         </button>
       </div>
     </div>

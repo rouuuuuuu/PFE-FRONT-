@@ -9,19 +9,19 @@
       <div>
         <h1 class="header-title">Iris</h1>
         <p class="header-sub">
-          Iris AI Engine
+          {{ 'AI.ENGINE' | translate }}
           <span class="mode-badge mode-badge-native">
             <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle">lock</mat-icon>
-            Native Engine (Offline)
+            {{ 'AI.NATIVE_ENGINE' | translate }}
           </span>
         </p>
       </div>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" matTooltip="Clear conversation" (click)="clearChat()">
+      <button class="icon-btn" [matTooltip]="'AI.CLEAR_CHAT' | translate" (click)="clearChat()">
         <mat-icon>refresh</mat-icon>
       </button>
-      <button class="icon-btn" matTooltip="Close" (click)="closeSidenav.emit()">
+      <button class="icon-btn" [matTooltip]="'AI.CLOSE' | translate" (click)="closeSidenav.emit()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -39,12 +39,12 @@
             {{ stats?.critical_sfps ?? '—' }}
           </ng-container>
         </div>
-        <div class="kpi-label">SFP Critiques</div>
+        <div class="kpi-label">{{ 'AI.CRITICAL_SFPS' | translate }}</div>
         <div class="kpi-trend" [class.trend-bad]="(stats?.critical_sfps ?? 0) > 0">
           <mat-icon class="trend-icon">
             {{ (stats?.critical_sfps ?? 0) > 0 ? 'warning' : 'check_circle' }}
           </mat-icon>
-          {{ (stats?.critical_sfps ?? 0) > 0 ? 'Action required' : 'Nominal' }}
+          {{ (stats?.critical_sfps ?? 0) > 0 ? ('AI.ACTION_REQUIRED' | translate) : ('AI.NOMINAL' | translate) }}
         </div>
       </div>
     </div>
@@ -59,12 +59,12 @@
             {{ stats?.down_ports ?? '—' }}
           </ng-container>
         </div>
-        <div class="kpi-label">Ports Down</div>
+        <div class="kpi-label">{{ 'AI.PORTS_DOWN' | translate }}</div>
         <div class="kpi-trend" [class.trend-bad]="(stats?.down_ports ?? 0) > 0">
           <mat-icon class="trend-icon">
             {{ (stats?.down_ports ?? 0) > 0 ? 'arrow_downward' : 'check_circle' }}
           </mat-icon>
-          {{ (stats?.down_ports ?? 0) > 0 ? 'Out of service' : 'Nominal' }}
+          {{ (stats?.down_ports ?? 0) > 0 ? ('AI.OUT_OF_SERVICE' | translate) : ('AI.NOMINAL' | translate) }}
         </div>
       </div>
     </div>
@@ -79,12 +79,12 @@
             {{ stats?.critical_links ?? '—' }}
           </ng-container>
         </div>
-        <div class="kpi-label">Liens Critiques</div>
+        <div class="kpi-label">{{ 'AI.CRITICAL_LINKS' | translate }}</div>
         <div class="kpi-trend" [class.trend-bad]="(stats?.critical_links ?? 0) > 0">
           <mat-icon class="trend-icon">
             {{ (stats?.critical_links ?? 0) > 0 ? 'link_off' : 'check_circle' }}
           </mat-icon>
-          {{ (stats?.critical_links ?? 0) > 0 ? 'Degraded' : 'Nominal' }}
+          {{ (stats?.critical_links ?? 0) > 0 ? ('AI.DEGRADED' | translate) : ('AI.NOMINAL' | translate) }}
         </div>
       </div>
     </div>
@@ -99,10 +99,10 @@
             {{ stats?.total_routers ?? '—' }}
           </ng-container>
         </div>
-        <div class="kpi-label">Routeurs Totaux</div>
+        <div class="kpi-label">{{ 'AI.TOTAL_ROUTERS' | translate }}</div>
         <div class="kpi-trend trend-ok">
           <mat-icon class="trend-icon">device_hub</mat-icon>
-          Inventoried
+          {{ 'AI.INVENTORIED' | translate }}
         </div>
       </div>
     </div>
@@ -118,11 +118,11 @@
     <div class="control-bar">
       <div class="engine-badge">
         <mat-icon class="engine-icon">security</mat-icon>
-        <span>Rule-based engine &middot; 100% offline &middot; Secure</span>
+        <span>{{ 'AI.RULE_BASED' | translate }} &middot; {{ 'AI.OFFLINE' | translate }} &middot; {{ 'AI.SECURE' | translate }}</span>
       </div>
-      <button class="clear-btn" (click)="clearChat()" matTooltip="Clear conversation">
+      <button class="clear-btn" (click)="clearChat()" [matTooltip]="'AI.CLEAR_CHAT' | translate">
         <mat-icon>delete_sweep</mat-icon>
-        <span>Clear</span>
+        <span>{{ 'AI.CLEAR' | translate }}</span>
       </button>
     </div>
 
@@ -132,7 +132,7 @@
 
         <div *ngIf="messages.length === 0" class="chat-empty">
           <mat-icon>chat_bubble_outline</mat-icon>
-          <p>Start a conversation with the network assistant.</p>
+          <p>{{ 'AI.START_CONVERSATION' | translate }}</p>
         </div>
 
         <div *ngFor="let msg of messages" class="message-row" [class.row-user]="msg.role === 'user'"
@@ -158,7 +158,7 @@
             <mat-icon>smart_toy</mat-icon>
           </div>
           <div class="thinking-bubble">
-            <span class="thinking-text">AI is thinking</span>
+            <span class="thinking-text">{{ 'AI.THINKING' | translate }}</span>
             <div class="thinking-dots">
               <span></span><span></span><span></span>
             </div>
@@ -180,12 +180,12 @@
         <div class="input-wrapper" [class.input-wrapper-loading]="isLoading">
           <textarea #textareaInput class="chat-textarea" rows="1" [(ngModel)]="userInput" (keydown)="onKeyDown($event)"
             (input)="autoResize($event)"
-            placeholder="Ask a question about the network…  (Enter = send, Shift+Enter = new line)"
+            [placeholder]="'AI.INPUT_PLACEHOLDER' | translate"
             [disabled]="isLoading">
           </textarea>
 
           <button class="send-btn" [class.send-btn-active]="userInput.trim().length > 0" (click)="sendMessage()"
-            [disabled]="isLoading || !userInput.trim()" matTooltip="Send (Enter)">
+            [disabled]="isLoading || !userInput.trim()" [matTooltip]="'AI.SEND' | translate">
             <mat-icon *ngIf="!isLoading">send</mat-icon>
             <mat-icon *ngIf="isLoading" class="spin-icon">autorenew</mat-icon>
           </button>
@@ -194,9 +194,9 @@
         <div class="input-footer">
           <span class="input-hint">
             <mat-icon class="hint-icon">lock</mat-icon>
-            Local engine active — data stays secure
+            {{ 'AI.LOCAL_ENGINE_ACTIVE' | translate }}
           </span>
-          <span class="char-count" *ngIf="userInput.length > 0">{{ userInput.length }} chars</span>
+          <span class="char-count" *ngIf="userInput.length > 0">{{ userInput.length }} {{ 'AI.CHARS' | translate }}</span>
         </div>
 
       </div>

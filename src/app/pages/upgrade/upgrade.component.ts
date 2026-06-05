@@ -13,6 +13,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../services/api.service';
 
 interface Device {
@@ -55,11 +57,19 @@ interface Upgrade {
   selector: 'app-upgrade',
   standalone: true,
   imports: [
-    CommonModule, FormsModule,
-    MatIconModule, MatProgressSpinnerModule,
-    MatCardModule, MatFormFieldModule, MatInputModule,
-    MatSelectModule, MatTableModule,
-    MatAutocompleteModule, MatTooltipModule
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatAutocompleteModule,
+    MatTableModule,
+    MatTooltipModule,
+    TranslateModule
   ],
   templateUrl: './upgrade.component.html',
   styleUrls: ['./upgrade.component.css']

@@ -1,14 +1,14 @@
 <div class="page-header">
   <mat-icon class="header-icon">dashboard</mat-icon>
   <div>
-    <h1 class="page-title">NOC Dashboard</h1>
-    <p class="page-subtitle">Live network overview · click any card to see the distribution chart</p>
+    <h1 class="page-title">{{ 'DASHBOARD.TITLE' | translate }}</h1>
+    <p class="page-subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
   </div>
 </div>
 
 <div *ngIf="loading" class="loading-container">
   <mat-spinner class="loading-spinner"></mat-spinner>
-  <p class="loading-text">Loading network data...</p>
+  <p class="loading-text">{{ 'DASHBOARD.LOADING' | translate }}</p>
 </div>
 
 <div *ngIf="!loading && stats" class="page-fade-in">
@@ -21,11 +21,11 @@
       <mat-card-content>
         <div class="stat-header">
           <mat-icon class="stat-icon icon-orange">router</mat-icon>
-          <p class="stat-label">Total Routers</p>
+          <p class="stat-label">{{ 'DASHBOARD.TOTAL_ROUTERS' | translate }}</p>
         </div>
         <h1 class="stat-value">{{ stats.devices.routers }}</h1>
         <p class="sub-stat">
-          <span class="filter-title">By Vendor:</span>
+          <span class="filter-title">{{ 'DASHBOARD.BY_VENDOR' | translate }}</span>
           <span class="chip chip--green">Huawei: {{ getVendorCount('huawei') }}</span>
           <span class="chip chip--yellow">Cisco: {{ getVendorCount('cisco') }}</span>
           <span class="chip chip--blue">Juniper: {{ getVendorCount('juniper') }}</span>
@@ -38,11 +38,11 @@
       <mat-card-content>
         <div class="stat-header">
           <mat-icon class="stat-icon icon-indigo">device_hub</mat-icon>
-          <p class="stat-label">Total Switches</p>
+          <p class="stat-label">{{ 'DASHBOARD.TOTAL_SWITCHES' | translate }}</p>
         </div>
         <h1 class="stat-value">{{ getTotalSwitches() }}</h1>
         <p class="sub-stat">
-          <span class="filter-title">Model:</span>
+          <span class="filter-title">{{ 'DASHBOARD.MODEL' | translate }}</span>
           <span class="chip chip--indigo">Juniper EX Series</span>
         </p>
       </mat-card-content>
@@ -50,18 +50,17 @@
 
     <!-- Backhaul Links — green / red conditional -->
     <mat-card class="stat-card clickable" (click)="toggleChart('links')"
-      [class.border-green]="stats.backhaul_links.alarm === 0"
-      [class.border-red]="stats.backhaul_links.alarm > 0">
+      [class.border-green]="stats.backhaul_links.alarm === 0" [class.border-red]="stats.backhaul_links.alarm > 0">
       <mat-card-content>
         <div class="stat-header">
           <mat-icon class="stat-icon icon-green">link</mat-icon>
-          <p class="stat-label">Backhaul Links</p>
+          <p class="stat-label">{{ 'DASHBOARD.BACKHAUL_LINKS' | translate }}</p>
         </div>
         <h1 class="stat-value">{{ stats.backhaul_links.total }}</h1>
         <p class="sub-stat">
-          <span class="filter-title">Status:</span>
-          <span class="chip chip--green">Normal: {{ stats.backhaul_links.normal }}</span>
-          <span class="chip chip--red">Alarm: {{ stats.backhaul_links.alarm }}</span>
+          <span class="filter-title">{{ 'DASHBOARD.STATUS' | translate }}</span>
+          <span class="chip chip--green">{{ 'DASHBOARD.NORMAL' | translate }}: {{ stats.backhaul_links.normal }}</span>
+          <span class="chip chip--red">{{ 'DASHBOARD.ALARM' | translate }}: {{ stats.backhaul_links.alarm }}</span>
         </p>
       </mat-card-content>
     </mat-card>
@@ -72,7 +71,7 @@
   <div class="chart-expansion" *ngIf="expandedRow === 'top'">
     <mat-card class="chart-inner-card">
       <mat-card-header>
-        <mat-card-title>{{ chartTitle }} Distribution</mat-card-title>
+        <mat-card-title>{{ 'DASHBOARD.DISTRIBUTION' | translate:{chartTitle: chartTitle} }}</mat-card-title>
       </mat-card-header>
       <mat-card-content class="chart-body">
         <div class="canvas-wrapper">
@@ -90,13 +89,13 @@
       <mat-card-content>
         <div class="stat-header">
           <mat-icon class="stat-icon icon-blue">settings_ethernet</mat-icon>
-          <p class="stat-label">Ports</p>
+          <p class="stat-label">{{ 'DASHBOARD.PORTS' | translate }}</p>
         </div>
         <h1 class="stat-value">{{ stats.hardware.ports.total }}</h1>
         <p class="sub-stat">
-          <span class="filter-title">Status:</span>
-          <span class="chip chip--green">Up: {{ stats.hardware.ports.up }}</span>
-          <span class="chip chip--red">Down: {{ stats.hardware.ports.down }}</span>
+          <span class="filter-title">{{ 'DASHBOARD.STATUS' | translate }}</span>
+          <span class="chip chip--green">{{ 'DASHBOARD.UP' | translate }}: {{ stats.hardware.ports.up }}</span>
+          <span class="chip chip--red">{{ 'DASHBOARD.DOWN' | translate }}: {{ stats.hardware.ports.down }}</span>
         </p>
       </mat-card-content>
     </mat-card>
@@ -106,12 +105,14 @@
       <mat-card-content>
         <div class="stat-header">
           <mat-icon class="stat-icon icon-amber">memory</mat-icon>
-          <p class="stat-label">Cards</p>
+          <p class="stat-label">{{ 'DASHBOARD.CARDS' | translate }}</p>
         </div>
         <h1 class="stat-value">{{ stats.hardware.cards.total }}</h1>
-        <p class="sub-stat" *ngIf="getHardwareBreakdown('cards', 'by_board_type', ['#ffca28','#ffa726','#ff7043','#ab47bc','#42a5f5']) as chips">
-          <span class="filter-title">By Board Type:</span>
-          <span *ngFor="let chip of chips" class="chip" [style.background]="chip.hexColor + '20'" [style.color]="chip.hexColor" [style.border]="'1px solid ' + chip.hexColor + '40'">
+        <p class="sub-stat"
+          *ngIf="getHardwareBreakdown('cards', 'by_board_type', ['#ffca28','#ffa726','#ff7043','#ab47bc','#42a5f5']) as chips">
+          <span class="filter-title">{{ 'DASHBOARD.BY_BOARD_TYPE' | translate }}</span>
+          <span *ngFor="let chip of chips" class="chip" [style.background]="chip.hexColor + '20'"
+            [style.color]="chip.hexColor" [style.border]="'1px solid ' + chip.hexColor + '40'">
             {{ chip.label | slice:0:15 }}{{ chip.label.length > 15 ? '...' : '' }}: {{ chip.count }}
           </span>
         </p>
@@ -123,12 +124,14 @@
       <mat-card-content>
         <div class="stat-header">
           <mat-icon class="stat-icon icon-cyan">flash_on</mat-icon>
-          <p class="stat-label">SFPs</p>
+          <p class="stat-label">{{ 'DASHBOARD.SFPS' | translate }}</p>
         </div>
         <h1 class="stat-value">{{ stats.hardware.sfps.total }}</h1>
-        <p class="sub-stat" *ngIf="getHardwareBreakdown('sfps', 'by_type', ['#4dd0e1','#26c6da','#00acc1','#80deea','#b2ebf2']) as chips">
-          <span class="filter-title">By Type:</span>
-          <span *ngFor="let chip of chips" class="chip" [style.background]="chip.hexColor + '20'" [style.color]="chip.hexColor" [style.border]="'1px solid ' + chip.hexColor + '40'">
+        <p class="sub-stat"
+          *ngIf="getHardwareBreakdown('sfps', 'by_type', ['#4dd0e1','#26c6da','#00acc1','#80deea','#b2ebf2']) as chips">
+          <span class="filter-title">{{ 'DASHBOARD.BY_TYPE' | translate }}</span>
+          <span *ngFor="let chip of chips" class="chip" [style.background]="chip.hexColor + '20'"
+            [style.color]="chip.hexColor" [style.border]="'1px solid ' + chip.hexColor + '40'">
             {{ chip.label }}: {{ chip.count }}
           </span>
         </p>
@@ -140,12 +143,14 @@
       <mat-card-content>
         <div class="stat-header">
           <mat-icon class="stat-icon icon-purple">dashboard_customize</mat-icon>
-          <p class="stat-label">SubCards</p>
+          <p class="stat-label">{{ 'DASHBOARD.SUBCARDS' | translate }}</p>
         </div>
         <h1 class="stat-value">{{ stats.hardware.subcards?.total ?? '—' }}</h1>
-        <p class="sub-stat" *ngIf="getHardwareBreakdown('subcards', 'by_board_type', ['#ce93d8','#ba68c8','#9c27b0','#e1bee7','#7b1fa2']) as chips">
-          <span class="filter-title">By Board Type:</span>
-          <span *ngFor="let chip of chips" class="chip" [style.background]="chip.hexColor + '20'" [style.color]="chip.hexColor" [style.border]="'1px solid ' + chip.hexColor + '40'">
+        <p class="sub-stat"
+          *ngIf="getHardwareBreakdown('subcards', 'by_board_type', ['#ce93d8','#ba68c8','#9c27b0','#e1bee7','#7b1fa2']) as chips">
+          <span class="filter-title">{{ 'DASHBOARD.BY_BOARD_TYPE' | translate }}</span>
+          <span *ngFor="let chip of chips" class="chip" [style.background]="chip.hexColor + '20'"
+            [style.color]="chip.hexColor" [style.border]="'1px solid ' + chip.hexColor + '40'">
             {{ chip.label | slice:0:15 }}{{ chip.label.length > 15 ? '...' : '' }}: {{ chip.count }}
           </span>
         </p>
@@ -158,7 +163,7 @@
   <div class="chart-expansion" *ngIf="expandedRow === 'bottom'">
     <mat-card class="chart-inner-card">
       <mat-card-header>
-        <mat-card-title>{{ chartTitle }} Details</mat-card-title>
+        <mat-card-title>{{ 'DASHBOARD.DISTRIBUTION' | translate:{chartTitle: chartTitle} }}</mat-card-title>
       </mat-card-header>
       <mat-card-content class="chart-body">
         <div class="canvas-wrapper">

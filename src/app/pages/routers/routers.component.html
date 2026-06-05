@@ -1,22 +1,22 @@
 <div class="page-header">
   <mat-icon class="header-icon">router</mat-icon>
   <div>
-    <h1 class="page-title">Routers</h1>
-    <p class="page-subtitle">All network routers · search and filter below</p>
+    <h1 class="page-title">{{ 'ROUTERS.TITLE' | translate }}</h1>
+    <p class="page-subtitle">{{ 'ROUTERS.SUBTITLE' | translate }}</p>
   </div>
 </div>
 
 
 <div class="filters-row"> <!-- L'kollha fi ligne we7ed bech n7ottou l'kwaritt d'filtres (Flex row for search/filter inputs) -->
   <mat-form-field appearance="outline" class="search-field" floatLabel="always"> <!-- Bloc mta3 recherche bil contour Material (Material outline form field for text search) -->
-    <mat-label>Search by name or IP</mat-label> <!-- Label mta3 l'input chnouwa yekhdem (Label indicating what to search for) -->
-    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="ex: TUN_0001 or 10.51.2.1" /> <!-- Champ lil ktiba mrabout bil variable w ydewwer fonction mba3d change (Input field bound to searchTerm model triggering applyFilter) -->
+    <mat-label>{{ 'ROUTERS.SEARCH_LABEL' | translate }}</mat-label> <!-- Label mta3 l'input chnouwa yekhdem (Label indicating what to search for) -->
+    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" [placeholder]="'ROUTERS.SEARCH_PLACEHOLDER' | translate" /> <!-- Champ lil ktiba mrabout bil variable w ydewwer fonction mba3d change (Input field bound to searchTerm model triggering applyFilter) -->
   </mat-form-field> <!-- Wfa bloc el recherche (End search field) -->
 
   <mat-form-field appearance="outline" class="filter-field" floatLabel="always"> <!-- Bloc theni lel select box (Material outline form field for select dropdown) -->
-    <mat-label>Filter by vendor</mat-label> <!-- L'etiquette (Dropdown label) -->
+    <mat-label>{{ 'ROUTERS.FILTER_LABEL' | translate }}</mat-label> <!-- L'etiquette (Dropdown label) -->
     <mat-select [(ngModel)]="vendorFilter" (ngModelChange)="applyFilter()"> <!-- L'liste dropdown litbadel el vendorFilter (Material select component bound to vendorFilter) -->
-      <mat-option value="">All</mat-option> <!-- Choix ywarri l'koll (Option for no filtering / all vendors) -->
+      <mat-option value="">{{ 'ROUTERS.ALL' | translate }}</mat-option> <!-- Choix ywarri l'koll (Option for no filtering / all vendors) -->
       <mat-option value="huawei">Huawei</mat-option> <!-- Choix Huawei (Option for Huawei) -->
       <mat-option value="juniper">Juniper</mat-option> <!-- Choix Juniper (Option for Juniper) -->
       <mat-option value="cisco">Cisco</mat-option> <!-- Choix Cisco (Option for Cisco) -->
@@ -31,7 +31,7 @@
 <mat-card *ngIf="!loading"> <!-- L'war9a mta3 l'tableau tatla3 ken loading kba (Material card displayed when loading completes) -->
   <mat-card-content class="card-body"> <!-- L'mo7tawa dakhil l'war9a (Content area of the card) -->
     <p class="stats-text"> <!-- Jomla mta3 e'statistiques l'fouq (Paragraph showing pagination stats) -->
-      Showing {{ pagedRouters.length }} of {{ filteredRouters.length }} routers (Total: {{ routers.length }}) <!-- Ne7sbou 9adech mn k3ba famma fel view (Dynamic text showing items counts) -->
+      {{ 'ROUTERS.SHOWING' | translate:{count: pagedRouters.length, filtered: filteredRouters.length, total: routers.length} }} <!-- Ne7sbou 9adech mn k3ba famma fel view (Dynamic text showing items counts) -->
     </p> <!-- Wfet ej'jomla (End stats paragraph) -->
 
     <div class="table-scroll"> <!-- Div bech ynjem l'tableau yascrolli horizontalement (Scroll wrapper for table responsiveness) -->
@@ -39,25 +39,25 @@
 
         <!-- Colonne Name Device -->
         <ng-container matColumnDef="name"> <!-- N7adrou colonne esemha name (Column definition for 'name') -->
-          <th mat-header-cell *matHeaderCellDef class="header-accent">Name</th> <!-- E'Titre mta3 colonne (Table header cell) -->
+          <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'ROUTERS.COL_NAME' | translate }}</th> <!-- E'Titre mta3 colonne (Table header cell) -->
           <td mat-cell *matCellDef="let r">{{ r.name }}</td> <!-- L'valeur tekhou mn chaque routeur (Table data cell showing router name) -->
         </ng-container> <!-- Wfet el colonne (End of column definition) -->
 
         <!-- Colonne Loopback IP -->
         <ng-container matColumnDef="loopback_ip"> <!-- N7adrou colonne IP (Column definition for 'loopback_ip') -->
-          <th mat-header-cell *matHeaderCellDef class="header-accent">Loopback IP</th> <!-- E'Titre mta3 colonne (Table header cell) -->
+          <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'ROUTERS.COL_IP' | translate }}</th> <!-- E'Titre mta3 colonne (Table header cell) -->
           <td mat-cell *matCellDef="let r">{{ r.loopback_ip }}</td> <!-- L'IP yet'afficha (Table data cell showing IP) -->
         </ng-container> <!-- Wfet el colonne (End of column definition) -->
 
         <!-- Colonne Model -->
         <ng-container matColumnDef="model"> <!-- N7adrou colonne mta3 modèle (Column definition for device 'model') -->
-          <th mat-header-cell *matHeaderCellDef class="header-accent">Model</th> <!-- E'Titre mta3 colonne (Table header cell) -->
+          <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'ROUTERS.COL_MODEL' | translate }}</th> <!-- E'Titre mta3 colonne (Table header cell) -->
           <td mat-cell *matCellDef="let r">{{ r.model }}</td> <!-- Modèle l'matériel (Table data cell showing model) -->
         </ng-container> <!-- Wfet el colonne (End of column definition) -->
 
         <!-- Colonne Vendor -->
         <ng-container matColumnDef="vendor"> <!-- Colonne mta3 l'fournisseur (Column definition for 'vendor') -->
-          <th mat-header-cell *matHeaderCellDef class="header-accent">Vendor</th> <!-- Titre fournisseur (Table header cell) -->
+          <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'ROUTERS.COL_VENDOR' | translate }}</th> <!-- Titre fournisseur (Table header cell) -->
           <td mat-cell *matCellDef="let r"> <!-- Data cell mta3 fournisseur (Table data cell template) -->
             <span class="vendor-badge" [style.background]="r.vendor === 'huawei' ? '#E87722' : '#888'"> <!-- E'badge ytbeddel lounou ken Huawei wala le (Badge with dynamic background color based on vendor) -->
               {{ r.vendor | titlecase }} <!-- Esem maktoub f kbir mel loul (Displays vendor name with first letter capitalized) -->
@@ -73,15 +73,15 @@
 
     <div class="pagination-container"> <!-- Conteneur lil les boutons l'outa mta3 tbdil sayf7a (Flex container for pagination controls) -->
       <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0"> <!-- Boutton yhezak l'teli, ymout ken fel page 'ula (Previous button, disabled on first page) -->
-        Previous <!-- Esem bouton e'sabe9 (Button text) -->
+        {{ 'ROUTERS.PREVIOUS' | translate }} <!-- Esem bouton e'sabe9 (Button text) -->
       </button> <!-- Wfat l'bouton (End previous button) -->
 
       <span class="page-info"> <!-- Kattiba lli fiha num l'page l'wostaniyya (Text displaying current page info) -->
-        Page {{ currentPage + 1 }} of {{ totalPages }} <!-- Tuarri win mawjoudin f les pages (Displays current page index and total) -->
+        {{ 'ROUTERS.PAGE_INFO' | translate:{current: currentPage + 1, total: totalPages} }} <!-- Tuarri win mawjoudin f les pages (Displays current page index and total) -->
       </span> <!-- Wfat kattiba (End page info span) -->
 
       <button class="page-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"> <!-- Boutton l'qoddém, ye9ef ki nakmlou l'table (Next button, disabled on last page) -->
-        Next <!-- Esem bouton (Button text) -->
+        {{ 'ROUTERS.NEXT' | translate }} <!-- Esem bouton (Button text) -->
       </button> <!-- Wfat l'bouton (End next button) -->
     </div> <!-- Wfa conteneur pagination (End pagination flex container) -->
 

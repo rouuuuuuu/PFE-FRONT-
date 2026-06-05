@@ -5,8 +5,8 @@
     <div class="topo-title-group">
       <mat-icon class="topo-header-icon">hub</mat-icon>
       <div>
-        <h1 class="topo-title">Live Network Topology</h1>
-        <p class="topo-subtitle">Force-directed graph · auto-refreshes every 30 s</p>
+        <h1 class="topo-title">{{ 'TOPOLOGY.TITLE' | translate }}</h1>
+        <p class="topo-subtitle">{{ 'TOPOLOGY.SUBTITLE' | translate }}</p>
       </div>
     </div>
 
@@ -18,7 +18,7 @@
              (ngModelChange)="onSearchChange()"
              (keyup.enter)="onSearchNode()" 
              [matAutocomplete]="topoAuto"
-             placeholder="Search router...">
+             [placeholder]="'TOPOLOGY.SEARCH_PLACEHOLDER' | translate">
       <mat-autocomplete #topoAuto="matAutocomplete" (optionSelected)="onAutoSelected($event)">
         <mat-option *ngFor="let node of filteredSearchNodes" [value]="node.name">
           <span style="font-weight:600">{{ node.name }}</span>
@@ -35,22 +35,22 @@
       <div class="stat-pill">
         <mat-icon class="pill-icon">router</mat-icon>
         <span class="pill-value">{{ statsNodes }}</span>
-        <span class="pill-label">Nodes</span>
+        <span class="pill-label">{{ 'TOPOLOGY.NODES' | translate }}</span>
       </div>
       <div class="stat-pill">
         <mat-icon class="pill-icon">linear_scale</mat-icon>
         <span class="pill-value">{{ statsLinks }}</span>
-        <span class="pill-label">Links</span>
+        <span class="pill-label">{{ 'TOPOLOGY.LINKS' | translate }}</span>
       </div>
       <div class="stat-pill pill-warn" [class.pill-warn-active]="statsAlarms > 0">
         <mat-icon class="pill-icon">warning_amber</mat-icon>
         <span class="pill-value">{{ statsAlarms }}</span>
-        <span class="pill-label">Active alarms</span>
+        <span class="pill-label">{{ 'TOPOLOGY.ACTIVE_ALARMS' | translate }}</span>
       </div>
       <div class="stat-pill pill-crit" [class.pill-crit-active]="statsCritical > 0">
         <mat-icon class="pill-icon">crisis_alert</mat-icon>
         <span class="pill-value">{{ statsCritical }}</span>
-        <span class="pill-label">Critical / Major</span>
+        <span class="pill-label">{{ 'TOPOLOGY.CRITICAL_MAJOR' | translate }}</span>
       </div>
     </div>
 
@@ -77,13 +77,13 @@
     <!-- Hint overlay — bottom left of map -->
     <div class="hint-text" *ngIf="!loading">
       <mat-icon style="font-size:13px;vertical-align:middle;margin-right:4px">info</mat-icon>
-      Drag nodes · Scroll to zoom · Click a node for details
+      {{ 'TOPOLOGY.HINT' | translate }}
     </div>
 
     <!-- Loading -->
     <div *ngIf="loading" class="topo-loading">
       <mat-spinner diameter="48"></mat-spinner>
-      <p>Building topology graph…</p>
+      <p>{{ 'TOPOLOGY.LOADING' | translate }}</p>
     </div>
 
     <!-- Error -->
@@ -130,7 +130,7 @@
 
           <div class="panel-links-title">
             <mat-icon style="font-size:14px;vertical-align:middle">linear_scale</mat-icon>
-            Connected Links ({{ selectedNodeLinks.length }})
+            {{ 'TOPOLOGY.CONNECTED_LINKS' | translate }} ({{ selectedNodeLinks.length }})
           </div>
 
           <div class="panel-link-list">
@@ -141,14 +141,14 @@
               </span>
               <span class="link-rate">{{ l.rate }}</span>
             </div>
-            <p *ngIf="selectedNodeLinks.length === 0" class="no-links">No links found.</p>
+            <p *ngIf="selectedNodeLinks.length === 0" class="no-links">{{ 'TOPOLOGY.NO_LINKS' | translate }}</p>
           </div>
 
           <a class="panel-detail-btn"
             [routerLink]="['/routers', selectedNode.ip]"
             *ngIf="selectedNode.ip">
             <mat-icon>open_in_new</mat-icon>
-            View Hardware Details
+            {{ 'TOPOLOGY.VIEW_DETAILS' | translate }}
           </a>
         </div>
 

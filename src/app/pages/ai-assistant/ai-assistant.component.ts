@@ -18,10 +18,12 @@ interface DisplayMessage {
   html: SafeHtml;   // HTML sécurisé rendu depuis Markdown
 }
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-ai-assistant',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatTooltipModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatTooltipModule, TranslateModule],
   templateUrl: './ai-assistant.component.html',
   styleUrls: ['./ai-assistant.component.css']
 })
@@ -88,7 +90,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
     // Welcome message
     this._pushAssistantMessage(
-      '**Hello Iris Here! I`m your AI Assistant :)**\n\n' +
+      '**Hello Iris Here! I\'m your AI Assistant :)**\n\n' +
       'I can analyze alerts, critical equipment, and answer questions about the network.\n\n' +
       '_Use the quick prompts below or type your own question._'
     );

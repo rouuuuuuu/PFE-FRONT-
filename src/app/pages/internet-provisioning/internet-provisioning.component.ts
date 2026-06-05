@@ -19,6 +19,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { ApiService } from '../../services/api.service';
 import { HttpClient } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 // ── Custom IP validator ─────────────────────────────────────
 function ipAddressValidator(control: AbstractControl): ValidationErrors | null {
@@ -62,6 +63,7 @@ interface PortInterface {
     MatTableModule,
     MatTooltipModule,
     MatCheckboxModule,
+    TranslateModule
   ],
   templateUrl: './internet-provisioning.component.html',
   styleUrls: ['./internet-provisioning.component.css']

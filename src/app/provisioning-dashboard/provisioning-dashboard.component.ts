@@ -4,10 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({ // Définition l'component limits logics texts tokens validation validation parsing values parsing mapping.
   selector: 'app-provisioning-dashboard', // L'tag mtaa component text frameworks.
   standalone: true, // Type standalone limitations format configuration validation.
-  imports: [CommonModule, RouterModule, MatCardModule, MatIconModule],
+  imports: [CommonModule, RouterModule, MatCardModule, MatIconModule, TranslateModule],
   templateUrl: './provisioning-dashboard.component.html', // l'path mté3 l'html parameters values limits syntax.
   styleUrl: './provisioning-dashboard.component.css' // l'path mté3 l'css definitions evaluation boundaries definition limitation iterations.
 }) // limits reference validations limits elements loop string evaluations.

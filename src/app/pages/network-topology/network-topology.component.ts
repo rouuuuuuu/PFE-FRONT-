@@ -31,10 +31,12 @@ interface TopoLink {
   rate: string;
 }
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-network-topology',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule, TranslateModule],
   templateUrl: './network-topology.component.html',
   styleUrl:    './network-topology.component.css'
 })

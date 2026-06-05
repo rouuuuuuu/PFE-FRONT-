@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms'; // FormsModule bch najem nesta3mel
 import { ApiService } from '../../services/api.service'; // l'API li ktebneha 9bal (Our custom ApiService to fetch backhaul data)
 import { MatChipsModule } from '@angular/material/chips'; // Module jdid bech na3mlou el badges zghar (Material chips module for UI badges)
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({ // ngoulou l'appli elli hedha composant (Decorates class as a component)
   selector: 'app-links', // l'id mte3 e'nomro balisa fl appli html (Selector used to embed component in HTML)
@@ -25,6 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatChipsModule, // el chipattes zghar fel louniyat. (UI Chips)
     FormsModule, // el ngModel mta3 inputs. (Data binding forms)
     MatIconModule,
+    TranslateModule
   ],
   templateUrl: './links.component.html', // path mta3 HTML mta3 page (Link to the template HTML file)
   styleUrl: './links.component.css' // path el CSS (Link to style CSS sheet)
