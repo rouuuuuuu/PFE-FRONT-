@@ -1,0 +1,207 @@
+<div class="ai-page">
+
+  <div class="ai-page-header">
+    <div class="header-left">
+      <div class="header-icon-wrap">
+        <mat-icon class="header-icon">smart_toy</mat-icon>
+        <div class="header-icon-glow"></div>
+      </div>
+      <div>
+        <h1 class="header-title">Iris</h1>
+        <p class="header-sub">
+          Iris AI Engine
+          <span class="mode-badge mode-badge-native">
+            <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle">lock</mat-icon>
+            Native Engine (Offline)
+          </span>
+        </p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" matTooltip="Clear conversation" (click)="clearChat()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button class="icon-btn" matTooltip="Close" (click)="closeSidenav.emit()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+
+    <div class="kpi-card" [class.kpi-critical]="(stats?.critical_sfps ?? 0) > 0">
+      <div class="kpi-icon-wrap kpi-red">
+        <mat-icon>sensors</mat-icon>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-value">
+          <ng-container *ngIf="!statsLoading; else kpiSkeleton">
+            {{ stats?.critical_sfps ?? '—' }}
+          </ng-container>
+        </div>
+        <div class="kpi-label">SFP Critiques</div>
+        <div class="kpi-trend" [class.trend-bad]="(stats?.critical_sfps ?? 0) > 0">
+          <mat-icon class="trend-icon">
+            {{ (stats?.critical_sfps ?? 0) > 0 ? 'warning' : 'check_circle' }}
+          </mat-icon>
+          {{ (stats?.critical_sfps ?? 0) > 0 ? 'Action required' : 'Nominal' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-card" [class.kpi-critical]="(stats?.down_ports ?? 0) > 0">
+      <div class="kpi-icon-wrap kpi-orange">
+        <mat-icon>settings_input_component</mat-icon>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-value">
+          <ng-container *ngIf="!statsLoading; else kpiSkeleton">
+            {{ stats?.down_ports ?? '—' }}
+          </ng-container>
+        </div>
+        <div class="kpi-label">Ports Down</div>
+        <div class="kpi-trend" [class.trend-bad]="(stats?.down_ports ?? 0) > 0">
+          <mat-icon class="trend-icon">
+            {{ (stats?.down_ports ?? 0) > 0 ? 'arrow_downward' : 'check_circle' }}
+          </mat-icon>
+          {{ (stats?.down_ports ?? 0) > 0 ? 'Out of service' : 'Nominal' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-card" [class.kpi-critical]="(stats?.critical_links ?? 0) > 0">
+      <div class="kpi-icon-wrap kpi-purple">
+        <mat-icon>cable</mat-icon>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-value">
+          <ng-container *ngIf="!statsLoading; else kpiSkeleton">
+            {{ stats?.critical_links ?? '—' }}
+          </ng-container>
+        </div>
+        <div class="kpi-label">Liens Critiques</div>
+        <div class="kpi-trend" [class.trend-bad]="(stats?.critical_links ?? 0) > 0">
+          <mat-icon class="trend-icon">
+            {{ (stats?.critical_links ?? 0) > 0 ? 'link_off' : 'check_circle' }}
+          </mat-icon>
+          {{ (stats?.critical_links ?? 0) > 0 ? 'Degraded' : 'Nominal' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-info">
+      <div class="kpi-icon-wrap kpi-blue">
+        <mat-icon>router</mat-icon>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-value">
+          <ng-container *ngIf="!statsLoading; else kpiSkeleton">
+            {{ stats?.total_routers ?? '—' }}
+          </ng-container>
+        </div>
+        <div class="kpi-label">Routeurs Totaux</div>
+        <div class="kpi-trend trend-ok">
+          <mat-icon class="trend-icon">device_hub</mat-icon>
+          Inventoried
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #kpiSkeleton>
+    <span class="skeleton-val"></span>
+  </ng-template>
+
+  <div class="ai-main">
+
+    <div class="control-bar">
+      <div class="engine-badge">
+        <mat-icon class="engine-icon">security</mat-icon>
+        <span>Rule-based engine &middot; 100% offline &middot; Secure</span>
+      </div>
+      <button class="clear-btn" (click)="clearChat()" matTooltip="Clear conversation">
+        <mat-icon>delete_sweep</mat-icon>
+        <span>Clear</span>
+      </button>
+    </div>
+
+    <div class="chat-container">
+
+      <div class="chat-messages" #chatZone>
+
+        <div *ngIf="messages.length === 0" class="chat-empty">
+          <mat-icon>chat_bubble_outline</mat-icon>
+          <p>Start a conversation with the network assistant.</p>
+        </div>
+
+        <div *ngFor="let msg of messages" class="message-row" [class.row-user]="msg.role === 'user'"
+          [class.row-assistant]="msg.role === 'assistant'">
+
+          <div class="avatar" *ngIf="msg.role === 'assistant'">
+            <mat-icon>smart_toy</mat-icon>
+          </div>
+
+          <div class="bubble" [class.bubble-user]="msg.role === 'user'"
+            [class.bubble-assistant]="msg.role === 'assistant'">
+            <div class="bubble-content" [innerHTML]="msg.html"></div>
+          </div>
+
+          <div class="avatar avatar-user" *ngIf="msg.role === 'user'">
+            <mat-icon>person</mat-icon>
+          </div>
+
+        </div>
+
+        <div class="thinking-row" *ngIf="isLoading">
+          <div class="avatar">
+            <mat-icon>smart_toy</mat-icon>
+          </div>
+          <div class="thinking-bubble">
+            <span class="thinking-text">AI is thinking</span>
+            <div class="thinking-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="quick-prompts">
+        <button *ngFor="let p of quickPrompts" class="quick-chip" (click)="usePrompt(p.text)" [disabled]="isLoading"
+          [matTooltip]="p.text">
+          <mat-icon class="chip-icon">{{ p.icon }}</mat-icon>
+          {{ p.label }}
+        </button>
+      </div>
+
+      <div class="input-area">
+
+        <div class="input-wrapper" [class.input-wrapper-loading]="isLoading">
+          <textarea #textareaInput class="chat-textarea" rows="1" [(ngModel)]="userInput" (keydown)="onKeyDown($event)"
+            (input)="autoResize($event)"
+            placeholder="Ask a question about the network…  (Enter = send, Shift+Enter = new line)"
+            [disabled]="isLoading">
+          </textarea>
+
+          <button class="send-btn" [class.send-btn-active]="userInput.trim().length > 0" (click)="sendMessage()"
+            [disabled]="isLoading || !userInput.trim()" matTooltip="Send (Enter)">
+            <mat-icon *ngIf="!isLoading">send</mat-icon>
+            <mat-icon *ngIf="isLoading" class="spin-icon">autorenew</mat-icon>
+          </button>
+        </div>
+
+        <div class="input-footer">
+          <span class="input-hint">
+            <mat-icon class="hint-icon">lock</mat-icon>
+            Local engine active — data stays secure
+          </span>
+          <span class="char-count" *ngIf="userInput.length > 0">{{ userInput.length }} chars</span>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

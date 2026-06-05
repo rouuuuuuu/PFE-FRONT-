@@ -46,8 +46,8 @@
   transform-origin: center;
   transition:
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity   0.2s ease,
-    width     0.3s ease,
+    opacity 0.2s ease,
+    width 0.3s ease,
     background 0.2s ease;
 }
 
@@ -59,10 +59,12 @@
 .hamburger-bar:nth-child(1).bar-open {
   transform: translateY(7px) rotate(45deg);
 }
+
 .hamburger-bar:nth-child(2).bar-open {
   opacity: 0;
   width: 0;
 }
+
 .hamburger-bar:nth-child(3).bar-open {
   transform: translateY(-7px) rotate(-45deg);
 }
@@ -297,7 +299,7 @@
   max-height: 0;
   opacity: 0;
   transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.25s ease;
+    opacity 0.25s ease;
 }
 
 .nav-submenu-open {
@@ -374,7 +376,7 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.35s ease;
+    background 0.35s ease;
   box-shadow: 0 2px 6px rgba(255, 121, 0, 0.3);
 }
 
@@ -391,4 +393,73 @@
   height: 14px !important;
   color: white;
   line-height: 1;
+}
+
+/* ── Custom Drawer for AI Assistant ──────────────────────────────────────── */
+.ai-custom-drawer {
+  position: fixed;
+  top: 56px;
+  right: -500px; /* Hidden by default */
+  width: 500px;
+  height: calc(100vh - 56px);
+  background: var(--bg-surface);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  pointer-events: none; /* CRITICAL: don't intercept clicks when hidden */
+  overflow-y: auto;
+}
+
+.ai-custom-drawer.ai-drawer-open {
+  right: 0;
+  pointer-events: auto; /* Re-enable clicks when drawer is visible */
+}
+
+@media (max-width: 768px) {
+  .ai-custom-drawer {
+    width: 100%;
+    right: -100%;
+  }
+}
+
+/* ── Floating Action Button (Bubble) ──────────────────────────────────────── */
+.ai-fab-bubble {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-orange), #ff9800);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 16px rgba(255, 121, 0, 0.4), 0 8px 32px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  z-index: 99;
+  /* Below the open drawer */
+}
+
+.ai-fab-bubble mat-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  transition: transform 0.3s ease;
+}
+
+.ai-fab-bubble:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(255, 121, 0, 0.5), 0 12px 48px rgba(0, 0, 0, 0.3);
+}
+
+.ai-fab-bubble:hover mat-icon {
+  transform: rotate(15deg);
+}
+
+.ai-fab-bubble:active {
+  transform: scale(0.95);
 }

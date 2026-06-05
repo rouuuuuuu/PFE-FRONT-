@@ -14,32 +14,32 @@ import { StockDashboardComponent } from './pages/stock-dashboard/stock-dashboard
 import { PortReservationComponent } from './pages/port-reservation/port-reservation.component';
 import { NetworkTopologyComponent } from './pages/network-topology/network-topology.component';
 import { InternetProvisioningComponent } from './pages/internet-provisioning/internet-provisioning.component';
-import { NlpProvisioningComponent } from './pages/nlp-provisioning/nlp-provisioning.component';
+import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component'; // Page AI Network Assistant
 
 
 export const routes: Routes = [
-  { path: '',          component: DashboardComponent }, // Default → dashboard
-  { path: 'topology',  component: NetworkTopologyComponent },
-  { path: 'routers',   component: RoutersComponent },
-  { path: 'switches', component: SwitchesComponent }, // Cheman /switches ytalla3 page mta3 switches (Path for switches list)
-  { path: 'nlp-provisioning', component: NlpProvisioningComponent },
+  { path: '', component: DashboardComponent }, // Default → dashboard
+  { path: 'topology', component: NetworkTopologyComponent },
+  { path: 'routers', component: RoutersComponent },
+  { path: 'switches', component: SwitchesComponent },
   { path: 'switches/:ip', component: SwitchSummaryComponent }, // Cheman /switches/:ip ytalla3 kholassa mta3 ports (Summary page for a single switch)
   { path: 'switches/:ip/ports/:status', component: SwitchPortDetailsComponent }, // Tafasil mta3 ports b'status (Filtered ports detail page)
   { path: 'routers/:ip', component: HardwareSummaryComponent }, // Cheman yemchi l detail mta3 routeur wa7ad w na3tiweh l'IP (Parametrised path for router summary)
   { path: 'routers/:ip/:component/:status', component: HardwareDetailsComponent }, // Cheman akthar tafasil m3a type u statut (Deep link into hardware statuses)
-  { path: 'links',       component: LinksComponent }, // Cheman lel backhaul links (Path for all links)
-  { path: 'upgrade',    component: UpgradeComponent },
-  { path: 'inventory',  component: StockDashboardComponent },
+  { path: 'links', component: LinksComponent }, // Cheman lel backhaul links (Path for all links)
+  { path: 'upgrade', component: UpgradeComponent },
+  { path: 'ai-assistant', component: AiAssistantComponent }, // Page AI Network Assistant
+  { path: 'inventory', component: StockDashboardComponent },
 
-  { 
+  {
     path: 'provisioning', // Cheman parent mta3 el provisioning (Parent path for provisioning area)
     children: [ // El routage louled lli ta7tou (Child routes block)
       { path: '', component: ProvisioningDashboardComponent }, // Ken ma famech chay ba3edha ytala3 menu (Default route inside provisioning shows the cards)
       { path: 'task/:taskType', component: ProvisioningTaskComponent }, // yit7all l'formulaire selon l'esem mta3 e'Tache (Dynamic path for each individual provisioning task)
       { path: 'port-reservation', component: PortReservationComponent }, // Nouveau cheman lel reservation des ports
       { path: 'internet-service', component: InternetProvisioningComponent } // Internet service provisioning wizard
-    ] 
-  } 
+    ]
+  }
 
 
 ]; 

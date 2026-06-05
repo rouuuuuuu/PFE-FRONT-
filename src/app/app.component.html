@@ -17,31 +17,31 @@
   <!-- ── Quick-access nav pills ── -->
   <div class="toolbar-quicknav">
 
-    <a class="quicknav-btn" routerLink="/" routerLinkActive="quicknav-active"
-       [routerLinkActiveOptions]="{exact:true}" matTooltip="Dashboard" matTooltipPosition="below">
+    <a class="quicknav-btn" routerLink="/" routerLinkActive="quicknav-active" [routerLinkActiveOptions]="{exact:true}"
+      matTooltip="Dashboard" matTooltipPosition="below">
       <mat-icon>dashboard</mat-icon>
       <span class="quicknav-label">Dashboard</span>
     </a>
 
     <a class="quicknav-btn" routerLink="/topology" routerLinkActive="quicknav-active"
-       [routerLinkActiveOptions]="{exact:true}" matTooltip="Network Topology" matTooltipPosition="below">
+      [routerLinkActiveOptions]="{exact:true}" matTooltip="Network Topology" matTooltipPosition="below">
       <mat-icon>hub</mat-icon>
       <span class="quicknav-label">Topology</span>
     </a>
 
-    <a class="quicknav-btn" routerLink="/routers" routerLinkActive="quicknav-active"
-       matTooltip="Routers" matTooltipPosition="below">
+    <a class="quicknav-btn" routerLink="/routers" routerLinkActive="quicknav-active" matTooltip="Routers"
+      matTooltipPosition="below">
       <mat-icon>router</mat-icon>
       <span class="quicknav-label">Routers</span>
     </a>
-    <a class="quicknav-btn" routerLink="/inventory" routerLinkActive="quicknav-active"
-       matTooltip="Stock Inventory" matTooltipPosition="below">
+    <a class="quicknav-btn" routerLink="/inventory" routerLinkActive="quicknav-active" matTooltip="Stock Inventory"
+      matTooltipPosition="below">
       <mat-icon>inventory_2</mat-icon>
       <span class="quicknav-label">Stock</span>
     </a>
     <!-- Provisioning with dropdown -->
-    <button class="quicknav-btn quicknav-menu-trigger" [matMenuTriggerFor]="provMenu"
-            matTooltip="Provisioning tasks" matTooltipPosition="below">
+    <button class="quicknav-btn quicknav-menu-trigger" [matMenuTriggerFor]="provMenu" matTooltip="Provisioning tasks"
+      matTooltipPosition="below">
       <mat-icon>settings</mat-icon>
       <span class="quicknav-label">Provisioning <mat-icon class="quicknav-chevron">arrow_drop_down</mat-icon></span>
     </button>
@@ -60,7 +60,13 @@
       </a>
     </mat-menu>
 
-    
+    <!-- AI Assistant link commented out — now accessible via the floating bubble
+    <a class="quicknav-btn" routerLink="/ai-assistant" routerLinkActive="quicknav-active"
+      [routerLinkActiveOptions]="{exact:true}" matTooltip="Iris AI Assistant" matTooltipPosition="below">
+      <mat-icon>smart_toy</mat-icon>
+      <span class="quicknav-label">Iris</span>
+    </a>
+    -->
 
   </div>
 
@@ -97,7 +103,7 @@
         <span class="nav-label">Network Topology</span>
       </a>
 
-  
+
 
 
       <!-- Lien pour les Routers -->
@@ -105,14 +111,14 @@
         <!-- Lien vers la liste des routeurs (Link to routers page). -->
         <mat-icon class="nav-icon">router</mat-icon> <!-- Icone routeur (Router icon). -->
         <span class="nav-label">Routers</span> <!-- Esem el lien (Link text). -->
-      </a> 
+      </a>
 
       <!-- Lien pour les Switches -->
       <a class="nav-item" routerLink="/switches" routerLinkActive="nav-active">
         <!-- Lien lel page des switches (Link to switches page). -->
         <mat-icon class="nav-icon">device_hub</mat-icon> <!-- Icone switch/hub (Network switch icon). -->
         <span class="nav-label">Switches</span> <!-- Esem el lien (Link text). -->
-      </a> 
+      </a>
 
       <!-- Lien pour les Backhaul Links -->
       <a class="nav-item" routerLink="/links" routerLinkActive="nav-active">
@@ -126,6 +132,13 @@
         <mat-icon class="nav-icon">inventory_2</mat-icon>
         <span class="nav-label">Stock Inventory</span>
       </a>
+
+      <!-- AI Assistant link commented out — now accessible via the floating bubble
+      <a class="nav-item" routerLink="/ai-assistant" routerLinkActive="nav-active">
+        <mat-icon class="nav-icon">smart_toy</mat-icon>
+        <span class="nav-label">Iris</span>
+      </a>
+      -->
 
       <div class="nav-divider"></div>
       <!-- Khat yefra9 bin section l'oula w thenia fil menu (Divider line between navigation groups). -->
@@ -150,7 +163,7 @@
           <!-- Lien principal lel provisioning (Link to main provisioning tasks). -->
           <mat-icon class="nav-icon">folder_open</mat-icon> <!-- Icone mta3 dossier t7al (Open folder icon). -->
           <span class="nav-label">All Tasks</span> <!-- Texte mta3 lien (Link label). -->
-        </a> 
+        </a>
 
         <a class="nav-item nav-sub-item" routerLink="/upgrade" routerLinkActive="nav-active">
           <mat-icon class="nav-icon">speed</mat-icon>
@@ -168,15 +181,21 @@
         </a>
 
       </div>
-    </nav> 
-  </mat-sidenav> 
+    </nav>
+  </mat-sidenav>
 
-  <!-- Contenu principal fil wost mta3 l'écran (The main content area filling the remaining screen space). -->
-  <mat-sidenav-content class="app-content"> <!-- Material directive lel content principal (Sidenav content wrapper). -->
+  <!-- Main content area -->
+  <mat-sidenav-content class="app-content">
     <router-outlet />
-    <!-- El blasa win tetbadel les pages 7asb e'routeur (The injection spot for routed components). -->
-  </mat-sidenav-content> 
+
+    <!-- Floating Bubble to open AI Assistant -->
+    <button class="ai-fab-bubble" (click)="isAiDrawerOpen = !isAiDrawerOpen" matTooltip="Iris" matTooltipPosition="left">
+      <mat-icon>smart_toy</mat-icon>
+    </button>
+  </mat-sidenav-content>
 </mat-sidenav-container>
 
-<!-- ── Global floating AI widget — visible on every page ── -->
-<app-ai-chat-widget />
+<!-- AI Assistant Custom Right Drawer -->
+<div class="ai-custom-drawer" [class.ai-drawer-open]="isAiDrawerOpen">
+  <app-ai-assistant *ngIf="isAiDrawerOpen" (closeSidenav)="isAiDrawerOpen = false"></app-ai-assistant>
+</div>
