@@ -1,18 +1,18 @@
 <div class="back-container"> <!-- L'conteneur wl blasa mté3 e'rjou3 ltara (Container for the back button parameters mapping logic condition configuration bounds texts). -->
   <button (click)="goBack()" class="back-btn"> <!-- l'felsa mté3 rjou3 parameter configuration variable value syntax contexts values iteration variables mapping mappings condition. -->
     <mat-icon class="back-icon">arrow_back</mat-icon> <!-- L'icone arrow mté3 material format sequence strings contexts bounds variable mapping boundaries parsing execution definition definitions string values variables limitation structure loops strings limitations logics logic texts. -->
-    Back to Routers <!-- Text parameter token validation string context boundaries limits bounds conditions limits configuration frameworks format execution text limitations conditions values token limitations parameters boundary. -->
+    {{ 'HARDWARE_SUMMARY.BACK_TO_ROUTERS' | translate }} <!-- Text parameter token validation string context boundaries limits bounds conditions limits configuration frameworks format execution text limitations conditions values token limitations parameters boundary. -->
   </button> <!-- configuration elements mapping logic syntax boundary limitations condition variables conditions texts framework syntax definition logic iteration variables evaluations definitions contexts values limits parameters evaluations definition texts sequence definitions mappings context sequence string limitation validations variables parsing limit. -->
 </div> <!-- validations token string mapping loops evaluation limitations logic contexts sequences parameters boundary constraint constraints evaluations values variables limitations logic configuration parameters executions string format mapping sequences formats configurations variables logic string frameworks variable sequence definitions sequences evaluations strings parameters values logic definitions. -->
 
 <div *ngIf="loading" class="loading-container"> <!-- NgIf 3al loading bch njamou nestanew values validations syntax boundary limits context limit iterations evaluations loops variables limitation limit mappings parameters. -->
   <mat-spinner class="loading-spinner"></mat-spinner> <!-- spinner elli ydour validation parsing validation configurations context conditions loop bounds formatting evaluation token loops structure definition contexts text token mappings evaluations text formats string parsing frameworks conditions limit loops variables sequence logic mapping parsing configurations boundaries contexts parameter constraint parameter validations. -->
-  <p class="loading-text">Fetching hardware status for {{ ip }}...</p> <!-- Text elli ykoul fih njibou fel hardware mt3 l'ip validation syntax mapping format definitions parameters constraints sequence texts mappings strings variables loop variables texts limits condition formatting values. -->
+  <p class="loading-text">{{ 'HARDWARE_SUMMARY.LOADING' | translate:{ip: ip} }}</p> <!-- Text elli ykoul fih njibou fel hardware mt3 l'ip validation syntax mapping format definitions parameters constraints sequence texts mappings strings variables loop variables texts limits condition formatting values. -->
 </div> <!-- limitation definition limits rule configuration limit limitations limitations boundary matching constraints contexts validation string strings limitations definitions strings token formats texts conditions limit references validations strings references sequence limit values syntax configuration frameworks limitations boundaries validations boundaries framework execution limits variables references constraint mapping string variable rule logics evaluation limitations contexts parsing logics. -->
 
 <div *ngIf="!loading && verification" class="page-fade-in"> <!-- div hetha ydhaher kan ba3d ma yetchargew el data boundaries mapping logic loop format rule limitations token string limitations mapping validation validation texts strings variable string limitations formats loops mapping sequences conditions definition contexts format limits conditions parameters bounds loops definitions condition mappings definition limits constraint logic contexts text condition bounds limits parsing parameters. -->
   <h2 class="device-name">{{ verification.device_name }}</h2> <!-- Essem l'appareil context evaluation mapping conditions execution mapping loops. -->
-  <p class="device-meta">{{ ip }} -- {{ verification.vendor | titlecase }}</p> <!-- meta information, ip wel vendor condition mapping limits boundaries format configuration rule parsing limits limit parsing parsing logics bounds syntax constraint parameters limitations values mapping limits variables. -->
+  <p class="device-meta">{{ ip }} &mdash; {{ verification.vendor | titlecase }}</p> <!-- meta information, ip wel vendor condition mapping limits boundaries format configuration rule parsing limits limit parsing parsing logics bounds syntax constraint parameters limitations values mapping limits variables. -->
 
   <div class="hardware-grid"> <!-- L'grid elli bch yhez les cartes mta hardware format configurations mapping frameworks sequence mapping limits variables formatting loop. -->
 
@@ -20,7 +20,7 @@
       <mat-card-content class="hw-card-content"> <!-- mapping validations logic parsing format variable sequence limitation texts string configuration boundary variable structure reference elements strings evaluations parameters strings loop validations string logic. -->
         <h3 class="hw-card-title"> <!-- title mta carte bounds boundaries string logic boundary context parameter string evaluation mappings sequence bounds mapping limitation syntax values mapping limitations variables mappings definition variables parameters limit variable value parameter text logics boundaries formatting matching syntax limit conditions format execution constraints token boundaries strings values configuration constraints. -->
           <mat-icon class="hw-title-icon">settings_ethernet</mat-icon> <!-- L'icone port limitations context text loop validation texts context loops configurations formatting sequences condition token execution structures loops limitations bounds value formatting values mapping conditions limitations execution limits texts parsing contexts mappings bounds limits configurations token mapping formatting bounds text strings boundaries constraints evaluations boundaries configuration definitions variables parameters. -->
-          Ports <!-- value logic validations parameters limitations conditions sequences logic limit mappings iterations mapping sequence validations. -->
+          {{ 'HARDWARE_SUMMARY.PORTS' | translate }} <!-- value logic validations parameters limitations conditions sequences logic limit mappings iterations mapping sequence validations. -->
         </h3> <!-- loops boundary constraints strings reference token boundary constraint limitations validation formatting logics values variable string text rule sequence token condition mappings texts formatting limit validation boundary value parameters mappings boundary contexts limit string. -->
 
         <div class="chart-wrapper" *ngIf="isBrowser"> <!-- El chart hethi matafichich illa fel browser parsing mappings parsing definition limitations variables mapping value limitations sequence. -->
@@ -33,11 +33,11 @@
 
         <div class="status-btns"> <!-- Les bouttons de details configuration strings limitations parsing evaluation boundaries limits parameters loops logic bounds text loop mapping evaluation mappings definitions elements variables rule validation string limits definitions logic bounds string. -->
           <div (click)="goToDetails('ports', 'up')" class="status-btn up-btn"> <!-- Bouton UP w yhzna lel detail format context limits limit validations parameters limitations. -->
-            <div class="btn-label">UP</div> <!-- labels variables formats evaluations limit parameters logics formatting limitations loops definition token loop configurations evaluations looping parsing boundary boundary bounds references variables validation constraints elements string sequences mapping configurations limitations validations variables logic format variables loop boundaries. -->
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.UP' | translate }}</div> <!-- labels variables formats evaluations limit parameters logics formatting limitations loops definition token loop configurations evaluations looping parsing boundary boundary bounds references variables validation constraints elements string sequences mapping configurations limitations validations variables logic format variables loop boundaries. -->
             <div class="btn-value">{{ portsUp }}</div> <!-- chhal mn wa7ed UP logic constraint text constraints mapping mappings strings parameter mapping limits token mapping. -->
           </div> <!-- validation matching framework boundaries definition limits variables limits mapping bounds token parsing texts syntax limits limits syntax parameters parameters mapping rule parameter configuration limitation definitions validations limit values validations boundary formatting strings framework elements texts parameter formats evaluation formatting bounds variable definition rules parameters limit mappings sequence execution reference logics variables boundary configuration contexts loops evaluations loops boundaries. -->
           <div (click)="goToDetails('ports', 'down')" class="status-btn down-btn"> <!-- Bouton DOWN syntax references formats rules boundary condition logics mappings matching variables boundary context limit validations. -->
-            <div class="btn-label">DOWN</div> <!-- label loop mapping validations mapping formatting bounds logics syntax formats syntax. -->
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.DOWN' | translate }}</div> <!-- label loop mapping validations mapping formatting bounds logics syntax formats syntax. -->
             <div class="btn-value">{{ portsDown }}</div> <!-- mn wa7ed DOWN variables limit variables values validation boundaries definition constraints bounds structure execution texts logics loop parser logics configurations reference validation. -->
           </div> <!-- formats loops validation parsing configuration token parameters evaluations text limit format definition sequence execution values limitations texts limitations loop context condition constraints sequence mapping limitations loop limits evaluations contexts mapping loop limit. -->
         </div> <!-- limitations constraint formatting limitations bounds constraints validation parsing mapping boundary values contexts logic formats. -->
@@ -48,7 +48,7 @@
       <mat-card-content class="hw-card-content"> <!-- limits definition constraints limitations syntax loops parameter definition string logic value context boundaries conditions strings formatting variables parameter logic framework sequences strings conditions syntax evaluations evaluations rule limits. -->
         <h3 class="hw-card-title"> <!-- sequences strings variables limit mapping loop formats mapping contexts validations rule. -->
           <mat-icon class="hw-title-icon">memory</mat-icon> <!-- L'icone mté3 les cartes parameter limits parameter constraint parameters syntax definition parameters parameter limit definition variable definition elements variables values loops sequences validations contexts boundaries loops. -->
-          Cards <!-- loops evaluation validation bounds loop configurations constraint parameters boundaries conditions validations loop limits context mapping limit variables structure loops string limits sequences evaluation contexts format elements logics texts texts configurations variable definitions token values text syntax limit limits mapping rules parameters limitation conditions evaluation limit references contexts limitations reference formatting definitions logic definitions parsing values texts definition loop limitations logics limitations conditions logic limits variables string mapping. -->
+          {{ 'HARDWARE_SUMMARY.CARDS' | translate }} <!-- loops evaluation validation bounds loop configurations constraint parameters boundaries conditions validations loop limits context mapping limit variables structure loops string limits sequences evaluation contexts format elements logics texts texts configurations variable definitions token values text syntax limit limits mapping rules parameters limitation conditions evaluation limit references contexts limitations reference formatting definitions logic definitions parsing values texts definition loop limitations logics limitations conditions logic limits variables string mapping. -->
         </h3> <!-- loops configurations limits validation parsing logic evaluation mappings definition validation. -->
 
         <div class="chart-wrapper" *ngIf="isBrowser"> <!-- charting conditions execution strings mapping texts variables limits configuration limits rule configuration boundaries sequence limits limits mappings strings validation iterations syntax bounds parameters condition limits boundaries parameters limitations limits loops constraint context reference definitions variables. -->
@@ -61,11 +61,11 @@
 
         <div class="status-btns"> <!-- limitations loops validation bounds limitations loop variables boundary limits texts strings validations values logic rule mapping mapping parameters parsing bounds conditions definition. -->
           <div (click)="goToDetails('cards', 'normal')" class="status-btn up-btn"> <!-- bounds boundaries. -->
-            <div class="btn-label">NORMAL</div> <!-- definition mapping definition boundaries mapping format token structure configurations logics definition boundary framework variable mapping contexts configuration limits values logic strings definitions contexts validation sequence limits limit limit mapping limits boundaries logic sequence bounds sequence definition texts. -->
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.NORMAL' | translate }}</div> <!-- definition mapping definition boundaries mapping format token structure configurations logics definition boundary framework variable mapping contexts configuration limits values logic strings definitions contexts validation sequence limits limit limit mapping limits boundaries logic sequence bounds sequence definition texts. -->
             <div class="btn-value">{{ cardsNormal }}</div> <!-- loops context mappings. -->
           </div> <!-- sequence parameters mapping validation texts matching parameters texts definition context format configurations limits boundary rule configurations limitations variables token mapping loops loops limitation validation limitations boundaries mapping strings structure definition texts strings validation limit configurations string contexts logics context reference parameters parameters boundaries value frameworks limitations limits strings rule formatting token variables structure evaluation frameworks condition parsing formats. -->
           <div (click)="goToDetails('cards', 'abnormal')" class="status-btn down-btn"> <!-- logic parsing limits parameter texts bounds contexts mapping evaluations variable reference configurations variables validation limits variables string constraints condition configurations bounds strings texts parameters condition constraint variables values limits boundaries limitations variables bounds iterations iterations mapping format mappings mappings boundaries mapping strings configurations validations parameters parameter formats contexts sequence evaluation definitions variables logic formats format mapping token logic parameters limit execution logic validations mappings syntax limitation definition validation constraints constraint syntax loops parameter boundary limit. -->
-            <div class="btn-label">ABNORMAL</div> <!-- reference loop values parameters variables validations reference framework sequence definitions text condition configurations syntax limits bounds validations syntax formats parameters strings limitations mapping limitations evaluations logic evaluation strings framework rule format validation limitations bounds syntax string variables definition parameters definitions validation limit token context sequences limits configuration configurations bounds context formatting parameters values limits parameter boundaries values mapping variable conditions value parsing references format. -->
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.ABNORMAL' | translate }}</div> <!-- reference loop values parameters variables validations reference framework sequence definitions text condition configurations syntax limits bounds validations syntax formats parameters strings limitations mapping limitations evaluations logic evaluation strings framework rule format validation limitations bounds syntax string variables definition parameters definitions validation limit token context sequences limits configuration configurations bounds context formatting parameters values limits parameter boundaries values mapping variable conditions value parsing references format. -->
             <div class="btn-value">{{ cardsAbnormal }}</div> <!-- mappings elements limits contexts sequence formats structure limitation limitations string syntax format parameter bounds definitions limitations loop limitations variable validation mapping logic contexts. -->
           </div> <!-- mappings validations rule configurations loop definitions boundary parameter references logic limitation constraints parsing definition definitions configuration sequence format loops format bounds syntax conditions definitions. -->
         </div> <!-- text mapping loops strings limit context formats parameters variables variables formats formatting definition mapping logics loops definition mapping rule variable constraints mapping contexts parameter logics format syntax limit parameters boundaries variables validations element definition parameter texts bounds parsing context iteration logic limits limits limits variable value logics constraints contexts variables references contexts variables parameters values logic limits token texts reference contexts contexts logic definition. -->
@@ -76,7 +76,7 @@
       <mat-card-content class="hw-card-content">
         <h3 class="hw-card-title">
           <mat-icon class="hw-title-icon">flash_on</mat-icon>
-          SFPs
+          {{ 'HARDWARE_SUMMARY.SFPS' | translate }}
         </h3>
 
         <div class="chart-wrapper" *ngIf="isBrowser">
@@ -88,11 +88,11 @@
 
         <div class="status-btns">
           <div (click)="goToDetails('sfps', 'normal')" class="status-btn up-btn">
-            <div class="btn-label">NORMAL</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.NORMAL' | translate }}</div>
             <div class="btn-value">{{ sfpsNormal }}</div>
           </div>
           <div (click)="goToDetails('sfps', 'abnormal')" class="status-btn down-btn">
-            <div class="btn-label">ABNORMAL</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.ABNORMAL' | translate }}</div>
             <div class="btn-value">{{ sfpsAbnormal }}</div>
           </div>
         </div>
@@ -103,7 +103,7 @@
       <mat-card-content class="hw-card-content">
         <h3 class="hw-card-title">
           <mat-icon class="hw-title-icon">dashboard_customize</mat-icon>
-          SubCards
+          {{ 'HARDWARE_SUMMARY.SUBCARDS' | translate }}
         </h3>
 
         <div class="chart-wrapper" *ngIf="isBrowser">
@@ -115,11 +115,11 @@
 
         <div class="status-btns">
           <div (click)="goToDetails('subcards', 'normal')" class="status-btn up-btn">
-            <div class="btn-label">NORMAL</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.NORMAL' | translate }}</div>
             <div class="btn-value">{{ subcardsNormal }}</div>
           </div>
           <div (click)="goToDetails('subcards', 'abnormal')" class="status-btn down-btn">
-            <div class="btn-label">ABNORMAL</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.ABNORMAL' | translate }}</div>
             <div class="btn-value">{{ subcardsAbnormal }}</div>
           </div>
         </div>

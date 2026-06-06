@@ -9,9 +9,8 @@
   </button>
 
   <div class="toolbar-brand">
-    <span class="brand-text">Orange</span>
-    <span class="brand-divider"></span>
-    <span class="brand-sub">NOC</span>
+    <img class="brand-logo logo-dark" src="assets/orange-noc-horizontal-white-text.png" alt="Orange NOC">
+    <img class="brand-logo logo-light" src="assets/orange-noc-horizontal-dark-text.png" alt="Orange NOC">
   </div>
 
   <!-- ── Quick-access nav pills ── -->
@@ -73,7 +72,7 @@
   <div class="toolbar-spacer"></div>
 
   <!-- Language toggle -->
-  <button class="theme-toggle lang-toggle" (click)="toggleLanguage()" style="margin-right: 12px; font-weight: bold; width: 40px; border-radius: 8px;">
+  <button class="theme-toggle lang-toggle" (click)="toggleLanguage()">
     {{ currentLang | uppercase }}
   </button>
 

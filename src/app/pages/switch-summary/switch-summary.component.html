@@ -2,14 +2,14 @@
 <div class="back-container">
   <button (click)="goBack()" class="back-btn">
     <mat-icon class="back-icon">arrow_back</mat-icon>
-    Back to Switches
+    {{ 'HARDWARE_SUMMARY.BACK_TO_SWITCHES' | translate }}
   </button>
 </div>
 
 <!-- Loading -->
 <div *ngIf="loading" class="loading-container">
   <mat-spinner class="loading-spinner"></mat-spinner>
-  <p class="loading-text">Fetching hardware status for {{ ip }}...</p>
+  <p class="loading-text">{{ 'HARDWARE_SUMMARY.LOADING' | translate:{ip: ip} }}</p>
 </div>
 
 <!-- Content -->
@@ -24,7 +24,7 @@
       <mat-card-content class="hw-card-content">
         <h3 class="hw-card-title">
           <mat-icon class="hw-title-icon">settings_ethernet</mat-icon>
-          Ports
+          {{ 'HARDWARE_SUMMARY.PORTS' | translate }}
         </h3>
 
         <!-- Chart or no-data -->
@@ -37,18 +37,18 @@
         <ng-template #noPorts>
           <div class="no-hw-data">
             <mat-icon>info_outline</mat-icon>
-            <span>No port data available</span>
+            <span>{{ 'HARDWARE_SUMMARY.NO_PORT_DATA' | translate }}</span>
           </div>
         </ng-template>
 
         <!-- UP / DOWN Buttons -->
         <div class="status-btns">
           <div (click)="goToDetails('up')" class="status-btn up-btn">
-            <div class="btn-label">UP</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.UP' | translate }}</div>
             <div class="btn-value">{{ portsUp }}</div>
           </div>
           <div (click)="goToDetails('down')" class="status-btn down-btn">
-            <div class="btn-label">DOWN</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.DOWN' | translate }}</div>
             <div class="btn-value">{{ portsDown }}</div>
           </div>
         </div>
@@ -60,7 +60,7 @@
       <mat-card-content class="hw-card-content">
         <h3 class="hw-card-title">
           <mat-icon class="hw-title-icon">memory</mat-icon>
-          Cards
+          {{ 'HARDWARE_SUMMARY.CARDS' | translate }}
         </h3>
 
         <ng-container *ngIf="(cardsNormal + cardsAbnormal) > 0; else noCards">
@@ -72,18 +72,18 @@
         <ng-template #noCards>
           <div class="no-hw-data">
             <mat-icon>info_outline</mat-icon>
-            <span>No card data available</span>
+            <span>{{ 'HARDWARE_SUMMARY.NO_CARD_DATA' | translate }}</span>
           </div>
         </ng-template>
 
         <!-- NORMAL / ABNORMAL Buttons -->
         <div class="status-btns">
           <div class="status-btn up-btn">
-            <div class="btn-label">NORMAL</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.NORMAL' | translate }}</div>
             <div class="btn-value">{{ cardsNormal }}</div>
           </div>
           <div class="status-btn down-btn">
-            <div class="btn-label">ABNORMAL</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.ABNORMAL' | translate }}</div>
             <div class="btn-value">{{ cardsAbnormal }}</div>
           </div>
         </div>
@@ -95,7 +95,7 @@
       <mat-card-content class="hw-card-content">
         <h3 class="hw-card-title">
           <mat-icon class="hw-title-icon">flash_on</mat-icon>
-          SFPs
+          {{ 'HARDWARE_SUMMARY.SFPS' | translate }}
         </h3>
 
         <ng-container *ngIf="(sfpsNormal + sfpsAbnormal) > 0; else noSfps">
@@ -107,18 +107,18 @@
         <ng-template #noSfps>
           <div class="no-hw-data">
             <mat-icon>info_outline</mat-icon>
-            <span>No SFP data available</span>
+            <span>{{ 'HARDWARE_SUMMARY.NO_SFP_DATA' | translate }}</span>
           </div>
         </ng-template>
 
         <!-- NORMAL / ABNORMAL Buttons -->
         <div class="status-btns">
           <div class="status-btn up-btn">
-            <div class="btn-label">NORMAL</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.NORMAL' | translate }}</div>
             <div class="btn-value">{{ sfpsNormal }}</div>
           </div>
           <div class="status-btn down-btn">
-            <div class="btn-label">ABNORMAL</div>
+            <div class="btn-label">{{ 'HARDWARE_SUMMARY.ABNORMAL' | translate }}</div>
             <div class="btn-value">{{ sfpsAbnormal }}</div>
           </div>
         </div>
@@ -131,5 +131,5 @@
 <!-- No data fallback -->
 <div *ngIf="!loading && !verification" class="no-data">
   <mat-icon class="no-data-icon">error_outline</mat-icon>
-  <p>Could not retrieve hardware data for <strong>{{ ip }}</strong>.</p>
+  <p>{{ 'HARDWARE_SUMMARY.NO_HW_DATA' | translate }} <strong>{{ ip }}</strong>.</p>
 </div>

@@ -86,27 +86,26 @@
   gap: 12px;
 }
 
-.brand-text {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--primary-orange);
-  letter-spacing: -0.3px;
+.brand-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
 }
 
-.brand-divider {
-  width: 1px;
-  height: 20px;
-  background: var(--glass-border);
+/* Default (Dark Theme) state */
+.brand-logo.logo-light {
+  display: none;
+}
+.brand-logo.logo-dark {
+  display: block;
 }
 
-.brand-sub {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  color: var(--text-secondary);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+/* Light Theme overrides using :host-context since component uses encapsulation */
+:host-context(.light-theme) .brand-logo.logo-light {
+  display: block;
+}
+:host-context(.light-theme) .brand-logo.logo-dark {
+  display: none;
 }
 
 /* ── Toolbar quick-nav ─────────────────────────────────── */
@@ -345,6 +344,29 @@
   align-items: center;
   outline: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+.lang-toggle {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 28px;
+  min-width: 40px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s ease;
+  margin-right: 16px;
+}
+
+.lang-toggle:hover {
+  background: var(--glass-hover);
+  color: var(--primary-orange);
+  border-color: var(--primary-orange);
 }
 
 /* --- Track --- */

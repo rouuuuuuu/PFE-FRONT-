@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core'; // <-- Add Inject and PLATFORM_ID (Jibna les decorateurs ml code base mta angular syntax mapping tokens limitations configurations variable references)
 import { CommonModule, isPlatformBrowser } from '@angular/common'; // <-- Add isPlatformBrowser (Lel browser check w common directives loops format constraint mapping boundaries parameter definition configuration limits)
 import { ActivatedRoute, Router } from '@angular/router'; // E'routage besh najmou nkalmou paramettre wl page jdid configurations parameters definitions mappings evaluation text context rules)
+import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card'; // Les cartes material limits parameters limit bounds)
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Spinner l'loading limit variables parameters condition definitions texts)
 import { MatIconModule } from '@angular/material/icon'; // L'icounet mta3 material format text bounds parsing limits limit contexts string)
@@ -11,7 +12,7 @@ import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js'; // typag
 @Component({ // Définition l'composant limits sequence validation.
   selector: 'app-hardware-summary', // E'tag fl DOM loop parameter constraint parameters rule.
   standalone: true, // Type standalone limitations constraint text definition variable structure variables logic.
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, NgChartsModule], // Les dépendances mta3 module formats formatting reference configurations boundaries limit validations tokens sequences configurations iteration context rule formats mapping format configuration sequence variable string bounds text string constraint formats definitions elements texts.
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, NgChartsModule, TranslateModule], // Les dépendances mta3 module formats formatting reference configurations boundaries limit validations tokens sequences configurations iteration context rule formats mapping format configuration sequence variable string bounds text string constraint formats definitions elements texts.
   templateUrl: './hardware-summary.component.html', // path l'template limits variables parameter formatting variables iteration context mapping constraints boundaries context limits contexts mapping parsing formats values contexts sequence definition configuration definition parsing logic elements strings evaluation validations texts limits context definitions definition contexts mapping parameters limitations iteration sequences structure limits pattern limit limitation loops mapping.
   styleUrl: './hardware-summary.component.css' // path l'css rule limitation formatting limits rule context boundary value variables context parameters execution.
 }) // limit parsing rules limitations contexts validations sequences limit rules limits texts format contexts limit rules validation evaluation context format.
@@ -62,6 +63,7 @@ export class HardwareSummaryComponent implements OnInit { // definition mta clas
       // Call 1: unified device — device info + ports/cards/sfps
       this.api.getUnifiedDevice(this.ip).subscribe({
         next: (data: any) => {
+          data.device_name = data.device_name || data.ne_name || data.name || 'Unknown Device';
           this.verification = data;
 
           const portList = data.ports || data.port_details || [];

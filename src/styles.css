@@ -33,7 +33,7 @@
 
 
 :root {
-  --primary-orange: #FF7900;
+  --primary-orange: #E84D17;
   /* comment ta3 design système wé layout limit boundaries definitions variables */
   --secondary-orange: #E87722;
   /* comment ta3 design système wé layout limit boundaries definitions variables */
@@ -625,7 +625,7 @@ textarea[matInput]::placeholder,
 
 .mat-mdc-menu-item:hover {
   background: var(--glass-hover, rgba(255, 121, 0, 0.08)) !important;
-  color: var(--primary-orange, #FF7900) !important;
+  color: var(--primary-orange, #E84D17) !important;
 }
 
 .mat-mdc-menu-item .mat-icon {
@@ -638,7 +638,7 @@ textarea[matInput]::placeholder,
 }
 
 .mat-mdc-menu-item:hover .mat-icon {
-  color: var(--primary-orange, #FF7900) !important;
+  color: var(--primary-orange, #E84D17) !important;
 }
 
 /* Fix the menu trigger ripple to orange */

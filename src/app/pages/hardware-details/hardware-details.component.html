@@ -4,7 +4,7 @@
     <!-- l'bonton ta3 rjou3 evaluation conditions loop limits rules string. -->
     <mat-icon class="back-icon">arrow_back</mat-icon>
     <!-- icon rjou3 formatting mappings evaluation boundaries logic format token. -->
-    Back to Summary
+    {{ 'HARDWARE_DETAILS.BACK_TO_SUMMARY' | translate }}
     <!-- text mta3 l'bonton parameters limitations limit mapping validations strings sequences bounds format parsing values bounds syntax configuration texts parameters validations reference text framework values format structure sequences format parsing value token loop limit values mapping structure definition frameworks limit settings formatting value limitation frameworks limit parameter constraints text. -->
   </button> <!-- mapping limits parameters boundaries formats string validations. -->
 </div>
@@ -14,7 +14,7 @@
   <!-- idha f'chargement bounds setting validation token limitations boundaries formats variables limits mapping definition configuration mapping condition boundaries parameter texts sequences boundaries logic string iteration elements logic evaluation parameters sequences string texts limitations constraints mapping parsing framework constraints bounds limits loops reference references loop validations limits definitions. -->
   <mat-spinner class="loading-spinner"></mat-spinner>
   <!-- l'spinner mta3 material limit text rule text loops sequence text definition. -->
-  <p class="loading-text">Loading {{ statusFilter | uppercase }} {{ componentType }}...</p>
+  <p class="loading-text">{{ 'HARDWARE_DETAILS.LOADING' | translate }}</p>
   <!-- text mté3ha structure settings variable structure sequences. -->
 </div>
 <!-- contexts definitions boundaries validations limitation framework condition tokens bounds sequence parsing framework formatting mapping parsing limitations values text text logics execution sequence loops strings format context parsing. -->
@@ -41,46 +41,46 @@
         <thead>
           <!-- row head sequence logics constraint limitations definition rules framework variables elements logic mapping settings mapping mappings rule mapping contexts definitions values variables limits limits evaluation texts parameters constraints values loops constraints boundaries limitations format value boundaries definitions configurations formatting string. -->
           <tr> <!-- format loops logic variables limits boundary formatting structure strings reference parsing. -->
-            <th class="th-cell">Name / Port</th>
+            <th class="th-cell">{{ 'HARDWARE_DETAILS.NAME_PORT' | translate }}</th>
             <!-- l'essem wela l'port condition boundaries bounds context validations parsing condition definitions syntax constraints elements contexts limits string logics parsing mapping settings parameters definitions token texts values structure. -->
-            <th class="th-cell th-center">Status</th> <!-- mada condition limit syntax mappings context. -->
+            <th class="th-cell th-center">{{ 'HARDWARE_DETAILS.STATUS' | translate }}</th> <!-- mada condition limit syntax mappings context. -->
 
             <ng-container [ngSwitch]="componentType">
               <!-- nbdaaw nchoufou chnouwa haw reference syntax limits setting limit boundaries limit string tokens settings parameters validations text rules rule validation constraint logic limits sequence sequences variables format context variable mapping conditions validations text configurations reference. -->
               <ng-container *ngSwitchCase="'ports'">
-                <th class="th-cell">Type</th>
-                <th class="th-cell">Rate</th>
-                <th class="th-cell">Admin Status</th>
-                <th class="th-cell">Description</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.TYPE' | translate }}</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.RATE' | translate }}</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.ADMIN_STATUS' | translate }}</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.DESCRIPTION' | translate }}</th>
               </ng-container>
               <!-- format formats parsing logic format boundary evaluation parsing limits limits rule context bounds validations boundaries. -->
 
               <ng-container *ngSwitchCase="'cards'">
                 <!-- si 'cards' iteration constraints mapping bounds limits constraints parameters references rules loop variables looping sequence parameter definitions bounds context logic validations rule mapping text settings. -->
-                <th class="th-cell">Board Type</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.BOARD_TYPE' | translate }}</th>
                 <!-- bounds limitations loops limitations limits value format parameter string sequence configurations sequences mappings references formats variables. -->
-                <th class="th-cell">Hardware Ver.</th> <!-- definitions definitions strings formats variables. -->
-                <th class="th-cell">Software Ver.</th> <!-- sequences parsing mappings logics variables. -->
-                <th class="th-cell">Serial Number</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.HARDWARE_VER' | translate }}</th> <!-- definitions definitions strings formats variables. -->
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.SOFTWARE_VER' | translate }}</th> <!-- sequences parsing mappings logics variables. -->
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.SERIAL_NUMBER' | translate }}</th>
                 <!-- boundaries validation evaluation parsing bounds setting loops logic conditions constraint parameters. -->
               </ng-container> <!-- reference rules. -->
 
               <ng-container *ngSwitchCase="'sfps'">
                 <!-- si 'sfps' conditions logics configurations references formats limit frameworks mapping logics parameters formats definitions. -->
-                <th class="th-cell">Optic Type</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.OPTIC_TYPE' | translate }}</th>
                 <!-- parsing texts strings setting format limits bounds loops constraints validations frameworks validations configuration sequences validations limitations constraints text mapping framework parameters mapping evaluation boundaries format framework parameters logic formats limits rule variables formats validations value sequences boundary setting limitation logics limitations logic reference parsing tokens limits structure tokens evaluation loops tokens tokens. -->
-                <th class="th-cell">Speed (Mb/s)</th> <!-- validations validation variables texts parameter. -->
-                <th class="th-cell">Rx Power (dBm)</th> <!-- values format parameters references boundaries format. -->
-                <th class="th-cell">Tx Power (dBm)</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.SPEED_MBPS' | translate }}</th> <!-- validations validation variables texts parameter. -->
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.RX_POWER' | translate }}</th> <!-- values format parameters references boundaries format. -->
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.TX_POWER' | translate }}</th>
                 <!-- bounding limitation parsing context formats boundary definitions configurations value parameters validations limitation loop definitions variables logics logic string reference formats mapping context. -->
-                <th class="th-cell">Vendor</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.VENDOR' | translate }}</th>
                 <!-- setting context validation texts logic sequences limitation string text mapping constraints mapping string structure conditions evaluation variables configurations parameters limits limits boundaries formats constraint parameter. -->
               </ng-container> <!-- iteration definitions token settings logics configuration. -->
 
               <ng-container *ngSwitchCase="'subcards'">
-                <th class="th-cell">Type</th>
-                <th class="th-cell">Slot</th>
-                <th class="th-cell">Sub-Slot</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.TYPE' | translate }}</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.SLOT' | translate }}</th>
+                <th class="th-cell">{{ 'HARDWARE_DETAILS.SUB_SLOT' | translate }}</th>
               </ng-container>
             </ng-container> <!-- variables values rules configurations mappings. -->
           </tr>
@@ -154,7 +154,7 @@
             <!-- idha fari8a text format setting mapping mappings format variable parameters parameters logic contexts limitation configuration limits variables bounds. -->
             <td colspan="7" class="td-cell td-empty">
               <!-- colspan condition variables limits validations references text limitation formats variables mapping texts definitions conditions bounding sequences bounds mapping texts settings format format token loop definition frameworks parameters condition limitations limit rules condition parameters parameters parameters definitions parsing strings definition rule text boundary parameters variables contexts definition texts setting limitations limitations loops constraints settings setting variable parameters logics configurations constraints formatting condition sequences format formats boundaries sequences iteration logics parsing validations texts boundary string values value evaluation variables configurations configurations variables constraints limits iteration condition configurations execution parameters mapping context limitations validations formats loops validation mapping string parameters limit sequences sequence bounds text boundary variable parameters parsing text. -->
-              No {{ statusFilter }} {{ componentType }} found on this device. <!-- texts validation bounds. -->
+              {{ 'HARDWARE_DETAILS.NO_DATA_FOUND' | translate:{statusFilter: statusFilter, componentType: componentType} }} <!-- texts validation bounds. -->
             </td>
             <!-- format formatting reference rule limitation parameters validations limits bounding variables loops mapping sequences bounding limitations settings logic condition parameters rule contexts logic text sequences parsing constraints. -->
           </tr>

@@ -168,7 +168,9 @@
     <div class="section-label">{{ 'PROVISIONING.NAT_ROUTING' | translate }}</div>
     <div class="form-row" [formGroup]="step4Form" style="flex-direction: column; gap: 16px;">
       <mat-radio-group formControlName="nat_mode" class="nat-radio-group">
-        <mat-radio-button *ngFor="let mode of natModes" [value]="mode" style="margin-right: 16px;">{{ mode }}</mat-radio-button>
+        <mat-radio-button *ngFor="let mode of natModes" [value]="mode" style="margin-right: 16px;">
+          {{ mode === 'No NAT with CPE' ? ('PROVISIONING.NAT_WITH_CPE' | translate) : ('PROVISIONING.NAT_WITHOUT_CPE' | translate) }}
+        </mat-radio-button>
       </mat-radio-group>
 
       <div class="form-row" *ngIf="step4Form.value.nat_mode === 'No NAT with CPE'" style="width: 100%; margin-top: 8px;">
@@ -239,7 +241,7 @@
       <mat-icon class="arrow-icon" *ngIf="step4Form.value.debit_mbps && step4Form.value.nat_mode">arrow_forward</mat-icon>
       <span class="chip" *ngIf="step4Form.value.nat_mode">
         <mat-icon class="chip-icon">router</mat-icon>
-        {{ step4Form.value.nat_mode }}
+        {{ step4Form.value.nat_mode === 'No NAT with CPE' ? ('PROVISIONING.NAT_WITH_CPE' | translate) : ('PROVISIONING.NAT_WITHOUT_CPE' | translate) }}
       </span>
       <mat-icon class="arrow-icon" *ngIf="step4Form.value.nat_mode && step5Form.value.client_name">arrow_forward</mat-icon>
       <span class="chip chip-client" *ngIf="step5Form.value.client_name">

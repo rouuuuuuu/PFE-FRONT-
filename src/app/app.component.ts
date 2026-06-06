@@ -53,12 +53,9 @@ export class AppComponent implements OnInit { // Définition mta3 l'class w n'im
       const savedSidenav = localStorage.getItem('noc-sidenav');
       if (savedSidenav === 'closed') this.sidenavOpen = false;
 
-      // Restore language preference
-      const savedLang = localStorage.getItem('noc-lang');
-      if (savedLang) {
-        this.currentLang = savedLang;
-      }
-      this.translate.use(this.currentLang);
+      // Always enforce English on startup
+      this.currentLang = 'en';
+      this.translate.use('en');
     }
   }
 
@@ -66,9 +63,6 @@ export class AppComponent implements OnInit { // Définition mta3 l'class w n'im
   toggleLanguage() {
     this.currentLang = this.currentLang === 'en' ? 'fr' : 'en';
     this.translate.use(this.currentLang);
-    if (this.isBrowser) {
-      localStorage.setItem('noc-lang', this.currentLang);
-    }
   }
 
   toggleProvisioning() { this.isProvisioningOpen = !this.isProvisioningOpen; }

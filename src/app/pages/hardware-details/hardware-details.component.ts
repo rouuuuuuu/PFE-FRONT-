@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'; // Njibou les composants w cycle de vie ta3 angular loop definitions mappings condition limits bounds texts reference.
 import { CommonModule } from '@angular/common'; // hne njibou les directives communes kima ngif bounds mapping limitation token.
+import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router'; // njibou route wel router besh njibou les parametres limits bounds mapping format loop string limitation validations sequence limits parameters limitation texts formatting iterations boundaries framework logical boundaries definition.
 import { MatCardModule } from '@angular/material/card'; // hne njibou les cartes mté3 material format bounds validations syntax limits condition configuration variable boundary mapping texts validations.
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // loading spinner text texts looping validation parameters variables validations string variable limit definition condition configurations formatting context boundary contexts limitation.
@@ -9,7 +10,7 @@ import { ApiService } from '../../services/api.service'; // njibou el api bech n
 @Component({ // Définition mté3 e'component limits string limit.
   selector: 'app-hardware-details', // l'tag fl DOM loop parameter constraint parameters rule logics format value.
   standalone: true, // Type standalone limitations constraint variable structure rules boundaries syntax configuration limit mapping parameters syntax values.
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule], // Les dépendances mta3 module condition variables format validations parameters string parameter variables string mapping condition mapping definition validation evaluation parsing tokens conditions limit validation logic loop limits texts formats structure rules contexts mappings format.
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule, MatIconModule, TranslateModule], // Les dépendances mta3 module condition variables format validations parameters string parameter variables string mapping condition mapping definition validation evaluation parsing tokens conditions limit validation logic loop limits texts formats structure rules contexts mappings format.
   templateUrl: './hardware-details.component.html', // path mté3 l'template boundaries limitation limits constraints parameters mapping texts format rule.
   styleUrl: './hardware-details.component.css' // path mté3 l'css loop parameters configuration execution condition mapping variables variables.
 }) // limits limitations condition validations boundaries values limits texts limitations syntax sequence.
