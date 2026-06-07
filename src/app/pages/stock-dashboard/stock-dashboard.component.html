@@ -7,9 +7,14 @@
       <p class="page-subtitle">{{ 'STOCK.SUBTITLE' | translate }}</p>
     </div>
   </div>
-  <button class="refresh-btn" (click)="loadStock()" [matTooltip]="'STOCK.REFRESH' | translate" id="refresh-stock-btn">
-    <mat-icon>refresh</mat-icon>
-  </button>
+  <div class="header-actions">
+    <button *ngIf="isAdmin" class="page-btn add-item-btn" (click)="openAddItemDialog()">
+      <mat-icon style="font-size: 18px; width: 18px; height: 18px; margin-right: 4px;">add</mat-icon> {{ 'STOCK.ADD_ITEM' | translate }}
+    </button>
+    <button class="refresh-btn" (click)="loadStock()" [matTooltip]="'STOCK.REFRESH' | translate" id="refresh-stock-btn">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
 </div>
 
 <!-- ── Loading ── -->
@@ -157,8 +162,26 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row" [class]="getStockClass(row)">
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="header-accent th-center">{{ 'STOCK.COL_ACTIONS' | translate }}</th>
+          <td mat-cell *matCellDef="let item" class="td-center">
+            <div class="action-buttons" *ngIf="isAdmin">
+              <button mat-icon-button color="primary" [matTooltip]="'STOCK.ACTION_INC' | translate" (click)="incrementStock(item)">
+                <mat-icon>add_circle</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" [matTooltip]="'STOCK.ACTION_DEC' | translate" (click)="decrementStock(item)" [disabled]="item.stock_qte <= 0">
+                <mat-icon>remove_circle</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" class="delete-btn" [matTooltip]="'STOCK.ACTION_DEL' | translate" (click)="deleteItem(item)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsList; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsList;" class="table-row" [class]="getStockClass(row)">
         </tr>
 
         <!-- No data -->

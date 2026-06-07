@@ -645,3 +645,60 @@ textarea[matInput]::placeholder,
 .mat-mdc-menu-trigger .mat-ripple-element {
   background: rgba(255, 121, 0, 0.12) !important;
 }
+
+/* ── Mat-Dialog theme (CDK overlay lives outside component scope) ── */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background: var(--bg-elevated, #1a1a2e) !important;
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08)) !important;
+  border-radius: var(--radius-lg, 14px) !important;
+  box-shadow: var(--shadow-hover) !important;
+}
+
+.mat-mdc-dialog-title {
+  color: var(--text-primary) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 700 !important;
+  border-bottom: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
+}
+
+.mat-mdc-dialog-content {
+  color: var(--text-secondary, #ccc) !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.mat-mdc-dialog-content strong {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-dialog-actions {
+  border-top: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
+}
+
+/* ── Dialog Form Field text overrides (Ensure it's visible in Dark Mode) ── */
+.mat-mdc-dialog-container .mat-mdc-form-field label,
+.mat-mdc-dialog-container .mat-mdc-form-field .mdc-floating-label,
+.mat-mdc-dialog-container .mat-mdc-form-field .mat-mdc-select-placeholder {
+  color: var(--text-secondary) !important;
+  -webkit-text-fill-color: var(--text-secondary) !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-input-element,
+.mat-mdc-dialog-container .mdc-text-field__input,
+.mat-mdc-dialog-container .mat-mdc-select-value-text {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-input-element::placeholder,
+.mat-mdc-dialog-container .mdc-text-field__input::placeholder {
+  color: var(--text-muted) !important;
+  -webkit-text-fill-color: var(--text-muted) !important;
+}
+
+/* Fix basic Material button text inside dialogs (e.g. Cancel button) */
+.mat-mdc-dialog-container .mat-mdc-button:not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+  color: var(--text-secondary) !important;
+}
+.mat-mdc-dialog-container .mat-mdc-button:not(.mat-primary):not(.mat-accent):not(.mat-warn) .mdc-button__label {
+  color: var(--text-secondary) !important;
+}

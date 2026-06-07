@@ -38,6 +38,24 @@
   font-family: 'Outfit', sans-serif;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-item-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  height: 40px;
+  padding: 0 20px;
+}
+
 .refresh-btn {
   background: transparent;
   border: 1px solid #3a3a3a;
@@ -375,9 +393,30 @@
 }
 
 .badge-icon-sm {
-  font-size: 13px;
-  width: 13px;
-  height: 13px;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+/* ── Actions Column ── */
+.th-center, .td-center {
+  text-align: center !important;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-buttons button {
+  transform: scale(0.9);
+}
+
+.delete-btn {
+  color: #ef4444 !important;
 }
 
 /* ── Transfer Cell ── */
