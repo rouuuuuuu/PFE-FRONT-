@@ -2,6 +2,23 @@ import { Injectable } from '@angular/core'; // Décorateur Injectable men Angula
 import { HttpClient, HttpParams } from '@angular/common/http'; // HttpClient w HttpParams bech nb3thou les requêtes web (Classes for making HTTP requests and handling query params)
 import { Observable } from 'rxjs'; // Observable men RxJS bech ngériw les données asynchrones (Handles asynchronous data streams)
 
+// Interface mta3 e'response mta3 generate report (Type-safe response shape from the Django report endpoint)
+export interface GenerateReportResponse {
+  status: 'success' | 'error';
+  message: string;
+}
+
+// Interface mta3 chaque rapport mensuel (Shape of a single monthly report object from the API)
+export interface MonthlyReport {
+  id: number;
+  month_year: string;           // e.g. "May 2026"
+  total_routers: number;
+  total_switches: number;
+  critical_alarms_count: number;
+  pdf_file: string | null;      // Full URL to the PDF, or null if generation failed
+  generated_at: string;         // ISO 8601 datetime string
+}
+
 const API_URL = 'http://127.0.0.1:8000/api'; // L'adresse mta3 l'backend Django (The base URL for our backend API)
 
 @Injectable({ // Y9oul l'Angular elli service hedha ynejjem tet'injecta f'blasa okhra (Allows this service to be injected into components)
@@ -118,6 +135,10 @@ export class ApiService { // Définition mta3 l'class ApiService (Export the API
     return this.http.post(`${API_URL}/provisioning/reserve-port/`, data);
   }
 
+  getPortReservationHistory(): Observable<any> { // Njibou l'historique mta3 les réservations des ports (Fetch the full port reservation history list)
+    return this.http.get(`${API_URL}/provisioning/port-reservations/`);
+  }
+
   // Resolve real DB integer PK for a port by router ID + port name
 getPortId(routerId: number, portName: string): Observable<any> {
   return this.http.get(`${API_URL}/port-id/`, {
@@ -126,5 +147,16 @@ getPortId(routerId: number, portName: string): Observable<any> {
 }
 
   getStock() { return this.http.get(`${API_URL}/inventory/stock/`); }
+
+  // ==========================================
+  // REPORTS (Rapports PDF mensuels)
+  // ==========================================
+  generateReportManually(): Observable<GenerateReportResponse> { // Lancer la génération manuelle du rapport PDF mensuel (Trigger Celery task to build the monthly PDF report)
+    return this.http.post<GenerateReportResponse>(`${API_URL}/reports/monthly/generate_now/`, {}); // POST vide – le backend n'a besoin d'aucun payload (Empty POST body – the backend ignores the body and starts the task)
+  }
+
+  getReports(): Observable<MonthlyReport[]> { // Njibou e'liste mta3 les rapports générés (Fetch the list of all generated reports)
+    return this.http.get<MonthlyReport[]>(`${API_URL}/reports/monthly/`); // GET lel endpoint mta3 les rapports (GET request for the reports list)
+  }
 
 } // Wfa e'service (End of service class)

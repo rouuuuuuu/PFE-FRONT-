@@ -1,0 +1,191 @@
+<div class="rl-page">
+
+  <!-- ══════════════════════════════════════════
+       PAGE HEADER
+  ══════════════════════════════════════════ -->
+  <div class="rl-header">
+    <div class="rl-header-left">
+      <div class="rl-title-group">
+        <span class="rl-title-icon">
+          <i class="fas fa-file-alt"></i>
+        </span>
+        <div>
+          <h1 class="rl-title">{{ 'REPORTS.TITLE' | translate }}</h1>
+          <p class="rl-subtitle">{{ 'REPORTS.SUBTITLE' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generate Report button -->
+    <button
+      class="rl-btn-generate"
+      (click)="triggerManualReport()"
+      [disabled]="isGenerating"
+      [title]="'REPORTS.GENERATE_TOOLTIP' | translate">
+
+      <ng-container *ngIf="isGenerating; else idleIcon">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>{{ 'REPORTS.GENERATING' | translate }}</span>
+      </ng-container>
+
+      <ng-template #idleIcon>
+        <i class="fas fa-file-pdf"></i>
+        <span>{{ 'REPORTS.GENERATE_BTN' | translate }}</span>
+      </ng-template>
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       NOTIFICATION BANNER (auto-dismiss)
+  ══════════════════════════════════════════ -->
+  <div
+    *ngIf="notification"
+    class="rl-notification"
+    [ngClass]="{
+      'rl-notif-success': notification.type === 'success',
+      'rl-notif-error':   notification.type === 'error'
+    }">
+
+    <div class="rl-notif-content">
+      <i class="fas"
+        [ngClass]="{
+          'fa-check-circle':       notification.type === 'success',
+          'fa-exclamation-circle': notification.type === 'error'
+        }">
+      </i>
+      <span>{{ notification.message }}</span>
+    </div>
+
+    <button class="rl-notif-close" (click)="dismissNotification()" [attr.aria-label]="'REPORTS.DISMISS' | translate">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MAIN TABLE CARD
+  ══════════════════════════════════════════ -->
+  <div class="rl-card">
+
+    <!-- ── Loading skeleton ── -->
+    <div *ngIf="isLoadingReports" class="rl-state-center">
+      <i class="fas fa-spinner fa-spin rl-state-icon"></i>
+      <p>{{ 'REPORTS.LOADING' | translate }}</p>
+    </div>
+
+    <!-- ── HTTP error ── -->
+    <div *ngIf="!isLoadingReports && loadError" class="rl-state-center rl-state-error">
+      <i class="fas fa-exclamation-triangle rl-state-icon"></i>
+      <p>{{ loadError }}</p>
+      <button class="rl-btn-retry" (click)="loadReports()">
+        <i class="fas fa-redo"></i> {{ 'REPORTS.RETRY' | translate }}
+      </button>
+    </div>
+
+    <!-- ── Empty state ── -->
+    <div *ngIf="!isLoadingReports && !loadError && reports.length === 0" class="rl-state-center">
+      <i class="fas fa-folder-open rl-state-icon rl-state-muted"></i>
+      <p>{{ 'REPORTS.EMPTY' | translate }}</p>
+      <small [innerHTML]="'REPORTS.EMPTY_HINT' | translate"></small>
+    </div>
+
+    <!-- ── Data table ── -->
+    <div *ngIf="!isLoadingReports && !loadError && reports.length > 0" class="rl-table-wrapper">
+      <table class="rl-table">
+        <thead>
+          <tr>
+            <th class="col-month">{{ 'REPORTS.COL_MONTH' | translate }}</th>
+            <th class="col-stat col-center">
+              <i class="fas fa-network-wired"></i> {{ 'REPORTS.COL_ROUTERS' | translate }}
+            </th>
+            <th class="col-stat col-center">
+              <i class="fas fa-server"></i> {{ 'REPORTS.COL_SWITCHES' | translate }}
+            </th>
+            <th class="col-stat col-center">
+              <i class="fas fa-bell"></i> {{ 'REPORTS.COL_ALARMS' | translate }}
+            </th>
+            <th class="col-date">{{ 'REPORTS.COL_DATE' | translate }}</th>
+            <th class="col-action col-center">{{ 'REPORTS.COL_ACTIONS' | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let report of reports; let i = index" class="rl-row">
+
+            <!-- Month / Period -->
+            <td class="col-month">
+              <div class="month-cell">
+                <span class="month-badge">
+                  <i class="fas fa-calendar-alt"></i>
+                  {{ report.month_year }}
+                </span>
+                <span class="report-id">#{{ report.id }}</span>
+              </div>
+            </td>
+
+            <!-- Total Routers -->
+            <td class="col-stat col-center">
+              <span class="stat-pill pill-blue">{{ report.total_routers }}</span>
+            </td>
+
+            <!-- Total Switches -->
+            <td class="col-stat col-center">
+              <span class="stat-pill pill-indigo">{{ report.total_switches }}</span>
+            </td>
+
+            <!-- Critical Alarms — red if > 0 -->
+            <td class="col-stat col-center">
+              <span
+                class="stat-pill"
+                [ngClass]="{
+                  'pill-red':   hasCriticalAlarms(report),
+                  'pill-green': !hasCriticalAlarms(report)
+                }">
+                <i *ngIf="hasCriticalAlarms(report)" class="fas fa-exclamation-triangle"></i>
+                <i *ngIf="!hasCriticalAlarms(report)" class="fas fa-check"></i>
+                {{ report.critical_alarms_count }}
+              </span>
+            </td>
+
+            <!-- Generated At -->
+            <td class="col-date">
+              <span class="date-text">{{ report.generated_at | date:'dd MMM yyyy' }}</span>
+              <span class="time-text">{{ report.generated_at | date:'HH:mm' }}</span>
+            </td>
+
+            <!-- Actions — Download PDF or fallback -->
+            <td class="col-action col-center">
+
+              <!-- PDF available: native download link -->
+              <a
+                *ngIf="report.pdf_file"
+                [href]="report.pdf_file"
+                target="_blank"
+                download
+                class="rl-btn-download"
+                [title]="('REPORTS.DOWNLOAD_TOOLTIP' | translate) + ' ' + report.month_year">
+                <i class="fas fa-file-pdf"></i>
+                <span>{{ 'REPORTS.DOWNLOAD_BTN' | translate }}</span>
+              </a>
+
+              <!-- PDF not available: muted fallback -->
+              <span *ngIf="!report.pdf_file" class="rl-no-file">
+                <i class="fas fa-ban"></i>
+                {{ 'REPORTS.FILE_UNAVAILABLE' | translate }}
+              </span>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Table footer: record count -->
+      <div class="rl-table-footer">
+        <span>{{ reports.length }} {{ 'REPORTS.FOUND' | translate }}</span>
+        <button class="rl-btn-refresh" (click)="loadReports()" [title]="'REPORTS.REFRESH_TOOLTIP' | translate">
+          <i class="fas fa-sync-alt"></i> {{ 'REPORTS.REFRESH' | translate }}
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /.rl-card -->
+</div><!-- /.rl-page -->

@@ -11,7 +11,8 @@
     "UPGRADE": "Mise à niveau / Déclassement",
     "PORT_RESERVATION": "Réservation de Port",
     "INTERNET_SERVICE": "Service Internet",
-    "AI_ASSISTANT": "Iris - Assistant IA"
+    "AI_ASSISTANT": "Iris - Assistant IA",
+    "REPORTS": "Rapports"
   },
   "DASHBOARD": {
     "TITLE": "Tableau de Bord NOC",
@@ -34,7 +35,9 @@
     "SFPS": "SFP",
     "BY_TYPE": "Par Type :",
     "SUBCARDS": "Sous-Cartes",
-    "DETAILS": "Détails : {{chartTitle}}"
+    "DETAILS": "Détails : {{chartTitle}}",
+    "MONTHLY_REPORTS": "Rapports Mensuels",
+    "MONTHLY_REPORTS_TOOLTIP": "Voir & générer les rapports PDF mensuels"
   },
   "STOCK": {
     "TITLE": "Tableau de Bord des Stocks",
@@ -202,7 +205,19 @@
     "DESC_PLACEHOLDER": "ex: Réservé pour client B2B XYZ",
     "NO_DESC": "Pas de description",
     "RESERVING": "Réservation en cours...",
-    "RESERVE_BTN": "Réserver et activer le port"
+    "RESERVE_BTN": "Réserver et activer le port",
+    "HISTORY_TITLE": "Historique des réservations",
+    "HISTORY_SUBTITLE": "Toutes les réservations de ports soumises via cette interface",
+    "HISTORY_SEARCH": "Rechercher par routeur, port, statut...",
+    "HISTORY_LOADING": "Chargement de l'historique...",
+    "HISTORY_RETRY": "Réessayer",
+    "HISTORY_EMPTY": "Aucune réservation n'a encore été effectuée.",
+    "HISTORY_RECORDS": "enregistrement(s)",
+    "HISTORY_COL_ROUTER": "Routeur",
+    "HISTORY_COL_PORT": "Port",
+    "HISTORY_COL_DESC": "Description",
+    "HISTORY_COL_STATUS": "Statut",
+    "HISTORY_COL_DATE": "Réservé le"
   },
   "PROVISIONING": {
     "TITLE": "Fourniture de service Internet",
@@ -387,5 +402,29 @@
     "NO_CARD_DATA": "Aucune donnée de carte disponible",
     "NO_SFP_DATA": "Aucune donnée SFP disponible",
     "NO_HW_DATA": "Impossible de récupérer les données matérielles pour"
+  },
+  "REPORTS": {
+    "TITLE": "Historique des Rapports Mensuels",
+    "SUBTITLE": "Liste de tous les rapports réseau NOC et exports PDF générés",
+    "GENERATE_TOOLTIP": "Déclencher la génération manuelle du rapport PDF mensuel",
+    "GENERATING": "Génération en cours…",
+    "GENERATE_BTN": "Générer le Rapport",
+    "DISMISS": "Fermer",
+    "LOADING": "Chargement des rapports…",
+    "RETRY": "Réessayer",
+    "EMPTY": "Aucun rapport n'a encore été généré.",
+    "EMPTY_HINT": "Cliquez sur <strong>Générer le Rapport</strong> ci-dessus pour créer le premier.",
+    "COL_MONTH": "Mois / Période",
+    "COL_ROUTERS": "Routeurs",
+    "COL_SWITCHES": "Commutateurs",
+    "COL_ALARMS": "Alarmes Critiques",
+    "COL_DATE": "Généré Le",
+    "COL_ACTIONS": "Actions",
+    "DOWNLOAD_TOOLTIP": "Télécharger le rapport PDF pour",
+    "DOWNLOAD_BTN": "Télécharger",
+    "FILE_UNAVAILABLE": "Fichier indisponible",
+    "FOUND": "rapport(s) trouvé(s)",
+    "REFRESH_TOOLTIP": "Actualiser la liste",
+    "REFRESH": "Actualiser"
   }
 }

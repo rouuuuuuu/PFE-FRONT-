@@ -213,3 +213,314 @@
 ::ng-deep .error-snackbar .mat-mdc-button {
   color: #fff !important;
 }
+
+/* ============================================================
+   RESERVATION HISTORY SECTION
+   ============================================================ */
+
+.hist-section {
+  margin-top: 8px;
+}
+
+/* ── History header ── */
+.hist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.hist-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hist-title-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  color: var(--primary-orange);
+  opacity: 0.85;
+}
+
+.hist-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.hist-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.hist-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Search box ── */
+.hist-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.hist-search-icon {
+  position: absolute;
+  left: 10px;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.hist-search-input {
+  background: var(--glass-bg, #1a2236);
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.08));
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  padding: 8px 14px 8px 36px;
+  outline: none;
+  width: 220px;
+  transition: border-color 0.2s;
+}
+
+.hist-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.hist-search-input:focus {
+  border-color: var(--primary-orange);
+}
+
+/* ── Refresh button ── */
+.hist-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.08));
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.hist-refresh-btn:hover:not(:disabled) {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+}
+
+.hist-refresh-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── State displays ── */
+.hist-state-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 3rem 2rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  background: var(--glass-bg, #1a2236);
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.07));
+  border-radius: 12px;
+}
+
+.hist-state-error {
+  color: #f87171;
+}
+
+.hist-state-empty mat-icon {
+  font-size: 2rem !important;
+  opacity: 0.35;
+}
+
+.hist-empty-icon {
+  font-size: 2.5rem !important;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  opacity: 0.3;
+}
+
+.hist-retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f87171;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: background 0.15s;
+}
+
+.hist-retry-btn:hover {
+  background: rgba(239,68,68,0.2);
+}
+
+/* ── Table wrapper ── */
+.hist-table-wrap {
+  background: var(--glass-bg, #1a2236);
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.07));
+  border-top: 3px solid var(--primary-orange);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ── Table ── */
+.hist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.hist-table thead tr {
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.hist-table th {
+  padding: 0.85rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.hist-table td {
+  padding: 0.85rem 1.25rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: middle;
+}
+
+.hist-row:hover td {
+  background: rgba(255,255,255,0.025);
+}
+
+.hist-row:last-child td {
+  border-bottom: none;
+}
+
+.col-center { text-align: center; }
+
+/* ── Cell layouts ── */
+.cell-router,
+.cell-port {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cell-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--primary-orange);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.cell-desc {
+  color: var(--text-secondary);
+  font-style: italic;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell-date {
+  white-space: nowrap;
+}
+
+.date-main {
+  display: block;
+  font-weight: 500;
+}
+
+.date-time {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Status badges ── */
+.hist-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px 3px 6px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+}
+
+.badge-icon {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.hist-done {
+  background: rgba(34,197,94,0.12);
+  color: #4ade80;
+  border: 1px solid rgba(34,197,94,0.25);
+}
+
+.hist-error {
+  background: rgba(239,68,68,0.12);
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.25);
+}
+
+.hist-pending {
+  background: rgba(251,191,36,0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(251,191,36,0.2);
+}
+
+/* ── Footer ── */
+.hist-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.65rem 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.02);
+}
+
+/* ── Spinning icon (shared) ── */
+.spinning {
+  animation: spin 0.8s linear infinite;
+}

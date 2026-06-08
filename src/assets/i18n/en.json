@@ -11,7 +11,8 @@
     "UPGRADE": "Upgrade / Downgrade",
     "PORT_RESERVATION": "Port Reservation",
     "INTERNET_SERVICE": "Internet Service",
-    "AI_ASSISTANT": "Iris - AI Assistant"
+    "AI_ASSISTANT": "Iris - AI Assistant",
+    "REPORTS": "Reports"
   },
   "DASHBOARD": {
     "TITLE": "NOC Dashboard",
@@ -34,7 +35,9 @@
     "SFPS": "SFPs",
     "BY_TYPE": "By Type:",
     "SUBCARDS": "SubCards",
-    "DETAILS": "{{chartTitle}} Details"
+    "DETAILS": "{{chartTitle}} Details",
+    "MONTHLY_REPORTS": "Monthly Reports",
+    "MONTHLY_REPORTS_TOOLTIP": "View & generate monthly PDF reports"
   },
   "STOCK": {
     "TITLE": "Stock Dashboard",
@@ -202,7 +205,19 @@
     "DESC_PLACEHOLDER": "e.g. Reserved for B2B Client XYZ",
     "NO_DESC": "No Description",
     "RESERVING": "Reserving...",
-    "RESERVE_BTN": "Reserve & Bring Up Port"
+    "RESERVE_BTN": "Reserve & Bring Up Port",
+    "HISTORY_TITLE": "Reservation History",
+    "HISTORY_SUBTITLE": "All port reservations submitted through this interface",
+    "HISTORY_SEARCH": "Search by router, port, status...",
+    "HISTORY_LOADING": "Loading history...",
+    "HISTORY_RETRY": "Retry",
+    "HISTORY_EMPTY": "No reservations have been made yet.",
+    "HISTORY_RECORDS": "record(s)",
+    "HISTORY_COL_ROUTER": "Router",
+    "HISTORY_COL_PORT": "Port",
+    "HISTORY_COL_DESC": "Description",
+    "HISTORY_COL_STATUS": "Status",
+    "HISTORY_COL_DATE": "Reserved At"
   },
   "PROVISIONING": {
     "TITLE": "Internet Service Provisioning",
@@ -387,5 +402,29 @@
     "NO_CARD_DATA": "No card data available",
     "NO_SFP_DATA": "No SFP data available",
     "NO_HW_DATA": "Could not retrieve hardware data for"
+  },
+  "REPORTS": {
+    "TITLE": "Monthly Reports History",
+    "SUBTITLE": "List of all generated NOC network reports & PDF exports",
+    "GENERATE_TOOLTIP": "Trigger manual generation of the monthly PDF report",
+    "GENERATING": "Generating…",
+    "GENERATE_BTN": "Generate Report",
+    "DISMISS": "Dismiss",
+    "LOADING": "Loading reports…",
+    "RETRY": "Retry",
+    "EMPTY": "No reports have been generated yet.",
+    "EMPTY_HINT": "Click <strong>Generate Report</strong> above to create the first one.",
+    "COL_MONTH": "Month / Period",
+    "COL_ROUTERS": "Routers",
+    "COL_SWITCHES": "Switches",
+    "COL_ALARMS": "Critical Alarms",
+    "COL_DATE": "Generated At",
+    "COL_ACTIONS": "Actions",
+    "DOWNLOAD_TOOLTIP": "Download report PDF for",
+    "DOWNLOAD_BTN": "Download",
+    "FILE_UNAVAILABLE": "File unavailable",
+    "FOUND": "report(s) found",
+    "REFRESH_TOOLTIP": "Refresh list",
+    "REFRESH": "Refresh"
   }
 }

@@ -15,6 +15,7 @@ import { PortReservationComponent } from './pages/port-reservation/port-reservat
 import { NetworkTopologyComponent } from './pages/network-topology/network-topology.component';
 import { InternetProvisioningComponent } from './pages/internet-provisioning/internet-provisioning.component';
 import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component'; // Page AI Network Assistant
+import { ReportListComponent } from './pages/report-list/report-list.component'; // Page mta3 les rapports PDF mensuels (Monthly PDF reports page)
 
 
 export const routes: Routes = [
@@ -30,6 +31,7 @@ export const routes: Routes = [
   { path: 'upgrade', component: UpgradeComponent },
   { path: 'ai-assistant', component: AiAssistantComponent }, // Page AI Network Assistant
   { path: 'inventory', component: StockDashboardComponent },
+  { path: 'reports', component: ReportListComponent }, // Page mta3 les rapports mensuels PDF (Monthly reports list page),
 
   {
     path: 'provisioning', // Cheman parent mta3 el provisioning (Parent path for provisioning area)

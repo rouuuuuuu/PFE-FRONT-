@@ -4,7 +4,14 @@
     <h1 class="page-title">{{ 'DASHBOARD.TITLE' | translate }}</h1>
     <p class="page-subtitle">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
   </div>
+
+  <!-- Monthly Reports button — navigates to /reports -->
+  <button class="btn-generate-report" (click)="goToReports()" [title]="'DASHBOARD.MONTHLY_REPORTS_TOOLTIP' | translate">
+    <mat-icon>summarize</mat-icon>
+    <span>{{ 'DASHBOARD.MONTHLY_REPORTS' | translate }}</span>
+  </button>
 </div>
+
 
 <div *ngIf="loading" class="loading-container">
   <mat-spinner class="loading-spinner"></mat-spinner>

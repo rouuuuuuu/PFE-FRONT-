@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -46,9 +47,14 @@ export class DashboardComponent implements OnInit { // El class mté3a li fiha k
     '#aec7e8', '#ffbb78', '#98df8a', '#ff9896' // variable token loop constraints contexts matching mapping validation limit texts strings references limitations format structures variables configuration limitations contexts pattern conditions condition sequence mappings limits limit loop boundaries sequences text condition evaluation limitation rules condition limitations bounds conditions mapping parser strings strings evaluation parameter references structure limits loop text formatting mappings logic context text limit parsing value parsing limitation limit constraints contexts definition limits parser variables texts references limit limits formatting definition limitations texts strings context context value limitations condition strings limitation variables contexts formats loops variables validation formats limits validations texts mapping logic limitation tokens limits loop boundary reference.
   ];
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private router: Router) { }
 
 
+
+  /** Navigates to the Reports page */
+  goToReports(): void {
+    this.router.navigate(['/reports']);
+  }
 
   ngOnInit() { // awl fn tkhdem l'component token boundaries text format resolution bounds.
     this.api.getDashboardStats().subscribe({ // Tkalem API jib statistiques ta dashboards boundary.

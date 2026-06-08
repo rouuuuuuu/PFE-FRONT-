@@ -99,3 +99,119 @@
 
   </mat-card-content>
 </mat-card>
+
+<!-- ══════════════════════════════════════════
+     RESERVATION HISTORY
+══════════════════════════════════════════ -->
+<div class="hist-section">
+
+  <!-- History header -->
+  <div class="hist-header">
+    <div class="hist-title-group">
+      <mat-icon class="hist-title-icon">history</mat-icon>
+      <div>
+        <h2 class="hist-title">{{ 'PORT_RESERVATION.HISTORY_TITLE' | translate }}</h2>
+        <p class="hist-subtitle">{{ 'PORT_RESERVATION.HISTORY_SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+
+    <div class="hist-header-actions">
+      <!-- Search input -->
+      <div class="hist-search-wrap">
+        <mat-icon class="hist-search-icon">search</mat-icon>
+        <input
+          class="hist-search-input"
+          type="text"
+          [(ngModel)]="historySearch"
+          [placeholder]="'PORT_RESERVATION.HISTORY_SEARCH' | translate">
+      </div>
+
+      <!-- Refresh button -->
+      <button class="hist-refresh-btn" (click)="loadHistory()" [disabled]="loadingHistory" title="Refresh">
+        <mat-icon [class.spinning]="loadingHistory">refresh</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loadingHistory" class="hist-state-center">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>{{ 'PORT_RESERVATION.HISTORY_LOADING' | translate }}</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!loadingHistory && historyError" class="hist-state-center hist-state-error">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ historyError }}</p>
+    <button class="hist-retry-btn" (click)="loadHistory()">
+      <mat-icon>refresh</mat-icon>{{ 'PORT_RESERVATION.HISTORY_RETRY' | translate }}
+    </button>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loadingHistory && !historyError && history.length === 0" class="hist-state-center hist-state-empty">
+    <mat-icon class="hist-empty-icon">inbox</mat-icon>
+    <p>{{ 'PORT_RESERVATION.HISTORY_EMPTY' | translate }}</p>
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="!loadingHistory && !historyError && history.length > 0" class="hist-table-wrap">
+    <table class="hist-table">
+      <thead>
+        <tr>
+          <th>{{ 'PORT_RESERVATION.HISTORY_COL_ROUTER' | translate }}</th>
+          <th>{{ 'PORT_RESERVATION.HISTORY_COL_PORT' | translate }}</th>
+          <th>{{ 'PORT_RESERVATION.HISTORY_COL_DESC' | translate }}</th>
+          <th class="col-center">{{ 'PORT_RESERVATION.HISTORY_COL_STATUS' | translate }}</th>
+          <th>{{ 'PORT_RESERVATION.HISTORY_COL_DATE' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let h of filteredHistory" class="hist-row">
+
+          <!-- Router -->
+          <td class="cell-router">
+            <mat-icon class="cell-icon">router</mat-icon>
+            <span>{{ h.router_name || h.router_display || h.router || '—' }}</span>
+          </td>
+
+          <!-- Port -->
+          <td class="cell-port">
+            <mat-icon class="cell-icon">settings_ethernet</mat-icon>
+            <span>{{ h.port_name || h.port_display || h.port || '—' }}</span>
+          </td>
+
+          <!-- Description -->
+          <td class="cell-desc">{{ h.description || '—' }}</td>
+
+          <!-- Status badge -->
+          <td class="col-center">
+            <span class="hist-badge" [ngClass]="getStatusClass(h.status)">
+              <mat-icon class="badge-icon">
+                {{ h.status === 'completed' || h.status === 'success' || h.status === 'done'
+                   ? 'check_circle'
+                   : h.status === 'failed' || h.status === 'error'
+                     ? 'cancel'
+                     : 'hourglass_empty' }}
+              </mat-icon>
+              {{ h.status || 'pending' | titlecase }}
+            </span>
+          </td>
+
+          <!-- Date -->
+          <td class="cell-date">
+            <span class="date-main">{{ (h.reserved_at || h.created_at) | date:'dd MMM yyyy' }}</span>
+            <span class="date-time">{{ (h.reserved_at || h.created_at) | date:'HH:mm' }}</span>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="hist-footer">
+      <span>{{ filteredHistory.length }} / {{ history.length }} {{ 'PORT_RESERVATION.HISTORY_RECORDS' | translate }}</span>
+    </div>
+  </div>
+
+</div><!-- /.hist-section -->

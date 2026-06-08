@@ -53,12 +53,19 @@ export class PortReservationComponent implements OnInit {
   loadingPorts: boolean = false;
   submitting: boolean = false;
 
+  // ── History ─────────────────────────────────────────────────
+  history: any[] = [];
+  loadingHistory: boolean = false;
+  historyError: string | null = null;
+  historySearch: string = '';
+
   displayedColumns: string[] = ['name', 'oper_status', 'admin_status', 'action'];
 
   constructor(private api: ApiService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.loadRouters();
+    this.loadHistory();
   }
 
   loadRouters(): void {
@@ -169,6 +176,7 @@ export class PortReservationComponent implements OnInit {
             this.submitting = false;
             this.snackBar.open('✅ Port reserved. Background configuration started.', 'Close', { duration: 5000 });
             this.resetForm();
+            this.loadHistory(); // Refresh history after successful reservation
           },
           error: (err) => {
             this.submitting = false;
@@ -190,5 +198,49 @@ export class PortReservationComponent implements OnInit {
     this.description = '';
     this.ports = [];
     this.filteredRouters = this.routers;
+  }
+
+  // ── History ─────────────────────────────────────────────────
+
+  loadHistory(): void {
+    this.loadingHistory = true;
+    this.historyError = null;
+    this.api.getPortReservationHistory().subscribe({
+      next: (data: any) => {
+        this.history = Array.isArray(data) ? data : (data.results ?? []);
+        this.loadingHistory = false;
+      },
+      error: (err) => {
+        this.loadingHistory = false;
+
+        if (err.status === 404) {
+          // Endpoint not yet available on the backend — treat as empty, not an error
+          this.history = [];
+          this.historyError = null;
+        } else {
+          // Real server or network failure
+          console.error('Failed to load reservation history:', err);
+          this.historyError = 'Could not load history. Please check your connection.';
+        }
+      }
+    });
+  }
+
+  get filteredHistory(): any[] {
+    if (!this.historySearch.trim()) return this.history;
+    const q = this.historySearch.toLowerCase();
+    return this.history.filter(h =>
+      (h.router_name || h.router || '').toLowerCase().includes(q) ||
+      (h.port_name   || h.port   || '').toLowerCase().includes(q) ||
+      (h.description || '').toLowerCase().includes(q) ||
+      (h.status      || '').toLowerCase().includes(q)
+    );
+  }
+
+  getStatusClass(status: string): string {
+    const s = (status || '').toLowerCase();
+    if (s === 'completed' || s === 'success' || s === 'done') return 'hist-done';
+    if (s === 'failed'    || s === 'error')                   return 'hist-error';
+    return 'hist-pending';
   }
 }

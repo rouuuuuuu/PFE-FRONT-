@@ -2,12 +2,62 @@
    DASHBOARD — Dark Glass Cards
    ============================================================ */
 
+/* ── Page header: title left, button right ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.page-header > div {
+  flex: 1;
+}
+
+/* ── Generate Report button ── */
+.btn-generate-report {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-orange, #FF7900) 0%, #e65c00 100%);
+  border: none;
+  border-radius: var(--radius-sm, 8px);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(255, 121, 0, 0.35);
+  margin-left: auto;
+}
+
+.btn-generate-report mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.btn-generate-report:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 121, 0, 0.45);
+}
+
+.btn-generate-report:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 .page-title {
   color: var(--primary-orange);
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
   font-size: 24px;
-  margin-bottom: 28px;
+  margin-bottom: 4px;
   letter-spacing: -0.3px;
 }
 
