@@ -1,32 +1,29 @@
-import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component, OnInit, OnDestroy, ChangeDetectorRef,
+  PLATFORM_ID, Inject
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormsModule } from '@angular/forms';
+import {
+  ReactiveFormsModule, FormBuilder, FormGroup,
+  Validators, FormsModule
+} from '@angular/forms';
 import { interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule }              from '@angular/material/card';
+import { MatFormFieldModule }          from '@angular/material/form-field';
+import { MatInputModule }              from '@angular/material/input';
+import { MatSelectModule }             from '@angular/material/select';
+import { MatButtonModule }             from '@angular/material/button';
+import { MatIconModule }               from '@angular/material/icon';
+import { MatProgressSpinnerModule }    from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule }              from '@angular/material/table';
+import { MatTooltipModule }            from '@angular/material/tooltip';
 
-import { ApiService } from '../../services/api.service';
-import { HttpClient } from '@angular/common/http';
-import { TranslateModule } from '@ngx-translate/core';
-
-// ── Custom IP validator ─────────────────────────────────────
-function ipAddressValidator(control: AbstractControl): ValidationErrors | null {
-  if (!control.value) return null;
-  const ipv4 = /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/;
-  return ipv4.test(control.value) ? null : { invalidIp: true };
-}
+import { ApiService }           from '../../services/api.service';
+import { ProvisioningService }  from '../../services/provisioning.service';
+import { TranslateModule }      from '@ngx-translate/core';
 
 // ── Interfaces ───────────────────────────────────────────────
 interface RouterDevice {
@@ -36,13 +33,22 @@ interface RouterDevice {
   vendor: string;
 }
 
-interface PortInterface {
-  port_id: number;
+interface SwitchDevice {
+  id: number;
   name: string;
-  oper_status: string;
-  admin_status: string;
-  description: string;
+  ip_address: string;
 }
+
+interface PortInterface {
+  name: string;
+  physical: string;
+  protocol: string;
+  description: string;
+  is_subinterface: boolean;
+}
+
+/** One of the 3 NAT-mode actions the user can choose */
+type NatMode = 'sans_nat_avec_cpe' | 'sans_nat_sans_cpe';
 
 @Component({
   selector: 'app-internet-provisioning',
@@ -55,86 +61,94 @@ interface PortInterface {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatRadioModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTableModule,
     MatTooltipModule,
-    MatCheckboxModule,
     TranslateModule
   ],
   templateUrl: './internet-provisioning.component.html',
   styleUrls: ['./internet-provisioning.component.css']
 })
 export class InternetProvisioningComponent implements OnInit, OnDestroy {
-  private readonly BASE_URL = 'http://127.0.0.1:8000';
-  private destroy$ = new Subject<void>();
-  private readonly POLL_MS = 15_000;
 
-  // ── Step Forms ────────────────────────────────────────────
-  step1Form!: FormGroup; // Connection type
-  step2Form!: FormGroup; // Device selection
-  step3Form!: FormGroup; // Interface selection
-  step4Form!: FormGroup; // Technical parameters
-  step5Form!: FormGroup; // Client info
+  private readonly BASE_URL  = 'http://127.0.0.1:8000';
+  private readonly POLL_MS   = 15_000;
+  private destroy$           = new Subject<void>();
+
+  // ── Form ─────────────────────────────────────────────────
+  form!: FormGroup;
+
+  // ── Static options ───────────────────────────────────────
+  readonly transOptions  = [
+    { value: 'FO', label: 'FO — Fibre Optique' },
+    { value: 'FH', label: 'FH — Faisceau Hertzien' }
+  ];
+  // Dummy public IP ranges – backend will validate / allocate
+  readonly publicRanges  = [
+    '196.203.0.0/24',
+    '196.203.1.0/24',
+    '196.203.2.0/24',
+    '41.226.0.0/24',
+    '41.226.1.0/24'
+  ];
 
   // ── Data ─────────────────────────────────────────────────
-  routers: RouterDevice[] = [];
-  interfaces: PortInterface[] = [];
-  selectedInterface: PortInterface | null = null;
+  routers    : RouterDevice[]  = [];
+  switches   : SwitchDevice[]  = [];
+  interfaces : PortInterface[] = [];
 
-  // ── UI State ─────────────────────────────────────────────
-  loadingRouters = false;
-  loadingInterfaces = false;
-  submitting = false;
+  // ── UI state ─────────────────────────────────────────────
+  loadingRouters    = false;
+  loadingInterfaces = false;   // SYNC_RT spinner
+  loadingSwitches   = false;   // SYNC_SW spinner
+  submitting        = false;
+  activeNatBtn      : NatMode | null = null;  // which button is spinning
 
-  message = '';
-  messageType: 'success' | 'error' | '' = '';
+  switchIgnored     = false;   // IGNORE_SW was clicked
 
   // ── History ───────────────────────────────────────────────
-  historyTasks: any[] = [];
-  historyLoading = false;
-  filterStatus = 'all';
-  searchHistoryQuery = '';
-  historyColumns: string[] = ['task_id', 'device_name', 'client_name', 'vlan', 'debit_mbps', 'status', 'created_at'];
-
-  // ── Pagination ────────────────────────────────────────────
-  historyPage = 0;
-  historyPageSize = 10;
-
-  readonly subnetTypes = ['/31', '/30', '/29'];
-  readonly natModes = ['No NAT with CPE', 'No NAT without CPE'];
+  historyTasks     : any[]   = [];
+  historyLoading   = false;
+  filterStatus     = 'all';
+  searchQuery      = '';
+  historyPage      = 0;
+  historyPageSize  = 10;
+  historyColumns   : string[] = [
+    'task_id', 'device_name', 'client_name',
+    'vlan', 'debit_mbps', 'status', 'created_at'
+  ];
 
   constructor(
-    private fb: FormBuilder,
-    private api: ApiService,
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
+    private fb       : FormBuilder,
+    private api      : ApiService,
+    private svc      : ProvisioningService,
+    private cdr      : ChangeDetectorRef,
+    private snackBar : MatSnackBar,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
+  // ─────────────────────────────────────────────────────────
   ngOnInit(): void {
-    this._buildForms();
+    this._buildForm();
     this._loadRouters();
     this.loadHistory();
 
-    // Poll history every 15s
     if (isPlatformBrowser(this.platformId)) {
       interval(this.POLL_MS)
         .pipe(
           takeUntil(this.destroy$),
-          switchMap(() => this.http.get<any>(`${this.BASE_URL}/api/provisioning/tasks/`))
+          switchMap(() => this.api.getProvisioningTasks())
         )
         .subscribe({
-          next: (data) => {
+          next: (data: any) => {
             const all = Array.isArray(data) ? data : (data.results || []);
             this.historyTasks = all.filter((t: any) => t.task_type === 'internet');
             this.cdr.detectChanges();
           },
-          error: (err) => console.error('Polling error:', err)
+          error: (err: any) => console.error('Polling error:', err)
         });
     }
   }
@@ -144,69 +158,19 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ── Form builders ─────────────────────────────────────────
-  private _buildForms(): void {
-    this.step1Form = this.fb.group({
-      connection_type: ['', Validators.required]
-    });
-
-    this.step2Form = this.fb.group({
-      device_name: ['', Validators.required]
-    });
-
-    this.step3Form = this.fb.group({
-      port_id: [null, Validators.required]
-    });
-
-    this.step4Form = this.fb.group({
-      vlan:          [null, [Validators.required, Validators.min(1), Validators.max(4094)]],
-      debit_mbps:    [null, [Validators.required, Validators.min(1)]],
-      pe_ip_address: ['',   [Validators.required, ipAddressValidator]],
-      subnet_mask:   ['',   [Validators.required, ipAddressValidator]],
-      subnet_type:   ['',   Validators.required],
-      has_switch:    [false],
-      switch_ip:     [''],
-      nat_mode:      ['',   Validators.required],
-      ce_ip_address: [''],
-      customer_lan_prefix: [''],
-      customer_lan_cidr: ['']
-    });
-
-    // Dynamic validators for switch_ip based on has_switch
-    this.step4Form.get('has_switch')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(hasSwitch => {
-      const switchIpCtrl = this.step4Form.get('switch_ip');
-      if (hasSwitch) {
-        switchIpCtrl?.setValidators([Validators.required, ipAddressValidator]);
-      } else {
-        switchIpCtrl?.clearValidators();
-        switchIpCtrl?.setValue('');
-      }
-      switchIpCtrl?.updateValueAndValidity();
-    });
-
-    // Dynamic validators for NAT-mode dependent fields
-    this.step4Form.get('nat_mode')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(mode => {
-      const isCpe = mode === 'No NAT with CPE';
-      const controls = ['ce_ip_address', 'customer_lan_prefix', 'customer_lan_cidr'];
-      
-      controls.forEach(ctrlName => {
-        const ctrl = this.step4Form.get(ctrlName);
-        if (isCpe) {
-          if (ctrlName === 'ce_ip_address') {
-            ctrl?.setValidators([Validators.required, ipAddressValidator]);
-          } else {
-            ctrl?.setValidators([Validators.required]);
-          }
-        } else {
-          ctrl?.clearValidators();
-          ctrl?.setValue('');
-        }
-        ctrl?.updateValueAndValidity();
-      });
-    });
-
-    this.step5Form = this.fb.group({
-      client_name: ['', [Validators.required, Validators.minLength(2)]]
+  // ── Form builder ─────────────────────────────────────────
+  private _buildForm(): void {
+    this.form = this.fb.group({
+      nom_client   : ['', Validators.required],
+      vlan         : [null, [Validators.required, Validators.min(1), Validators.max(4094)]],
+      debit_mbps   : [null, [Validators.required, Validators.min(1)]],
+      media_type   : ['FO', Validators.required],
+      router_id    : [null, Validators.required],
+      router_name  : [''],           // hidden – set on router selection
+      switch_id    : [{ value: null, disabled: false }],
+      switch_ip    : [''],
+      port_name    : [{ value: null, disabled: true }, Validators.required],
+      public_range : [null]
     });
   }
 
@@ -219,149 +183,190 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
         this.routers = raw
           .filter((d: any) => (d.device_type || '').toLowerCase() === 'router')
           .map((d: any) => ({
-            id:         d.id ?? d.device_id ?? 0,
-            ne_name:    d.name ?? d.ne_name ?? '',
-            ip_address: d.loopback_ip ?? d.ip_address ?? '',
-            vendor:     d.vendor ?? ''
+            id         : d.id ?? d.device_id ?? 0,
+            ne_name    : d.name ?? d.ne_name ?? '',
+            ip_address : d.loopback_ip ?? d.ip_address ?? '',
+            vendor     : d.vendor ?? ''
           }));
         this.loadingRouters = false;
       },
       error: () => {
         this.loadingRouters = false;
-        this.snackBar.open('Failed to load routers.', 'Close', { duration: 3000 });
+        this._toast('Failed to load routers.', 'error');
       }
     });
   }
 
-  /** Called when a device is chosen */
-  onDeviceSelected(): void {
-    const deviceName = this.step2Form.value.device_name;
-    const router = this.routers.find(r => r.ne_name === deviceName);
-    if (!router) return;
-
+  /** Store router_name alongside router_id for payload */
+  onRouterChange(): void {
+    const id     = this.form.get('router_id')!.value;
+    const router = this.routers.find(r => r.id === id);
+    this.form.patchValue({ router_name: router?.ne_name ?? '' });
+    // Reset port on router change
     this.interfaces = [];
-    this.selectedInterface = null;
-    this.step3Form.reset();
-    this.loadingInterfaces = true;
+    this.form.get('port_name')!.setValue(null);
+    this.form.get('port_name')!.disable();
+  }
 
-    this.api.getUnifiedDevice(router.ip_address).subscribe({
-      next: (device: any) => {
-        const ports: any[] = device.ports || device.port_details || device.interfaces || [];
-        this.interfaces = ports.map((p: any, idx: number) => ({
-          port_id:      p.id ?? p.port_id ?? idx,
-          name:         p.port_full_name || p.name || `Port ${idx + 1}`,
-          oper_status:  p.oper_status || p.status || 'Unknown',
-          admin_status: p.admin_status || 'Unknown',
-          description:  p.port_description || p.description || ''
-        }));
+  // ── SYNC_RT ───────────────────────────────────────────────
+  syncRouter(): void {
+    const routerId = this.form.get('router_id')!.value;
+    if (!routerId) {
+      this._toast('Please select a router first.', 'warn');
+      return;
+    }
+
+    this.loadingInterfaces = true;
+    this.interfaces        = [];
+    this.form.get('port_name')!.setValue(null);
+    this.form.get('port_name')!.disable();
+
+    this.svc.fetchInterfaces(routerId).subscribe({
+      next: (res: any) => {
+        // Store only physical interfaces (is_subinterface === false)
+        const all: any[] = Array.isArray(res) ? res : (res.interfaces ?? res.results ?? []);
+        this.interfaces = all
+          .filter((p: any) => p.is_subinterface === false)
+          .map((p: any): PortInterface => ({
+            name           : p.name || '',
+            physical       : (p.physical || 'unknown').toLowerCase(),
+            protocol       : (p.protocol || 'unknown').toLowerCase(),
+            description    : p.description || '',
+            is_subinterface: false
+          }));
         this.loadingInterfaces = false;
-        if (!this.interfaces.length) {
-          this.snackBar.open('No interfaces found for this router.', 'Close', { duration: 3000 });
+
+        if (this.interfaces.length) {
+          this.form.get('port_name')!.enable();
+          this._toast(`${this.interfaces.length} interfaces loaded.`, 'success');
+        } else {
+          this._toast('No interfaces returned by router.', 'warn');
         }
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.loadingInterfaces = false;
+        const msg = err?.error?.error || 'Failed to fetch interfaces.';
+        this._toast(msg, 'error');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // ── SYNC_SW ───────────────────────────────────────────────
+  syncSwitch(): void {
+    this.switchIgnored   = false;
+    this.loadingSwitches = true;
+
+    const switchCtrl = this.form.get('switch_id')!;
+    switchCtrl.enable();
+    switchCtrl.setValue(null);
+
+    this.svc.fetchSwitches().subscribe({
+      next: (data: any) => {
+        const raw = Array.isArray(data) ? data : (data.results || []);
+        this.switches = raw.map((s: any) => ({
+          id         : s.id,
+          name       : s.name ?? s.ne_name ?? s.hostname ?? '',
+          ip_address : s.ip_address ?? s.loopback_ip ?? ''
+        }));
+        this.loadingSwitches = false;
+        this._toast(`${this.switches.length} switches loaded.`, 'success');
+        this.cdr.detectChanges();
       },
       error: () => {
-        this.loadingInterfaces = false;
-        this.snackBar.open('Failed to load interfaces.', 'Close', { duration: 4000 });
+        this.loadingSwitches = false;
+        this._toast('Failed to load switches.', 'error');
+        this.cdr.detectChanges();
       }
     });
   }
 
-  /** Called when user selects a port */
-  onInterfaceSelected(portId: number): void {
-    this.selectedInterface = this.interfaces.find(i => i.port_id === portId) ?? null;
+  /** IGNORE_SW — disable the switch select and clear its value */
+  ignoreSwitch(): void {
+    this.switchIgnored = true;
+    const switchCtrl   = this.form.get('switch_id')!;
+    switchCtrl.setValue(null);
+    switchCtrl.disable();
+    this.form.patchValue({ switch_ip: '' });
   }
 
-  // ── Derived state ─────────────────────────────────────────
-  get isFormPartiallyFilled(): boolean {
-    return !!(
-      this.step1Form.value.connection_type ||
-      this.step2Form.value.device_name ||
-      this.selectedInterface ||
-      this.step4Form.value.debit_mbps ||
-      this.step5Form.value.client_name
-    );
-  }
-
-  get canProvision(): boolean {
-    return (
-      this.step1Form.valid &&
-      this.step2Form.valid &&
-      this.step3Form.valid &&
-      this.step4Form.valid &&
-      this.step5Form.valid
-    );
+  /** When a switch is chosen, store its IP for the payload */
+  onSwitchChange(): void {
+    const id  = this.form.get('switch_id')!.value;
+    const sw  = this.switches.find(s => s.id === id);
+    this.form.patchValue({ switch_ip: sw?.ip_address ?? '' });
   }
 
   // ── Submission ────────────────────────────────────────────
-  provision(): void {
-    if (!this.canProvision) return;
-    this.submitting = true;
-    this.message = '';
+  submit(natMode: NatMode): void {
+    if (this.submitting) return;
 
-    // Map connection_type UI value (FO/FH) → backend media_type (fo/fh)
-    const mediaType = (this.step1Form.value.connection_type as string).toLowerCase() as 'fo' | 'fh';
+    // Mark all controls touched so validators show errors
+    this.form.markAllAsTouched();
 
-    // Map NAT mode UI label → backend enum string
-    const natModeUi: string = this.step4Form.value.nat_mode;
-    const natModeBackend = natModeUi === 'No NAT with CPE' ? 'sans_nat_avec_cpe' : 'sans_nat_sans_cpe';
+    // port_name may be disabled – still need it
+    const portVal = this.form.get('port_name')!.value;
+    if (!portVal) {
+      this._toast('Please sync the router and select a port.', 'warn');
+      return;
+    }
 
-    const hasSwitch: boolean = !!this.step4Form.value.has_switch;
-
-    // Resolve the full router object to extract its management IP
-    const selectedRouter = this.routers.find(
-      r => r.ne_name === this.step2Form.value.device_name
-    );
+    const switchId = this.form.get('switch_id')!.value;
+    const hasSwitch = !this.switchIgnored && !!switchId;
 
     const payload = {
-      device_name: this.step2Form.value.device_name,
-      device_ip:   selectedRouter?.ip_address ?? '',
-      task_type:   'internet',
-      parameters: {
-        port_id:       Number(this.step3Form.value.port_id),
-        client_name:   this.step5Form.value.client_name,
-        vlan:          Number(this.step4Form.value.vlan),
-        debit_mbps:    Number(this.step4Form.value.debit_mbps),
-        pe_ip_address: this.step4Form.value.pe_ip_address,
-        subnet_mask:   this.step4Form.value.subnet_mask,
-        subnet_type:   this.step4Form.value.subnet_type,
-        media_type:    mediaType,
-        has_switch:    hasSwitch,
-        ...(hasSwitch ? { switch_ip: this.step4Form.value.switch_ip } : {}),
-        nat_mode:      natModeBackend,
-        ...(natModeBackend === 'sans_nat_avec_cpe' ? {
-          ce_ip_address:       this.step4Form.value.ce_ip_address,
-          customer_lan_prefix: this.step4Form.value.customer_lan_prefix,
-          customer_lan_cidr:   this.step4Form.value.customer_lan_cidr
-        } : {})
+      device_name : this.form.get('router_name')!.value,
+      task_type   : 'internet',
+      parameters  : {
+        nom_client  : this.form.get('nom_client')!.value,
+        vlan        : Number(this.form.get('vlan')!.value),
+        debit_mbps  : Number(this.form.get('debit_mbps')!.value),
+        media_type  : this.form.get('media_type')!.value,
+        port_name   : portVal,
+        has_switch  : hasSwitch,
+        ...(hasSwitch ? { switch_ip: this.form.get('switch_ip')!.value } : {}),
+        nat_mode    : natMode,
+        ...(this.form.get('public_range')!.value
+          ? { public_range: this.form.get('public_range')!.value }
+          : {})
       }
     };
 
-    this.api.startProvisioning(payload).subscribe({
+    this.submitting   = true;
+    this.activeNatBtn = natMode;
+
+    this.svc.startProvisioning(payload).subscribe({
       next: (res: any) => {
-        this.submitting = false;
-        const taskId = res?.task_id ?? res?.id ?? '';
-        this.message = `Task queued successfully${taskId ? ' — Task ID: #' + taskId : ''}.`;
-        this.messageType = 'success';
-        this.resetForm();
+        this.submitting   = false;
+        this.activeNatBtn = null;
+        const id = res?.task_id ?? res?.id ?? '';
+        this._toast(
+          `✔ Provisioning queued${id ? ' — Task #' + id : ''}.`,
+          'success'
+        );
+        this._resetForm();
         this.loadHistory();
       },
       error: (err: any) => {
-        this.submitting = false;
-        const msg = err?.error?.error || err?.error?.detail || 'Failed to start provisioning.';
-        this.message = msg;
-        this.messageType = 'error';
+        this.submitting   = false;
+        this.activeNatBtn = null;
+        const msg = err?.error?.error || err?.error?.detail || 'Provisioning failed.';
+        this._toast(msg, 'error');
       }
     });
   }
 
-  resetForm(): void {
-    this.step1Form.reset();
-    this.step2Form.reset();
-    this.step3Form.reset();
-    this.step4Form.reset();
-    this.step5Form.reset();
-    this.interfaces = [];
-    this.selectedInterface = null;
+  // ── Reset ─────────────────────────────────────────────────
+  private _resetForm(): void {
+    this.form.reset({
+      media_type : 'FO'
+    });
+    this.interfaces   = [];
+    this.switches     = [];
+    this.switchIgnored = false;
+    this.form.get('port_name')!.disable();
+    this.form.get('switch_id')!.enable();
   }
 
   // ── History ───────────────────────────────────────────────
@@ -370,7 +375,7 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
     this.api.getProvisioningTasks().subscribe({
       next: (data: any) => {
         const all = Array.isArray(data) ? data : (data.results || []);
-        this.historyTasks = all.filter((t: any) => t.task_type === 'internet');
+        this.historyTasks   = all.filter((t: any) => t.task_type === 'internet');
         this.historyLoading = false;
         this.cdr.detectChanges();
       },
@@ -383,11 +388,11 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
       ? this.historyTasks
       : this.historyTasks.filter(t => t.status === this.filterStatus);
 
-    if (this.searchHistoryQuery) {
-      const q = this.searchHistoryQuery.toLowerCase();
+    if (this.searchQuery) {
+      const q = this.searchQuery.toLowerCase();
       list = list.filter(t =>
         (t.device_name || '').toLowerCase().includes(q) ||
-        (t.parameters?.client_name || '').toLowerCase().includes(q) ||
+        (t.parameters?.nom_client || t.parameters?.client_name || '').toLowerCase().includes(q) ||
         String(t.parameters?.vlan || '').includes(q)
       );
     }
@@ -395,46 +400,54 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   }
 
   get paginatedHistory(): any[] {
-    const start = this.historyPage * this.historyPageSize;
-    return this.filteredHistory.slice(start, start + this.historyPageSize);
+    const s = this.historyPage * this.historyPageSize;
+    return this.filteredHistory.slice(s, s + this.historyPageSize);
   }
 
   get totalHistoryPages(): number {
     return Math.max(1, Math.ceil(this.filteredHistory.length / this.historyPageSize));
   }
 
-  prevHistoryPage(): void {
-    if (this.historyPage > 0) this.historyPage--;
+  prevPage(): void { if (this.historyPage > 0) this.historyPage--; }
+  nextPage(): void { if (this.historyPage < this.totalHistoryPages - 1) this.historyPage++; }
+
+  // ── Interface helpers ─────────────────────────────────────
+  /** Returns the label shown in the dropdown: "name" or "name — description" */
+  getInterfaceLabel(iface: PortInterface): string {
+    return iface.description ? `${iface.name} — ${iface.description}` : iface.name;
   }
 
-  nextHistoryPage(): void {
-    if (this.historyPage < this.totalHistoryPages - 1) this.historyPage++;
+  /** Returns the CSS class for the status dot based on iface.physical */
+  getIfaceStatusDotClass(iface: PortInterface): string {
+    const phy = (iface.physical || '').toLowerCase();
+    if (phy === 'up')   return 'dot-up';
+    if (phy === 'down') return 'dot-down';
+    return 'dot-unknown';
   }
 
   // ── Status helpers ────────────────────────────────────────
-  getStatusClass(status: string): string {
-    const map: Record<string, string> = {
-      completed:   'status-completed',
-      in_progress: 'status-in-progress',
-      pending:     'status-pending',
-      failed:      'status-failed'
+  getStatusClass(s: string): string {
+    const m: Record<string, string> = {
+      completed: 'status-completed', in_progress: 'status-in-progress',
+      pending: 'status-pending', failed: 'status-failed'
     };
-    return map[status] || '';
+    return m[s] || '';
   }
 
-  getStatusIcon(status: string): string {
-    const map: Record<string, string> = {
-      completed:   'check_circle',
-      in_progress: 'sync',
-      pending:     'schedule',
-      failed:      'error'
+  getStatusIcon(s: string): string {
+    const m: Record<string, string> = {
+      completed: 'check_circle', in_progress: 'sync',
+      pending: 'schedule', failed: 'error'
     };
-    return map[status] || 'help';
+    return m[s] || 'help';
   }
 
-  // ── Vendor badge helper ───────────────────────────────────
-  getStatusBadge(s: string): string {
-    const m: Record<string,string> = { up: 'badge-up', down: 'badge-down' };
-    return m[(s||'').toLowerCase()] || 'badge-unknown';
+  // ── Toast helper ──────────────────────────────────────────
+  private _toast(msg: string, type: 'success' | 'error' | 'warn'): void {
+    const panelClass =
+      type === 'success' ? 'success-snackbar' :
+      type === 'error'   ? 'error-snackbar'   :
+                           'warn-snackbar';
+    this.snackBar.open(msg, '✕', { duration: 4000, panelClass });
   }
 }

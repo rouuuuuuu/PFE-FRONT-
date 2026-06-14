@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../services/api.service';
+import { ProvisioningService } from '../../services/provisioning.service';
 
 interface Device {
   device_id: number;
@@ -27,12 +28,11 @@ interface Device {
 }
 
 interface PortOption {
-  label: string;         // display: "GigabitEthernet0/1/0 — TO_CLIENT_FO"
-  interface: string;     // base interface name
+  label: string;         // display: "name" or "name — description"
+  interface: string;     // base interface name (before ".")
   vlan: string;
   description: string;
-  admin_status: string;
-  oper_status: string;
+  physical: string;      // physical status from API
 }
 
 interface Upgrade {
@@ -125,6 +125,7 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private api: ApiService,
+    private svc: ProvisioningService,
     private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
@@ -211,7 +212,7 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ─── Sync router — fetch interfaces from all-devices data ───
+  // ─── Sync router — fetch sub-interfaces from the provisioning API ───
   syncRouter(): void {
     if (!this.selectedDevice) return;
     this.syncingRouter = true;
@@ -219,35 +220,37 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     this.portOptions = [];
     this.selectedPort = null;
 
-    // Use getUnifiedDevice to get up-to-date port data
-    this.api.getUnifiedDevice(this.selectedDevice.ip_address).subscribe({
-      next: (data: any) => {
-        const ports: any[] = data.ports || data.port_details || [];
-        this.portOptions = ports.map(p => {
-          const ifName  = p.port_full_name || p.name || '';
-          const desc    = p.port_description || p.description || '';
-          const adminSt = p.admin_status || '-';
-          const operSt  = p.oper_status  || p.status || '-';
-          return {
-            label:        desc ? `${ifName} — ${desc}` : ifName,
-            interface:    ifName.split('.')[0],
-            vlan:         ifName.includes('.') ? ifName.split('.')[1] : '',
-            description:  desc,
-            admin_status: adminSt,
-            oper_status:  operSt
-          } as PortOption;
-        });
+    this.svc.fetchInterfaces(this.selectedDevice.device_id).subscribe({
+      next: (res: any) => {
+        // Bandwidth upgrade: show only sub-interfaces (is_subinterface === true)
+        const all: any[] = Array.isArray(res) ? res : (res.interfaces ?? res.results ?? []);
+        this.portOptions = all
+          .filter((p: any) => p.is_subinterface === true)
+          .map((p: any): PortOption => {
+            const ifName = p.name || '';
+            const desc   = p.description || '';
+            const phy    = (p.physical || 'unknown').toLowerCase();
+            return {
+              label      : desc ? `${ifName} — ${desc}` : ifName,
+              interface  : ifName.includes('.') ? ifName.split('.')[0] : ifName,
+              vlan       : ifName.includes('.') ? ifName.split('.')[1] : '',
+              description: desc,
+              physical   : phy
+            };
+          });
         this.syncDone = true;
         this.syncingRouter = false;
         if (this.portOptions.length === 0) {
-          this.message = 'No interfaces found for this router.';
+          this.message = 'No sub-interfaces found for this router.';
           this.messageType = 'error';
         }
+        this.cdr.detectChanges();
       },
       error: () => {
         this.message = 'Failed to sync router interfaces.';
         this.messageType = 'error';
         this.syncingRouter = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -261,6 +264,13 @@ export class UpgradeComponent implements OnInit, OnDestroy {
       .filter(u => u.device_name === this.selectedDevice!.ne_name && u.interface === iface)
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
     this.knownOldBandwidth = match ? match.new_bandwidth_mbps : null;
+  }
+
+  /** Status dot CSS class based on port.physical */
+  getIfaceStatusDotClass(port: PortOption): string {
+    if (port.physical === 'up')   return 'dot-up';
+    if (port.physical === 'down') return 'dot-down';
+    return 'dot-unknown';
   }
 
   // ─── Submit ───

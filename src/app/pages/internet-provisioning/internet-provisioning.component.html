@@ -1,277 +1,271 @@
-<!-- ── Page Header ── -->
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE HEADER
+     ══════════════════════════════════════════════════════════════ -->
 <div class="page-header">
-  <mat-icon class="header-icon">wifi</mat-icon>
+  <div class="header-badge">
+    <mat-icon>public</mat-icon>
+  </div>
   <div>
-    <h1 class="page-title">{{ 'PROVISIONING.TITLE' | translate }}</h1>
-    <p class="page-subtitle">{{ 'PROVISIONING.SUBTITLE' | translate }}</p>
+    <h1 class="page-title">SERVICE NIVEAU 3 DYNAMIQUE</h1>
+    <p class="page-subtitle">Internet B2B Provisioning — Huawei &amp; Juniper</p>
   </div>
 </div>
 
-<!-- ── Form Card ── -->
-<mat-card class="form-card">
+<!-- ══════════════════════════════════════════════════════════════
+     MAIN FORM CARD
+     ══════════════════════════════════════════════════════════════ -->
+<mat-card class="form-card" [formGroup]="form">
   <mat-card-content class="form-content">
 
-    <!-- Row 1: Connection Type -->
-    <div class="section-label">{{ 'PROVISIONING.CONN_TYPE' | translate }}</div>
-    <div class="conn-group" [formGroup]="step1Form">
-      <label class="conn-card" [class.conn-selected]="step1Form.value.connection_type === 'FO'"
-             (click)="step1Form.get('connection_type')!.setValue('FO')">
-        <mat-icon class="conn-icon">fiber_manual_record</mat-icon>
-        <div>
-          <div class="conn-label">{{ 'PROVISIONING.FO_LABEL' | translate }}</div>
-          <div class="conn-sub">{{ 'PROVISIONING.FO_SUB' | translate }}</div>
-        </div>
-      </label>
-      <label class="conn-card" [class.conn-selected]="step1Form.value.connection_type === 'FH'"
-             (click)="step1Form.get('connection_type')!.setValue('FH')">
-        <mat-icon class="conn-icon">settings_input_antenna</mat-icon>
-        <div>
-          <div class="conn-label">{{ 'PROVISIONING.FH_LABEL' | translate }}</div>
-          <div class="conn-sub">{{ 'PROVISIONING.FH_SUB' | translate }}</div>
-        </div>
-      </label>
+    <!-- ── Section: Client + Transport ─────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">person</mat-icon> Identification Client
     </div>
 
-    <div class="section-divider"></div>
+    <div class="form-grid">
 
-    <!-- Row 2: Device + Interface -->
-    <div class="section-label">{{ 'PROVISIONING.DEVICE_IFACE' | translate }}</div>
-    <div class="form-row" [formGroup]="step2Form">
-
-      <!-- PE Router -->
+      <!-- NOM_CLIENT -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>{{ 'PROVISIONING.PE_ROUTER' | translate }}</mat-label>
-        <mat-select formControlName="device_name"
-                    (selectionChange)="onDeviceSelected()"
-                    id="device-select"
-                    [placeholder]="'PROVISIONING.SELECT_ROUTER' | translate">
-          <mat-option *ngIf="loadingRouters" disabled>
-            <mat-spinner diameter="16" style="display:inline-block;margin-right:8px"></mat-spinner>
-            {{ 'PROVISIONING.LOADING_ROUTERS' | translate }}
-          </mat-option>
-          <mat-option *ngFor="let r of routers" [value]="r.ne_name">
-            <span class="autocomplete-name">{{ r.ne_name }}</span>
-            <span class="autocomplete-ip">({{ r.ip_address }})</span>
-            <span class="vendor-badge vendor-{{ r.vendor | lowercase }}">{{ r.vendor }}</span>
-          </mat-option>
-        </mat-select>
-        <mat-icon matSuffix *ngIf="loadingInterfaces" class="spin-icon">sync</mat-icon>
-        <mat-hint *ngIf="loadingInterfaces">{{ 'PROVISIONING.FETCHING_IFACES' | translate }}</mat-hint>
-        <mat-hint *ngIf="!loadingInterfaces && interfaces.length" class="hint-green">
-          {{ interfaces.length }} {{ 'PROVISIONING.IFACES_READY' | translate }}
-        </mat-hint>
+        <mat-label>NOM_CLIENT</mat-label>
+        <input matInput formControlName="nom_client"
+               id="input-nom-client"
+               placeholder="ex. STEG — Agence Lac">
+        <mat-icon matSuffix>badge</mat-icon>
+        <mat-error *ngIf="form.get('nom_client')?.hasError('required')">Champ requis</mat-error>
       </mat-form-field>
 
-      <!-- Interface / Port -->
-      <mat-form-field appearance="outline" class="form-field" floatLabel="always" [formGroup]="step3Form">
-        <mat-label>{{ 'PROVISIONING.IFACE_PORT' | translate }}</mat-label>
-        <mat-select formControlName="port_id"
-                    (selectionChange)="onInterfaceSelected($event.value)"
-                    [disabled]="!interfaces.length"
-                    id="port-select"
-                    [placeholder]="'PROVISIONING.SELECT_ROUTER_FIRST' | translate">
-          <mat-option *ngFor="let iface of interfaces" [value]="iface.port_id">
-            <span class="iface-label">{{ iface.name }}</span>
-            <span class="iface-status"
-                  [class.iface-up]="(iface.oper_status | lowercase) === 'up'"
-                  [class.iface-down]="(iface.oper_status | lowercase) !== 'up'">
-              ● {{ iface.oper_status | uppercase }}
-            </span>
-            <span *ngIf="iface.description" class="iface-desc"> — {{ iface.description }}</span>
-          </mat-option>
-        </mat-select>
-        <mat-hint *ngIf="selectedInterface">
-          {{ 'PROVISIONING.PORT_ID' | translate }}: <strong>#{{ selectedInterface.port_id }}</strong>
-        </mat-hint>
-      </mat-form-field>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <!-- Row 3: Technical Parameters -->
-    <div class="section-label">{{ 'PROVISIONING.TECH_PARAMS' | translate }}</div>
-    <div class="form-row" [formGroup]="step4Form">
-
+      <!-- VLAN -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>{{ 'PROVISIONING.VLAN_ID' | translate }}</mat-label>
+        <mat-label>VLAN</mat-label>
         <input matInput type="number" formControlName="vlan"
-               id="input-vlan" placeholder="1 – 4094" min="1" max="4094">
-        <mat-hint>{{ 'PROVISIONING.RANGE_VLAN' | translate }}</mat-hint>
-        <mat-error *ngIf="step4Form.get('vlan')?.hasError('required')">{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
-        <mat-error *ngIf="step4Form.get('vlan')?.hasError('min') || step4Form.get('vlan')?.hasError('max')">
-          {{ 'PROVISIONING.ERR_VLAN' | translate }}
+               id="input-vlan"
+               placeholder="1 – 4094" min="1" max="4094">
+        <mat-icon matSuffix>tag</mat-icon>
+        <mat-hint>Plage: 1 – 4094</mat-hint>
+        <mat-error *ngIf="form.get('vlan')?.hasError('required')">Champ requis</mat-error>
+        <mat-error *ngIf="form.get('vlan')?.hasError('min') || form.get('vlan')?.hasError('max')">
+          VLAN invalide (1–4094)
         </mat-error>
       </mat-form-field>
 
+      <!-- DEBIT -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>{{ 'PROVISIONING.DEBIT' | translate }}</mat-label>
+        <mat-label>DEBIT</mat-label>
         <input matInput type="number" formControlName="debit_mbps"
-               id="input-debit" placeholder="e.g. 100" min="1">
+               id="input-debit"
+               placeholder="ex. 100" min="1">
         <span matSuffix class="bw-suffix">Mbps</span>
-        <mat-error>{{ 'PROVISIONING.ERR_DEBIT' | translate }}</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>{{ 'PROVISIONING.PE_IP' | translate }}</mat-label>
-        <input matInput formControlName="pe_ip_address"
-               id="input-pe-ip" placeholder="e.g. 10.0.0.1">
-        <mat-error *ngIf="step4Form.get('pe_ip_address')?.hasError('required')">{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
-        <mat-error *ngIf="step4Form.get('pe_ip_address')?.hasError('invalidIp')">
-          {{ 'PROVISIONING.ERR_INVALID_IP' | translate }}
-        </mat-error>
+        <mat-error>Bande passante requise (&gt;0)</mat-error>
       </mat-form-field>
 
     </div>
 
-    <div class="form-row" [formGroup]="step4Form">
+    <div class="section-divider"></div>
 
-      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>{{ 'PROVISIONING.SUBNET_MASK' | translate }}</mat-label>
-        <input matInput formControlName="subnet_mask"
-               id="input-subnet-mask" placeholder="e.g. 255.255.255.252">
-        <mat-error *ngIf="step4Form.get('subnet_mask')?.hasError('required')">{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
-        <mat-error *ngIf="step4Form.get('subnet_mask')?.hasError('invalidIp')">
-          {{ 'PROVISIONING.ERR_INVALID_MASK' | translate }}
-        </mat-error>
-      </mat-form-field>
+    <!-- ── Section: Configuration réseau ──────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">settings_ethernet</mat-icon> Configuration Réseau
+    </div>
 
+    <div class="form-grid">
+
+
+      <!-- TRANS -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>{{ 'PROVISIONING.SUBNET_TYPE' | translate }}</mat-label>
-        <mat-select formControlName="subnet_type" id="select-subnet-type">
-          <mat-option *ngFor="let t of subnetTypes" [value]="t">{{ t }}</mat-option>
+        <mat-label>TRANS</mat-label>
+        <mat-select formControlName="media_type" id="select-trans">
+          <mat-option *ngFor="let t of transOptions" [value]="t.value">
+            <mat-icon style="font-size:16px;vertical-align:middle;margin-right:6px">
+              {{ t.value === 'FO' ? 'fiber_manual_record' : 'settings_input_antenna' }}
+            </mat-icon>
+            {{ t.label }}
+          </mat-option>
         </mat-select>
-        <mat-error>{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
+        <mat-icon matSuffix>signal_cellular_alt</mat-icon>
       </mat-form-field>
-    </div>
 
-    <!-- Topology / Switch -->
-    <div class="section-divider"></div>
-    <div class="section-label">{{ 'PROVISIONING.TOPOLOGY' | translate }}</div>
-    <div [formGroup]="step4Form" style="padding: 4px 0 8px;">
-      <mat-checkbox formControlName="has_switch" id="check-has-switch" color="primary">
-        {{ 'PROVISIONING.HAS_SWITCH' | translate }}
-      </mat-checkbox>
-
-      <div class="form-row" *ngIf="step4Form.value.has_switch" style="margin-top: 16px;">
-        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-          <mat-label>{{ 'PROVISIONING.SWITCH_IP' | translate }}</mat-label>
-          <input matInput formControlName="switch_ip"
-                 id="input-switch-ip" placeholder="e.g. 10.0.0.5">
-          <mat-error *ngIf="step4Form.get('switch_ip')?.hasError('required')">{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
-          <mat-error *ngIf="step4Form.get('switch_ip')?.hasError('invalidIp')">{{ 'PROVISIONING.ERR_INVALID_IP' | translate }}</mat-error>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- NAT & Routing -->
-    <div class="section-divider"></div>
-    <div class="section-label">{{ 'PROVISIONING.NAT_ROUTING' | translate }}</div>
-    <div class="form-row" [formGroup]="step4Form" style="flex-direction: column; gap: 16px;">
-      <mat-radio-group formControlName="nat_mode" class="nat-radio-group">
-        <mat-radio-button *ngFor="let mode of natModes" [value]="mode" style="margin-right: 16px;">
-          {{ mode === 'No NAT with CPE' ? ('PROVISIONING.NAT_WITH_CPE' | translate) : ('PROVISIONING.NAT_WITHOUT_CPE' | translate) }}
-        </mat-radio-button>
-      </mat-radio-group>
-
-      <div class="form-row" *ngIf="step4Form.value.nat_mode === 'No NAT with CPE'" style="width: 100%; margin-top: 8px;">
-        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-          <mat-label>{{ 'PROVISIONING.CE_IP' | translate }}</mat-label>
-          <input matInput formControlName="ce_ip_address" placeholder="e.g. 10.0.0.2">
-          <mat-error *ngIf="step4Form.get('ce_ip_address')?.hasError('required')">{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
-          <mat-error *ngIf="step4Form.get('ce_ip_address')?.hasError('invalidIp')">{{ 'PROVISIONING.ERR_INVALID_IP' | translate }}</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-          <mat-label>{{ 'PROVISIONING.CUSTOMER_PREFIX' | translate }}</mat-label>
-          <input matInput formControlName="customer_lan_prefix" placeholder="e.g. X.X.X.0 255.255.255.0">
-          <mat-error>{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-          <mat-label>{{ 'PROVISIONING.CUSTOMER_CIDR' | translate }}</mat-label>
-          <input matInput formControlName="customer_lan_cidr" placeholder="e.g. X.X.X.0/24">
-          <mat-error>{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-    <div class="section-label">{{ 'PROVISIONING.CLIENT_INFO' | translate }}</div>
-    <div class="form-row">
-      <!-- Client Name -->
-      <mat-form-field appearance="outline" class="form-field" floatLabel="always" [formGroup]="step5Form">
-        <mat-label>{{ 'PROVISIONING.CLIENT_NAME' | translate }}</mat-label>
-        <input matInput formControlName="client_name"
-               id="input-client-name" placeholder="e.g. Orange Tunisie — XYZ">
-        <mat-error *ngIf="step5Form.get('client_name')?.hasError('required')">{{ 'PROVISIONING.REQUIRED' | translate }}</mat-error>
-        <mat-error *ngIf="step5Form.get('client_name')?.hasError('minlength')">{{ 'PROVISIONING.ERR_MIN_CHARS' | translate }}</mat-error>
+      <!-- Select @Public Range -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Select Range &#64;Public</mat-label>
+        <mat-select formControlName="public_range" id="select-public-range">
+          <mat-option [value]="null">— Aucune / Auto —</mat-option>
+          <mat-option *ngFor="let r of publicRanges" [value]="r">{{ r }}</mat-option>
+        </mat-select>
+        <mat-icon matSuffix>public</mat-icon>
       </mat-form-field>
 
     </div>
 
-    <!-- ── Message Banner ── -->
-    <div *ngIf="message" class="message-banner"
-         [class.message-success]="messageType === 'success'"
-         [class.message-error]="messageType === 'error'">
-      <mat-icon class="message-icon">{{ messageType === 'success' ? 'check_circle' : 'error' }}</mat-icon>
-      {{ message }}
+    <div class="section-divider"></div>
+
+    <!-- ── Section: Routeur + Port ────────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">router</mat-icon> Équipement &amp; Interface
     </div>
 
-    <!-- ── Selection Summary Chips ── -->
-    <div class="selection-summary" *ngIf="isFormPartiallyFilled">
-      <span class="chip" *ngIf="step1Form.value.connection_type">
-        <mat-icon class="chip-icon">{{ step1Form.value.connection_type === 'FO' ? 'fiber_manual_record' : 'settings_input_antenna' }}</mat-icon>
-        {{ step1Form.value.connection_type === 'FO' ? 'Fibre Optique' : 'Faisceau Hertzien' }}
-      </span>
-      <mat-icon class="arrow-icon" *ngIf="step1Form.value.connection_type && step2Form.value.device_name">arrow_forward</mat-icon>
-      <span class="chip" *ngIf="step2Form.value.device_name">
-        <mat-icon class="chip-icon">router</mat-icon>
-        {{ step2Form.value.device_name }}
-      </span>
-      <mat-icon class="arrow-icon" *ngIf="step2Form.value.device_name && selectedInterface">arrow_forward</mat-icon>
-      <span class="chip" *ngIf="selectedInterface">
-        <mat-icon class="chip-icon">cable</mat-icon>
-        {{ selectedInterface.name }}
-      </span>
-      <mat-icon class="arrow-icon" *ngIf="selectedInterface && step4Form.value.debit_mbps">arrow_forward</mat-icon>
-      <span class="chip chip-bw" *ngIf="step4Form.value.debit_mbps">
-        <mat-icon class="chip-icon">speed</mat-icon>
-        {{ step4Form.value.debit_mbps }} Mbps
-      </span>
-      <mat-icon class="arrow-icon" *ngIf="step4Form.value.debit_mbps && step4Form.value.nat_mode">arrow_forward</mat-icon>
-      <span class="chip" *ngIf="step4Form.value.nat_mode">
-        <mat-icon class="chip-icon">router</mat-icon>
-        {{ step4Form.value.nat_mode === 'No NAT with CPE' ? ('PROVISIONING.NAT_WITH_CPE' | translate) : ('PROVISIONING.NAT_WITHOUT_CPE' | translate) }}
-      </span>
-      <mat-icon class="arrow-icon" *ngIf="step4Form.value.nat_mode && step5Form.value.client_name">arrow_forward</mat-icon>
-      <span class="chip chip-client" *ngIf="step5Form.value.client_name">
-        <mat-icon class="chip-icon">person</mat-icon>
-        {{ step5Form.value.client_name }}
-      </span>
+    <div class="form-grid">
+
+      <!-- ROUTEUR + SYNC_RT -->
+      <div class="field-with-btn">
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>ROUTEUR</mat-label>
+          <mat-select formControlName="router_id" id="select-router"
+                      (selectionChange)="onRouterChange()">
+            <mat-option *ngIf="loadingRouters" disabled>
+              <mat-spinner diameter="14" style="display:inline-block;margin-right:8px"></mat-spinner>
+              Chargement…
+            </mat-option>
+            <mat-option *ngFor="let r of routers" [value]="r.id">
+              <span class="opt-name">{{ r.ne_name }}</span>
+              <span class="opt-ip">&nbsp;({{ r.ip_address }})</span>
+              <span class="vendor-badge vendor-{{ r.vendor | lowercase }}">{{ r.vendor }}</span>
+            </mat-option>
+          </mat-select>
+          <mat-error>Sélectionner un routeur</mat-error>
+        </mat-form-field>
+
+        <button class="action-btn sync-btn"
+                id="btn-sync-rt"
+                type="button"
+                [disabled]="loadingInterfaces || !form.get('router_id')!.value"
+                (click)="syncRouter()"
+                matTooltip="Synchroniser les interfaces du routeur">
+          <mat-spinner *ngIf="loadingInterfaces" diameter="16"></mat-spinner>
+          <mat-icon *ngIf="!loadingInterfaces">sync</mat-icon>
+          <span>SYNC_RT</span>
+        </button>
+      </div>
+
+      <!-- Select PORT -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Select PORT</mat-label>
+        <mat-select formControlName="port_name" id="select-port">
+          <mat-option *ngIf="!interfaces.length" disabled>
+            {{ loadingInterfaces ? 'Chargement…' : 'Cliquer SYNC_RT d\'abord' }}
+          </mat-option>
+          <mat-option *ngFor="let iface of interfaces" [value]="iface.name">
+            <span class="dot" [ngClass]="getIfaceStatusDotClass(iface)"></span>
+            <span class="opt-name">{{ getInterfaceLabel(iface) }}</span>
+          </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="interfaces.length" class="hint-green">
+          {{ interfaces.length }} interfaces disponibles
+        </mat-hint>
+        <mat-error>Port requis</mat-error>
+      </mat-form-field>
+
     </div>
 
-    <!-- ── Execute Button ── -->
-    <div class="form-actions">
-      <button class="run-btn"
-              [disabled]="!canProvision || submitting"
-              (click)="provision()"
-              id="btn-provision">
-        <mat-icon class="run-icon" *ngIf="!submitting">play_arrow</mat-icon>
-        <mat-spinner *ngIf="submitting" diameter="18" class="btn-spinner"></mat-spinner>
-        <span>{{ submitting ? ('PROVISIONING.PROVISIONING' | translate) : ('PROVISIONING.PROVISION_BTN' | translate) }}</span>
+    <div class="section-divider"></div>
+
+    <!-- ── Section: Switch ────────────────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">device_hub</mat-icon> Switch Intermédiaire
+    </div>
+
+    <div class="form-grid">
+
+      <!-- SELECT SWITCH + SYNC_SW + IGNORE_SW -->
+      <div class="field-with-btn">
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>Select SWITCH</mat-label>
+          <mat-select formControlName="switch_id" id="select-switch"
+                      (selectionChange)="onSwitchChange()">
+            <mat-option [value]="null">— Aucun —</mat-option>
+            <mat-option *ngFor="let s of switches" [value]="s.id">
+              <span class="opt-name">{{ s.name }}</span>
+              <span class="opt-ip">&nbsp;({{ s.ip_address }})</span>
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="switchIgnored" class="hint-ignored">Switch ignoré</mat-hint>
+        </mat-form-field>
+
+        <button class="action-btn sync-btn"
+                id="btn-sync-sw"
+                type="button"
+                [disabled]="loadingSwitches"
+                (click)="syncSwitch()"
+                matTooltip="Charger la liste des switches">
+          <mat-spinner *ngIf="loadingSwitches" diameter="16"></mat-spinner>
+          <mat-icon *ngIf="!loadingSwitches">sync</mat-icon>
+          <span>SYNC_SW</span>
+        </button>
+
+        <button class="action-btn ignore-btn"
+                id="btn-ignore-sw"
+                type="button"
+                (click)="ignoreSwitch()"
+                matTooltip="Ignorer le switch (topologie directe PE↔CPE)">
+          <mat-icon>cancel</mat-icon>
+          <span>IGNORE_SW</span>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── 3 Submit Buttons ───────────────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">play_circle</mat-icon> Lancer le Provisioning
+    </div>
+
+    <div class="nat-buttons">
+
+
+      <!-- SANS NAT AVEC CPE OTN -->
+      <button class="nat-btn nat-btn--cpe"
+              id="btn-sans-nat-cpe"
+              type="button"
+              [disabled]="submitting"
+              (click)="submit('sans_nat_avec_cpe')">
+        <ng-container *ngIf="activeNatBtn === 'sans_nat_avec_cpe' && submitting; else iconCpe">
+          <mat-spinner diameter="18" class="btn-spinner"></mat-spinner>
+        </ng-container>
+        <ng-template #iconCpe>
+          <mat-icon>device_hub</mat-icon>
+        </ng-template>
+        <div class="nat-btn-text">
+          <span class="nat-btn-label">SANS NAT AVEC CPE OTN</span>
+          <span class="nat-btn-sub">Routage direct avec équipement CPE</span>
+        </div>
       </button>
+
+      <!-- SANS NAT SANS CPE OTN -->
+      <button class="nat-btn nat-btn--nocpe"
+              id="btn-sans-nat-nocpe"
+              type="button"
+              [disabled]="submitting"
+              (click)="submit('sans_nat_sans_cpe')">
+        <ng-container *ngIf="activeNatBtn === 'sans_nat_sans_cpe' && submitting; else iconNoCpe">
+          <mat-spinner diameter="18" class="btn-spinner"></mat-spinner>
+        </ng-container>
+        <ng-template #iconNoCpe>
+          <mat-icon>cable</mat-icon>
+        </ng-template>
+        <div class="nat-btn-text">
+          <span class="nat-btn-label">SANS NAT SANS CPE OTN</span>
+          <span class="nat-btn-sub">Connexion directe PE ↔ client</span>
+        </div>
+      </button>
+
     </div>
 
   </mat-card-content>
 </mat-card>
 
-<!-- ── History Section ── -->
+<!-- ══════════════════════════════════════════════════════════════
+     HISTORY SECTION
+     ══════════════════════════════════════════════════════════════ -->
 <div class="history-header">
-  <h3 class="history-title">{{ 'PROVISIONING.HISTORY_TITLE' | translate }}</h3>
+  <h3 class="history-title">
+    <mat-icon style="vertical-align:middle;margin-right:8px">history</mat-icon>
+    Historique des Provisioning
+  </h3>
   <div class="history-controls">
     <mat-form-field appearance="outline" class="history-search" floatLabel="always">
-      <mat-label>{{ 'PROVISIONING.SEARCH' | translate }}</mat-label>
-      <input matInput [(ngModel)]="searchHistoryQuery" [placeholder]="'PROVISIONING.SEARCH_PLACEHOLDER' | translate">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [(ngModel)]="searchQuery" placeholder="Client, routeur, VLAN…">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
     <div class="filter-tabs">
@@ -279,33 +273,35 @@
               class="filter-tab"
               [class.active]="filterStatus === f"
               (click)="filterStatus = f; historyPage = 0; loadHistory()">
-        {{ 'PROVISIONING.STATUS_' + (f | uppercase) | translate }}
+        {{ f === 'all' ? 'Tous' : f | titlecase }}
       </button>
     </div>
   </div>
 </div>
 
 <mat-card class="history-card">
-  <!-- Empty state -->
-  <div *ngIf="!historyLoading && !filteredHistory.length" class="td-empty">
-    {{ 'PROVISIONING.NO_HISTORY' | translate }}
-  </div>
+
   <div *ngIf="historyLoading" class="td-empty">
     <mat-spinner diameter="28" style="margin:0 auto 8px"></mat-spinner>
-    {{ 'PROVISIONING.LOADING_HISTORY' | translate }}
+    Chargement de l'historique…
   </div>
 
-  <table mat-table [dataSource]="paginatedHistory" class="full-width-table" *ngIf="filteredHistory.length">
+  <div *ngIf="!historyLoading && !filteredHistory.length" class="td-empty">
+    Aucun provisioning enregistré.
+  </div>
+
+  <table mat-table [dataSource]="paginatedHistory" class="full-width-table"
+         *ngIf="!historyLoading && filteredHistory.length">
 
     <!-- ID -->
     <ng-container matColumnDef="task_id">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'PROVISIONING.COL_ID' | translate }}</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">#</th>
       <td mat-cell *matCellDef="let t" class="td-id">{{ t.task_id || t.id }}</td>
     </ng-container>
 
     <!-- Device -->
     <ng-container matColumnDef="device_name">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'PROVISIONING.COL_ROUTER' | translate }}</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">Routeur</th>
       <td mat-cell *matCellDef="let t" class="td-bold">
         <div class="device-cell">
           <mat-icon class="cell-icon">router</mat-icon>
@@ -316,44 +312,42 @@
 
     <!-- Client -->
     <ng-container matColumnDef="client_name">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'PROVISIONING.COL_CLIENT' | translate }}</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">Client</th>
       <td mat-cell *matCellDef="let t" class="td-secondary">
-        {{ t.parameters?.client_name || t.client_name || '—' }}
+        {{ t.parameters?.nom_client || t.parameters?.client_name || '—' }}
       </td>
     </ng-container>
 
     <!-- VLAN -->
     <ng-container matColumnDef="vlan">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'PROVISIONING.COL_VLAN' | translate }}</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">VLAN</th>
       <td mat-cell *matCellDef="let t" class="td-secondary mono">
-        {{ t.parameters?.vlan || t.vlan || '—' }}
+        {{ t.parameters?.vlan || '—' }}
       </td>
     </ng-container>
 
     <!-- Bandwidth -->
     <ng-container matColumnDef="debit_mbps">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'PROVISIONING.COL_BANDWIDTH' | translate }}</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">Débit</th>
       <td mat-cell *matCellDef="let t">
-        <span class="chip chip-bw" style="font-size:11px;padding:2px 10px">
-          {{ t.parameters?.debit_mbps || t.debit_mbps || '—' }} Mbps
-        </span>
+        <span class="chip chip-bw">{{ t.parameters?.debit_mbps || '—' }} Mbps</span>
       </td>
     </ng-container>
 
     <!-- Status -->
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">{{ 'PROVISIONING.COL_STATUS' | translate }}</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">Statut</th>
       <td mat-cell *matCellDef="let t" class="td-center">
         <span class="status-badge" [class]="getStatusClass(t.status)">
           <mat-icon class="status-icon-sm">{{ getStatusIcon(t.status) }}</mat-icon>
-          {{ 'PROVISIONING.STATUS_' + (t.status | uppercase) | translate }}
+          {{ t.status | titlecase }}
         </span>
       </td>
     </ng-container>
 
     <!-- Date -->
     <ng-container matColumnDef="created_at">
-      <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'PROVISIONING.COL_DATE' | translate }}</th>
+      <th mat-header-cell *matHeaderCellDef class="header-accent">Date</th>
       <td mat-cell *matCellDef="let t" class="td-secondary small">
         {{ t.created_at | date:'dd/MM/yy HH:mm' }}
       </td>
@@ -363,16 +357,15 @@
     <tr mat-row *matRowDef="let row; columns: historyColumns;" class="table-row"></tr>
   </table>
 
-  <!-- Custom Pagination -->
+  <!-- Pagination -->
   <div class="pagination-container" *ngIf="filteredHistory.length > 0">
-    <button class="page-btn" (click)="prevHistoryPage()" [disabled]="historyPage === 0">
-      {{ 'PROVISIONING.PREVIOUS' | translate }}
+    <button class="page-btn" (click)="prevPage()" [disabled]="historyPage === 0">
+      ‹ Précédent
     </button>
-    <span class="page-info">
-      {{ 'PROVISIONING.PAGE_INFO' | translate:{current: historyPage + 1, total: totalHistoryPages} }}
-    </span>
-    <button class="page-btn" (click)="nextHistoryPage()" [disabled]="historyPage >= totalHistoryPages - 1">
-      {{ 'PROVISIONING.NEXT' | translate }}
+    <span class="page-info">Page {{ historyPage + 1 }} / {{ totalHistoryPages }}</span>
+    <button class="page-btn" (click)="nextPage()" [disabled]="historyPage >= totalHistoryPages - 1">
+      Suivant ›
     </button>
   </div>
+
 </mat-card>

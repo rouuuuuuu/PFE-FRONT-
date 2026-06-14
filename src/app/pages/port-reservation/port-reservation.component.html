@@ -45,13 +45,9 @@
         <mat-select [(ngModel)]="selectedPort"
                     [disabled]="!selectedRouter || loadingPorts || ports.length === 0"
                     [placeholder]="'PORT_RESERVATION.SELECT_PORT_PLACEHOLDER' | translate">
-          <mat-option *ngFor="let p of ports" [value]="p" [disabled]="!isPortDown(p)">
-            <span class="iface-label">{{ p.port_full_name || p.interface || p.name }}</span>
-            <span class="iface-status"
-                  [class.iface-up]="!isPortDown(p)"
-                  [class.iface-down]="isPortDown(p)">
-              ● {{ p.oper_status || p.status || 'UNKNOWN' | uppercase }}
-            </span>
+          <mat-option *ngFor="let p of ports" [value]="p">
+            <span class="dot" [ngClass]="getIfaceStatusDotClass(p)"></span>
+            <span class="iface-label">{{ getInterfaceLabel(p) }}</span>
           </mat-option>
         </mat-select>
         <mat-hint *ngIf="loadingPorts">{{ 'PORT_RESERVATION.FETCHING_PORTS' | translate }}</mat-hint>

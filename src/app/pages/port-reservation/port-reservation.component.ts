@@ -14,6 +14,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ApiService } from '../../services/api.service';
+import { ProvisioningService } from '../../services/provisioning.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -61,7 +62,11 @@ export class PortReservationComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'oper_status', 'admin_status', 'action'];
 
-  constructor(private api: ApiService, private snackBar: MatSnackBar) {}
+  constructor(
+    private api: ApiService,
+    private svc: ProvisioningService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.loadRouters();
@@ -115,42 +120,57 @@ export class PortReservationComponent implements OnInit {
 
   syncRouter(): void {
     if (!this.selectedRouter) return;
-    
+
     this.loadingPorts = true;
     this.ports = [];
     this.selectedPort = null;
 
-    if (this.selectedRouter.ports && Array.isArray(this.selectedRouter.ports)) {
-      this.ports = this.selectedRouter.ports;
-      this.loadingPorts = false;
-    } else if (this.selectedRouter.interfaces && Array.isArray(this.selectedRouter.interfaces)) {
-      this.ports = this.selectedRouter.interfaces;
-      this.loadingPorts = false;
-    } else {
-      this.api.getUnifiedDevice(this.selectedRouter.loopback_ip || this.selectedRouter.ip_address).subscribe({
-        next: (device) => {
-          this.ports = device.ports || device.interfaces || [];
-          this.loadingPorts = false;
-        },
-        error: (err) => {
-          console.error('Failed to load port details', err);
-          this.snackBar.open('Failed to load ports for this router.', 'Close', { duration: 3000 });
-          this.loadingPorts = false;
-        }
-      });
-    }
+    const routerId = this.selectedRouter.id || this.selectedRouter.device_id;
+
+    this.svc.fetchInterfaces(routerId).subscribe({
+      next: (res: any) => {
+        // Filter to physical interfaces only (is_subinterface === false)
+        const all: any[] = Array.isArray(res) ? res : (res.interfaces ?? res.results ?? []);
+        this.ports = all
+          .filter((p: any) => p.is_subinterface === false)
+          .map((p: any) => ({
+            name           : p.name || '',
+            physical       : (p.physical || 'unknown').toLowerCase(),
+            protocol       : (p.protocol || 'unknown').toLowerCase(),
+            description    : p.description || '',
+            is_subinterface: false
+          }));
+        this.loadingPorts = false;
+      },
+      error: (err) => {
+        console.error('Failed to load interfaces', err);
+        this.snackBar.open('Failed to load ports for this router.', 'Close', { duration: 3000 });
+        this.loadingPorts = false;
+      }
+    });
   }
 
+  /** A port is available for reservation when it is physically UP */
   isPortDown(port: any): boolean {
-    const operStatus = (port.oper_status || port.status || '').toLowerCase();
-    const adminStatus = (port.admin_status || '').toLowerCase();
-    return operStatus === 'down' || adminStatus === 'down';
+    const phy = (port.physical || port.oper_status || port.status || '').toLowerCase();
+    return phy === 'up'; // allow selection of UP ports for reservation
+  }
+
+  /** Dropdown label: "name" or "name — description" */
+  getInterfaceLabel(port: any): string {
+    return port.description ? `${port.name} — ${port.description}` : port.name;
+  }
+
+  /** CSS class for the status dot */
+  getIfaceStatusDotClass(port: any): string {
+    const phy = (port.physical || '').toLowerCase();
+    if (phy === 'up')   return 'dot-up';
+    if (phy === 'down') return 'dot-down';
+    return 'dot-unknown';
   }
 
   selectPort(port: any): void {
-    if (this.isPortDown(port)) {
-      this.selectedPort = port;
-    }
+    this.selectedPort = port;
   }
 
   reservePort(): void {

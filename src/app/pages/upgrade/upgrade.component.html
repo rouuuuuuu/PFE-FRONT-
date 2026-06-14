@@ -56,13 +56,8 @@
                     [placeholder]="'UPGRADE.SYNC_FIRST' | translate"
                     id="interface-select">
           <mat-option *ngFor="let p of portOptions" [value]="p">
-            <span class="iface-label">{{ p.interface }}</span>
-            <span class="iface-status"
-                  [class.iface-up]="p.oper_status.toLowerCase() === 'up'"
-                  [class.iface-down]="p.oper_status.toLowerCase() !== 'up'">
-              ● {{ p.oper_status | uppercase }}
-            </span>
-            <span *ngIf="p.description" class="iface-desc"> — {{ p.description }}</span>
+            <span class="dot" [ngClass]="getIfaceStatusDotClass(p)"></span>
+            <span class="iface-label">{{ p.label }}</span>
           </mat-option>
         </mat-select>
         <mat-hint *ngIf="syncDone && portOptions.length > 0">
