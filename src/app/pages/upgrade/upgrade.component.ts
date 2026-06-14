@@ -223,10 +223,9 @@ export class UpgradeComponent implements OnInit, OnDestroy {
 
     this.svc.fetchInterfaces(this.selectedDevice.device_id).subscribe({
       next: (res: any) => {
-        // Bandwidth upgrade: show only sub-interfaces (is_subinterface === true)
+        // Show ALL interfaces — both physical (Eth1/0/0) and sub-interfaces (Eth1/0/0.100)
         const all: any[] = Array.isArray(res) ? res : (res.interfaces ?? res.results ?? []);
         this.portOptions = all
-          .filter((p: any) => p.is_subinterface === true)
           .map((p: any): PortOption => {
             const ifName = p.name || '';
             const desc   = p.description || '';
@@ -244,7 +243,7 @@ export class UpgradeComponent implements OnInit, OnDestroy {
         this.syncDone = true;
         this.syncingRouter = false;
         if (this.portOptions.length === 0) {
-          this.message = 'No sub-interfaces found for this router.';
+          this.message = 'No interfaces found for this router.';
           this.messageType = 'error';
         }
         this.cdr.detectChanges();
@@ -393,55 +392,22 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     return `SWAN-${this.formatDateForTicket(d)}-${upgrade.upgrade_id.toString().padStart(4, '0')}`;
   }
 
-  // ─── Download config.txt ───
+  // ─── Download config ───
   downloadConfig(upgrade: Upgrade): void {
-    const ticket  = this.generateSwanTicket(upgrade);
-    const oldBw   = upgrade.old_bandwidth_mbps !== null ? `${upgrade.old_bandwidth_mbps} Mbps` : 'Unknown';
-    const newBw   = `${upgrade.new_bandwidth_mbps} Mbps`;
-    const dir     = upgrade.is_upgrade === null ? 'N/A' : upgrade.is_upgrade ? 'Upgrade ↑' : 'Downgrade ↓';
-    const date    = new Date(upgrade.created_at).toLocaleString();
+    const content = upgrade.generated_commands;
 
-    const content = [
-      `========================================`,
-      `  BANDWIDTH CHANGE CONFIGURATION`,
-      `========================================`,
-      ``,
-      `SWAN Ticket  : ${ticket}`,
-      ``,
-      `--- Device ---`,
-      `Router       : ${upgrade.device_name}`,
-      `IP Address   : ${upgrade.device_ip}`,
-      `Vendor       : ${upgrade.vendor || 'N/A'}`,
-      ``,
-      `--- Service ---`,
-      `Interface    : ${upgrade.interface}${upgrade.vlan ? '.' + upgrade.vlan : ''}`,
-      `Customer     : ${upgrade.customer_name || 'N/A'}`,
-      ``,
-      `--- Bandwidth Change ---`,
-      `Direction    : ${dir}`,
-      `Old Bandwidth: ${oldBw}`,
-      `New Bandwidth: ${newBw}`,
-      ``,
-      `--- Task Info ---`,
-      `Status       : ${upgrade.status.toUpperCase()}`,
-      `Requested On : ${date}`,
-      `Requested By : ${upgrade.created_by || 'N/A'}`,
-      ``,
-      `--- Generated Commands ---`,
-      upgrade.generated_commands || '(no commands recorded)',
-      ``,
-      `--- Execution Output ---`,
-      upgrade.execution_output || '(no output recorded)',
-      ``,
-      `========================================`,
-    ].join('\n');
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
 
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `${ticket}.txt`;
-    a.click();
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `upgrade_${upgrade.upgrade_id}.config`;
+    anchor.style.display = 'none';
+
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+
     URL.revokeObjectURL(url);
   }
 
