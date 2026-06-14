@@ -46,8 +46,13 @@
                     [disabled]="!selectedRouter || loadingPorts || ports.length === 0"
                     [placeholder]="'PORT_RESERVATION.SELECT_PORT_PLACEHOLDER' | translate">
           <mat-option *ngFor="let p of ports" [value]="p">
-            <span class="dot" [ngClass]="getIfaceStatusDotClass(p)"></span>
-            <span class="iface-label">{{ getInterfaceLabel(p) }}</span>
+            <span class="iface-opt-row">
+              <span class="iface-opt-bullet">●</span>
+              <span class="iface-opt-name">{{ p.name }}</span>
+              <span class="iface-opt-badge" [ngClass]="p.physical.startsWith('up') ? 'badge-up' : 'badge-down'">{{ p.physical }}</span>
+              <span class="iface-opt-badge" [ngClass]="p.protocol.startsWith('up') ? 'badge-up' : 'badge-down'">{{ p.protocol }}</span>
+              <span class="iface-opt-desc" *ngIf="p.description">{{ p.description }}</span>
+            </span>
           </mat-option>
         </mat-select>
         <mat-hint *ngIf="loadingPorts">{{ 'PORT_RESERVATION.FETCHING_PORTS' | translate }}</mat-hint>

@@ -144,8 +144,13 @@
             {{ loadingInterfaces ? 'Chargement…' : 'Cliquer SYNC_RT d\'abord' }}
           </mat-option>
           <mat-option *ngFor="let iface of interfaces" [value]="iface.name">
-            <span class="dot" [ngClass]="getIfaceStatusDotClass(iface)"></span>
-            <span class="opt-name">{{ getInterfaceLabel(iface) }}</span>
+            <span class="iface-opt-row">
+              <span class="iface-opt-bullet">●</span>
+              <span class="iface-opt-name">{{ iface.name }}</span>
+              <span class="iface-opt-badge" [ngClass]="iface.physical.startsWith('up') ? 'badge-up' : 'badge-down'">{{ iface.physical }}</span>
+              <span class="iface-opt-badge" [ngClass]="iface.protocol.startsWith('up') ? 'badge-up' : 'badge-down'">{{ iface.protocol }}</span>
+              <span class="iface-opt-desc" *ngIf="iface.description">{{ iface.description }}</span>
+            </span>
           </mat-option>
         </mat-select>
         <mat-hint *ngIf="interfaces.length" class="hint-green">

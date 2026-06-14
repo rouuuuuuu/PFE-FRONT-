@@ -56,8 +56,13 @@
                     [placeholder]="'UPGRADE.SYNC_FIRST' | translate"
                     id="interface-select">
           <mat-option *ngFor="let p of portOptions" [value]="p">
-            <span class="dot" [ngClass]="getIfaceStatusDotClass(p)"></span>
-            <span class="iface-label">{{ p.label }}</span>
+            <span class="iface-opt-row">
+              <span class="iface-opt-bullet">●</span>
+              <span class="iface-opt-name">{{ p.interface }}{{ p.vlan ? '.' + p.vlan : '' }}</span>
+              <span class="iface-opt-badge" [ngClass]="p.physical.startsWith('up') ? 'badge-up' : 'badge-down'">{{ p.physical }}</span>
+              <span class="iface-opt-badge" [ngClass]="p.protocol.startsWith('up') ? 'badge-up' : 'badge-down'">{{ p.protocol }}</span>
+              <span class="iface-opt-desc" *ngIf="p.description">{{ p.description }}</span>
+            </span>
           </mat-option>
         </mat-select>
         <mat-hint *ngIf="syncDone && portOptions.length > 0">

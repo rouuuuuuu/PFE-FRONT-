@@ -182,22 +182,65 @@
 .vendor-huawei  { background: rgba(255,57,57,0.12);  color: #ff5c5c; border: 1px solid rgba(255,57,57,0.25); }
 .vendor-juniper { background: rgba(76,175,80,0.12);  color: var(--status-green); border: 1px solid rgba(76,175,80,0.25); }
 
-.iface-status { font-size: 11px; font-weight: 600; margin-left: 6px; }
-.iface-up     { color: var(--status-green); }
-.iface-down   { color: var(--status-red); }
-
-/* Status dot for interface physical state */
-.dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 8px;
-  flex-shrink: 0;
-  vertical-align: middle;
+/* Interface option row layout */
+.iface-opt-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  width: 100%;
 }
-.dot-up      { background-color: #22c55e; }
-.dot-down    { background-color: #ef4444; }
+
+.iface-opt-bullet {
+  color: var(--primary-orange);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.iface-opt-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+.iface-opt-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+
+.badge-up {
+  background: rgba(76, 175, 80, 0.15);
+  color: #81c784;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.badge-down {
+  background: rgba(239, 83, 80, 0.14);
+  color: #ef9a9a;
+  border: 1px solid rgba(239, 83, 80, 0.28);
+}
+
+.iface-opt-desc {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keep dot classes for backward compat but no longer used in mat-option */
+.dot        { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; flex-shrink: 0; vertical-align: middle; }
+.dot-up     { background-color: #22c55e; }
+.dot-down   { background-color: #ef4444; }
 .dot-unknown { background-color: #6b7280; }
 
 .hint-green   { color: var(--status-green) !important; font-weight: 600; }

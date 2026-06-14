@@ -33,6 +33,7 @@ interface PortOption {
   vlan: string;
   description: string;
   physical: string;      // physical status from API
+  protocol: string;      // protocol status from API
 }
 
 interface Upgrade {
@@ -230,12 +231,14 @@ export class UpgradeComponent implements OnInit, OnDestroy {
             const ifName = p.name || '';
             const desc   = p.description || '';
             const phy    = (p.physical || 'unknown').toLowerCase();
+            const proto  = (p.protocol || 'unknown').toLowerCase();
             return {
               label      : desc ? `${ifName} — ${desc}` : ifName,
               interface  : ifName.includes('.') ? ifName.split('.')[0] : ifName,
               vlan       : ifName.includes('.') ? ifName.split('.')[1] : '',
               description: desc,
-              physical   : phy
+              physical   : phy,
+              protocol   : proto
             };
           });
         this.syncDone = true;

@@ -87,34 +87,60 @@
   to   { transform: rotate(360deg); }
 }
 
-/* --- Interface dropdown --- */
-.iface-label {
+/* --- Interface option row layout --- */
+.iface-opt-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  width: 100%;
+}
+
+.iface-opt-bullet {
+  color: var(--primary-orange);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.iface-opt-name {
   font-weight: 600;
   color: var(--text-primary);
+  min-width: 110px;
+  flex-shrink: 0;
 }
 
-.iface-status {
+.iface-opt-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 10px;
   font-size: 11px;
   font-weight: 600;
-  margin-left: 8px;
-}
-
-.iface-up   { color: var(--status-green); }
-.iface-down { color: var(--status-red); }
-
-/* Status dot for interface physical state */
-.dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 8px;
+  letter-spacing: 0.3px;
   flex-shrink: 0;
-  vertical-align: middle;
 }
-.dot-up      { background-color: #22c55e; }
-.dot-down    { background-color: #ef4444; }
-.dot-unknown { background-color: #6b7280; }
+
+.badge-up {
+  background: rgba(76, 175, 80, 0.15);
+  color: #81c784;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.badge-down {
+  background: rgba(239, 83, 80, 0.14);
+  color: #ef9a9a;
+  border: 1px solid rgba(239, 83, 80, 0.28);
+}
+
+.iface-opt-desc {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .hint-warn {
   color: var(--status-orange, #ff9800) !important;
