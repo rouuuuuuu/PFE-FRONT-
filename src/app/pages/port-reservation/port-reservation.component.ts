@@ -44,12 +44,12 @@ export class PortReservationComponent implements OnInit {
   filteredRouters: any[] = [];
   selectedRouter: any = null;
   routerSearchTerm: string = '';
-  
+
   ports: any[] = [];
   selectedPort: any = null;
-  
+
   description: string = '';
-  
+
   loadingRouters: boolean = true;
   loadingPorts: boolean = false;
   submitting: boolean = false;
@@ -66,7 +66,7 @@ export class PortReservationComponent implements OnInit {
     private api: ApiService,
     private svc: ProvisioningService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadRouters();
@@ -134,11 +134,13 @@ export class PortReservationComponent implements OnInit {
         this.ports = all
           .filter((p: any) => p.is_subinterface === false)
           .map((p: any) => ({
-            name           : p.name || '',
-            physical       : (p.physical || 'unknown').toLowerCase(),
-            protocol       : (p.protocol || 'unknown').toLowerCase(),
-            description    : p.description || '',
+            name:           p.name || '',
+            physical:       (p.physical || 'unknown').toLowerCase(),
+            protocol:       (p.protocol || 'unknown').toLowerCase(),
+            description:    p.description || '',
             is_subinterface: false
+            // Note: port_id is intentionally NOT mapped here — live interfaces don't have one.
+            // The backend will create the DB record on the fly using interface_name.
           }));
         this.loadingPorts = false;
       },
@@ -178,35 +180,31 @@ export class PortReservationComponent implements OnInit {
 
     this.submitting = true;
 
-    // Step 1: Resolve the real DB port ID (hardware data doesn't carry the integer PK)
-    const routerId  = this.selectedRouter.id || this.selectedRouter.device_id;
-    const portName  = this.selectedPort.port_full_name || this.selectedPort.interface || this.selectedPort.name;
+    const routerId      = this.selectedRouter.id || this.selectedRouter.device_id;
+    const interfaceName = this.selectedPort.port_full_name || this.selectedPort.interface || this.selectedPort.name;
 
-    this.api.getPortId(routerId, portName).subscribe({
-      next: (res: any) => {
-        const payload = {
-          router_id:   routerId,
-          port_id:     res.port_id,   // real integer DB PK
-          description: this.description.trim()
-        };
+    // port_id is only present when the port already exists in the DB.
+    // For live-fetched interfaces it will be undefined/null — the backend
+    // creates the DB record on the fly using interface_name.
+    const portId = this.selectedPort.port_id ?? null;
 
-        // Step 2: Submit the reservation
-        this.api.reservePort(payload).subscribe({
-          next: () => {
-            this.submitting = false;
-            this.snackBar.open('✅ Port reserved. Background configuration started.', 'Close', { duration: 5000 });
-            this.resetForm();
-            this.loadHistory(); // Refresh history after successful reservation
-          },
-          error: (err) => {
-            this.submitting = false;
-            this.snackBar.open(`❌ ${err.error?.message || err.error?.error || 'Failed to reserve port.'}`, 'Close', { duration: 5000 });
-          }
-        });
-      },
-      error: () => {
+    const payload = {
+      router_id:      routerId,
+      port_id:        portId,
+      interface_name: interfaceName,
+      description:    this.description.trim()
+    };
+
+    this.api.reservePort(payload).subscribe({
+      next: () => {
         this.submitting = false;
-        this.snackBar.open('❌ Could not find port in database. Check port name mapping.', 'Close', { duration: 5000 });
+        this.snackBar.open('✅ Port reserved. Background configuration started.', 'Close', { duration: 5000 });
+        this.resetForm();
+        this.loadHistory();
+      },
+      error: (err) => {
+        this.submitting = false;
+        this.snackBar.open(`❌ ${err.error?.message || err.error?.error || 'Failed to reserve port.'}`, 'Close', { duration: 5000 });
       }
     });
   }
