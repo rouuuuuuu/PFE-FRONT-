@@ -32,7 +32,7 @@ export class RoutersComponent implements OnInit { // Class tebda tetexecuta (Com
   loading = true; // Variable y9ollik rani nchargi (Boolean to track loading state)
   searchTerm = ''; // El mot mta3 recherche lli ktabha l'utilisateur (String variable bound to text search input)
   vendorFilter = ''; // El filtre mta3 l'marque (String variable bound to vendor select)
-  
+
   // Pagination State
   pageSize = 25; // 9addech mn routeur nheb nchouf f'page (Number of items to show per page)
   currentPage = 0; // Num mta3 page e'li a7na feha (Index of the current page, 0-based)
@@ -40,7 +40,7 @@ export class RoutersComponent implements OnInit { // Class tebda tetexecuta (Com
   columns = ['name', 'loopback_ip', 'model', 'vendor']; // Les colonnes bech ybànou fl tableau (List of columns displayed in the mat-table)
 
   // <-- Router injected here
-  constructor(private api: ApiService, private router: Router) {} // Injectinna l'API wel Routeur (Constructor injecting our API service and the Router)
+  constructor(private api: ApiService, private router: Router) { } // Injectinna l'API wel Routeur (Constructor injecting our API service and the Router)
 
   ngOnInit() { // Fonction tji m3a bedayet l'composant (Lifecycle hook runs when component initializes)
     this.api.getRouters().subscribe({ // Nkalmou backend bech ye3tina routers (Call the API to fetch routers data)

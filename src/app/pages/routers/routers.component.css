@@ -172,6 +172,7 @@
   .filters-row {
     flex-direction: column;
   }
+
   .search-field,
   .filter-field {
     min-width: 100%;

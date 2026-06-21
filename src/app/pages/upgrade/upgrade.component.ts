@@ -86,6 +86,7 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   allDevices: Device[] = [];
   filteredDevicesList: Device[] = [];
   loadingDevices = false;
+  private _skipNextFilter = false; // guard: skip ngModelChange after autocomplete selection
 
   // ─── Selected device & sync ───
   selectedDevice: Device | null = null;
@@ -185,6 +186,10 @@ export class UpgradeComponent implements OnInit, OnDestroy {
 
   // ─── Autocomplete ───
   filterDevices(searchTerm: string): void {
+    if (this._skipNextFilter) {
+      this._skipNextFilter = false;
+      return;
+    }
     this.syncDone = false;
     this.portOptions = [];
     this.selectedPort = null;
@@ -199,12 +204,28 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Show all devices when the field is focused/clicked with no text,
+   *  or re-show matching ones if text is already present */
+  onSearchFocus(): void {
+    if (!this.searchQuery) {
+      this.filteredDevicesList = [...this.allDevices];
+    } else {
+      const term = this.searchQuery.toLowerCase();
+      this.filteredDevicesList = this.allDevices.filter(d =>
+        d.ne_name.toLowerCase().includes(term) ||
+        d.ip_address.includes(term)
+      );
+    }
+  }
+
   onDeviceAutoSelected(event: any): void {
     const name = event.option.value as string;
     const device = this.allDevices.find(d => d.ne_name === name);
     if (device) {
+      this._skipNextFilter = true; // prevent the following ngModelChange from re-filtering
       this.selectedDevice = device;
       this.searchQuery = device.ne_name;
+      this.filteredDevicesList = []; // close panel
       this.syncDone = false;
       this.portOptions = [];
       this.selectedPort = null;

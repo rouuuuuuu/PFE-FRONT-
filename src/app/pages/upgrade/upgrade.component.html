@@ -18,6 +18,7 @@
         <input type="text" matInput
                [(ngModel)]="searchQuery"
                (ngModelChange)="filterDevices($event)"
+               (focus)="onSearchFocus()"
                [matAutocomplete]="routerAuto"
                [placeholder]="'UPGRADE.ROUTER_PLACEHOLDER' | translate"
                id="router-search-input">

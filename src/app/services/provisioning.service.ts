@@ -31,6 +31,19 @@ export class ProvisioningService {
   }
 
   /**
+   * Live LLDP discovery: detect the switch connected to a router port.
+   * POST /api/provisioning/fetch-switch/
+   * Body: { router_id, port_name }
+   * Returns: { has_switch, switch_ip, switch_port, switch_uplink_port, message }
+   */
+  fetchSwitchDiscovery(routerId: number, portName: string): Observable<any> {
+    return this.http.post<any>(
+      `${BASE}/api/provisioning/fetch-switch/`,
+      { router_id: routerId, port_name: portName }
+    );
+  }
+
+  /**
    * Start an internet-provisioning task.
    * POST /api/provisioning/start/
    */

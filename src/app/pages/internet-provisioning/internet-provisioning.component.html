@@ -6,7 +6,7 @@
     <mat-icon>public</mat-icon>
   </div>
   <div>
-    <h1 class="page-title">SERVICE NIVEAU 3 DYNAMIQUE</h1>
+    <h1 class="page-title">Internet Provisioning Service</h1>
     <p class="page-subtitle">Internet B2B Provisioning — Huawei &amp; Juniper</p>
   </div>
 </div>
@@ -84,14 +84,42 @@
         <mat-icon matSuffix>signal_cellular_alt</mat-icon>
       </mat-form-field>
 
-      <!-- Select @Public Range -->
+      <!-- Select Subnet Type (CIDR) @Public -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
         <mat-label>Select Range &#64;Public</mat-label>
-        <mat-select formControlName="public_range" id="select-public-range">
+        <mat-select formControlName="subnet_type" id="select-subnet-type">
           <mat-option [value]="null">— Aucune / Auto —</mat-option>
-          <mat-option *ngFor="let r of publicRanges" [value]="r">{{ r }}</mat-option>
+          <mat-option *ngFor="let s of subnetOptions" [value]="s.value">{{ s.label }}</mat-option>
         </mat-select>
-        <mat-icon matSuffix>public</mat-icon>
+        <mat-icon matSuffix>lan</mat-icon>
+      </mat-form-field>
+
+      <!-- PE_IP — IP côté routeur PE (optionnel, alloué automatiquement si vide) -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>IP PE (optionnel)</mat-label>
+        <input matInput formControlName="pe_ip_address"
+               id="input-pe-ip"
+               placeholder="ex. 192.168.1.1"
+               autocomplete="off">
+        <mat-icon matSuffix>router</mat-icon>
+        <mat-hint>Laissez vide pour attribution automatique</mat-hint>
+        <mat-error *ngIf="form.get('pe_ip_address')?.hasError('invalidIp')">
+          Format IPv4 invalide (ex. 10.0.0.1)
+        </mat-error>
+      </mat-form-field>
+
+      <!-- CE_IP — IP côté équipement client (optionnel, alloué automatiquement si vide) -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>IP CE (optionnel)</mat-label>
+        <input matInput formControlName="ce_ip_address"
+               id="input-ce-ip"
+               placeholder="ex. 192.168.1.2"
+               autocomplete="off">
+        <mat-icon matSuffix>computer</mat-icon>
+        <mat-hint>Laissez vide pour attribution automatique</mat-hint>
+        <mat-error *ngIf="form.get('ce_ip_address')?.hasError('invalidIp')">
+          Format IPv4 invalide (ex. 10.0.0.2)
+        </mat-error>
       </mat-form-field>
 
     </div>
@@ -109,18 +137,26 @@
       <div class="field-with-btn">
         <mat-form-field appearance="outline" class="form-field" floatLabel="always">
           <mat-label>ROUTEUR</mat-label>
-          <mat-select formControlName="router_id" id="select-router"
-                      (selectionChange)="onRouterChange()">
-            <mat-option *ngIf="loadingRouters" disabled>
-              <mat-spinner diameter="14" style="display:inline-block;margin-right:8px"></mat-spinner>
-              Chargement…
-            </mat-option>
-            <mat-option *ngFor="let r of routers" [value]="r.id">
+          <input type="text" matInput
+                 [(ngModel)]="routerSearchQuery"
+                 [ngModelOptions]="{standalone: true}"
+                 (ngModelChange)="filterRouterSuggestions($event)"
+                 (focus)="onRouterSearchFocus()"
+                 [matAutocomplete]="routerAuto"
+                 placeholder="Tapez le nom ou l'IP…"
+                 id="input-router-search">
+          <mat-icon matSuffix *ngIf="loadingRouters">hourglass_empty</mat-icon>
+          <mat-icon matSuffix *ngIf="!loadingRouters">search</mat-icon>
+          <mat-autocomplete #routerAuto="matAutocomplete" (optionSelected)="onRouterAutoSelected($event)">
+            <mat-option *ngFor="let r of filteredRoutersList" [value]="r.ne_name">
               <span class="opt-name">{{ r.ne_name }}</span>
               <span class="opt-ip">&nbsp;({{ r.ip_address }})</span>
               <span class="vendor-badge vendor-{{ r.vendor | lowercase }}">{{ r.vendor }}</span>
             </mat-option>
-          </mat-select>
+            <mat-option *ngIf="filteredRoutersList.length === 0 && routerSearchQuery" disabled>
+              <span style="color:var(--text-muted);font-style:italic">Aucun routeur trouvé</span>
+            </mat-option>
+          </mat-autocomplete>
           <mat-error>Sélectionner un routeur</mat-error>
         </mat-form-field>
 
@@ -185,15 +221,18 @@
           <mat-hint *ngIf="switchIgnored" class="hint-ignored">Switch ignoré</mat-hint>
         </mat-form-field>
 
+        <!-- SYNC_SW: live LLDP discovery (requires router + port selected) -->
         <button class="action-btn sync-btn"
                 id="btn-sync-sw"
                 type="button"
-                [disabled]="loadingSwitches"
-                (click)="syncSwitch()"
-                matTooltip="Charger la liste des switches">
-          <mat-spinner *ngIf="loadingSwitches" diameter="16"></mat-spinner>
-          <mat-icon *ngIf="!loadingSwitches">sync</mat-icon>
-          <span>SYNC_SW</span>
+                [disabled]="loadingSwitch
+                            || !form.get('router_id')!.value
+                            || !form.get('port_name')!.value"
+                (click)="onSyncSwitch()"
+                matTooltip="Découverte LLDP en direct via SSH (3–5 sec)">
+          <mat-spinner *ngIf="loadingSwitch" diameter="16"></mat-spinner>
+          <mat-icon *ngIf="!loadingSwitch">travel_explore</mat-icon>
+          <span>{{ loadingSwitch ? 'Discovering…' : 'SYNC_SW' }}</span>
         </button>
 
         <button class="action-btn ignore-btn"
@@ -355,6 +394,26 @@
       <th mat-header-cell *matHeaderCellDef class="header-accent">Date</th>
       <td mat-cell *matCellDef="let t" class="td-secondary small">
         {{ t.created_at | date:'dd/MM/yy HH:mm' }}
+      </td>
+    </ng-container>
+
+
+    <!-- SWAN Ticket -->
+    <ng-container matColumnDef="swan_ticket">
+      <th mat-header-cell *matHeaderCellDef class="header-accent">Ticket</th>
+      <td mat-cell *matCellDef="let t" class="td-ticket">{{ generateSwanTicket(t) }}</td>
+    </ng-container>
+
+    <!-- Download Config -->
+    <ng-container matColumnDef="download">
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">Config</th>
+      <td mat-cell *matCellDef="let t" class="td-center">
+        <button class="dl-btn"
+                (click)="downloadConfig(t)"
+                [matTooltip]="'Download ' + generateSwanTicket(t) + '.txt'"
+                id="download-config-btn-{{ t.task_id || t.id }}">
+          <mat-icon class="dl-icon">download</mat-icon>
+        </button>
       </td>
     </ng-container>
 
