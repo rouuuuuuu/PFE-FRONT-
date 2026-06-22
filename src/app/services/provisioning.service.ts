@@ -50,4 +50,15 @@ export class ProvisioningService {
   startProvisioning(payload: any): Observable<any> {
     return this.http.post<any>(`${BASE}/api/provisioning/start/`, payload);
   }
+
+  /**
+   * Preview the auto-computed CPE parameters (CE IP & Customer LAN prefix)
+   * based on the selected subnet type. The backend generates IP ranges dynamically.
+   * GET /api/provisioning/preview-cpe/?subnet_type=/29
+   * Returns: { ce_ip_address: string, customer_lan_prefix: string }
+   */
+  previewCpeParams(subnetType: string): Observable<any> {
+    const url = `${BASE}/api/provisioning/preview-cpe/?subnet_type=${encodeURIComponent(subnetType)}`;
+    return this.http.get<any>(url);
+  }
 }

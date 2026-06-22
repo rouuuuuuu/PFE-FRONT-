@@ -146,6 +146,10 @@ getPortId(routerId: number, portName: string): Observable<any> {
   });
 }
 
+  getPublicRanges(): Observable<any> {
+    return this.http.get(`${API_URL}/devices/public-ranges/`);
+  }
+
   getStock() { return this.http.get(`${API_URL}/inventory/stock/`); }
 
   // ==========================================
