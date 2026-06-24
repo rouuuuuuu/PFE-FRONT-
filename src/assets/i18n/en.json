@@ -213,11 +213,20 @@
     "HISTORY_RETRY": "Retry",
     "HISTORY_EMPTY": "No reservations have been made yet.",
     "HISTORY_RECORDS": "record(s)",
+    "HISTORY_COL_ID": "#",
     "HISTORY_COL_ROUTER": "Router",
     "HISTORY_COL_PORT": "Port",
     "HISTORY_COL_DESC": "Description",
     "HISTORY_COL_STATUS": "Status",
-    "HISTORY_COL_DATE": "Reserved At"
+    "HISTORY_COL_DATE": "Reserved At",
+    "HISTORY_COL_TICKET": "SWAN Ticket",
+    "HISTORY_COL_CONFIG": "Config",
+    "SEARCH": "Search",
+    "SEARCH_PLACEHOLDER": "Router, port, description...",
+    "PREVIOUS": "Previous",
+    "NEXT": "Next",
+    "PAGE_INFO": "Page {{current}} of {{total}}",
+    "DOWNLOAD_CONFIG": "Download Config"
   },
   "PROVISIONING": {
     "TITLE": "Internet Provisioning Service",

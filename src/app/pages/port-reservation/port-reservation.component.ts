@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { interval, Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,7 +41,11 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './port-reservation.component.html',
   styleUrls: ['./port-reservation.component.css']
 })
-export class PortReservationComponent implements OnInit {
+export class PortReservationComponent implements OnInit, OnDestroy {
+
+  private readonly POLL_MS = 15_000;
+  private destroy$ = new Subject<void>();
+
   routers: any[] = [];
   filteredRouters: any[] = [];
   selectedRouter: any = null;
@@ -59,18 +65,49 @@ export class PortReservationComponent implements OnInit {
   loadingHistory: boolean = false;
   historyError: string | null = null;
   historySearch: string = '';
+  filterStatus = 'all';
+  historyPage = 0;
+  historyPageSize = 10;
+  historyColumns: string[] = [
+    'reservation_id', 'router_name', 'port_name',
+    'description', 'status', 'created_at',
+    'swan_ticket', 'download'
+  ];
 
   displayedColumns: string[] = ['name', 'oper_status', 'admin_status', 'action'];
 
   constructor(
     private api: ApiService,
     private svc: ProvisioningService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
     this.loadRouters();
     this.loadHistory();
+
+    // ── Polling — keep history table live ──
+    if (isPlatformBrowser(this.platformId)) {
+      interval(this.POLL_MS)
+        .pipe(
+          takeUntil(this.destroy$),
+          switchMap(() => this.api.getPortReservationHistory())
+        )
+        .subscribe({
+          next: (data: any) => {
+            this.history = Array.isArray(data) ? data : (data.results ?? []);
+            this.cdr.detectChanges();
+          },
+          error: (err: any) => console.error('Polling error:', err)
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadRouters(): void {
@@ -227,6 +264,7 @@ export class PortReservationComponent implements OnInit {
       next: (data: any) => {
         this.history = Array.isArray(data) ? data : (data.results ?? []);
         this.loadingHistory = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loadingHistory = false;
@@ -244,21 +282,92 @@ export class PortReservationComponent implements OnInit {
     });
   }
 
-  get filteredHistory(): any[] {
-    if (!this.historySearch.trim()) return this.history;
-    const q = this.historySearch.toLowerCase();
-    return this.history.filter(h =>
-      (h.router_name || h.router || '').toLowerCase().includes(q) ||
-      (h.port_name   || h.port   || '').toLowerCase().includes(q) ||
-      (h.description || '').toLowerCase().includes(q) ||
-      (h.status      || '').toLowerCase().includes(q)
-    );
+  onFilterChange(): void {
+    this.historyPage = 0;
   }
 
+  get filteredHistory(): any[] {
+    let list = this.filterStatus === 'all'
+      ? this.history
+      : this.history.filter(h => h.status === this.filterStatus);
+
+    if (this.historySearch.trim()) {
+      const q = this.historySearch.toLowerCase();
+      list = list.filter(h =>
+        (h.router_name || h.router || '').toLowerCase().includes(q) ||
+        (h.port_name   || h.port   || '').toLowerCase().includes(q) ||
+        (h.description || '').toLowerCase().includes(q) ||
+        (h.status      || '').toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }
+
+  get paginatedHistory(): any[] {
+    const start = this.historyPage * this.historyPageSize;
+    return this.filteredHistory.slice(start, start + this.historyPageSize);
+  }
+
+  get totalHistoryPages(): number {
+    return Math.max(1, Math.ceil(this.filteredHistory.length / this.historyPageSize));
+  }
+
+  prevPage(): void { if (this.historyPage > 0) this.historyPage--; }
+  nextPage(): void { if (this.historyPage < this.totalHistoryPages - 1) this.historyPage++; }
+
+  // ── SWAN Ticket ─────────────────────────────────────────────
+  private formatDateForTicket(d: Date): string {
+    return d.getFullYear().toString() +
+      (d.getMonth() + 1).toString().padStart(2, '0') +
+      d.getDate().toString().padStart(2, '0');
+  }
+
+  generateSwanTicket(h: any): string {
+    const d  = new Date(h.reserved_at || h.created_at);
+    const id = (h.reservation_id ?? h.id ?? 0).toString().padStart(4, '0');
+    return `SWAN-${this.formatDateForTicket(d)}-${id}`;
+  }
+
+  // ── Download Config ─────────────────────────────────────────
+  downloadConfig(h: any): void {
+    const ticket  = this.generateSwanTicket(h);
+    const content = h.generated_commands ?? h.script_output ?? '';
+    const blob    = new Blob([content], { type: 'text/plain' });
+    const url     = URL.createObjectURL(blob);
+    const anchor  = document.createElement('a');
+    anchor.href     = url;
+    anchor.download = `${ticket}.config`;
+    anchor.style.display = 'none';
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Status helpers ──────────────────────────────────────────
   getStatusClass(status: string): string {
-    const s = (status || '').toLowerCase();
-    if (s === 'completed' || s === 'success' || s === 'done') return 'hist-done';
-    if (s === 'failed'    || s === 'error')                   return 'hist-error';
-    return 'hist-pending';
+    const map: Record<string, string> = {
+      completed:   'status-completed',
+      success:     'status-completed',
+      done:        'status-completed',
+      in_progress: 'status-in-progress',
+      pending:     'status-pending',
+      failed:      'status-failed',
+      error:       'status-failed'
+    };
+    return map[(status || '').toLowerCase()] || 'status-pending';
+  }
+
+  getStatusIcon(status: string): string {
+    const map: Record<string, string> = {
+      completed:   'check_circle',
+      success:     'check_circle',
+      done:        'check_circle',
+      in_progress: 'sync',
+      pending:     'schedule',
+      failed:      'error',
+      error:       'error'
+    };
+    return map[(status || '').toLowerCase()] || 'help';
   }
 }

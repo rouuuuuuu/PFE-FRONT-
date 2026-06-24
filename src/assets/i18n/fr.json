@@ -213,11 +213,20 @@
     "HISTORY_RETRY": "Réessayer",
     "HISTORY_EMPTY": "Aucune réservation n'a encore été effectuée.",
     "HISTORY_RECORDS": "enregistrement(s)",
+    "HISTORY_COL_ID": "#",
     "HISTORY_COL_ROUTER": "Routeur",
     "HISTORY_COL_PORT": "Port",
     "HISTORY_COL_DESC": "Description",
     "HISTORY_COL_STATUS": "Statut",
-    "HISTORY_COL_DATE": "Réservé le"
+    "HISTORY_COL_DATE": "Réservé le",
+    "HISTORY_COL_TICKET": "Ticket SWAN",
+    "HISTORY_COL_CONFIG": "Config",
+    "SEARCH": "Rechercher",
+    "SEARCH_PLACEHOLDER": "Routeur, port, description...",
+    "PREVIOUS": "Précédent",
+    "NEXT": "Suivant",
+    "PAGE_INFO": "Page {{current}} sur {{total}}",
+    "DOWNLOAD_CONFIG": "Télécharger Config"
   },
   "PROVISIONING": {
     "TITLE": "Service de Provisionnement Internet",

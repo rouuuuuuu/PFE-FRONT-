@@ -544,12 +544,12 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
 
   downloadConfig(task: any): void {
     const ticket  = this.generateSwanTicket(task);
-    const content = task.script_output ?? task.generated_commands ?? '';
+    const content = task.generated_commands ?? task.script_output ?? '';
     const blob    = new Blob([content], { type: 'text/plain' });
     const url     = URL.createObjectURL(blob);
     const anchor  = document.createElement('a');
     anchor.href     = url;
-    anchor.download = `${ticket}.txt`;
+    anchor.download = `${ticket}.config`;
     anchor.style.display = 'none';
     document.body.appendChild(anchor);
     anchor.click();
