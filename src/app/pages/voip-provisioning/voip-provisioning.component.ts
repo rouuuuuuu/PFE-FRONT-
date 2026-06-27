@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 import { MatCardModule }              from '@angular/material/card';
 import { MatFormFieldModule }          from '@angular/material/form-field';
@@ -21,6 +22,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule }              from '@angular/material/table';
 import { MatTooltipModule }            from '@angular/material/tooltip';
 import { MatAutocompleteModule }       from '@angular/material/autocomplete';
+import { ClipboardModule }             from '@angular/cdk/clipboard';
 
 import { ApiService }           from '../../services/api.service';
 import { ProvisioningService }  from '../../services/provisioning.service';
@@ -66,6 +68,7 @@ interface PortInterface {
     MatTableModule,
     MatTooltipModule,
     MatAutocompleteModule,
+    ClipboardModule,
     TranslateModule
   ],
   templateUrl: './voip-provisioning.component.html',
@@ -112,6 +115,7 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
   taskScriptOutput   : string | null = null;
   pollingActive      = false;
   liberating         = false;
+  copyDone           = false;
 
   // ── History ───────────────────────────────────────────────
   historyTasks    : any[] = [];
@@ -133,6 +137,7 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
     private cdr       : ChangeDetectorRef,
     private snackBar  : MatSnackBar,
     private translate : TranslateService,
+    private clipboard : Clipboard,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -522,6 +527,14 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
     this.taskResult       = null;
     this.taskScriptOutput = null;
     this.pollingActive    = false;
+  }
+
+  /** Copy script output to clipboard */
+  copyScriptOutput(): void {
+    if (!this.taskScriptOutput) return;
+    this.clipboard.copy(this.taskScriptOutput);
+    this.copyDone = true;
+    setTimeout(() => this.copyDone = false, 2000);
   }
 
   // ── Reset ─────────────────────────────────────────────

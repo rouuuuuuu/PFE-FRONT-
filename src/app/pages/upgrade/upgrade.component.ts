@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -14,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../services/api.service';
 import { ProvisioningService } from '../../services/provisioning.service';
@@ -70,6 +72,7 @@ interface Upgrade {
     MatAutocompleteModule,
     MatTableModule,
     MatTooltipModule,
+    ClipboardModule,
     TranslateModule
   ],
   templateUrl: './upgrade.component.html',
@@ -79,7 +82,9 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   private readonly BASE_URL = 'http://127.0.0.1:8000';
   private apiUrl = `${this.BASE_URL}/api/provisioning`;
   private destroy$ = new Subject<void>();
+  private statusPollDestroy$ = new Subject<void>();
   private readonly POLL_MS = 10_000;
+  private readonly STATUS_POLL_MS = 3_000;
 
   // ─── Device search ───
   searchQuery = '';
@@ -106,6 +111,14 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   message = '';
   messageType: 'success' | 'error' | '' = '';
 
+  // ── Status polling / result panel ────────────────────────
+  currentTaskId      : number | null = null;
+  taskStatus         : string | null = null;
+  taskResult         : string | null = null;
+  taskScriptOutput   : string | null = null;
+  pollingActive      = false;
+  copyDone           = false;
+
   // ─── History ───
   upgrades: Upgrade[] = [];
   filterStatus = 'all';
@@ -129,6 +142,7 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private svc: ProvisioningService,
     private cdr: ChangeDetectorRef,
+    private clipboard: Clipboard,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -159,6 +173,8 @@ export class UpgradeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.statusPollDestroy$.next();
+    this.statusPollDestroy$.complete();
   }
 
   // ─── Load routers only ───
@@ -327,8 +343,13 @@ export class UpgradeComponent implements OnInit, OnDestroy {
         this.message = `Task queued — ID: ${res.upgrade_id} | Ticket: SWAN-${this.formatDateForTicket(new Date())}-${res.upgrade_id.toString().padStart(4, '0')}`;
         this.messageType = 'success';
         this.submitting = false;
+        const id = res?.upgrade_id ?? res?.task_id ?? res?.id ?? null;
+        if (id) {
+          this.currentTaskId = id;
+          this._startStatusPolling(id);
+        }
         this.resetForm();
-        this.loadUpgrades(); // backend has already saved the record — fetch immediately
+        this.loadUpgrades();
       },
       error: (err) => {
         this.message = `Failed: ${err.error?.error || 'Unknown error'}`;
@@ -347,6 +368,60 @@ export class UpgradeComponent implements OnInit, OnDestroy {
     this.syncDone = false;
     this.searchQuery = '';
     this.filteredDevicesList = [...this.allDevices];
+  }
+
+  // ── Status Polling ────────────────────────────────────────
+  private _startStatusPolling(taskId: number): void {
+    this.pollingActive    = true;
+    this.taskStatus       = 'pending';
+    this.taskResult       = null;
+    this.taskScriptOutput = null;
+
+    this.statusPollDestroy$.next();
+
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    interval(this.STATUS_POLL_MS)
+      .pipe(
+        takeUntil(this.statusPollDestroy$),
+        switchMap(() => this.api.getProvisioningStatus(taskId))
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.taskStatus       = res?.status ?? 'unknown';
+          this.taskResult       = res?.result ?? res?.message ?? null;
+          this.taskScriptOutput = res?.script_output ?? res?.generated_commands ?? null;
+          this.cdr.detectChanges();
+
+          if (this.taskStatus === 'completed' || this.taskStatus === 'failed') {
+            this.pollingActive = false;
+            this.statusPollDestroy$.next();
+            this.loadUpgrades();
+          }
+        },
+        error: (err: any) => {
+          console.error('Status poll error:', err);
+          this.pollingActive = false;
+          this.statusPollDestroy$.next();
+        }
+      });
+  }
+
+  /** Dismiss the result panel */
+  dismissResult(): void {
+    this.currentTaskId    = null;
+    this.taskStatus       = null;
+    this.taskResult       = null;
+    this.taskScriptOutput = null;
+    this.pollingActive    = false;
+  }
+
+  /** Copy script output to clipboard */
+  copyScriptOutput(): void {
+    if (!this.taskScriptOutput) return;
+    this.clipboard.copy(this.taskScriptOutput);
+    this.copyDone = true;
+    setTimeout(() => this.copyDone = false, 2000);
   }
 
   // ─── History ───

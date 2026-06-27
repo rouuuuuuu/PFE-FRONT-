@@ -77,4 +77,12 @@ export class ProvisioningService {
   liberateVoipTask(taskId: number): Observable<any> {
     return this.http.post<any>(`${BASE}/api/provisioning/voip/liberate/${taskId}/`, {});
   }
+
+  /**
+   * Liberate (release) a completed Internet provisioning task.
+   * POST /api/provisioning/liberate/<taskId>/
+   */
+  liberateInternetTask(taskId: number): Observable<any> {
+    return this.http.post<any>(`${BASE}/api/provisioning/liberate/${taskId}/`, {});
+  }
 }

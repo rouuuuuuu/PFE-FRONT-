@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 import { MatCardModule }              from '@angular/material/card';
 import { MatFormFieldModule }          from '@angular/material/form-field';
@@ -21,6 +22,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule }              from '@angular/material/table';
 import { MatTooltipModule }            from '@angular/material/tooltip';
 import { MatAutocompleteModule }       from '@angular/material/autocomplete';
+import { ClipboardModule }             from '@angular/cdk/clipboard';
 
 import { ApiService }           from '../../services/api.service';
 import { ProvisioningService }  from '../../services/provisioning.service';
@@ -69,6 +71,7 @@ type NatMode = 'sans_nat_avec_cpe' | 'sans_nat_sans_cpe';
     MatTableModule,
     MatTooltipModule,
     MatAutocompleteModule,
+    ClipboardModule,
     TranslateModule
   ],
   templateUrl: './internet-provisioning.component.html',
@@ -76,8 +79,10 @@ type NatMode = 'sans_nat_avec_cpe' | 'sans_nat_sans_cpe';
 })
 export class InternetProvisioningComponent implements OnInit, OnDestroy {
 
-  private readonly POLL_MS = 15_000;
-  private destroy$         = new Subject<void>();
+  private readonly POLL_MS        = 15_000;
+  private readonly STATUS_POLL_MS = 3_000;
+  private destroy$               = new Subject<void>();
+  private statusPollDestroy$     = new Subject<void>();
 
   // ── Form ─────────────────────────────────────────────────
   form!: FormGroup;
@@ -115,6 +120,15 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   /** Which NAT mode tile is currently selected */
   selectedNatMode   : NatMode | null = null;
 
+  // ── Status polling / result panel ────────────────────────
+  currentTaskId      : number | null = null;
+  taskStatus         : string | null = null;
+  taskResult         : string | null = null;
+  taskScriptOutput   : string | null = null;
+  pollingActive      = false;
+  liberating         = false;
+  copyDone           = false;
+
   switchIgnored = false;
   has_switch    = false;
 
@@ -138,6 +152,7 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
     private cdr       : ChangeDetectorRef,
     private snackBar  : MatSnackBar,
     private translate : TranslateService,
+    private clipboard : Clipboard,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -167,6 +182,8 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.statusPollDestroy$.next();
+    this.statusPollDestroy$.complete();
   }
 
   // ── Form builder ─────────────────────────────────────────
@@ -439,13 +456,17 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
           next: (res: any) => {
             this.submitting   = false;
             this.activeNatBtn = null;
-            const id = res?.task_id ?? res?.id ?? '';
+            const id = res?.task_id ?? res?.id ?? null;
             this._toast(
               id
                 ? this.translate.instant('PROVISIONING.TOAST_SUCCESS', { id })
                 : this.translate.instant('PROVISIONING.TOAST_SUCCESS_NOID'),
               'success'
             );
+            if (id) {
+              this.currentTaskId = id;
+              this._startStatusPolling(id);
+            }
             this._resetForm();
             this.loadHistory();
           },
@@ -480,6 +501,83 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
     this.selectedNatMode = null;
     this.routerSearchQuery = '';
     this.form.get('port_name')!.disable();
+  }
+
+  // ── Status Polling ────────────────────────────────────────
+  private _startStatusPolling(taskId: number): void {
+    this.pollingActive    = true;
+    this.taskStatus       = 'pending';
+    this.taskResult       = null;
+    this.taskScriptOutput = null;
+
+    // Stop any previous polling
+    this.statusPollDestroy$.next();
+
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    interval(this.STATUS_POLL_MS)
+      .pipe(
+        takeUntil(this.statusPollDestroy$),
+        switchMap(() => this.api.getProvisioningStatus(taskId))
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.taskStatus       = res?.status ?? 'unknown';
+          this.taskResult       = res?.result ?? res?.message ?? null;
+          this.taskScriptOutput = res?.script_output ?? res?.generated_commands ?? null;
+          this.cdr.detectChanges();
+
+          if (this.taskStatus === 'completed' || this.taskStatus === 'failed') {
+            this.pollingActive = false;
+            this.statusPollDestroy$.next();
+            this.loadHistory();
+          }
+        },
+        error: (err: any) => {
+          console.error('Status poll error:', err);
+          this.pollingActive = false;
+          this.statusPollDestroy$.next();
+        }
+      });
+  }
+
+  // ── Liberation ────────────────────────────────────────────
+  liberateTask(): void {
+    if (!this.currentTaskId || this.liberating) return;
+
+    this.liberating = true;
+    this.svc.liberateInternetTask(this.currentTaskId).subscribe({
+      next: (res: any) => {
+        this.liberating = false;
+        this._toast(
+          res?.message || 'Libération réussie',
+          'success'
+        );
+        this.loadHistory();
+      },
+      error: (err: any) => {
+        this.liberating = false;
+        const msg = err?.error?.error || err?.error?.detail || 'Erreur de libération';
+        this._toast(msg, 'error');
+      }
+    });
+  }
+
+  /** Dismiss the result panel */
+  dismissResult(): void {
+    this.currentTaskId    = null;
+    this.taskStatus       = null;
+    this.taskResult       = null;
+    this.taskScriptOutput = null;
+    this.pollingActive    = false;
+  }
+
+  /** Copy script output to clipboard */
+  copyScriptOutput(): void {
+    if (!this.taskScriptOutput) return;
+    this.clipboard.copy(this.taskScriptOutput);
+    this.copyDone = true;
+    setTimeout(() => this.copyDone = false, 2000);
   }
 
   // ── History ───────────────────────────────────────────────

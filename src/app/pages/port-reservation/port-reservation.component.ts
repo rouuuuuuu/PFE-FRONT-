@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +16,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { ApiService } from '../../services/api.service';
 import { ProvisioningService } from '../../services/provisioning.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,6 +38,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatTableModule,
     MatTooltipModule,
     MatAutocompleteModule,
+    ClipboardModule,
     TranslateModule
   ],
   templateUrl: './port-reservation.component.html',
@@ -43,8 +46,10 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class PortReservationComponent implements OnInit, OnDestroy {
 
-  private readonly POLL_MS = 15_000;
-  private destroy$ = new Subject<void>();
+  private readonly POLL_MS        = 15_000;
+  private readonly STATUS_POLL_MS = 3_000;
+  private destroy$               = new Subject<void>();
+  private statusPollDestroy$     = new Subject<void>();
 
   routers: any[] = [];
   filteredRouters: any[] = [];
@@ -59,6 +64,14 @@ export class PortReservationComponent implements OnInit, OnDestroy {
   loadingRouters: boolean = true;
   loadingPorts: boolean = false;
   submitting: boolean = false;
+
+  // ── Status polling / result panel ────────────────────────
+  currentTaskId      : number | null = null;
+  taskStatus         : string | null = null;
+  taskResult         : string | null = null;
+  taskScriptOutput   : string | null = null;
+  pollingActive      = false;
+  copyDone           = false;
 
   // ── History ─────────────────────────────────────────────────
   history: any[] = [];
@@ -81,6 +94,7 @@ export class PortReservationComponent implements OnInit, OnDestroy {
     private svc: ProvisioningService,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
+    private clipboard: Clipboard,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -108,6 +122,8 @@ export class PortReservationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.statusPollDestroy$.next();
+    this.statusPollDestroy$.complete();
   }
 
   loadRouters(): void {
@@ -233,9 +249,14 @@ export class PortReservationComponent implements OnInit, OnDestroy {
     };
 
     this.api.reservePort(payload).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.submitting = false;
         this.snackBar.open('✅ Port reserved. Background configuration started.', 'Close', { duration: 5000 });
+        const id = res?.task_id ?? res?.reservation_id ?? res?.id ?? null;
+        if (id) {
+          this.currentTaskId = id;
+          this._startStatusPolling(id);
+        }
         this.resetForm();
         this.loadHistory();
       },
@@ -253,6 +274,60 @@ export class PortReservationComponent implements OnInit, OnDestroy {
     this.description = '';
     this.ports = [];
     this.filteredRouters = this.routers;
+  }
+
+  // ── Status Polling ────────────────────────────────────────
+  private _startStatusPolling(taskId: number): void {
+    this.pollingActive    = true;
+    this.taskStatus       = 'pending';
+    this.taskResult       = null;
+    this.taskScriptOutput = null;
+
+    this.statusPollDestroy$.next();
+
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    interval(this.STATUS_POLL_MS)
+      .pipe(
+        takeUntil(this.statusPollDestroy$),
+        switchMap(() => this.api.getProvisioningStatus(taskId))
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.taskStatus       = res?.status ?? 'unknown';
+          this.taskResult       = res?.result ?? res?.message ?? null;
+          this.taskScriptOutput = res?.script_output ?? res?.generated_commands ?? null;
+          this.cdr.detectChanges();
+
+          if (this.taskStatus === 'completed' || this.taskStatus === 'failed') {
+            this.pollingActive = false;
+            this.statusPollDestroy$.next();
+            this.loadHistory();
+          }
+        },
+        error: (err: any) => {
+          console.error('Status poll error:', err);
+          this.pollingActive = false;
+          this.statusPollDestroy$.next();
+        }
+      });
+  }
+
+  /** Dismiss the result panel */
+  dismissResult(): void {
+    this.currentTaskId    = null;
+    this.taskStatus       = null;
+    this.taskResult       = null;
+    this.taskScriptOutput = null;
+    this.pollingActive    = false;
+  }
+
+  /** Copy script output to clipboard */
+  copyScriptOutput(): void {
+    if (!this.taskScriptOutput) return;
+    this.clipboard.copy(this.taskScriptOutput);
+    this.copyDone = true;
+    setTimeout(() => this.copyDone = false, 2000);
   }
 
   // ── History ─────────────────────────────────────────────────

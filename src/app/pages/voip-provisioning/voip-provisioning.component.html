@@ -295,7 +295,13 @@
 
     <!-- Script output -->
     <div *ngIf="taskScriptOutput" class="result-output">
-      <div class="result-label">Script Output</div>
+      <div class="result-output-header">
+        <div class="result-label">Script Output</div>
+        <button class="copy-btn" (click)="copyScriptOutput()" matTooltip="Copier">
+          <mat-icon>{{ copyDone ? 'check' : 'content_copy' }}</mat-icon>
+          <span>{{ copyDone ? 'Copié !' : 'Copier' }}</span>
+        </button>
+      </div>
       <pre class="script-output-pre">{{ taskScriptOutput }}</pre>
     </div>
 

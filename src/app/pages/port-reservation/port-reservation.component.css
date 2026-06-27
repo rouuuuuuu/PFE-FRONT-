@@ -254,6 +254,169 @@
   color: #fff !important;
 }
 
+/* ══════════════════════════════════════════════════════════
+   RESULT PANEL — Status / Script Output
+   ══════════════════════════════════════════════════════════ */
+.result-panel {
+  margin-bottom: 32px;
+  border-top: 3px solid var(--primary-orange) !important;
+  background: var(--glass-bg) !important;
+  animation: fadeSlideIn 0.3s ease;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.result-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.result-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-pending   { color: #ffb74d; }
+.icon-progress  { color: #64b5f6; animation: spin 1.2s linear infinite; }
+.icon-completed { color: var(--status-green); }
+.icon-failed    { color: var(--status-red); }
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.result-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dismiss-btn {
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  color: var(--text-muted);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.dismiss-btn:hover {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  background: rgba(255, 94, 0, 0.08);
+}
+
+.polling-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.result-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--primary-orange);
+  margin-bottom: 6px;
+}
+
+.result-text {
+  margin-bottom: 16px;
+}
+
+.result-text p {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.result-output {
+  margin-bottom: 16px;
+}
+
+.result-output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.result-output-header .result-label {
+  margin-bottom: 0;
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid #3a3a3a;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.copy-btn:hover {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  background: rgba(255, 94, 0, 0.08);
+}
+
+.copy-btn mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.script-output-pre {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--status-green);
+  line-height: 1.6;
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 /* ============================================================
    RESERVATION HISTORY — Mat-Table Style (matching upgrade)
    ============================================================ */
