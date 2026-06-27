@@ -11,6 +11,7 @@
     "UPGRADE": "Mise à niveau / Déclassement",
     "PORT_RESERVATION": "Réservation de Port",
     "INTERNET_SERVICE": "Service Internet",
+    "VOIP_SERVICE": "Service VoIP",
     "AI_ASSISTANT": "Iris - Assistant IA",
     "REPORTS": "Rapports"
   },
@@ -321,6 +322,10 @@
     "TOAST_PROV_FAILED": "Échec du provisionnement.",
     "TOAST_PORT_ERROR": "Erreur de résolution du port : {{msg}}"
   },
+  "VOIP_PROV": {
+    "TITLE": "Fourniture de Service VoIP",
+    "SUBTITLE": "Provisionnement VoIP B2B — Huawei & Juniper"
+  },
   "PROV_DASH": {
     "TITLE": "Déploiement",
     "SUBTITLE": "Sélectionnez une tâche ci-dessous pour démarrer un flux d'automatisation",
@@ -330,7 +335,9 @@
       "port_reservation_TITLE": "Réservation de port",
       "port_reservation_DESC": "Recherchez un routeur, choisissez un port disponible, ajoutez une description et réservez-le.",
       "internet_provisioning_TITLE": "Fourniture de service Internet",
-      "internet_provisioning_DESC": "Configurez le service internet incluant la VRF, les interfaces physiques et les sous-interfaces."
+      "internet_provisioning_DESC": "Configurez le service internet incluant la VRF, les interfaces physiques et les sous-interfaces.",
+      "voip_provisioning_TITLE": "Fourniture de service VoIP",
+      "voip_provisioning_DESC": "Configurez le service VoIP avec l'IP passerelle, le VLAN et les interfaces physiques."
     }
   },
   "PROV_TASK": {

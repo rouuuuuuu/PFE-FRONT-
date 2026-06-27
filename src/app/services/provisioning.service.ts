@@ -61,4 +61,20 @@ export class ProvisioningService {
     const url = `${BASE}/api/provisioning/preview-cpe/?subnet_type=${encodeURIComponent(subnetType)}`;
     return this.http.get<any>(url);
   }
+
+  /**
+   * Start a VoIP provisioning task.
+   * POST /api/provisioning/voip/start/
+   */
+  startVoipProvisioning(payload: any): Observable<any> {
+    return this.http.post<any>(`${BASE}/api/provisioning/voip/start/`, payload);
+  }
+
+  /**
+   * Liberate (release) a completed VoIP provisioning task.
+   * POST /api/provisioning/voip/liberate/<taskId>/
+   */
+  liberateVoipTask(taskId: number): Observable<any> {
+    return this.http.post<any>(`${BASE}/api/provisioning/voip/liberate/${taskId}/`, {});
+  }
 }

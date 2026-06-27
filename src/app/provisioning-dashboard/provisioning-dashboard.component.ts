@@ -36,6 +36,13 @@ export class ProvisioningDashboardComponent { // classe mté3 l'component parsin
       desc: 'Configure internet service including VRF, physical interfaces, and sub-interfaces.',
       icon: 'public',
       route: '/provisioning/internet-service'
+    },
+    {
+      id: 'voip_provisioning',
+      title: 'VoIP Provisioning',
+      desc: 'Configure VoIP service with gateway IP, VLAN, and physical interface provisioning.',
+      icon: 'phone_in_talk',
+      route: '/provisioning/voip-service'
     }
   ];
 

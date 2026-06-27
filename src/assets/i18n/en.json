@@ -11,6 +11,7 @@
     "UPGRADE": "Upgrade / Downgrade",
     "PORT_RESERVATION": "Port Reservation",
     "INTERNET_SERVICE": "Internet Service",
+    "VOIP_SERVICE": "VoIP Service",
     "AI_ASSISTANT": "Iris - AI Assistant",
     "REPORTS": "Reports"
   },
@@ -326,6 +327,10 @@
     "TOAST_PROV_FAILED": "Provisioning failed.",
     "TOAST_PORT_ERROR": "Port resolution error: {{msg}}"
   },
+  "VOIP_PROV": {
+    "TITLE": "VoIP Service Provisioning",
+    "SUBTITLE": "VoIP B2B Provisioning — Huawei & Juniper"
+  },
   "PROV_DASH": {
     "TITLE": "Provisioning",
     "SUBTITLE": "Select a task below to start an automation workflow",
@@ -335,7 +340,9 @@
       "port_reservation_TITLE": "Port Reservation",
       "port_reservation_DESC": "Search a router, pick an available port, add a description and reserve it.",
       "internet_provisioning_TITLE": "Internet Provisioning",
-      "internet_provisioning_DESC": "Configure internet service including VRF, physical interfaces, and sub-interfaces."
+      "internet_provisioning_DESC": "Configure internet service including VRF, physical interfaces, and sub-interfaces.",
+      "voip_provisioning_TITLE": "VoIP Provisioning",
+      "voip_provisioning_DESC": "Configure VoIP service with gateway IP, VLAN, and physical interface provisioning."
     }
   },
   "PROV_TASK": {

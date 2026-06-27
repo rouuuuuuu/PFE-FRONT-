@@ -57,6 +57,9 @@
       <a mat-menu-item routerLink="/provisioning/internet-service">
         <mat-icon>wifi</mat-icon> {{ 'NAV.INTERNET_SERVICE' | translate }}
       </a>
+      <a mat-menu-item routerLink="/provisioning/voip-service">
+        <mat-icon>phone_in_talk</mat-icon> {{ 'NAV.VOIP_SERVICE' | translate }}
+      </a>
     </mat-menu>
 
     <!-- AI Assistant link commented out — now accessible via the floating bubble
@@ -182,6 +185,11 @@
         <a class="nav-item nav-sub-item" routerLink="/provisioning/internet-service" routerLinkActive="nav-active">
           <mat-icon class="nav-icon">wifi</mat-icon>
           <span class="nav-label">{{ 'NAV.INTERNET_SERVICE' | translate }}</span>
+        </a>
+
+        <a class="nav-item nav-sub-item" routerLink="/provisioning/voip-service" routerLinkActive="nav-active">
+          <mat-icon class="nav-icon">phone_in_talk</mat-icon>
+          <span class="nav-label">{{ 'NAV.VOIP_SERVICE' | translate }}</span>
         </a>
 
       </div>
