@@ -212,7 +212,7 @@
 
     <!-- Main content area -->
     <mat-sidenav-content class="app-content">
-      <router-outlet />
+      <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
 
       <!-- Floating Bubble to open AI Assistant -->
       <button class="ai-fab-bubble" (click)="isAiDrawerOpen = !isAiDrawerOpen" [matTooltip]="'NAV.AI_ASSISTANT' | translate"
@@ -229,5 +229,9 @@
 </ng-container>
 
 <ng-container *ngIf="!authService.isLoggedIn()">
-  <router-outlet />
+  <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
 </ng-container>
+
+<ng-template #contentTpl>
+  <router-outlet />
+</ng-template>

@@ -28,9 +28,8 @@
       <!-- NOM_CLIENT -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
         <mat-label>{{ 'PROVISIONING.CLIENT_NAME' | translate }}</mat-label>
-        <input matInput formControlName="client_name"
-               id="input-l2vc-client-name"
-               [placeholder]="'PROVISIONING.CLIENT_NAME_PLACEHOLDER' | translate">
+        <input matInput formControlName="client_name" id="input-l2vc-client-name"
+          [placeholder]="'PROVISIONING.CLIENT_NAME_PLACEHOLDER' | translate">
         <mat-icon matSuffix>badge</mat-icon>
         <mat-error *ngIf="form.get('client_name')?.hasError('required')">
           {{ 'PROVISIONING.REQUIRED' | translate }}
@@ -40,9 +39,8 @@
       <!-- VLAN -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
         <mat-label>{{ 'PROVISIONING.VLAN_ID' | translate }}</mat-label>
-        <input matInput type="number" formControlName="vlan"
-               id="input-l2vc-vlan"
-               placeholder="1 – 4094" min="1" max="4094">
+        <input matInput type="number" formControlName="vlan" id="input-l2vc-vlan" placeholder="1 – 4094" min="1"
+          max="4094">
         <mat-icon matSuffix>tag</mat-icon>
         <mat-hint>{{ 'PROVISIONING.VLAN_HINT' | translate }}</mat-hint>
         <mat-error *ngIf="form.get('vlan')?.hasError('required')">
@@ -83,14 +81,10 @@
       <div class="field-with-btn">
         <mat-form-field appearance="outline" class="form-field" floatLabel="always">
           <mat-label>{{ 'PROVISIONING.ROUTER_LABEL' | translate }}</mat-label>
-          <input type="text" matInput
-                 [(ngModel)]="routerSearchQuery"
-                 [ngModelOptions]="{standalone: true}"
-                 (ngModelChange)="filterRouterSuggestions($event)"
-                 (focus)="onRouterSearchFocus()"
-                 [matAutocomplete]="routerAuto"
-                 [placeholder]="'PROVISIONING.ROUTER_PLACEHOLDER' | translate"
-                 id="input-l2vc-router-search">
+          <input type="text" matInput [(ngModel)]="routerSearchQuery" [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="filterRouterSuggestions($event)" (focus)="onRouterSearchFocus()"
+            [matAutocomplete]="routerAuto" [placeholder]="'PROVISIONING.ROUTER_PLACEHOLDER' | translate"
+            id="input-l2vc-router-search">
           <mat-icon matSuffix *ngIf="loadingRouters">hourglass_empty</mat-icon>
           <mat-icon matSuffix *ngIf="!loadingRouters">search</mat-icon>
           <mat-autocomplete #routerAuto="matAutocomplete" (optionSelected)="onRouterAutoSelected($event)">
@@ -108,12 +102,9 @@
           <mat-error>{{ 'PROVISIONING.ROUTER_REQUIRED' | translate }}</mat-error>
         </mat-form-field>
 
-        <button class="action-btn sync-btn"
-                id="btn-l2vc-sync-rt"
-                type="button"
-                [disabled]="loadingInterfaces || !form.get('router_id')!.value"
-                (click)="syncRouter()"
-                [matTooltip]="'PROVISIONING.SYNC_RT_TOOLTIP' | translate">
+        <button class="action-btn sync-btn" id="btn-l2vc-sync-rt" type="button"
+          [disabled]="loadingInterfaces || !form.get('router_id')!.value" (click)="syncRouter()"
+          [matTooltip]="'PROVISIONING.SYNC_RT_TOOLTIP' | translate">
           <mat-spinner *ngIf="loadingInterfaces" diameter="16"></mat-spinner>
           <mat-icon *ngIf="!loadingInterfaces">sync</mat-icon>
           <span>SYNC_RT</span>
@@ -126,15 +117,17 @@
         <mat-select formControlName="port_name" id="select-l2vc-port">
           <mat-option *ngIf="!interfaces.length" disabled>
             {{ loadingInterfaces
-                ? ('PROVISIONING.PORT_LOADING' | translate)
-                : ('PROVISIONING.PORT_SYNC_FIRST' | translate) }}
+            ? ('PROVISIONING.PORT_LOADING' | translate)
+            : ('PROVISIONING.PORT_SYNC_FIRST' | translate) }}
           </mat-option>
           <mat-option *ngFor="let iface of interfaces" [value]="iface.name">
             <span class="iface-opt-row">
               <span class="iface-opt-bullet">●</span>
               <span class="iface-opt-name">{{ iface.name }}</span>
-              <span class="iface-opt-badge" [ngClass]="iface.physical.startsWith('up') ? 'badge-up' : 'badge-down'">{{ iface.physical }}</span>
-              <span class="iface-opt-badge" [ngClass]="iface.protocol.startsWith('up') ? 'badge-up' : 'badge-down'">{{ iface.protocol }}</span>
+              <span class="iface-opt-badge" [ngClass]="iface.physical.startsWith('up') ? 'badge-up' : 'badge-down'">{{
+                iface.physical }}</span>
+              <span class="iface-opt-badge" [ngClass]="iface.protocol.startsWith('up') ? 'badge-up' : 'badge-down'">{{
+                iface.protocol }}</span>
               <span class="iface-opt-desc" *ngIf="iface.description">{{ iface.description }}</span>
             </span>
           </mat-option>
@@ -161,15 +154,10 @@
       <div class="field-with-btn">
         <mat-form-field appearance="outline" class="form-field" floatLabel="always">
           <mat-label>Remote PE Router</mat-label>
-          <input type="text" matInput
-                 [(ngModel)]="remoteRouterSearchQuery"
-                 [ngModelOptions]="{standalone: true}"
-                 (ngModelChange)="filterRemoteRouterSuggestions($event)"
-                 (focus)="onRemoteRouterSearchFocus()"
-                 [matAutocomplete]="remoteRouterAuto"
-                 placeholder="Select the remote PE router"
-                 id="input-l2vc-remote-router-search"
-                 [disabled]="!form.get('router_id')!.value">
+          <input type="text" matInput [(ngModel)]="remoteRouterSearchQuery" [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="filterRemoteRouterSuggestions($event)" (focus)="onRemoteRouterSearchFocus()"
+            [matAutocomplete]="remoteRouterAuto" placeholder="Select the remote PE router"
+            id="input-l2vc-remote-router-search" [disabled]="!form.get('router_id')!.value">
           <mat-icon matSuffix>search</mat-icon>
           <mat-autocomplete #remoteRouterAuto="matAutocomplete" (optionSelected)="onRemoteRouterAutoSelected($event)">
             <mat-option *ngFor="let r of filteredRemoteRoutersList" [value]="r.ne_name">
@@ -185,7 +173,43 @@
           </mat-autocomplete>
           <mat-error>Please select the remote router.</mat-error>
         </mat-form-field>
+
+        <button class="action-btn sync-btn"
+                id="btn-l2vc-sync-remote-rt"
+                type="button"
+                [disabled]="loadingRemoteInterfaces || !form.get('remote_router_id')!.value"
+                (click)="syncRemoteRouter()"
+                matTooltip="Sync Remote Interfaces">
+          <mat-spinner *ngIf="loadingRemoteInterfaces" diameter="16"></mat-spinner>
+          <mat-icon *ngIf="!loadingRemoteInterfaces">sync</mat-icon>
+          <span>SYNC_RT</span>
+        </button>
       </div>
+
+      <!-- Select REMOTE PORT -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Remote Port</mat-label>
+        <mat-select formControlName="remote_port_name" id="select-l2vc-remote-port">
+          <mat-option *ngIf="!remoteInterfaces.length" disabled>
+            {{ loadingRemoteInterfaces
+                ? ('PROVISIONING.PORT_LOADING' | translate)
+                : 'Select remote PE to fetch interfaces' }}
+          </mat-option>
+          <mat-option *ngFor="let iface of remoteInterfaces" [value]="iface.name">
+            <span class="iface-opt-row">
+              <span class="iface-opt-bullet">●</span>
+              <span class="iface-opt-name">{{ iface.name }}</span>
+              <span class="iface-opt-badge" [ngClass]="iface.physical.startsWith('up') ? 'badge-up' : 'badge-down'">{{ iface.physical }}</span>
+              <span class="iface-opt-badge" [ngClass]="iface.protocol.startsWith('up') ? 'badge-up' : 'badge-down'">{{ iface.protocol }}</span>
+              <span class="iface-opt-desc" *ngIf="iface.description">{{ iface.description }}</span>
+            </span>
+          </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="remoteInterfaces.length" class="hint-green">
+          {{ 'PROVISIONING.PORT_HINT' | translate : { count: remoteInterfaces.length } }}
+        </mat-hint>
+        <mat-error>Remote port is required</mat-error>
+      </mat-form-field>
 
     </div>
 
@@ -203,10 +227,10 @@
       <div class="field-with-btn">
         <mat-form-field appearance="outline" class="form-field" floatLabel="always">
           <mat-label>{{ 'PROVISIONING.SELECT_SWITCH' | translate }}</mat-label>
-          <mat-select formControlName="switch_id" id="select-l2vc-switch"
-                      (selectionChange)="onSwitchChange()"
-                      [disabled]="(!has_switch && !switches.length) || switchIgnored">
-            <mat-option [value]="null">{{ switchIgnored ? ('PROVISIONING.SWITCH_IGNORED' | translate) : ('PROVISIONING.SWITCH_NONE' | translate) }}</mat-option>
+          <mat-select formControlName="switch_id" id="select-l2vc-switch" (selectionChange)="onSwitchChange()"
+            [disabled]="(!has_switch && !switches.length) || switchIgnored">
+            <mat-option [value]="null">{{ switchIgnored ? ('PROVISIONING.SWITCH_IGNORED' | translate) :
+              ('PROVISIONING.SWITCH_NONE' | translate) }}</mat-option>
             <mat-option *ngFor="let s of switches" [value]="s.id">
               <span class="opt-name">{{ s.name }}</span>
               <span class="opt-ip">&nbsp;({{ s.ip_address }})</span>
@@ -218,27 +242,20 @@
         </mat-form-field>
 
         <!-- SYNC_SW -->
-        <button class="action-btn sync-btn"
-                id="btn-l2vc-sync-sw"
-                type="button"
-                [disabled]="loadingSwitch
+        <button class="action-btn sync-btn" id="btn-l2vc-sync-sw" type="button" [disabled]="loadingSwitch
                             || !form.get('router_id')!.value
-                            || !form.get('port_name')!.value"
-                (click)="onSyncSwitch()"
-                [matTooltip]="'PROVISIONING.SYNC_SW_TOOLTIP' | translate">
+                            || !form.get('port_name')!.value" (click)="onSyncSwitch()"
+          [matTooltip]="'PROVISIONING.SYNC_SW_TOOLTIP' | translate">
           <mat-spinner *ngIf="loadingSwitch" diameter="16"></mat-spinner>
           <mat-icon *ngIf="!loadingSwitch">travel_explore</mat-icon>
           <span>{{ loadingSwitch
-                    ? ('PROVISIONING.SYNC_SW_DISCOVERING' | translate)
-                    : 'SYNC_SW' }}</span>
+            ? ('PROVISIONING.SYNC_SW_DISCOVERING' | translate)
+            : 'SYNC_SW' }}</span>
         </button>
 
         <!-- IGNORE_SW -->
-        <button class="action-btn ignore-btn"
-                id="btn-l2vc-ignore-sw"
-                type="button"
-                (click)="ignoreSwitch()"
-                [matTooltip]="'PROVISIONING.IGNORE_SW_TOOLTIP' | translate">
+        <button class="action-btn ignore-btn" id="btn-l2vc-ignore-sw" type="button" (click)="ignoreSwitch()"
+          [matTooltip]="'PROVISIONING.IGNORE_SW_TOOLTIP' | translate">
           <mat-icon>cancel</mat-icon>
           <span>IGNORE_SW</span>
         </button>
@@ -250,11 +267,8 @@
 
     <!-- ── Submit button ─────────────────────────────────────── -->
     <div class="submit-row" style="margin-top:24px">
-      <button class="submit-btn"
-              id="btn-l2vc-submit-provisioning"
-              type="button"
-              [disabled]="submitting"
-              (click)="submit()">
+      <button class="submit-btn" id="btn-l2vc-submit-provisioning" type="button" [disabled]="submitting"
+        (click)="submit()">
         <ng-container *ngIf="submitting; else iconSubmit">
           <mat-spinner diameter="18" class="btn-spinner"></mat-spinner>
         </ng-container>
@@ -310,9 +324,7 @@
 
     <!-- LIBERATE BUTTON (only if completed) -->
     <div class="liberate-row" *ngIf="taskStatus === 'completed'">
-      <button class="liberate-btn" type="button"
-              (click)="liberateTask()"
-              [disabled]="liberating">
+      <button class="liberate-btn" type="button" (click)="liberateTask()" [disabled]="liberating">
         <mat-spinner *ngIf="liberating" diameter="18" class="btn-spinner"></mat-spinner>
         <mat-icon *ngIf="!liberating">lock_open</mat-icon>
         <span>{{ liberating ? 'Liberating...' : 'Libérer la ressource' }}</span>
@@ -335,15 +347,19 @@
         <mat-form-field appearance="outline" class="history-search" floatLabel="always">
           <mat-label>Search History</mat-label>
           <input matInput [(ngModel)]="searchQuery" (ngModelChange)="historyPage = 0"
-                 placeholder="Search by client, device or VLAN...">
+            placeholder="Search by client, device or VLAN...">
           <mat-icon matPrefix style="margin-right:8px">search</mat-icon>
         </mat-form-field>
 
         <div class="filter-tabs">
-          <button class="filter-tab" [class.active]="filterStatus === 'all'" (click)="filterStatus='all'; historyPage=0">All</button>
-          <button class="filter-tab" [class.active]="filterStatus === 'completed'" (click)="filterStatus='completed'; historyPage=0">Completed</button>
-          <button class="filter-tab" [class.active]="filterStatus === 'in_progress'" (click)="filterStatus='in_progress'; historyPage=0">In Progress</button>
-          <button class="filter-tab" [class.active]="filterStatus === 'failed'" (click)="filterStatus='failed'; historyPage=0">Failed</button>
+          <button class="filter-tab" [class.active]="filterStatus === 'all'"
+            (click)="filterStatus='all'; historyPage=0">All</button>
+          <button class="filter-tab" [class.active]="filterStatus === 'completed'"
+            (click)="filterStatus='completed'; historyPage=0">Completed</button>
+          <button class="filter-tab" [class.active]="filterStatus === 'in_progress'"
+            (click)="filterStatus='in_progress'; historyPage=0">In Progress</button>
+          <button class="filter-tab" [class.active]="filterStatus === 'failed'"
+            (click)="filterStatus='failed'; historyPage=0">Failed</button>
         </div>
       </div>
     </div>
@@ -382,18 +398,16 @@
             <span class="status-badge status-{{ t.status }}">
               <mat-icon class="status-icon-sm">
                 {{ t.status === 'completed' ? 'check_circle' :
-                   t.status === 'failed'    ? 'error' :
-                   t.status === 'in_progress' ? 'sync' : 'schedule' }}
+                t.status === 'failed' ? 'error' :
+                t.status === 'in_progress' ? 'sync' : 'schedule' }}
               </mat-icon>
               {{ t.status }}
             </span>
           </td>
           <td class="td-ticket">{{ generateSwanTicket(t) }}</td>
           <td class="td-center">
-            <button *ngIf="t.script_output || t.generated_commands"
-                    class="dl-btn"
-                    matTooltip="Download Config"
-                    (click)="downloadConfig(t)">
+            <button *ngIf="t.script_output || t.generated_commands" class="dl-btn" matTooltip="Download Config"
+              (click)="downloadConfig(t)">
               <mat-icon class="dl-icon">download</mat-icon>
             </button>
             <span *ngIf="!t.script_output && !t.generated_commands" style="color:#555">—</span>

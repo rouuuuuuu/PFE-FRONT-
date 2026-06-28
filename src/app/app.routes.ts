@@ -21,12 +21,14 @@ import { ReportListComponent } from './pages/report-list/report-list.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
+import { guestGuard } from './guards/guest.guard';
 import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [authGuard, adminGuard] },
   { path: '', component: DashboardComponent, canActivate: [authGuard] }, // Default → dashboard
+  { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
   { path: 'topology', component: NetworkTopologyComponent, canActivate: [authGuard] },
   { path: 'routers', component: RoutersComponent, canActivate: [authGuard] },
   { path: 'switches', component: SwitchesComponent, canActivate: [authGuard] },

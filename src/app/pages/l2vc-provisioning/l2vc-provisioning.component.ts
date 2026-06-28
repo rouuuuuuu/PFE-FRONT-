@@ -11,21 +11,21 @@ import { interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
 
-import { MatCardModule }              from '@angular/material/card';
-import { MatFormFieldModule }          from '@angular/material/form-field';
-import { MatInputModule }              from '@angular/material/input';
-import { MatSelectModule }             from '@angular/material/select';
-import { MatButtonModule }             from '@angular/material/button';
-import { MatIconModule }               from '@angular/material/icon';
-import { MatProgressSpinnerModule }    from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableModule }              from '@angular/material/table';
-import { MatTooltipModule }            from '@angular/material/tooltip';
-import { MatAutocompleteModule }       from '@angular/material/autocomplete';
-import { ClipboardModule }             from '@angular/cdk/clipboard';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
-import { ApiService }           from '../../services/api.service';
-import { ProvisioningService }  from '../../services/provisioning.service';
+import { ApiService } from '../../services/api.service';
+import { ProvisioningService } from '../../services/provisioning.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 // ── Interfaces ───────────────────────────────────────────────
@@ -76,10 +76,10 @@ interface PortInterface {
 })
 export class L2vcProvisioningComponent implements OnInit, OnDestroy {
 
-  private readonly POLL_MS       = 15_000;
+  private readonly POLL_MS = 15_000;
   private readonly STATUS_POLL_MS = 3_000;
-  private destroy$               = new Subject<void>();
-  private statusPollDestroy$     = new Subject<void>();
+  private destroy$ = new Subject<void>();
+  private statusPollDestroy$ = new Subject<void>();
 
   // ── Form ─────────────────────────────────────────────────
   form!: FormGroup;
@@ -91,58 +91,60 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
   ];
 
   // ── Data ─────────────────────────────────────────────────
-  routers             : RouterDevice[]  = [];
-  filteredRoutersList : RouterDevice[]  = [];
-  filteredRemoteRoutersList : RouterDevice[]  = [];
-  routerSearchQuery   = '';
-  remoteRouterSearchQuery   = '';
+  routers: RouterDevice[] = [];
+  filteredRoutersList: RouterDevice[] = [];
+  filteredRemoteRoutersList: RouterDevice[] = [];
+  routerSearchQuery = '';
+  remoteRouterSearchQuery = '';
   private _skipNextRouterFilter = false;
   private _skipNextRemoteRouterFilter = false;
 
-  switches   : SwitchDevice[]  = [];
-  interfaces : PortInterface[] = [];
+  switches: SwitchDevice[] = [];
+  interfaces: PortInterface[] = [];
+  remoteInterfaces: PortInterface[] = [];
 
   // ── UI state ─────────────────────────────────────────────
-  loadingRouters    = false;
+  loadingRouters = false;
   loadingInterfaces = false;
-  loadingSwitch     = false;
-  submitting        = false;
+  loadingRemoteInterfaces = false;
+  loadingSwitch = false;
+  submitting = false;
 
   switchIgnored = false;
-  has_switch    = false;
+  has_switch = false;
 
   // ── Status polling / result panel ────────────────────────
-  currentTaskId      : number | null = null;
-  taskStatus         : string | null = null;
-  taskResult         : string | null = null;
-  taskScriptOutput   : string | null = null;
-  pollingActive      = false;
-  liberating         = false;
-  copyDone           = false;
+  currentTaskId: number | null = null;
+  taskStatus: string | null = null;
+  taskResult: string | null = null;
+  taskScriptOutput: string | null = null;
+  pollingActive = false;
+  liberating = false;
+  copyDone = false;
 
   // ── History ───────────────────────────────────────────────
-  historyTasks    : any[] = [];
-  historyLoading  = false;
-  filterStatus    = 'all';
-  searchQuery     = '';
-  historyPage     = 0;
+  historyTasks: any[] = [];
+  historyLoading = false;
+  filterStatus = 'all';
+  searchQuery = '';
+  historyPage = 0;
   historyPageSize = 10;
-  historyColumns  : string[] = [
+  historyColumns: string[] = [
     'task_id', 'device_name', 'client_name',
     'vlan', 'status', 'created_at',
     'swan_ticket', 'download'
   ];
 
   constructor(
-    private fb        : FormBuilder,
-    private api       : ApiService,
-    private svc       : ProvisioningService,
-    private cdr       : ChangeDetectorRef,
-    private snackBar  : MatSnackBar,
-    private translate : TranslateService,
-    private clipboard : Clipboard,
+    private fb: FormBuilder,
+    private api: ApiService,
+    private svc: ProvisioningService,
+    private cdr: ChangeDetectorRef,
+    private snackBar: MatSnackBar,
+    private translate: TranslateService,
+    private clipboard: Clipboard,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
   // ─────────────────────────────────────────────────────────
   ngOnInit(): void {
@@ -177,18 +179,19 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
   // ── Form builder ─────────────────────────────────────────
   private _buildForm(): void {
     this.form = this.fb.group({
-      client_name        : ['', Validators.required],
-      vlan               : [null, [Validators.required, Validators.min(1), Validators.max(4094)]],
-      media_type         : ['fo', Validators.required],
-      router_id          : [null, Validators.required],
-      router_name        : [''],
-      remote_router_id   : [null, Validators.required],
-      remote_router_name : [''],
-      switch_id          : [null],
-      switch_ip          : [null],
-      switch_port        : [null],
-      switch_uplink_port : [null],
-      port_name          : [{ value: null, disabled: true }, Validators.required]
+      client_name: ['', Validators.required],
+      vlan: [null, [Validators.required, Validators.min(1), Validators.max(4094)]],
+      media_type: ['fo', Validators.required],
+      router_id: [null, Validators.required],
+      router_name: [''],
+      remote_router_id: [null, Validators.required],
+      remote_router_name: [''],
+      switch_id: [null],
+      switch_ip: [null],
+      switch_port: [null],
+      switch_uplink_port: [null],
+      port_name: [{ value: null, disabled: true }, Validators.required],
+      remote_port_name: [{ value: null, disabled: true }, Validators.required]
     });
   }
 
@@ -201,10 +204,10 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
         this.routers = raw
           .filter((d: any) => (d.device_type || '').toLowerCase() === 'router')
           .map((d: any) => ({
-            id         : d.id ?? d.device_id ?? 0,
-            ne_name    : d.name ?? d.ne_name ?? '',
-            ip_address : d.loopback_ip ?? d.ip_address ?? '',
-            vendor     : d.vendor ?? ''
+            id: d.id ?? d.device_id ?? 0,
+            ne_name: d.name ?? d.ne_name ?? '',
+            ip_address: d.loopback_ip ?? d.ip_address ?? '',
+            vendor: d.vendor ?? ''
           }));
         this.filteredRoutersList = [...this.routers];
         this.filteredRemoteRoutersList = [...this.routers];
@@ -252,7 +255,7 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
   }
 
   onRouterAutoSelected(event: any): void {
-    const name   = event.option.value as string;
+    const name = event.option.value as string;
     const router = this.routers.find(r => r.ne_name === name);
     if (router) {
       this._skipNextRouterFilter = true;
@@ -261,7 +264,7 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
       this.form.patchValue({ router_id: router.id, router_name: router.ne_name });
       // Reset port & switch on router change
       this.interfaces = [];
-      this.switches   = [];
+      this.switches = [];
       this.has_switch = false;
       this.switchIgnored = false;
       this.form.get('port_name')!.setValue(null);
@@ -271,6 +274,9 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
       if (this.form.get('remote_router_id')?.value === router.id) {
         this.form.patchValue({ remote_router_id: null, remote_router_name: '' });
         this.remoteRouterSearchQuery = '';
+        this.remoteInterfaces = [];
+        this.form.get('remote_port_name')!.setValue(null);
+        this.form.get('remote_port_name')!.disable();
       }
     }
   }
@@ -290,6 +296,9 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
       return;
     }
     this.form.patchValue({ remote_router_id: null, remote_router_name: '' });
+    this.remoteInterfaces = [];
+    this.form.get('remote_port_name')!.setValue(null);
+    this.form.get('remote_port_name')!.disable();
 
     const available = this.getAvailableRemoteRouters();
     if (!term) {
@@ -317,7 +326,7 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
   }
 
   onRemoteRouterAutoSelected(event: any): void {
-    const name   = event.option.value as string;
+    const name = event.option.value as string;
     const router = this.routers.find(r => r.ne_name === name);
     if (router) {
       this._skipNextRemoteRouterFilter = true;
@@ -325,6 +334,55 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
       this.filteredRemoteRoutersList = [];
       this.form.patchValue({ remote_router_id: router.id, remote_router_name: router.ne_name });
     }
+  }
+
+  syncRemoteRouter(): void {
+    const routerId = this.form.get('remote_router_id')!.value;
+    if (!routerId) {
+      this._toast('Please select a remote PE router', 'warn');
+      return;
+    }
+
+    this.loadingRemoteInterfaces = true;
+    this.remoteInterfaces = [];
+    this.form.get('remote_port_name')!.setValue(null);
+    this.form.get('remote_port_name')!.disable();
+
+    this.svc.fetchInterfaces(routerId).subscribe({
+      next: (res: any) => {
+        const all: any[] = Array.isArray(res) ? res : (res.interfaces ?? res.results ?? []);
+        this.remoteInterfaces = all
+          .filter((p: any) =>
+            p.is_subinterface === false &&
+            !(p.name || '').includes('.4094')
+          )
+          .map((p: any): PortInterface => ({
+            name: p.name || '',
+            physical: (p.physical || 'unknown').toLowerCase(),
+            protocol: (p.protocol || 'unknown').toLowerCase(),
+            description: p.description || '',
+            is_subinterface: false
+          }));
+        this.loadingRemoteInterfaces = false;
+
+        if (this.remoteInterfaces.length) {
+          this.form.get('remote_port_name')!.enable();
+          this._toast(
+            this.translate.instant('PROVISIONING.TOAST_IFACES_LOADED', { count: this.remoteInterfaces.length }),
+            'success'
+          );
+        } else {
+          this._toast(this.translate.instant('PROVISIONING.TOAST_NO_IFACES'), 'warn');
+        }
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.loadingRemoteInterfaces = false;
+        const msg = err?.error?.error || 'Failed to load remote interfaces';
+        this._toast(msg, 'error');
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   // ── SYNC_RT ───────────────────────────────────────────────
@@ -336,7 +394,7 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
     }
 
     this.loadingInterfaces = true;
-    this.interfaces        = [];
+    this.interfaces = [];
     this.form.get('port_name')!.setValue(null);
     this.form.get('port_name')!.disable();
 
@@ -349,10 +407,10 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
             !(p.name || '').includes('.4094')
           )
           .map((p: any): PortInterface => ({
-            name           : p.name || '',
-            physical       : (p.physical || 'unknown').toLowerCase(),
-            protocol       : (p.protocol || 'unknown').toLowerCase(),
-            description    : p.description || '',
+            name: p.name || '',
+            physical: (p.physical || 'unknown').toLowerCase(),
+            protocol: (p.protocol || 'unknown').toLowerCase(),
+            description: p.description || '',
             is_subinterface: false
           }));
         this.loadingInterfaces = false;
@@ -388,8 +446,8 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
     }
 
     this.loadingSwitch = true;
-    this.has_switch    = false;
-    this.switches      = [];
+    this.has_switch = false;
+    this.switches = [];
     this.form.patchValue({ switch_id: null, switch_ip: null, switch_port: null, switch_uplink_port: null });
 
     this.svc.fetchSwitchDiscovery(routerId, portName).subscribe({
@@ -399,16 +457,16 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
         if (response?.has_switch === true) {
           this.has_switch = true;
           const discoveredSwitch: SwitchDevice = {
-            id         : -1,
-            name       : response.switch_name ?? response.switch_ip ?? 'Switch LLDP',
-            ip_address : response.switch_ip   ?? ''
+            id: -1,
+            name: response.switch_name ?? response.switch_ip ?? 'Switch LLDP',
+            ip_address: response.switch_ip ?? ''
           };
           this.switches = [discoveredSwitch];
           this.form.patchValue({
-            switch_id          : -1,
-            switch_ip          : response.switch_ip          ?? null,
-            switch_port        : response.switch_port        ?? null,
-            switch_uplink_port : response.switch_uplink_port ?? null
+            switch_id: -1,
+            switch_ip: response.switch_ip ?? null,
+            switch_port: response.switch_port ?? null,
+            switch_uplink_port: response.switch_uplink_port ?? null
           });
           this._toast(
             response.message ?? this.translate.instant('PROVISIONING.TOAST_SWITCH_FOUND'),
@@ -432,8 +490,8 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
   /** IGNORE_SW — clear switch, mark has_switch = false */
   ignoreSwitch(): void {
     this.switchIgnored = true;
-    this.has_switch    = false;
-    this.switches      = [];
+    this.has_switch = false;
+    this.switches = [];
     this.form.patchValue({ switch_id: null, switch_ip: null, switch_port: null, switch_uplink_port: null });
   }
 
@@ -451,9 +509,10 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
 
     this.form.markAllAsTouched();
 
-    const portVal    = this.form.get('port_name')!.value as string;
-    const routerId   = this.form.get('router_id')!.value as number;
+    const portVal = this.form.get('port_name')!.value as string;
+    const routerId = this.form.get('router_id')!.value as number;
     const remoteRouterId = this.form.get('remote_router_id')!.value as number;
+    const remotePortVal = this.form.get('remote_port_name')!.value as string;
 
     if (!routerId) {
       this._toast(this.translate.instant('PROVISIONING.TOAST_SELECT_ROUTER'), 'warn');
@@ -465,6 +524,10 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
     }
     if (!portVal) {
       this._toast(this.translate.instant('PROVISIONING.TOAST_SELECT_ROUTER_PORT'), 'warn');
+      return;
+    }
+    if (!remotePortVal) {
+      this._toast('Please select a remote port', 'warn');
       return;
     }
 
@@ -480,19 +543,20 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
         const portId: number = portRes.port_id;
 
         const payload = {
-          device_name  : this.form.get('router_name')!.value,
-          task_type    : 'l2vc',
-          parameters   : {
-            client_name        : this.form.get('client_name')!.value,
-            vlan               : Number(this.form.get('vlan')!.value),
-            media_type         : this.form.get('media_type')!.value,
-            remote_device_name : this.form.get('remote_router_name')!.value,
-            port_id            : portId,
-            has_switch         : this.has_switch,
-            switch_ip          : this.form.get('switch_ip')!.value  ?? '',
-            switch_port        : this.form.get('switch_port')!.value ?? '',
-            switch_uplink_port : this.form.get('switch_uplink_port')!.value ?? '',
-            switch_vendor      : 'juniper'
+          device_name: this.form.get('router_name')!.value,
+          task_type: 'l2vc',
+          parameters: {
+            client_name: this.form.get('client_name')!.value,
+            vlan: Number(this.form.get('vlan')!.value),
+            media_type: this.form.get('media_type')!.value,
+            remote_device_name: this.form.get('remote_router_name')!.value,
+            remote_port_name: this.form.get('remote_port_name')!.value,
+            port_id: portId,
+            has_switch: this.has_switch,
+            switch_ip: this.form.get('switch_ip')!.value ?? '',
+            switch_port: this.form.get('switch_port')!.value ?? '',
+            switch_uplink_port: this.form.get('switch_uplink_port')!.value ?? '',
+            switch_vendor: 'juniper'
           }
         };
 
@@ -534,9 +598,9 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
 
   // ── Status Polling ────────────────────────────────────────
   private _startStatusPolling(taskId: number): void {
-    this.pollingActive   = true;
-    this.taskStatus      = 'pending';
-    this.taskResult      = null;
+    this.pollingActive = true;
+    this.taskStatus = 'pending';
+    this.taskResult = null;
     this.taskScriptOutput = null;
 
     // Stop any previous polling
@@ -551,8 +615,8 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (res: any) => {
-          this.taskStatus       = res?.status ?? 'unknown';
-          this.taskResult       = res?.result ?? res?.message ?? null;
+          this.taskStatus = res?.status ?? 'unknown';
+          this.taskResult = res?.result ?? res?.message ?? null;
           this.taskScriptOutput = res?.script_output ?? res?.generated_commands ?? null;
           this.cdr.detectChanges();
 
@@ -594,11 +658,11 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
 
   /** Dismiss the result panel */
   dismissResult(): void {
-    this.currentTaskId    = null;
-    this.taskStatus       = null;
-    this.taskResult       = null;
+    this.currentTaskId = null;
+    this.taskStatus = null;
+    this.taskResult = null;
     this.taskScriptOutput = null;
-    this.pollingActive    = false;
+    this.pollingActive = false;
   }
 
   /** Copy script output to clipboard */
@@ -612,13 +676,15 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
   // ── Reset ─────────────────────────────────────────────
   private _resetForm(): void {
     this.form.reset({ media_type: 'fo' });
-    this.interfaces      = [];
-    this.switches        = [];
-    this.switchIgnored   = false;
-    this.has_switch      = false;
+    this.interfaces = [];
+    this.remoteInterfaces = [];
+    this.switches = [];
+    this.switchIgnored = false;
+    this.has_switch = false;
     this.routerSearchQuery = '';
     this.remoteRouterSearchQuery = '';
     this.form.get('port_name')!.disable();
+    this.form.get('remote_port_name')!.disable();
   }
 
   // ── History ───────────────────────────────────────────────
@@ -627,7 +693,7 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
     this.api.getProvisioningTasks().subscribe({
       next: (data: any) => {
         const all = Array.isArray(data) ? data : (data.results || []);
-        this.historyTasks   = all.filter((t: any) => t.task_type === 'l2vc');
+        this.historyTasks = all.filter((t: any) => t.task_type === 'l2vc');
         this.historyLoading = false;
         this.cdr.detectChanges();
       },
@@ -676,18 +742,18 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
   }
 
   generateSwanTicket(task: any): string {
-    const d  = new Date(task.created_at);
+    const d = new Date(task.created_at);
     const id = (task.task_id ?? task.id ?? 0).toString().padStart(4, '0');
     return `SWAN-${this._formatDateForTicket(d)}-${id}`;
   }
 
   downloadConfig(task: any): void {
-    const ticket  = this.generateSwanTicket(task);
+    const ticket = this.generateSwanTicket(task);
     const content = task.generated_commands ?? task.script_output ?? '';
-    const blob    = new Blob([content], { type: 'text/plain' });
-    const url     = URL.createObjectURL(blob);
-    const anchor  = document.createElement('a');
-    anchor.href     = url;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
     anchor.download = `${ticket}.config`;
     anchor.style.display = 'none';
     document.body.appendChild(anchor);
@@ -717,8 +783,8 @@ export class L2vcProvisioningComponent implements OnInit, OnDestroy {
   private _toast(msg: string, type: 'success' | 'error' | 'warn'): void {
     const panelClass =
       type === 'success' ? 'success-snackbar' :
-      type === 'error'   ? 'error-snackbar'   :
-                           'warn-snackbar';
+        type === 'error' ? 'error-snackbar' :
+          'warn-snackbar';
     this.snackBar.open(msg, '✕', { duration: 4000, panelClass });
   }
 }
