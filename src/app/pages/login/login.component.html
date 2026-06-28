@@ -1,0 +1,163 @@
+<div class="login-container" (mousemove)="onMouseMove($event)">
+
+  <!-- Cursor glow dot -->
+  <div class="cursor-glow" [style.left.px]="cursorX" [style.top.px]="cursorY"></div>
+
+  <!-- Ambient floating orbs -->
+  <div class="login-orb login-orb-1"></div>
+  <div class="login-orb login-orb-2"></div>
+  <div class="login-orb login-orb-3"></div>
+
+  <!-- Theme & Language Toggles -->
+  <div class="login-toggles">
+    <button class="theme-toggle lang-toggle" (click)="toggleLanguage()">
+      {{ currentLang | uppercase }}
+    </button>
+    <button class="theme-toggle" (click)="toggleTheme()"
+      [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+      <div class="toggle-track" [class.toggle-track-light]="!isDarkMode">
+        <div class="toggle-thumb" [class.toggle-thumb-light]="!isDarkMode">
+          <mat-icon class="toggle-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <div class="login-card-wrapper">
+    <mat-card class="login-card">
+
+      <div class="login-header">
+        <img src="assets/orange-noc-horizontal-white-text.png" alt="Orange NOC" class="login-logo logo-dark">
+        <img src="assets/orange-noc-horizontal-dark-text.png"  alt="Orange NOC" class="login-logo logo-light">
+      </div>
+
+      <!-- ═══════════════ LOGIN FORM ═══════════════ -->
+      <mat-card-content *ngIf="mode === 'login'">
+        <h2 class="login-title">{{ 'LOGIN.SIGN_IN' | translate }}</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'LOGIN.EMAIL' | translate }}</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput formControlName="email" type="email" autocomplete="email" required>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('email')">{{ 'LOGIN.INVALID_EMAIL' | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'LOGIN.PASSWORD' | translate }}</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'" autocomplete="current-password" required>
+            <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword" [attr.aria-label]="'Toggle password'">
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <a href="javascript:void(0)" class="forgot-link" (click)="switchMode('reset-request')">
+              {{ 'LOGIN.FORGOT_PASSWORD' | translate }}
+            </a>
+          </div>
+
+          <div *ngIf="error" class="error-message">
+            <mat-icon>error_outline</mat-icon> {{ error }}
+          </div>
+
+          <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="loginForm.invalid || loading">
+            <span *ngIf="!loading">{{ 'LOGIN.LOG_IN' | translate }}</span>
+            <mat-spinner *ngIf="loading" diameter="22"></mat-spinner>
+          </button>
+        </form>
+      </mat-card-content>
+
+      <!-- ═══════════════ RESET STEP 1 — request code ═══════════════ -->
+      <mat-card-content *ngIf="mode === 'reset-request'">
+        <h2 class="login-title">{{ 'LOGIN.RESET_PASSWORD' | translate }}</h2>
+        <p class="reset-desc">{{ 'LOGIN.RESET_DESC' | translate }}</p>
+
+        <form [formGroup]="resetRequestForm" (ngSubmit)="onRequestReset()" class="login-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'LOGIN.EMAIL' | translate }}</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput formControlName="email" type="email" autocomplete="email" required>
+            <mat-error *ngIf="resetRequestForm.get('email')?.hasError('email')">{{ 'LOGIN.INVALID_EMAIL' | translate }}</mat-error>
+          </mat-form-field>
+
+          <div *ngIf="error" class="error-message">
+            <mat-icon>error_outline</mat-icon> {{ error }}
+          </div>
+
+          <div *ngIf="resetMessage" class="success-message">
+            <mat-icon>check_circle</mat-icon> {{ resetMessage | translate }}
+          </div>
+
+          <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="resetRequestForm.invalid || loading">
+            <span *ngIf="!loading">{{ 'LOGIN.SEND_RESET_LINK' | translate }}</span>
+            <mat-spinner *ngIf="loading" diameter="22"></mat-spinner>
+          </button>
+
+          <div class="form-actions center-text" style="margin-top:16px;">
+            <a href="javascript:void(0)" class="forgot-link" (click)="switchMode('login')">
+              {{ 'LOGIN.BACK_TO_SIGN_IN' | translate }}
+            </a>
+            &nbsp;·&nbsp;
+            <a href="javascript:void(0)" class="forgot-link" (click)="switchMode('reset-confirm')">
+              {{ 'LOGIN.ALREADY_HAVE_CODE' | translate }}
+            </a>
+          </div>
+        </form>
+      </mat-card-content>
+
+      <!-- ═══════════════ RESET STEP 2 — confirm code + new password ═══════════════ -->
+      <mat-card-content *ngIf="mode === 'reset-confirm'">
+        <h2 class="login-title">{{ 'LOGIN.ENTER_CODE' | translate }}</h2>
+        <p class="reset-desc">{{ 'LOGIN.ENTER_CODE_DESC' | translate }}</p>
+
+        <form [formGroup]="resetConfirmForm" (ngSubmit)="onConfirmReset()" class="login-form">
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'LOGIN.EMAIL' | translate }}</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput formControlName="email" type="email" autocomplete="email" required>
+            <mat-error *ngIf="resetConfirmForm.get('email')?.hasError('email')">{{ 'LOGIN.INVALID_EMAIL' | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'LOGIN.RESET_CODE' | translate }}</mat-label>
+            <mat-icon matPrefix>key</mat-icon>
+            <input matInput formControlName="code" type="text" autocomplete="one-time-code" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'LOGIN.NEW_PASSWORD' | translate }}</mat-label>
+            <mat-icon matPrefix>lock_reset</mat-icon>
+            <input matInput formControlName="new_password" [type]="showNewPassword ? 'text' : 'password'" autocomplete="new-password" required>
+            <button mat-icon-button matSuffix type="button" (click)="showNewPassword = !showNewPassword">
+              <mat-icon>{{ showNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="resetConfirmForm.get('new_password')?.hasError('minlength')">{{ 'LOGIN.PASSWORD_MIN' | translate }}</mat-error>
+          </mat-form-field>
+
+          <div *ngIf="error" class="error-message">
+            <mat-icon>error_outline</mat-icon> {{ error }}
+          </div>
+
+          <div *ngIf="resetMessage" class="success-message">
+            <mat-icon>check_circle</mat-icon> {{ resetMessage | translate }}
+          </div>
+
+          <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="resetConfirmForm.invalid || loading">
+            <span *ngIf="!loading">{{ 'LOGIN.CONFIRM_RESET' | translate }}</span>
+            <mat-spinner *ngIf="loading" diameter="22"></mat-spinner>
+          </button>
+
+          <div class="form-actions center-text" style="margin-top:16px;">
+            <a href="javascript:void(0)" class="forgot-link" (click)="switchMode('login')">
+              {{ 'LOGIN.BACK_TO_SIGN_IN' | translate }}
+            </a>
+          </div>
+        </form>
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+</div>

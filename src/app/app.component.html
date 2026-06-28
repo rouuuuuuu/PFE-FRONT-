@@ -1,214 +1,225 @@
-<!-- Toolbar de l'application (Header bar) -->
-<mat-toolbar class="app-toolbar">
+<ng-container *ngIf="authService.isLoggedIn()">
+  <!-- Toolbar de l'application (Header bar) -->
+  <mat-toolbar class="app-toolbar">
 
-  <!-- Hamburger menu toggle -->
-  <button class="menu-toggle" (click)="toggleSidenav()" [attr.aria-label]="sidenavOpen ? 'Close menu' : 'Open menu'">
-    <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
-    <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
-    <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
-  </button>
-
-  <div class="toolbar-brand">
-    <img class="brand-logo logo-dark" src="assets/orange-noc-horizontal-white-text.png" alt="Orange NOC">
-    <img class="brand-logo logo-light" src="assets/orange-noc-horizontal-dark-text.png" alt="Orange NOC">
-  </div>
-
-  <!-- ── Quick-access nav pills ── -->
-  <div class="toolbar-quicknav">
-
-    <a class="quicknav-btn" routerLink="/" routerLinkActive="quicknav-active" [routerLinkActiveOptions]="{exact:true}"
-      [matTooltip]="'NAV.DASHBOARD' | translate" matTooltipPosition="below">
-      <mat-icon>dashboard</mat-icon>
-      <span class="quicknav-label">{{ 'NAV.DASHBOARD' | translate }}</span>
-    </a>
-
-    <a class="quicknav-btn" routerLink="/topology" routerLinkActive="quicknav-active"
-      [routerLinkActiveOptions]="{exact:true}" [matTooltip]="'NAV.TOPOLOGY' | translate" matTooltipPosition="below">
-      <mat-icon>hub</mat-icon>
-      <span class="quicknav-label">{{ 'NAV.TOPOLOGY' | translate }}</span>
-    </a>
-
-    <a class="quicknav-btn" routerLink="/routers" routerLinkActive="quicknav-active" [matTooltip]="'NAV.ROUTERS' | translate"
-      matTooltipPosition="below">
-      <mat-icon>router</mat-icon>
-      <span class="quicknav-label">{{ 'NAV.ROUTERS' | translate }}</span>
-    </a>
-    <a class="quicknav-btn" routerLink="/inventory" routerLinkActive="quicknav-active" [matTooltip]="'NAV.INVENTORY' | translate"
-      matTooltipPosition="below">
-      <mat-icon>inventory_2</mat-icon>
-      <span class="quicknav-label">{{ 'NAV.INVENTORY' | translate }}</span>
-    </a>
-    <!-- Provisioning with dropdown -->
-    <button class="quicknav-btn quicknav-menu-trigger" [matMenuTriggerFor]="provMenu" [matTooltip]="'NAV.PROVISIONING' | translate"
-      matTooltipPosition="below">
-      <mat-icon>settings</mat-icon>
-      <span class="quicknav-label">{{ 'NAV.PROVISIONING' | translate }} <mat-icon class="quicknav-chevron">arrow_drop_down</mat-icon></span>
+    <!-- Hamburger menu toggle -->
+    <button class="menu-toggle" (click)="toggleSidenav()" [attr.aria-label]="sidenavOpen ? 'Close menu' : 'Open menu'">
+      <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
+      <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
+      <span class="hamburger-bar" [class.bar-open]="sidenavOpen"></span>
     </button>
-    <mat-menu #provMenu="matMenu" class="quicknav-dropdown">
-      <a mat-menu-item routerLink="/provisioning">
-        <mat-icon>folder_open</mat-icon> {{ 'NAV.ALL_TASKS' | translate }}
-      </a>
-      <a mat-menu-item routerLink="/upgrade">
-        <mat-icon>speed</mat-icon> {{ 'NAV.UPGRADE' | translate }}
-      </a>
-      <a mat-menu-item routerLink="/provisioning/port-reservation">
-        <mat-icon>cable</mat-icon> {{ 'NAV.PORT_RESERVATION' | translate }}
-      </a>
-      <a mat-menu-item routerLink="/provisioning/internet-service">
-        <mat-icon>wifi</mat-icon> {{ 'NAV.INTERNET_SERVICE' | translate }}
-      </a>
-      <a mat-menu-item routerLink="/provisioning/voip-service">
-        <mat-icon>phone_in_talk</mat-icon> {{ 'NAV.VOIP_SERVICE' | translate }}
-      </a>
-    </mat-menu>
 
-    <!-- AI Assistant link commented out — now accessible via the floating bubble
-    <a class="quicknav-btn" routerLink="/ai-assistant" routerLinkActive="quicknav-active"
-      [routerLinkActiveOptions]="{exact:true}" matTooltip="AI Network Assistant" matTooltipPosition="below">
-      <mat-icon>psychology</mat-icon>
-      <span class="quicknav-label">AI Assistant</span>
-    </a>
-    -->
-
-  </div>
-
-  <div class="toolbar-spacer"></div>
-
-  <!-- Language toggle -->
-  <button class="theme-toggle lang-toggle" (click)="toggleLanguage()">
-    {{ currentLang | uppercase }}
-  </button>
-
-  <!-- Theme toggle -->
-  <button class="theme-toggle" (click)="toggleTheme()"
-    [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
-    <div class="toggle-track" [class.toggle-track-light]="!isDarkMode">
-      <div class="toggle-thumb" [class.toggle-thumb-light]="!isDarkMode">
-        <mat-icon class="toggle-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
-      </div>
+    <div class="toolbar-brand">
+      <img class="brand-logo logo-dark" src="assets/orange-noc-horizontal-white-text.png" alt="Orange NOC">
+      <img class="brand-logo logo-light" src="assets/orange-noc-horizontal-dark-text.png" alt="Orange NOC">
     </div>
-  </button>
 
-</mat-toolbar>
+    <!-- ── Quick-access nav pills ── -->
+    <div class="toolbar-quicknav">
 
-
-<!-- Container principal lli ylammid e'Sidenav wel conteneur central (Main layout holding side menu and content). -->
-<mat-sidenav-container class="app-container">
-  <!-- Composant Material bech y7alli layout mta3 menu (Wrapper for sidenav). -->
-  <mat-sidenav mode="side" [opened]="sidenavOpen" class="app-sidenav">
-    <!-- Le menu latéral li dima ma7loul f jnab (Persistent sidebar on the left). -->
-    <nav class="sidenav-nav"> <!-- Balise de navigation sémantique (Semantic navigation element). -->
-
-      <!-- Lien pour le Dashboard (default page) -->
-      <a class="nav-item" routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
-        <mat-icon class="nav-icon">dashboard</mat-icon>
-        <span class="nav-label">{{ 'NAV.DASHBOARD' | translate }}</span>
-      </a>
-      <!-- Lien pour Network Topology -->
-      <a class="nav-item" routerLink="/topology" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
-        <mat-icon class="nav-icon">hub</mat-icon>
-        <span class="nav-label">{{ 'NAV.TOPOLOGY' | translate }}</span>
+      <a class="quicknav-btn" routerLink="/" routerLinkActive="quicknav-active" [routerLinkActiveOptions]="{exact:true}"
+        [matTooltip]="'NAV.DASHBOARD' | translate" matTooltipPosition="below">
+        <mat-icon>dashboard</mat-icon>
+        <span class="quicknav-label">{{ 'NAV.DASHBOARD' | translate }}</span>
       </a>
 
-
-
-
-      <!-- Lien pour les Routers -->
-      <a class="nav-item" routerLink="/routers" routerLinkActive="nav-active">
-        <!-- Lien vers la liste des routeurs (Link to routers page). -->
-        <mat-icon class="nav-icon">router</mat-icon> <!-- Icone routeur (Router icon). -->
-        <span class="nav-label">{{ 'NAV.ROUTERS' | translate }}</span> <!-- Esem el lien (Link text). -->
+      <a class="quicknav-btn" routerLink="/topology" routerLinkActive="quicknav-active"
+        [routerLinkActiveOptions]="{exact:true}" [matTooltip]="'NAV.TOPOLOGY' | translate" matTooltipPosition="below">
+        <mat-icon>hub</mat-icon>
+        <span class="quicknav-label">{{ 'NAV.TOPOLOGY' | translate }}</span>
       </a>
 
-      <!-- Lien pour les Switches -->
-      <a class="nav-item" routerLink="/switches" routerLinkActive="nav-active">
-        <!-- Lien lel page des switches (Link to switches page). -->
-        <mat-icon class="nav-icon">device_hub</mat-icon> <!-- Icone switch/hub (Network switch icon). -->
-        <span class="nav-label">{{ 'NAV.SWITCHES' | translate }}</span> <!-- Esem el lien (Link text). -->
+      <a class="quicknav-btn" routerLink="/routers" routerLinkActive="quicknav-active" [matTooltip]="'NAV.ROUTERS' | translate"
+        matTooltipPosition="below">
+        <mat-icon>router</mat-icon>
+        <span class="quicknav-label">{{ 'NAV.ROUTERS' | translate }}</span>
       </a>
-
-      <!-- Lien pour les Backhaul Links -->
-      <a class="nav-item" routerLink="/links" routerLinkActive="nav-active">
-        <mat-icon class="nav-icon">link</mat-icon>
-        <span class="nav-label">{{ 'NAV.LINKS' | translate }}</span>
+      <a class="quicknav-btn" routerLink="/inventory" routerLinkActive="quicknav-active" [matTooltip]="'NAV.INVENTORY' | translate"
+        matTooltipPosition="below">
+        <mat-icon>inventory_2</mat-icon>
+        <span class="quicknav-label">{{ 'NAV.INVENTORY' | translate }}</span>
       </a>
-
-
-      <!-- Lien pour le Stock Inventory -->
-      <a class="nav-item" routerLink="/inventory" routerLinkActive="nav-active">
-        <mat-icon class="nav-icon">inventory_2</mat-icon>
-        <span class="nav-label">{{ 'NAV.INVENTORY' | translate }}</span>
-      </a>
-
-      <!-- AI Assistant link commented out — now accessible via the floating bubble
-      <a class="nav-item" routerLink="/ai-assistant" routerLinkActive="nav-active">
-        <mat-icon class="nav-icon">psychology</mat-icon>
-        <span class="nav-label">AI Assistant</span>
-      </a>
-      -->
-
-      <div class="nav-divider"></div>
-      <!-- Khat yefra9 bin section l'oula w thenia fil menu (Divider line between navigation groups). -->
-
-      <!-- Bouton y7all w ysaker submenu mta3 Provisioning -->
-      <div class="nav-item nav-toggle" (click)="toggleProvisioning()">
-        <!-- Div clickable bech n7allou e'sous-menu (Clickable div to toggle dropdown). -->
-        <mat-icon class="nav-icon">settings</mat-icon> <!-- Icone paramètres (Settings icon). -->
-        <span class="nav-label">{{ 'NAV.PROVISIONING' | translate }}</span> <!-- Esem e'menu (Dropdown title). -->
-        <mat-icon class="nav-chevron" [class.nav-chevron-open]="isProvisioningOpen">
-          <!-- Flesha tdoor kif yethal l'menu (Chevron arrow reacting to state). -->
-          expand_more <!-- Icone mta3 l'flesha (Arrow pointing down). -->
-        </mat-icon> <!-- Wfa l'icone (End icon). -->
-      </div> <!-- Wfa l'bouton toggle (End toggle button). -->
-
-      <!-- Le sous-menu lli yt7al kif nenzelou l'fouk (The dropdown menu that appears when toggled). -->
-      <div class="nav-submenu" [class.nav-submenu-open]="isProvisioningOpen">
-        <!-- Ytih el menu ken l'variable true (Opens dropdown based on state variable). -->
-
-        <a class="nav-item nav-sub-item" routerLink="/provisioning" routerLinkActive="nav-active"
-          [routerLinkActiveOptions]="{exact:true}">
-          <!-- Lien principal lel provisioning (Link to main provisioning tasks). -->
-          <mat-icon class="nav-icon">folder_open</mat-icon> <!-- Icone mta3 dossier t7al (Open folder icon). -->
-          <span class="nav-label">{{ 'NAV.ALL_TASKS' | translate }}</span> <!-- Texte mta3 lien (Link label). -->
+      <!-- Provisioning with dropdown -->
+      <button class="quicknav-btn quicknav-menu-trigger" [matMenuTriggerFor]="provMenu" [matTooltip]="'NAV.PROVISIONING' | translate"
+        matTooltipPosition="below">
+        <mat-icon>settings</mat-icon>
+        <span class="quicknav-label">{{ 'NAV.PROVISIONING' | translate }} <mat-icon class="quicknav-chevron">arrow_drop_down</mat-icon></span>
+      </button>
+      <mat-menu #provMenu="matMenu" class="quicknav-dropdown">
+        <a mat-menu-item routerLink="/provisioning">
+          <mat-icon>folder_open</mat-icon> {{ 'NAV.ALL_TASKS' | translate }}
         </a>
-
-        <a class="nav-item nav-sub-item" routerLink="/upgrade" routerLinkActive="nav-active">
-          <mat-icon class="nav-icon">speed</mat-icon>
-          <span class="nav-label">{{ 'NAV.UPGRADE' | translate }}</span>
+        <a mat-menu-item routerLink="/upgrade">
+          <mat-icon>speed</mat-icon> {{ 'NAV.UPGRADE' | translate }}
         </a>
-
-        <a class="nav-item nav-sub-item" routerLink="/provisioning/port-reservation" routerLinkActive="nav-active">
-          <mat-icon class="nav-icon">cable</mat-icon>
-          <span class="nav-label">{{ 'NAV.PORT_RESERVATION' | translate }}</span>
+        <a mat-menu-item routerLink="/provisioning/port-reservation">
+          <mat-icon>cable</mat-icon> {{ 'NAV.PORT_RESERVATION' | translate }}
         </a>
-
-        <a class="nav-item nav-sub-item" routerLink="/provisioning/internet-service" routerLinkActive="nav-active">
-          <mat-icon class="nav-icon">wifi</mat-icon>
-          <span class="nav-label">{{ 'NAV.INTERNET_SERVICE' | translate }}</span>
+        <a mat-menu-item routerLink="/provisioning/internet-service">
+          <mat-icon>wifi</mat-icon> {{ 'NAV.INTERNET_SERVICE' | translate }}
         </a>
-
-        <a class="nav-item nav-sub-item" routerLink="/provisioning/voip-service" routerLinkActive="nav-active">
-          <mat-icon class="nav-icon">phone_in_talk</mat-icon>
-          <span class="nav-label">{{ 'NAV.VOIP_SERVICE' | translate }}</span>
+        <a mat-menu-item routerLink="/provisioning/voip-service">
+          <mat-icon>phone_in_talk</mat-icon> {{ 'NAV.VOIP_SERVICE' | translate }}
         </a>
+      </mat-menu>
 
-      </div>
-    </nav>
-  </mat-sidenav>
+      <!-- Admin: Create User -->
+      <a *ngIf="authService.isAdmin()" class="quicknav-btn" routerLink="/register" routerLinkActive="quicknav-active" [matTooltip]="'NAV.CREATE_USER' | translate" matTooltipPosition="below">
+        <mat-icon>person_add</mat-icon>
+        <span class="quicknav-label">{{ 'NAV.CREATE_USER' | translate }}</span>
+      </a>
 
-  <!-- Main content area -->
-  <mat-sidenav-content class="app-content">
-    <router-outlet />
+    </div>
 
-    <!-- Floating Bubble to open AI Assistant -->
-    <button class="ai-fab-bubble" (click)="isAiDrawerOpen = !isAiDrawerOpen" [matTooltip]="'NAV.AI_ASSISTANT' | translate"
-      matTooltipPosition="left">
-      <mat-icon>smart_toy</mat-icon>
+    <div class="toolbar-spacer"></div>
+
+    <!-- Logout button — styled as pill, far right -->
+    <button class="theme-toggle logout-btn" (click)="authService.logout()" [matTooltip]="'NAV.LOGOUT' | translate">
+      <mat-icon>logout</mat-icon>
+      <span class="logout-label">{{ 'NAV.LOGOUT' | translate }}</span>
     </button>
-  </mat-sidenav-content>
-</mat-sidenav-container>
 
-<!-- AI Assistant Custom Right Drawer -->
-<div class="ai-custom-drawer" [class.ai-drawer-open]="isAiDrawerOpen">
-  <app-ai-assistant *ngIf="isAiDrawerOpen" (closeSidenav)="isAiDrawerOpen = false"></app-ai-assistant>
-</div>
+    <!-- Language toggle -->
+    <button class="theme-toggle lang-toggle" (click)="toggleLanguage()">
+      {{ currentLang | uppercase }}
+    </button>
+
+    <!-- Theme toggle -->
+    <button class="theme-toggle" (click)="toggleTheme()"
+      [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+      <div class="toggle-track" [class.toggle-track-light]="!isDarkMode">
+        <div class="toggle-thumb" [class.toggle-thumb-light]="!isDarkMode">
+          <mat-icon class="toggle-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</mat-icon>
+        </div>
+      </div>
+    </button>
+
+  </mat-toolbar>
+
+
+  <!-- Container principal lli ylammid e'Sidenav wel conteneur central (Main layout holding side menu and content). -->
+  <mat-sidenav-container class="app-container">
+    <!-- Composant Material bech y7alli layout mta3 menu (Wrapper for sidenav). -->
+    <mat-sidenav mode="side" [opened]="sidenavOpen" class="app-sidenav">
+      <!-- Le menu latéral li dima ma7loul f jnab (Persistent sidebar on the left). -->
+      <nav class="sidenav-nav"> <!-- Balise de navigation sémantique (Semantic navigation element). -->
+
+        <!-- Lien pour le Dashboard (default page) -->
+        <a class="nav-item" routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
+          <mat-icon class="nav-icon">dashboard</mat-icon>
+          <span class="nav-label">{{ 'NAV.DASHBOARD' | translate }}</span>
+        </a>
+        <!-- Lien pour Network Topology -->
+        <a class="nav-item" routerLink="/topology" routerLinkActive="nav-active" [routerLinkActiveOptions]="{exact:true}">
+          <mat-icon class="nav-icon">hub</mat-icon>
+          <span class="nav-label">{{ 'NAV.TOPOLOGY' | translate }}</span>
+        </a>
+
+
+
+
+        <!-- Lien pour les Routers -->
+        <a class="nav-item" routerLink="/routers" routerLinkActive="nav-active">
+          <!-- Lien vers la liste des routeurs (Link to routers page). -->
+          <mat-icon class="nav-icon">router</mat-icon> <!-- Icone routeur (Router icon). -->
+          <span class="nav-label">{{ 'NAV.ROUTERS' | translate }}</span> <!-- Esem el lien (Link text). -->
+        </a>
+
+        <!-- Lien pour les Switches -->
+        <a class="nav-item" routerLink="/switches" routerLinkActive="nav-active">
+          <!-- Lien lel page des switches (Link to switches page). -->
+          <mat-icon class="nav-icon">device_hub</mat-icon> <!-- Icone switch/hub (Network switch icon). -->
+          <span class="nav-label">{{ 'NAV.SWITCHES' | translate }}</span> <!-- Esem el lien (Link text). -->
+        </a>
+
+        <!-- Lien pour les Backhaul Links -->
+        <a class="nav-item" routerLink="/links" routerLinkActive="nav-active">
+          <mat-icon class="nav-icon">link</mat-icon>
+          <span class="nav-label">{{ 'NAV.LINKS' | translate }}</span>
+        </a>
+
+
+        <!-- Lien pour le Stock Inventory -->
+        <a class="nav-item" routerLink="/inventory" routerLinkActive="nav-active">
+          <mat-icon class="nav-icon">inventory_2</mat-icon>
+          <span class="nav-label">{{ 'NAV.INVENTORY' | translate }}</span>
+        </a>
+
+        <div class="nav-divider"></div>
+        <!-- Khat yefra9 bin section l'oula w thenia fil menu (Divider line between navigation groups). -->
+
+        <!-- Bouton y7all w ysaker submenu mta3 Provisioning -->
+        <div class="nav-item nav-toggle" (click)="toggleProvisioning()">
+          <!-- Div clickable bech n7allou e'sous-menu (Clickable div to toggle dropdown). -->
+          <mat-icon class="nav-icon">settings</mat-icon> <!-- Icone paramètres (Settings icon). -->
+          <span class="nav-label">{{ 'NAV.PROVISIONING' | translate }}</span> <!-- Esem e'menu (Dropdown title). -->
+          <mat-icon class="nav-chevron" [class.nav-chevron-open]="isProvisioningOpen">
+            <!-- Flesha tdoor kif yethal l'menu (Chevron arrow reacting to state). -->
+            expand_more <!-- Icone mta3 l'flesha (Arrow pointing down). -->
+          </mat-icon> <!-- Wfa l'icone (End icon). -->
+        </div> <!-- Wfa l'bouton toggle (End toggle button). -->
+
+        <!-- Le sous-menu lli yt7al kif nenzelou l'fouk (The dropdown menu that appears when toggled). -->
+        <div class="nav-submenu" [class.nav-submenu-open]="isProvisioningOpen">
+          <!-- Ytih el menu ken l'variable true (Opens dropdown based on state variable). -->
+
+          <a class="nav-item nav-sub-item" routerLink="/provisioning" routerLinkActive="nav-active"
+            [routerLinkActiveOptions]="{exact:true}">
+            <!-- Lien principal lel provisioning (Link to main provisioning tasks). -->
+            <mat-icon class="nav-icon">folder_open</mat-icon> <!-- Icone mta3 dossier t7al (Open folder icon). -->
+            <span class="nav-label">{{ 'NAV.ALL_TASKS' | translate }}</span> <!-- Texte mta3 lien (Link label). -->
+          </a>
+
+          <a class="nav-item nav-sub-item" routerLink="/upgrade" routerLinkActive="nav-active">
+            <mat-icon class="nav-icon">speed</mat-icon>
+            <span class="nav-label">{{ 'NAV.UPGRADE' | translate }}</span>
+          </a>
+
+          <a class="nav-item nav-sub-item" routerLink="/provisioning/port-reservation" routerLinkActive="nav-active">
+            <mat-icon class="nav-icon">cable</mat-icon>
+            <span class="nav-label">{{ 'NAV.PORT_RESERVATION' | translate }}</span>
+          </a>
+
+          <a class="nav-item nav-sub-item" routerLink="/provisioning/internet-service" routerLinkActive="nav-active">
+            <mat-icon class="nav-icon">wifi</mat-icon>
+            <span class="nav-label">{{ 'NAV.INTERNET_SERVICE' | translate }}</span>
+          </a>
+
+          <a class="nav-item nav-sub-item" routerLink="/provisioning/voip-service" routerLinkActive="nav-active">
+            <mat-icon class="nav-icon">phone_in_talk</mat-icon>
+            <span class="nav-label">{{ 'NAV.VOIP_SERVICE' | translate }}</span>
+          </a>
+
+        </div>
+        <!-- Admin: Create User (merged into main nav, no extra gap) -->
+        <ng-container *ngIf="authService.isAdmin()">
+          <div class="nav-divider"></div>
+          <a class="nav-item" routerLink="/register" routerLinkActive="nav-active">
+            <mat-icon class="nav-icon">person_add</mat-icon>
+            <span class="nav-label">{{ 'NAV.CREATE_USER' | translate }}</span>
+          </a>
+        </ng-container>
+      </nav>
+    </mat-sidenav>
+
+    <!-- Main content area -->
+    <mat-sidenav-content class="app-content">
+      <router-outlet />
+
+      <!-- Floating Bubble to open AI Assistant -->
+      <button class="ai-fab-bubble" (click)="isAiDrawerOpen = !isAiDrawerOpen" [matTooltip]="'NAV.AI_ASSISTANT' | translate"
+        matTooltipPosition="left">
+        <mat-icon>smart_toy</mat-icon>
+      </button>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <!-- AI Assistant Custom Right Drawer -->
+  <div class="ai-custom-drawer" [class.ai-drawer-open]="isAiDrawerOpen">
+    <app-ai-assistant *ngIf="isAiDrawerOpen" (closeSidenav)="isAiDrawerOpen = false"></app-ai-assistant>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!authService.isLoggedIn()">
+  <router-outlet />
+</ng-container>

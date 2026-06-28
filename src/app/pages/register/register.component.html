@@ -1,0 +1,144 @@
+<!-- Register / Create User — Admin Page -->
+<div class="page-fade-in register-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-icon-wrap">
+      <mat-icon>person_add</mat-icon>
+    </div>
+    <div>
+      <h1 class="page-title">Create User</h1>
+      <p class="page-subtitle">Admin portal — provision a new NOC account</p>
+    </div>
+  </div>
+
+  <div class="register-layout">
+
+    <!-- ── Form Card ── -->
+    <div class="register-card">
+
+      <!-- Top accent line -->
+      <div class="card-accent"></div>
+
+      <div class="card-body">
+
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="register-form">
+
+          <!-- Username -->
+          <div class="field-group">
+            <label class="field-label">
+              <mat-icon class="label-icon">person</mat-icon>
+              Username
+            </label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput formControlName="username" type="text" placeholder="e.g. jdupont" autocomplete="username">
+              <mat-error *ngIf="registerForm.get('username')?.hasError('required')">Username is required</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Email -->
+          <div class="field-group">
+            <label class="field-label">
+              <mat-icon class="label-icon">email</mat-icon>
+              Email Address
+            </label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput formControlName="email" type="email" placeholder="name@orange.com" autocomplete="email">
+              <mat-error *ngIf="registerForm.get('email')?.hasError('required')">Email is required</mat-error>
+              <mat-error *ngIf="registerForm.get('email')?.hasError('email') && !registerForm.get('email')?.hasError('required')">Enter a valid email address</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Password -->
+          <div class="field-group">
+            <label class="field-label">
+              <mat-icon class="label-icon">lock</mat-icon>
+              Password
+            </label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Min. 6 characters" autocomplete="new-password">
+              <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword" class="visibility-btn">
+                <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <mat-error *ngIf="registerForm.get('password')?.hasError('required')">Password is required</mat-error>
+              <mat-error *ngIf="registerForm.get('password')?.hasError('minlength') && !registerForm.get('password')?.hasError('required')">Password must be at least 6 characters</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Role -->
+          <div class="field-group">
+            <label class="field-label">
+              <mat-icon class="label-icon">badge</mat-icon>
+              Role
+            </label>
+            <div class="role-selector">
+              <button type="button" class="role-btn" [class.role-btn-active]="registerForm.get('role')?.value === 'user'" (click)="registerForm.get('role')?.setValue('user')">
+                <mat-icon>person</mat-icon>
+                <span>User</span>
+                <span class="role-desc">Standard access</span>
+              </button>
+              <button type="button" class="role-btn" [class.role-btn-active]="registerForm.get('role')?.value === 'admin'" (click)="registerForm.get('role')?.setValue('admin')">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>Admin</span>
+                <span class="role-desc">Full access</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Error -->
+          <div *ngIf="error" class="alert alert-error">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ error }}</span>
+          </div>
+
+          <!-- Success -->
+          <div *ngIf="successMessage" class="alert alert-success">
+            <mat-icon>check_circle_outline</mat-icon>
+            <span>{{ successMessage }}</span>
+          </div>
+
+          <!-- Submit -->
+          <button class="submit-btn" type="submit" [disabled]="registerForm.invalid || loading">
+            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="!loading">person_add</mat-icon>
+            <span *ngIf="!loading">Create User</span>
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- ── Info Panel ── -->
+    <div class="info-panel">
+      <div class="info-card">
+        <mat-icon class="info-icon">info</mat-icon>
+        <h3 class="info-title">Account Guidelines</h3>
+        <ul class="info-list">
+          <li>
+            <mat-icon>check</mat-icon>
+            Use the official Orange Tunisie email format
+          </li>
+          <li>
+            <mat-icon>check</mat-icon>
+            Password must be at least 6 characters
+          </li>
+          <li>
+            <mat-icon>check</mat-icon>
+            Assign <strong>User</strong> for read-only NOC access
+          </li>
+          <li>
+            <mat-icon>check</mat-icon>
+            Assign <strong>Admin</strong> to grant provisioning and user management rights
+          </li>
+        </ul>
+      </div>
+
+      <div class="info-card info-card-warn">
+        <mat-icon class="info-icon warn">warning</mat-icon>
+        <h3 class="info-title">Admin Privileges</h3>
+        <p class="info-text">Admin accounts can create users, access all provisioning features, and manage the full network inventory. Grant this role carefully.</p>
+      </div>
+    </div>
+
+  </div>
+</div>

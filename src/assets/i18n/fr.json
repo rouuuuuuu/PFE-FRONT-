@@ -1,4 +1,28 @@
 {
+  "LOGIN": {
+    "SIGN_IN": "Se Connecter",
+    "RESET_PASSWORD": "Réinitialiser le mot de passe",
+    "RESET_DESC": "Entrez votre e-mail. Un code de réinitialisation sera affiché dans le terminal du serveur — contactez votre administrateur.",
+    "EMAIL": "E-mail",
+    "PASSWORD": "Mot de passe",
+    "FORGOT_PASSWORD": "Mot de passe oublié ?",
+    "LOG_IN": "Connexion",
+    "SEND_RESET_LINK": "Envoyer la demande",
+    "BACK_TO_SIGN_IN": "Retour à la connexion",
+    "ALREADY_HAVE_CODE": "J'ai déjà un code",
+    "ENTER_CODE": "Saisir le code de réinitialisation",
+    "ENTER_CODE_DESC": "Entrez le code affiché dans le terminal du serveur ainsi que votre nouveau mot de passe.",
+    "RESET_CODE": "Code de réinitialisation",
+    "NEW_PASSWORD": "Nouveau mot de passe",
+    "PASSWORD_MIN": "Le mot de passe doit comporter au moins 6 caractères",
+    "CONFIRM_RESET": "Définir le nouveau mot de passe",
+    "RESET_CODE_SENT": "Vérifiez votre e-mail ou demandez le code à votre administrateur.",
+    "RESET_SUCCESS_CONFIRM": "Mot de passe modifié ! Vous pouvez maintenant vous connecter.",
+    "INVALID_EMAIL": "Veuillez entrer un e-mail valide",
+    "INVALID_CREDENTIALS": "E-mail ou mot de passe invalide",
+    "RESET_SUCCESS": "Vérifiez votre e-mail pour le code de réinitialisation",
+    "RESET_FAILED": "Échec de l'envoi de l'e-mail de réinitialisation"
+  },
   "NAV": {
     "DASHBOARD": "Tableau de Bord",
     "TOPOLOGY": "Topologie Réseau",
@@ -13,7 +37,9 @@
     "INTERNET_SERVICE": "Service Internet",
     "VOIP_SERVICE": "Service VoIP",
     "AI_ASSISTANT": "Iris - Assistant IA",
-    "REPORTS": "Rapports"
+    "REPORTS": "Rapports",
+    "CREATE_USER": "Créer Utilisateur",
+    "LOGOUT": "Déconnexion"
   },
   "DASHBOARD": {
     "TITLE": "Tableau de Bord NOC",

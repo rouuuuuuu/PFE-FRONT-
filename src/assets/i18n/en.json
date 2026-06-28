@@ -1,4 +1,28 @@
 {
+  "LOGIN": {
+    "SIGN_IN": "Sign In",
+    "RESET_PASSWORD": "Reset Password",
+    "RESET_DESC": "Enter your email address. A reset code will be printed in the server terminal — ask your administrator.",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "LOG_IN": "Log In",
+    "SEND_RESET_LINK": "Send Reset Request",
+    "BACK_TO_SIGN_IN": "Back to Sign In",
+    "ALREADY_HAVE_CODE": "I already have a code",
+    "ENTER_CODE": "Enter Reset Code",
+    "ENTER_CODE_DESC": "Enter the code shown in the server terminal along with your new password.",
+    "RESET_CODE": "Reset Code",
+    "NEW_PASSWORD": "New Password",
+    "PASSWORD_MIN": "Password must be at least 6 characters",
+    "CONFIRM_RESET": "Set New Password",
+    "RESET_CODE_SENT": "Check your email or ask your administrator for the reset code.",
+    "RESET_SUCCESS_CONFIRM": "Password changed! You can now sign in.",
+    "INVALID_EMAIL": "Please enter a valid email",
+    "INVALID_CREDENTIALS": "Invalid email or password",
+    "RESET_SUCCESS": "Check your email for a reset code",
+    "RESET_FAILED": "Failed to send reset email"
+  },
   "NAV": {
     "DASHBOARD": "Dashboard",
     "TOPOLOGY": "Network Topology",
@@ -13,7 +37,9 @@
     "INTERNET_SERVICE": "Internet Service",
     "VOIP_SERVICE": "VoIP Service",
     "AI_ASSISTANT": "Iris - AI Assistant",
-    "REPORTS": "Reports"
+    "REPORTS": "Reports",
+    "CREATE_USER": "Create User",
+    "LOGOUT": "Logout"
   },
   "DASHBOARD": {
     "TITLE": "NOC Dashboard",

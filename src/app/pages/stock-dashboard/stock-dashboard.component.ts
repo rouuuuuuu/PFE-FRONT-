@@ -27,6 +27,7 @@ export interface StockItem {
 }
 
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-stock-dashboard',
@@ -86,7 +87,14 @@ export class StockDashboardComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = ms;
   }
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private dialog: MatDialog) {}
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private authService: AuthService
+  ) {
+    this.isAdmin = this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.loadStock();

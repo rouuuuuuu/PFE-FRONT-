@@ -9,6 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component';
+import { AuthService } from './services/auth.service';
 
 @Component({ // Hedhi décorateur y9oul l'Angular elli l'class hedhi rahi composant (This marks the class as an Angular Component)
   selector: 'app-root', // L'esem mta3 balise HTML bech n3aytou lel composant hedha (The HTML tag for this component)
@@ -34,7 +35,8 @@ export class AppComponent implements OnInit { // Définition mta3 l'class w n'im
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public authService: AuthService
   ) { // Constructeur bech n'injectiwo el PLATFORM_ID (Constructor with Dependency Injection)
     this.isBrowser = isPlatformBrowser(this.platformId); // Nvériwiw si l'app texecuti fil browser, bech l'localStorage tekhdem (Avoid SSR errors with localStorage)
     

@@ -17,25 +17,31 @@ import { InternetProvisioningComponent } from './pages/internet-provisioning/int
 import { VoipProvisioningComponent } from './pages/voip-provisioning/voip-provisioning.component';
 import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component'; // Page AI Network Assistant
 import { ReportListComponent } from './pages/report-list/report-list.component'; // Page mta3 les rapports PDF mensuels (Monthly PDF reports page)
-
+import { LoginComponent } from './pages/login/login.component';
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
+import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
-  { path: '', component: DashboardComponent }, // Default → dashboard
-  { path: 'topology', component: NetworkTopologyComponent },
-  { path: 'routers', component: RoutersComponent },
-  { path: 'switches', component: SwitchesComponent },
-  { path: 'switches/:ip', component: SwitchSummaryComponent }, // Cheman /switches/:ip ytalla3 kholassa mta3 ports (Summary page for a single switch)
-  { path: 'switches/:ip/ports/:status', component: SwitchPortDetailsComponent }, // Tafasil mta3 ports b'status (Filtered ports detail page)
-  { path: 'routers/:ip', component: HardwareSummaryComponent }, // Cheman yemchi l detail mta3 routeur wa7ad w na3tiweh l'IP (Parametrised path for router summary)
-  { path: 'routers/:ip/:component/:status', component: HardwareDetailsComponent }, // Cheman akthar tafasil m3a type u statut (Deep link into hardware statuses)
-  { path: 'links', component: LinksComponent }, // Cheman lel backhaul links (Path for all links)
-  { path: 'upgrade', component: UpgradeComponent },
-  { path: 'ai-assistant', component: AiAssistantComponent }, // Page AI Network Assistant
-  { path: 'inventory', component: StockDashboardComponent },
-  { path: 'reports', component: ReportListComponent }, // Page mta3 les rapports mensuels PDF (Monthly reports list page),
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent, canActivate: [authGuard, adminGuard] },
+  { path: '', component: DashboardComponent, canActivate: [authGuard] }, // Default → dashboard
+  { path: 'topology', component: NetworkTopologyComponent, canActivate: [authGuard] },
+  { path: 'routers', component: RoutersComponent, canActivate: [authGuard] },
+  { path: 'switches', component: SwitchesComponent, canActivate: [authGuard] },
+  { path: 'switches/:ip', component: SwitchSummaryComponent, canActivate: [authGuard] }, // Cheman /switches/:ip ytalla3 kholassa mta3 ports (Summary page for a single switch)
+  { path: 'switches/:ip/ports/:status', component: SwitchPortDetailsComponent, canActivate: [authGuard] }, // Tafasil mta3 ports b'status (Filtered ports detail page)
+  { path: 'routers/:ip', component: HardwareSummaryComponent, canActivate: [authGuard] }, // Cheman yemchi l detail mta3 routeur wa7ad w na3tiweh l'IP (Parametrised path for router summary)
+  { path: 'routers/:ip/:component/:status', component: HardwareDetailsComponent, canActivate: [authGuard] }, // Cheman akthar tafasil m3a type u statut (Deep link into hardware statuses)
+  { path: 'links', component: LinksComponent, canActivate: [authGuard] }, // Cheman lel backhaul links (Path for all links)
+  { path: 'upgrade', component: UpgradeComponent, canActivate: [authGuard] },
+  { path: 'ai-assistant', component: AiAssistantComponent, canActivate: [authGuard] }, // Page AI Network Assistant
+  { path: 'inventory', component: StockDashboardComponent, canActivate: [authGuard] },
+  { path: 'reports', component: ReportListComponent, canActivate: [authGuard] }, // Page mta3 les rapports mensuels PDF (Monthly reports list page),
 
   {
     path: 'provisioning', // Cheman parent mta3 el provisioning (Parent path for provisioning area)
+    canActivate: [authGuard],
     children: [ // El routage louled lli ta7tou (Child routes block)
       { path: '', component: ProvisioningDashboardComponent }, // Ken ma famech chay ba3edha ytala3 menu (Default route inside provisioning shows the cards)
       { path: 'task/:taskType', component: ProvisioningTaskComponent }, // yit7all l'formulaire selon l'esem mta3 e'Tache (Dynamic path for each individual provisioning task)
@@ -45,5 +51,4 @@ export const routes: Routes = [
     ]
   }
 
-
-]; 
+];
