@@ -85,4 +85,20 @@ export class ProvisioningService {
   liberateInternetTask(taskId: number): Observable<any> {
     return this.http.post<any>(`${BASE}/api/provisioning/liberate/${taskId}/`, {});
   }
+
+  /**
+   * Start an L2VC provisioning task.
+   * POST /api/provisioning/l2vc/start/
+   */
+  startL2vcProvisioning(payload: any): Observable<any> {
+    return this.http.post<any>(`${BASE}/api/provisioning/l2vc/start/`, payload);
+  }
+
+  /**
+   * Liberate (release) a completed L2VC provisioning task.
+   * POST /api/provisioning/l2vc/liberate/<taskId>/
+   */
+  liberateL2vcTask(taskId: number): Observable<any> {
+    return this.http.post<any>(`${BASE}/api/provisioning/l2vc/liberate/${taskId}/`, {});
+  }
 }

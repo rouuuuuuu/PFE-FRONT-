@@ -36,6 +36,7 @@
     "PORT_RESERVATION": "Port Reservation",
     "INTERNET_SERVICE": "Internet Service",
     "VOIP_SERVICE": "VoIP Service",
+    "L2VC_SERVICE": "L2VC Service",
     "AI_ASSISTANT": "Iris - AI Assistant",
     "REPORTS": "Reports",
     "CREATE_USER": "Create User",
@@ -368,7 +369,9 @@
       "internet_provisioning_TITLE": "Internet Provisioning",
       "internet_provisioning_DESC": "Configure internet service including VRF, physical interfaces, and sub-interfaces.",
       "voip_provisioning_TITLE": "VoIP Provisioning",
-      "voip_provisioning_DESC": "Configure VoIP service with gateway IP, VLAN, and physical interface provisioning."
+      "voip_provisioning_DESC": "Configure VoIP service with gateway IP, VLAN, and physical interface provisioning.",
+      "l2vc_provisioning_TITLE": "L2VC Provisioning",
+      "l2vc_provisioning_DESC": "Configure L2VC service linking two PE routers with VLAN and physical interface parameters."
     }
   },
   "PROV_TASK": {

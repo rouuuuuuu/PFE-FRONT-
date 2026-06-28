@@ -36,6 +36,7 @@
     "PORT_RESERVATION": "Réservation de Port",
     "INTERNET_SERVICE": "Service Internet",
     "VOIP_SERVICE": "Service VoIP",
+    "L2VC_SERVICE": "Service L2VC",
     "AI_ASSISTANT": "Iris - Assistant IA",
     "REPORTS": "Rapports",
     "CREATE_USER": "Créer Utilisateur",
@@ -360,10 +361,12 @@
       "bandwidth_upgrade_DESC": "Sélectionnez un routeur, synchronisez ses interfaces et appliquez une nouvelle bande passante via SSH.",
       "port_reservation_TITLE": "Réservation de port",
       "port_reservation_DESC": "Recherchez un routeur, choisissez un port disponible, ajoutez une description et réservez-le.",
-      "internet_provisioning_TITLE": "Fourniture de service Internet",
-      "internet_provisioning_DESC": "Configurez le service internet incluant la VRF, les interfaces physiques et les sous-interfaces.",
-      "voip_provisioning_TITLE": "Fourniture de service VoIP",
-      "voip_provisioning_DESC": "Configurez le service VoIP avec l'IP passerelle, le VLAN et les interfaces physiques."
+      "internet_provisioning_TITLE": "Service Internet",
+      "internet_provisioning_DESC": "Configurer le service Internet incluant VRF, interfaces physiques et sous-interfaces.",
+      "voip_provisioning_TITLE": "Service VoIP",
+      "voip_provisioning_DESC": "Configurer le service VoIP avec passerelle IP, VLAN et interfaces physiques.",
+      "l2vc_provisioning_TITLE": "Service L2VC",
+      "l2vc_provisioning_DESC": "Configurer le service L2VC reliant deux routeurs PE avec les paramètres VLAN et les interfaces physiques."
     }
   },
   "PROV_TASK": {

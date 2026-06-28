@@ -43,6 +43,13 @@ export class ProvisioningDashboardComponent { // classe mté3 l'component parsin
       desc: 'Configure VoIP service with gateway IP, VLAN, and physical interface provisioning.',
       icon: 'phone_in_talk',
       route: '/provisioning/voip-service'
+    },
+    {
+      id: 'l2vc_provisioning',
+      title: 'L2VC Provisioning',
+      desc: 'Configure L2VC service linking two PE routers with VLAN and physical interface parameters.',
+      icon: 'compare_arrows',
+      route: '/provisioning/l2vc-service'
     }
   ];
 

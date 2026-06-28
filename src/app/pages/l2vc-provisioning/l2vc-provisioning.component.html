@@ -1,0 +1,415 @@
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE HEADER
+     ══════════════════════════════════════════════════════════════ -->
+<div class="page-header">
+  <div class="header-badge">
+    <mat-icon>compare_arrows</mat-icon>
+  </div>
+  <div>
+    <h1 class="page-title">{{ 'NAV.L2VC_SERVICE' | translate }}</h1>
+    <p class="page-subtitle">Configure L2VC connecting two PE routers.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MAIN FORM CARD
+     ══════════════════════════════════════════════════════════════ -->
+<mat-card class="form-card" [formGroup]="form">
+  <mat-card-content class="form-content">
+
+    <!-- ── Section: Client Identification ─────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">person</mat-icon>
+      {{ 'PROVISIONING.SECTION_CLIENT' | translate }}
+    </div>
+
+    <div class="form-grid">
+
+      <!-- NOM_CLIENT -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>{{ 'PROVISIONING.CLIENT_NAME' | translate }}</mat-label>
+        <input matInput formControlName="client_name"
+               id="input-l2vc-client-name"
+               [placeholder]="'PROVISIONING.CLIENT_NAME_PLACEHOLDER' | translate">
+        <mat-icon matSuffix>badge</mat-icon>
+        <mat-error *ngIf="form.get('client_name')?.hasError('required')">
+          {{ 'PROVISIONING.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- VLAN -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>{{ 'PROVISIONING.VLAN_ID' | translate }}</mat-label>
+        <input matInput type="number" formControlName="vlan"
+               id="input-l2vc-vlan"
+               placeholder="1 – 4094" min="1" max="4094">
+        <mat-icon matSuffix>tag</mat-icon>
+        <mat-hint>{{ 'PROVISIONING.VLAN_HINT' | translate }}</mat-hint>
+        <mat-error *ngIf="form.get('vlan')?.hasError('required')">
+          {{ 'PROVISIONING.REQUIRED' | translate }}
+        </mat-error>
+        <mat-error *ngIf="form.get('vlan')?.hasError('min') || form.get('vlan')?.hasError('max')">
+          {{ 'PROVISIONING.ERR_VLAN' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- MEDIA TYPE -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>Media Type</mat-label>
+        <mat-select formControlName="media_type" id="select-l2vc-media">
+          <mat-option *ngFor="let t of transOptions" [value]="t.value">
+            <mat-icon style="font-size:16px;vertical-align:middle;margin-right:6px">
+              {{ t.value === 'fo' ? 'fiber_manual_record' : 'settings_input_antenna' }}
+            </mat-icon>
+            {{ t.label }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>settings_ethernet</mat-icon>
+      </mat-form-field>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section: Device & Interface ───────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">router</mat-icon>
+      Local PE Device & Interface
+    </div>
+
+    <div class="form-grid">
+
+      <!-- ROUTEUR + SYNC_RT -->
+      <div class="field-with-btn">
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>{{ 'PROVISIONING.ROUTER_LABEL' | translate }}</mat-label>
+          <input type="text" matInput
+                 [(ngModel)]="routerSearchQuery"
+                 [ngModelOptions]="{standalone: true}"
+                 (ngModelChange)="filterRouterSuggestions($event)"
+                 (focus)="onRouterSearchFocus()"
+                 [matAutocomplete]="routerAuto"
+                 [placeholder]="'PROVISIONING.ROUTER_PLACEHOLDER' | translate"
+                 id="input-l2vc-router-search">
+          <mat-icon matSuffix *ngIf="loadingRouters">hourglass_empty</mat-icon>
+          <mat-icon matSuffix *ngIf="!loadingRouters">search</mat-icon>
+          <mat-autocomplete #routerAuto="matAutocomplete" (optionSelected)="onRouterAutoSelected($event)">
+            <mat-option *ngFor="let r of filteredRoutersList" [value]="r.ne_name">
+              <span class="opt-name">{{ r.ne_name }}</span>
+              <span class="opt-ip">&nbsp;({{ r.ip_address }})</span>
+              <span class="vendor-badge vendor-{{ r.vendor | lowercase }}">{{ r.vendor }}</span>
+            </mat-option>
+            <mat-option *ngIf="filteredRoutersList.length === 0 && routerSearchQuery" disabled>
+              <span style="color:var(--text-muted);font-style:italic">
+                {{ 'PROVISIONING.ROUTER_NOT_FOUND' | translate }}
+              </span>
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error>{{ 'PROVISIONING.ROUTER_REQUIRED' | translate }}</mat-error>
+        </mat-form-field>
+
+        <button class="action-btn sync-btn"
+                id="btn-l2vc-sync-rt"
+                type="button"
+                [disabled]="loadingInterfaces || !form.get('router_id')!.value"
+                (click)="syncRouter()"
+                [matTooltip]="'PROVISIONING.SYNC_RT_TOOLTIP' | translate">
+          <mat-spinner *ngIf="loadingInterfaces" diameter="16"></mat-spinner>
+          <mat-icon *ngIf="!loadingInterfaces">sync</mat-icon>
+          <span>SYNC_RT</span>
+        </button>
+      </div>
+
+      <!-- Select PORT -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>{{ 'PROVISIONING.SELECT_PORT' | translate }}</mat-label>
+        <mat-select formControlName="port_name" id="select-l2vc-port">
+          <mat-option *ngIf="!interfaces.length" disabled>
+            {{ loadingInterfaces
+                ? ('PROVISIONING.PORT_LOADING' | translate)
+                : ('PROVISIONING.PORT_SYNC_FIRST' | translate) }}
+          </mat-option>
+          <mat-option *ngFor="let iface of interfaces" [value]="iface.name">
+            <span class="iface-opt-row">
+              <span class="iface-opt-bullet">●</span>
+              <span class="iface-opt-name">{{ iface.name }}</span>
+              <span class="iface-opt-badge" [ngClass]="iface.physical.startsWith('up') ? 'badge-up' : 'badge-down'">{{ iface.physical }}</span>
+              <span class="iface-opt-badge" [ngClass]="iface.protocol.startsWith('up') ? 'badge-up' : 'badge-down'">{{ iface.protocol }}</span>
+              <span class="iface-opt-desc" *ngIf="iface.description">{{ iface.description }}</span>
+            </span>
+          </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="interfaces.length" class="hint-green">
+          {{ 'PROVISIONING.PORT_HINT' | translate : { count: interfaces.length } }}
+        </mat-hint>
+        <mat-error>{{ 'PROVISIONING.PORT_REQUIRED' | translate }}</mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section: Remote PE Device ───────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">router</mat-icon>
+      Remote PE Device
+    </div>
+
+    <div class="form-grid">
+
+      <!-- REMOTE ROUTEUR -->
+      <div class="field-with-btn">
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>Remote PE Router</mat-label>
+          <input type="text" matInput
+                 [(ngModel)]="remoteRouterSearchQuery"
+                 [ngModelOptions]="{standalone: true}"
+                 (ngModelChange)="filterRemoteRouterSuggestions($event)"
+                 (focus)="onRemoteRouterSearchFocus()"
+                 [matAutocomplete]="remoteRouterAuto"
+                 placeholder="Select the remote PE router"
+                 id="input-l2vc-remote-router-search"
+                 [disabled]="!form.get('router_id')!.value">
+          <mat-icon matSuffix>search</mat-icon>
+          <mat-autocomplete #remoteRouterAuto="matAutocomplete" (optionSelected)="onRemoteRouterAutoSelected($event)">
+            <mat-option *ngFor="let r of filteredRemoteRoutersList" [value]="r.ne_name">
+              <span class="opt-name">{{ r.ne_name }}</span>
+              <span class="opt-ip">&nbsp;({{ r.ip_address }})</span>
+              <span class="vendor-badge vendor-{{ r.vendor | lowercase }}">{{ r.vendor }}</span>
+            </mat-option>
+            <mat-option *ngIf="filteredRemoteRoutersList.length === 0" disabled>
+              <span style="color:var(--text-muted);font-style:italic">
+                No available routers
+              </span>
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error>Please select the remote router.</mat-error>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section: Switch ───────────────────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">device_hub</mat-icon>
+      {{ 'PROVISIONING.SECTION_SWITCH' | translate }}
+    </div>
+
+    <div class="form-grid">
+
+      <!-- SELECT SWITCH + SYNC_SW + IGNORE_SW -->
+      <div class="field-with-btn">
+        <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+          <mat-label>{{ 'PROVISIONING.SELECT_SWITCH' | translate }}</mat-label>
+          <mat-select formControlName="switch_id" id="select-l2vc-switch"
+                      (selectionChange)="onSwitchChange()"
+                      [disabled]="(!has_switch && !switches.length) || switchIgnored">
+            <mat-option [value]="null">{{ switchIgnored ? ('PROVISIONING.SWITCH_IGNORED' | translate) : ('PROVISIONING.SWITCH_NONE' | translate) }}</mat-option>
+            <mat-option *ngFor="let s of switches" [value]="s.id">
+              <span class="opt-name">{{ s.name }}</span>
+              <span class="opt-ip">&nbsp;({{ s.ip_address }})</span>
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="switchIgnored" class="hint-ignored">
+            {{ 'PROVISIONING.SWITCH_IGNORED' | translate }}
+          </mat-hint>
+        </mat-form-field>
+
+        <!-- SYNC_SW -->
+        <button class="action-btn sync-btn"
+                id="btn-l2vc-sync-sw"
+                type="button"
+                [disabled]="loadingSwitch
+                            || !form.get('router_id')!.value
+                            || !form.get('port_name')!.value"
+                (click)="onSyncSwitch()"
+                [matTooltip]="'PROVISIONING.SYNC_SW_TOOLTIP' | translate">
+          <mat-spinner *ngIf="loadingSwitch" diameter="16"></mat-spinner>
+          <mat-icon *ngIf="!loadingSwitch">travel_explore</mat-icon>
+          <span>{{ loadingSwitch
+                    ? ('PROVISIONING.SYNC_SW_DISCOVERING' | translate)
+                    : 'SYNC_SW' }}</span>
+        </button>
+
+        <!-- IGNORE_SW -->
+        <button class="action-btn ignore-btn"
+                id="btn-l2vc-ignore-sw"
+                type="button"
+                (click)="ignoreSwitch()"
+                [matTooltip]="'PROVISIONING.IGNORE_SW_TOOLTIP' | translate">
+          <mat-icon>cancel</mat-icon>
+          <span>IGNORE_SW</span>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Submit button ─────────────────────────────────────── -->
+    <div class="submit-row" style="margin-top:24px">
+      <button class="submit-btn"
+              id="btn-l2vc-submit-provisioning"
+              type="button"
+              [disabled]="submitting"
+              (click)="submit()">
+        <ng-container *ngIf="submitting; else iconSubmit">
+          <mat-spinner diameter="18" class="btn-spinner"></mat-spinner>
+        </ng-container>
+        <ng-template #iconSubmit>
+          <mat-icon>rocket_launch</mat-icon>
+        </ng-template>
+        <span>{{ 'PROVISIONING.SUBMIT_BTN' | translate }}</span>
+      </button>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RESULT PANEL (Polling / Output / Liberate)
+     ══════════════════════════════════════════════════════════════ -->
+<mat-card class="result-panel" *ngIf="pollingActive || taskStatus">
+  <mat-card-content>
+    <div class="result-header">
+      <div class="result-header-left">
+        <mat-icon class="result-icon" [ngClass]="'icon-' + taskStatus">
+          {{ getStatusIcon(taskStatus || '') }}
+        </mat-icon>
+        <h2 class="result-title">Task #{{ currentTaskId }}</h2>
+      </div>
+      <button class="dismiss-btn" (click)="dismissResult()" matTooltip="Dismiss">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="polling-indicator" *ngIf="pollingActive">
+      <mat-icon class="spin-icon">autorenew</mat-icon>
+      <span>Polling task status (every 3s)...</span>
+    </div>
+
+    <!-- STATUS TEXT -->
+    <div class="result-text" *ngIf="taskResult">
+      <div class="result-label">Result Message</div>
+      <p>{{ taskResult }}</p>
+    </div>
+
+    <!-- SCRIPT OUTPUT -->
+    <div class="result-output" *ngIf="taskScriptOutput">
+      <div class="result-output-header">
+        <div class="result-label">Generated Config / Output</div>
+        <button class="copy-btn" (click)="copyScriptOutput()">
+          <mat-icon>{{ copyDone ? 'check' : 'content_copy' }}</mat-icon>
+          {{ copyDone ? 'Copied' : 'Copy config' }}
+        </button>
+      </div>
+      <div class="script-output-pre">{{ taskScriptOutput }}</div>
+    </div>
+
+    <!-- LIBERATE BUTTON (only if completed) -->
+    <div class="liberate-row" *ngIf="taskStatus === 'completed'">
+      <button class="liberate-btn" type="button"
+              (click)="liberateTask()"
+              [disabled]="liberating">
+        <mat-spinner *ngIf="liberating" diameter="18" class="btn-spinner"></mat-spinner>
+        <mat-icon *ngIf="!liberating">lock_open</mat-icon>
+        <span>{{ liberating ? 'Liberating...' : 'Libérer la ressource' }}</span>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HISTORY PANEL
+     ══════════════════════════════════════════════════════════════ -->
+<mat-card class="history-card" *ngIf="!pollingActive && !taskStatus">
+  <mat-card-content>
+    <div class="history-header">
+      <h2 class="history-title">
+        <mat-icon style="margin-right:8px;color:var(--primary-orange)">history</mat-icon>
+        Provisioning History (L2VC)
+      </h2>
+      <div class="history-controls">
+        <mat-form-field appearance="outline" class="history-search" floatLabel="always">
+          <mat-label>Search History</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (ngModelChange)="historyPage = 0"
+                 placeholder="Search by client, device or VLAN...">
+          <mat-icon matPrefix style="margin-right:8px">search</mat-icon>
+        </mat-form-field>
+
+        <div class="filter-tabs">
+          <button class="filter-tab" [class.active]="filterStatus === 'all'" (click)="filterStatus='all'; historyPage=0">All</button>
+          <button class="filter-tab" [class.active]="filterStatus === 'completed'" (click)="filterStatus='completed'; historyPage=0">Completed</button>
+          <button class="filter-tab" [class.active]="filterStatus === 'in_progress'" (click)="filterStatus='in_progress'; historyPage=0">In Progress</button>
+          <button class="filter-tab" [class.active]="filterStatus === 'failed'" (click)="filterStatus='failed'; historyPage=0">Failed</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="historyLoading" style="padding: 40px; text-align: center;">
+      <mat-spinner diameter="40" style="margin: 0 auto 16px;"></mat-spinner>
+      <span style="color:var(--text-muted);font-family:'Outfit'">Loading history...</span>
+    </div>
+
+    <div class="td-empty" *ngIf="!historyLoading && paginatedHistory.length === 0">
+      <mat-icon style="font-size:40px;width:40px;height:40px;margin-bottom:12px;opacity:0.5">inbox</mat-icon><br>
+      No L2VC provisioning history found.
+    </div>
+
+    <table class="full-width-table" *ngIf="!historyLoading && paginatedHistory.length > 0">
+      <thead>
+        <tr>
+          <th class="header-accent">ID</th>
+          <th class="header-accent">Date</th>
+          <th class="header-accent">Device</th>
+          <th class="header-accent">Client</th>
+          <th class="header-accent">VLAN</th>
+          <th class="header-accent th-center">Status</th>
+          <th class="header-accent">Ticket</th>
+          <th class="header-accent th-center">Config</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of paginatedHistory" class="table-row">
+          <td class="td-id">#{{ t.task_id ?? t.id }}</td>
+          <td class="td-secondary small">{{ t.created_at | date:'short' }}</td>
+          <td class="td-bold">{{ t.device_name }}</td>
+          <td>{{ t.parameters?.client_name || t.parameters?.nom_client || '—' }}</td>
+          <td class="mono">{{ t.parameters?.vlan || '—' }}</td>
+          <td class="td-center">
+            <span class="status-badge status-{{ t.status }}">
+              <mat-icon class="status-icon-sm">
+                {{ t.status === 'completed' ? 'check_circle' :
+                   t.status === 'failed'    ? 'error' :
+                   t.status === 'in_progress' ? 'sync' : 'schedule' }}
+              </mat-icon>
+              {{ t.status }}
+            </span>
+          </td>
+          <td class="td-ticket">{{ generateSwanTicket(t) }}</td>
+          <td class="td-center">
+            <button *ngIf="t.script_output || t.generated_commands"
+                    class="dl-btn"
+                    matTooltip="Download Config"
+                    (click)="downloadConfig(t)">
+              <mat-icon class="dl-icon">download</mat-icon>
+            </button>
+            <span *ngIf="!t.script_output && !t.generated_commands" style="color:#555">—</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-container" *ngIf="!historyLoading && totalHistoryPages > 1">
+      <button class="page-btn" [disabled]="historyPage === 0" (click)="prevPage()">
+        Prev
+      </button>
+      <span class="page-info">Page {{ historyPage + 1 }} of {{ totalHistoryPages }}</span>
+      <button class="page-btn" [disabled]="historyPage >= totalHistoryPages - 1" (click)="nextPage()">
+        Next
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

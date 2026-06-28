@@ -61,6 +61,9 @@
         <a mat-menu-item routerLink="/provisioning/voip-service">
           <mat-icon>phone_in_talk</mat-icon> {{ 'NAV.VOIP_SERVICE' | translate }}
         </a>
+        <a mat-menu-item routerLink="/provisioning/l2vc-service">
+          <mat-icon>compare_arrows</mat-icon> {{ 'NAV.L2VC_SERVICE' | translate }}
+        </a>
       </mat-menu>
 
       <!-- Admin: Create User -->
@@ -188,6 +191,11 @@
           <a class="nav-item nav-sub-item" routerLink="/provisioning/voip-service" routerLinkActive="nav-active">
             <mat-icon class="nav-icon">phone_in_talk</mat-icon>
             <span class="nav-label">{{ 'NAV.VOIP_SERVICE' | translate }}</span>
+          </a>
+
+          <a class="nav-item nav-sub-item" routerLink="/provisioning/l2vc-service" routerLinkActive="nav-active">
+            <mat-icon class="nav-icon">compare_arrows</mat-icon>
+            <span class="nav-label">{{ 'NAV.L2VC_SERVICE' | translate }}</span>
           </a>
 
         </div>
