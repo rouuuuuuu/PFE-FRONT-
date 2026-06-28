@@ -11,8 +11,8 @@
         <p class="header-sub">
           {{ 'AI.ENGINE' | translate }}
           <span class="mode-badge mode-badge-native">
-            <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle">lock</mat-icon>
-            {{ 'AI.NATIVE_ENGINE' | translate }}
+            <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle">psychology</mat-icon>
+            Llama 3.3 (OpenRouter)
           </span>
         </p>
       </div>
@@ -117,8 +117,8 @@
 
     <div class="control-bar">
       <div class="engine-badge">
-        <mat-icon class="engine-icon">security</mat-icon>
-        <span>{{ 'AI.RULE_BASED' | translate }} &middot; {{ 'AI.OFFLINE' | translate }} &middot; {{ 'AI.SECURE' | translate }}</span>
+        <mat-icon class="engine-icon">cloud</mat-icon>
+        <span>OpenRouter &middot; Llama 3.3 &middot; Generative AI</span>
       </div>
       <button class="clear-btn" (click)="clearChat()" [matTooltip]="'AI.CLEAR_CHAT' | translate">
         <mat-icon>delete_sweep</mat-icon>
@@ -145,6 +145,10 @@
           <div class="bubble" [class.bubble-user]="msg.role === 'user'"
             [class.bubble-assistant]="msg.role === 'assistant'">
             <div class="bubble-content" [innerHTML]="msg.html"></div>
+            <div class="msg-meta" *ngIf="msg.role === 'assistant' && (msg.model || msg.intent)">
+              <span class="meta-badge" *ngIf="msg.model"><mat-icon>memory</mat-icon> {{ msg.model }}</span>
+              <span class="meta-badge" *ngIf="msg.intent"><mat-icon>adjust</mat-icon> Intent: {{ msg.intent | uppercase }}</span>
+            </div>
           </div>
 
           <div class="avatar avatar-user" *ngIf="msg.role === 'user'">
@@ -193,8 +197,8 @@
 
         <div class="input-footer">
           <span class="input-hint">
-            <mat-icon class="hint-icon">lock</mat-icon>
-            {{ 'AI.LOCAL_ENGINE_ACTIVE' | translate }}
+            <mat-icon class="hint-icon">cloud</mat-icon>
+            OpenRouter API connected
           </span>
           <span class="char-count" *ngIf="userInput.length > 0">{{ userInput.length }} {{ 'AI.CHARS' | translate }}</span>
         </div>

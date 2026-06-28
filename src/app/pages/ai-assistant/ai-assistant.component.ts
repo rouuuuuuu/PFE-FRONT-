@@ -16,6 +16,8 @@ interface DisplayMessage {
   role: 'user' | 'assistant';
   text: string;     // Texte brut (Markdown)
   html: SafeHtml;   // HTML sécurisé rendu depuis Markdown
+  intent?: string;  // Intention détectée (ex: sfp, ports)
+  model?: string;   // Modèle utilisé (ex: meta-llama/llama-3.3-70b-instruct)
 }
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -125,7 +127,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     // Appel HTTP POST vers /api/ai/chat/native/
     this.activeSub = this.aiService.sendMessage(apiMessages).subscribe({
       next: (res) => {
-        this._pushAssistantMessage(res.response);
+        this._pushAssistantMessage(res.response, res.intent, res.model);
         this.isLoading = false;
         this._scrollToBottom();
         this.cdr.detectChanges();
@@ -200,11 +202,13 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _pushAssistantMessage(markdown: string): void {
+  private _pushAssistantMessage(markdown: string, intent?: string, model?: string): void {
     this.messages.push({
       role: 'assistant',
       text: markdown,
-      html: this.sanitizer.bypassSecurityTrustHtml(marked(markdown) as string)
+      html: this.sanitizer.bypassSecurityTrustHtml(marked(markdown) as string),
+      intent: intent,
+      model: model
     });
   }
 

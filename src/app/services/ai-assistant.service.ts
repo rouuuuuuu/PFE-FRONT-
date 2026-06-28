@@ -19,9 +19,11 @@ export interface ChatMessage {
   content: string;
 }
 
-// ── Interface pour la réponse JSON du backend natif ──────────────────────────
+// ── Interface pour la réponse JSON du backend OpenRouter ────────────────────
 export interface NativeResponse {
   response: string;
+  intent: string;   // 'sfp' | 'ports' | 'spare_parts' | 'router' | 'network_summary' | 'general'
+  model: string;    // e.g. 'meta-llama/llama-3.3-70b-instruct'
 }
 
 @Injectable({
@@ -44,6 +46,6 @@ export class AiAssistantService {
   //     POST /api/ai/chat/native/ → { response: string }
   // ════════════════════════════════════════════════════════════════════════
   sendMessage(messages: ChatMessage[]): Observable<NativeResponse> {
-    return this.http.post<NativeResponse>(`${API_URL}/ai/chat/native/`, { messages });
+    return this.http.post<NativeResponse>(`${API_URL}/ai/chat/`, { messages });
   }
 }
