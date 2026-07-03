@@ -23,10 +23,14 @@ import { MatTableModule }              from '@angular/material/table';
 import { MatTooltipModule }            from '@angular/material/tooltip';
 import { MatAutocompleteModule }       from '@angular/material/autocomplete';
 import { ClipboardModule }             from '@angular/cdk/clipboard';
+import { MatDialog, MatDialogModule }  from '@angular/material/dialog';
 
 import { ApiService }           from '../../services/api.service';
 import { ProvisioningService }  from '../../services/provisioning.service';
+import { AiEngineService }      from '../../ai-engine/ai-engine.service';
+import { ValidationModalComponent } from '../../ai-engine/validation-modal/validation-modal.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TaskStateService } from '../../services/task-state.service';
 
 // ── Interfaces ───────────────────────────────────────────────
 interface RouterDevice {
@@ -69,7 +73,8 @@ interface PortInterface {
     MatTooltipModule,
     MatAutocompleteModule,
     ClipboardModule,
-    TranslateModule
+    TranslateModule,
+    MatDialogModule
   ],
   templateUrl: './voip-provisioning.component.html',
   styleUrls: ['./voip-provisioning.component.css']
@@ -130,6 +135,8 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
     'swan_ticket', 'download'
   ];
 
+  private isBrowser: boolean;
+
   constructor(
     private fb        : FormBuilder,
     private api       : ApiService,
@@ -138,14 +145,31 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
     private snackBar  : MatSnackBar,
     private translate : TranslateService,
     private clipboard : Clipboard,
+    private aiService : AiEngineService,
+    private dialog    : MatDialog,
+    private taskStateService: TaskStateService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   // ─────────────────────────────────────────────────────────
   ngOnInit(): void {
     this._buildForm();
     this._loadRouters();
     this.loadHistory();
+
+    const state = this.taskStateService.restore('voip');
+    if (state) {
+      this.form.patchValue(state.formData);
+      this.currentTaskId = state.taskId;
+      this.taskStatus = state.status;
+      if (this.taskStatus === 'completed') {
+        this.pollingActive = false;
+      } else if (['queued', 'pending', 'running'].includes(this.taskStatus)) {
+        if (this.currentTaskId) this._startStatusPolling(this.currentTaskId);
+      }
+    }
 
     if (isPlatformBrowser(this.platformId)) {
       interval(this.POLL_MS)
@@ -165,6 +189,16 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.taskStateService.save('voip', {
+      taskId: this.currentTaskId,
+      status: this.taskStatus || '',
+      formData: this.form.value,
+      activeStep: 0,
+      deviceName: this.form.get('router_name')?.value || '',
+      taskType: 'voip',
+      completedAt: null
+    });
+
     this.destroy$.next();
     this.destroy$.complete();
     this.statusPollDestroy$.next();
@@ -424,28 +458,40 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
           }
         };
 
-        this.svc.startVoipProvisioning(payload).subscribe({
-          next: (res: any) => {
-            this.submitting = false;
-            const id = res?.task_id ?? res?.id ?? null;
-            this._toast(
-              id
-                ? this.translate.instant('PROVISIONING.TOAST_SUCCESS', { id })
-                : this.translate.instant('PROVISIONING.TOAST_SUCCESS_NOID'),
-              'success'
-            );
-            if (id) {
-              this.currentTaskId = id;
-              this._startStatusPolling(id);
+        const validationPayload = {
+          task_id: 0,
+          task_type: 'voip',
+          router_hostname: this.form.get('router_name')!.value,
+          vendor: this.routers.find(r => r.id === routerId)?.vendor || 'huawei',
+          task_data: payload
+        };
+
+        this.aiService.validateTask(validationPayload).subscribe({
+          next: (result) => {
+            if (result.verdict === 'blocked' || result.verdict === 'warning') {
+              this.submitting = false;
+              this.cdr.detectChanges();
+              
+              const dialogRef = this.dialog.open(ValidationModalComponent, {
+                width: '500px',
+                data: {
+                  result,
+                  canProceed: result.verdict === 'warning'
+                }
+              });
+
+              dialogRef.afterClosed().subscribe(proceed => {
+                if (proceed) {
+                  this.submitting = true;
+                  this.doExecute(payload);
+                }
+              });
+            } else {
+              this.doExecute(payload);
             }
-            this._resetForm();
-            this.loadHistory();
           },
-          error: (err: any) => {
-            this.submitting = false;
-            const msg = err?.error?.error || err?.error?.detail
-              || this.translate.instant('PROVISIONING.TOAST_PROV_FAILED');
-            this._toast(msg, 'error');
+          error: () => {
+            this.doExecute(payload);
           }
         });
       },
@@ -456,6 +502,33 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
           this.translate.instant('PROVISIONING.TOAST_PORT_ERROR', { msg }),
           'error'
         );
+      }
+    });
+  }
+
+  private doExecute(payload: any): void {
+    this.svc.startVoipProvisioning(payload).subscribe({
+      next: (res: any) => {
+        this.submitting = false;
+        const id = res?.task_id ?? res?.id ?? null;
+        this._toast(
+          id
+            ? this.translate.instant('PROVISIONING.TOAST_SUCCESS', { id })
+            : this.translate.instant('PROVISIONING.TOAST_SUCCESS_NOID'),
+          'success'
+        );
+        if (id) {
+          this.currentTaskId = id;
+          this._startStatusPolling(id);
+        }
+        this._resetForm();
+        this.loadHistory();
+      },
+      error: (err: any) => {
+        this.submitting = false;
+        const msg = err?.error?.error || err?.error?.detail
+          || this.translate.instant('PROVISIONING.TOAST_PROV_FAILED');
+        this._toast(msg, 'error');
       }
     });
   }

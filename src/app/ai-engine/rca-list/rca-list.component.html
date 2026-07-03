@@ -1,0 +1,114 @@
+<div class="rca-page page-fade-in">
+
+  <!-- ── Page Header ── -->
+  <div class="page-header">
+    <mat-icon class="header-icon">search</mat-icon>
+    <div>
+      <h1 class="page-title">Root Cause Analysis</h1>
+      <p class="page-subtitle">AI-classified failure diagnostics and suggested fixes</p>
+    </div>
+  </div>
+
+  <!-- ── Filter Bar ── -->
+  <div class="filter-bar">
+    <div class="filter-left">
+      <span class="section-label">
+        {{ showResolved ? 'All Issues' : 'Open Issues' }}
+      </span>
+      <span class="count-badge" *ngIf="!loading">{{ rcas.length }}</span>
+    </div>
+    <div class="filter-controls">
+      <select class="filter-select" [(ngModel)]="filterType" (change)="onFilterChange()">
+        <option value="">All Types</option>
+        <option value="l2vc">L2VC</option>
+        <option value="voip">VoIP</option>
+        <option value="internet">Internet</option>
+      </select>
+      <select class="filter-select" [(ngModel)]="filterCause" (change)="onFilterChange()">
+        <option value="">All Causes</option>
+        <option value="config_syntax">Config Syntax</option>
+        <option value="connectivity">Connectivity</option>
+        <option value="authentication">Authentication</option>
+        <option value="timeout">Timeout</option>
+        <option value="resource_exhaustion">Resource Exhaustion</option>
+        <option value="version_mismatch">Version Mismatch</option>
+        <option value="dependency_failure">Dependency Failure</option>
+        <option value="permission_denied">Permission Denied</option>
+        <option value="hardware_fault">Hardware Fault</option>
+        <option value="unknown">Unknown</option>
+      </select>
+      <label class="toggle-label">
+        <input type="checkbox" [(ngModel)]="showResolved" (change)="onFilterChange()">
+        <span>Show Resolved</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- ── Loading ── -->
+  <div class="loading-center" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+  </div>
+
+  <!-- ── Error ── -->
+  <div class="error-box" *ngIf="error">{{ error }}</div>
+
+  <!-- ── RCA Cards ── -->
+  <div class="rca-list" *ngIf="!loading && !error">
+
+    <div class="rca-card" *ngFor="let rca of rcas">
+
+      <!-- Status dot -->
+      <div class="rca-dot-wrap">
+        <span class="pulse-dot" [ngClass]="rca.is_resolved ? 'green' : 'red'"></span>
+      </div>
+
+      <!-- Info section -->
+      <div class="rca-info">
+        <div class="rca-info-top">
+          <span class="rca-task-id mono">#{{ rca.task_id }}</span>
+          <span class="type-badge"
+            [style.background]="rca.task_type === 'l2vc' ? '#3b82f618' : rca.task_type === 'voip' ? '#a855f718' : '#14b8a618'"
+            [style.color]="rca.task_type === 'l2vc' ? '#3b82f6' : rca.task_type === 'voip' ? '#a855f7' : '#14b8a6'">
+            {{ rca.task_type | uppercase }}
+          </span>
+          <span class="rca-router">{{ rca.router_hostname }}</span>
+        </div>
+        <div class="rca-info-bottom">
+          <span class="cause-chip"
+            [style.background]="getCauseBg(rca.classified_cause)"
+            [style.color]="getCauseColor(rca.classified_cause)">
+            {{ rca.cause_display || rca.classified_cause }}
+          </span>
+          <!-- Confidence mini bar -->
+          <div class="confidence-bar-wrap">
+            <div class="confidence-bar-track">
+              <div class="confidence-bar-fill"
+                [style.width.%]="rca.confidence * 100"
+                [style.background]="getCauseColor(rca.classified_cause)">
+              </div>
+            </div>
+            <span class="confidence-label">{{ (rca.confidence * 100).toFixed(0) }}%</span>
+          </div>
+          <span class="rca-time">{{ rca.created_at | timeAgo }}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="rca-actions">
+        <button class="btn-ghost-sm" (click)="viewDetail(rca.task_id)">View Details</button>
+        <button class="btn-ghost-sm resolve" (click)="resolveRca(rca)" *ngIf="!rca.is_resolved">
+          Mark Resolved
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Empty -->
+    <div class="empty-state" *ngIf="rcas.length === 0">
+      <mat-icon class="empty-icon">check_circle</mat-icon>
+      <p>No {{ showResolved ? '' : 'open ' }}issues found.</p>
+    </div>
+
+  </div>
+
+</div>

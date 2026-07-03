@@ -70,6 +70,70 @@
 }
 
 
+
+
+/* ── Profile Menu ── */
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.3s;
+  margin-right: 1rem;
+}
+
+.profile-trigger:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.profile-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.profile-summary .user-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.profile-summary .user-role {
+  font-size: 0.7rem;
+  color: #a0a0a0;
+}
+
+.profile-dropdown-menu.mat-menu-panel {
+  background: #15181e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.profile-dropdown-menu .mat-mdc-menu-item {
+  color: #fff !important;
+}
+
+.profile-dropdown-menu .mat-mdc-menu-item:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+
 .app-toolbar::after {
   content: '';
   position: absolute;
@@ -96,6 +160,7 @@
 .brand-logo.logo-light {
   display: none;
 }
+
 .brand-logo.logo-dark {
   display: block;
 }
@@ -104,6 +169,7 @@
 :host-context(.light-theme) .brand-logo.logo-light {
   display: block;
 }
+
 :host-context(.light-theme) .brand-logo.logo-dark {
   display: none;
 }
@@ -425,6 +491,22 @@
   border-color: rgba(0, 0, 0, 0.1);
 }
 
+/* ── Right-Side Slide Drawer for AI Panel ── */
+.ai-custom-drawer {
+  position: absolute;
+  top: 0;
+  right: -500px;
+  width: 500px;
+  height: 100%;
+  background: transparent;
+  transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1000;
+}
+
+.ai-custom-drawer.ai-drawer-open {
+  right: 0;
+}
+
 /* --- Thumb --- */
 .toggle-thumb {
   position: absolute;
@@ -461,7 +543,8 @@
 .ai-custom-drawer {
   position: fixed;
   top: 56px;
-  right: -500px; /* Hidden by default */
+  right: -500px;
+  /* Hidden by default */
   width: 500px;
   height: calc(100vh - 56px);
   background: var(--bg-surface);
@@ -469,13 +552,15 @@
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
-  pointer-events: none; /* CRITICAL: don't intercept clicks when hidden */
+  pointer-events: none;
+  /* CRITICAL: don't intercept clicks when hidden */
   overflow-y: auto;
 }
 
 .ai-custom-drawer.ai-drawer-open {
   right: 0;
-  pointer-events: auto; /* Re-enable clicks when drawer is visible */
+  pointer-events: auto;
+  /* Re-enable clicks when drawer is visible */
 }
 
 @media (max-width: 768px) {
@@ -486,6 +571,17 @@
 }
 
 /* ── Floating Action Button (Bubble) ──────────────────────────────────────── */
+/* ============================================================
+   HOST LAYOUT FIXES
+   ============================================================ */
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  position: relative;
+  z-index: 1;
+}
+
 .ai-fab-bubble {
   position: fixed;
   bottom: 32px;

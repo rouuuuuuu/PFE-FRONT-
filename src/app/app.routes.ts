@@ -22,11 +22,14 @@ import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 import { guestGuard } from './guards/guest.guard';
+import { aiAccessGuard } from './guards/ai-access.guard';
 import { RegisterComponent } from './pages/register/register.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [authGuard, adminGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: '', component: DashboardComponent, canActivate: [authGuard] }, // Default → dashboard
   { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
   { path: 'topology', component: NetworkTopologyComponent, canActivate: [authGuard] },
@@ -54,5 +57,4 @@ export const routes: Routes = [
       { path: 'l2vc-service', component: L2vcProvisioningComponent } // L2VC service provisioning wizard
     ]
   }
-
 ];

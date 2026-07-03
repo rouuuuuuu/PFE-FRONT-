@@ -1,0 +1,176 @@
+<div class="profile-container glass-panel">
+  <div class="profile-header">
+    <h2>{{ 'PROFILE.SETTINGS' | translate }}</h2>
+  </div>
+
+  <ng-container *ngIf="user$ | async as user; else loading">
+    <div class="profile-layout">
+      <!-- Sidebar Navigation -->
+      <div class="profile-sidebar">
+        <button class="nav-item" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">
+          <mat-icon>person</mat-icon> {{ 'PROFILE.ACCOUNT' | translate }}
+        </button>
+        <button class="nav-item" *ngIf="user.is_admin" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
+          <mat-icon>group</mat-icon> {{ 'PROFILE.USER_MANAGEMENT' | translate }}
+        </button>
+        <button class="nav-item" *ngIf="user.is_admin" [class.active]="activeTab === 'ai-admin'" (click)="activeTab = 'ai-admin'">
+          <mat-icon>admin_panel_settings</mat-icon> {{ 'PROFILE.AI_REQUESTS' | translate }}
+        </button>
+        <button class="nav-item" *ngIf="!user.is_admin" [class.active]="activeTab === 'ai-user'" (click)="activeTab = 'ai-user'">
+          <mat-icon>psychology</mat-icon> {{ 'PROFILE.AI_ACCESS' | translate }}
+        </button>
+        <button class="nav-item" [class.active]="activeTab === 'preferences'" (click)="activeTab = 'preferences'">
+          <mat-icon>settings</mat-icon> {{ 'PROFILE.PREFERENCES' | translate }}
+        </button>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="profile-content">
+        <!-- Account Tab -->
+        <div *ngIf="activeTab === 'account'" class="tab-pane fade-in">
+          <h3>{{ 'PROFILE.ACCOUNT_DETAILS' | translate }}</h3>
+          <div class="account-card">
+            <div class="avatar-large" [style.background-color]="authService.getAvatarColor(user.username)">
+              {{ authService.getInitials(user) }}
+            </div>
+            <div class="account-info">
+              <h4>{{ user.display_name || user.username }}</h4>
+              <p class="email">{{ user.email }}</p>
+              <div class="role-badge" [class.admin-badge]="user.is_admin">{{ user.role }}</div>
+            </div>
+          </div>
+          
+          <div class="account-details-grid">
+            <div class="detail-item">
+              <label>{{ 'PROFILE.FIRST_NAME' | translate }}</label>
+              <span>{{ user.first_name || '-' }}</span>
+            </div>
+            <div class="detail-item">
+              <label>{{ 'PROFILE.LAST_NAME' | translate }}</label>
+              <span>{{ user.last_name || '-' }}</span>
+            </div>
+            <div class="detail-item">
+              <label>{{ 'PROFILE.DATE_JOINED' | translate }}</label>
+              <span>{{ user.date_joined | date:'mediumDate' }}</span>
+            </div>
+            <div class="detail-item">
+              <label>{{ 'PROFILE.LAST_LOGIN' | translate }}</label>
+              <span>{{ user.last_login | date:'medium' }}</span>
+            </div>
+          </div>
+
+          <div class="account-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <button mat-stroked-button (click)="isEditing = !isEditing; isChangingPassword = false">{{ 'PROFILE.EDIT_PROFILE' | translate }}</button>
+            <button mat-stroked-button (click)="isChangingPassword = !isChangingPassword; isEditing = false">{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</button>
+          </div>
+
+          <div *ngIf="profileMessage" class="success-message" style="color: #10B981; margin-top: 1rem;">{{ profileMessage }}</div>
+          <div *ngIf="passwordMessage" class="success-message" style="color: #10B981; margin-top: 1rem;">{{ passwordMessage }}</div>
+
+          <!-- Edit Profile Form -->
+          <div *ngIf="isEditing" class="edit-form-card fade-in" style="margin-top: 1.5rem; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px;">
+            <form [formGroup]="editProfileForm" (ngSubmit)="updateProfile()" style="display: flex; flex-direction: column; gap: 1rem;">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'PROFILE.DISPLAY_NAME' | translate }}</mat-label>
+                <input matInput formControlName="display_name">
+              </mat-form-field>
+              
+              <div style="display: flex; gap: 1rem;">
+                <mat-form-field appearance="outline" style="flex: 1;">
+                  <mat-label>{{ 'PROFILE.FIRST_NAME' | translate }}</mat-label>
+                  <input matInput formControlName="first_name">
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="flex: 1;">
+                  <mat-label>{{ 'PROFILE.LAST_NAME' | translate }}</mat-label>
+                  <input matInput formControlName="last_name">
+                </mat-form-field>
+              </div>
+              
+              <button mat-raised-button color="primary" type="submit">{{ 'PROFILE.SAVE_CHANGES' | translate }}</button>
+            </form>
+          </div>
+
+          <!-- Change Password Form -->
+          <div *ngIf="isChangingPassword" class="edit-form-card fade-in" style="margin-top: 1.5rem; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px;">
+            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" style="display: flex; flex-direction: column; gap: 1rem;">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'PROFILE.CURRENT_PASSWORD' | translate }}</mat-label>
+                <input matInput type="password" formControlName="old_password">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'PROFILE.NEW_PASSWORD' | translate }}</mat-label>
+                <input matInput type="password" formControlName="new_password">
+              </mat-form-field>
+              <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">{{ 'PROFILE.UPDATE_PASSWORD' | translate }}</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- User Management Tab -->
+        <div *ngIf="activeTab === 'users' && user.is_admin" class="tab-content fade-in">
+          <div class="content-header">
+            <h3>{{ 'PROFILE.USER_MANAGEMENT' | translate }}</h3>
+          </div>
+          <div class="user-management-container">
+            <!-- Create User Form (RegisterComponent) -->
+            <app-register></app-register>
+          </div>
+        </div>
+
+        <!-- AI Admin Requests Tab (Admin Only) -->
+        <div *ngIf="activeTab === 'ai-admin' && user.is_admin" class="tab-pane fade-in">
+          <h3>{{ 'PROFILE.AI_ENGINE_ACCESS_REQUESTS' | translate }}</h3>
+          <div class="ai-requests-wrapper">
+            <app-admin-requests></app-admin-requests>
+          </div>
+        </div>
+
+        <!-- AI User Access Tab -->
+        <div *ngIf="activeTab === 'ai-user' && !user.is_admin" class="tab-pane fade-in">
+          <h3>{{ 'PROFILE.AI_ENGINE_ACCESS_STATUS' | translate }}</h3>
+          <div class="ai-requests-wrapper">
+            <app-access-request></app-access-request>
+          </div>
+        </div>
+
+        <!-- Preferences Tab -->
+        <div *ngIf="activeTab === 'preferences'" class="tab-pane fade-in">
+          <h3>{{ 'PROFILE.PREFERENCES' | translate }}</h3>
+          <div class="preferences-grid">
+            <div class="pref-item">
+              <label>{{ 'PROFILE.THEME' | translate }}</label>
+              <div class="pref-actions">
+                <button mat-stroked-button [class.active-pref]="(prefService.isDarkMode$ | async)" (click)="prefService.setTheme(true)">{{ 'PROFILE.DARK_THEME' | translate }}</button>
+                <button mat-stroked-button [class.active-pref]="!(prefService.isDarkMode$ | async)" (click)="prefService.setTheme(false)">{{ 'PROFILE.LIGHT_THEME' | translate }}</button>
+              </div>
+            </div>
+            <div class="pref-item">
+              <label>{{ 'PROFILE.ACCENT_COLOR' | translate }}</label>
+              <div class="pref-actions color-picker">
+                <div class="color-circle" [class.active-color]="(prefService.accentColor$ | async) === '#FF7900'" style="background-color: #FF7900;" (click)="prefService.setAccentColor('#FF7900')"></div>
+                <div class="color-circle" [class.active-color]="(prefService.accentColor$ | async) === '#3B82F6'" style="background-color: #3B82F6;" (click)="prefService.setAccentColor('#3B82F6')"></div>
+                <div class="color-circle" [class.active-color]="(prefService.accentColor$ | async) === '#10B981'" style="background-color: #10B981;" (click)="prefService.setAccentColor('#10B981')"></div>
+                <div class="color-circle" [class.active-color]="(prefService.accentColor$ | async) === '#8B5CF6'" style="background-color: #8B5CF6;" (click)="prefService.setAccentColor('#8B5CF6')"></div>
+                <div class="color-circle" [class.active-color]="(prefService.accentColor$ | async) === '#EF4444'" style="background-color: #EF4444;" (click)="prefService.setAccentColor('#EF4444')"></div>
+              </div>
+            </div>
+            <div class="pref-item">
+              <label>{{ 'PROFILE.LANGUAGE' | translate }}</label>
+              <div class="pref-actions">
+                <button mat-stroked-button [class.active-pref]="(prefService.currentLang$ | async) === 'en'" (click)="prefService.setLanguage('en')">{{ 'PROFILE.ENGLISH' | translate }}</button>
+                <button mat-stroked-button [class.active-pref]="(prefService.currentLang$ | async) === 'fr'" (click)="prefService.setLanguage('fr')">{{ 'PROFILE.FRENCH' | translate }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  </ng-template>
+</div>

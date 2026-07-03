@@ -1,0 +1,85 @@
+<!-- Loading state -->
+<div class="access-wrapper page-fade-in" *ngIf="!loading; else loadingTpl">
+
+  <!-- ── STATE A: No record or refused — show request form ── -->
+  <div class="access-card" *ngIf="accessStatus?.status === 'none' || accessStatus?.status === 'refused'">
+
+    <div class="access-icon-wrap">
+      <span class="access-lock-icon">🔒</span>
+    </div>
+
+    <h1 class="access-title">AI Engine Access Required</h1>
+    <p class="access-subtitle">
+      This module contains Smart Provisioning Validator and Auto Root Cause Analysis.
+      Submit a request and an admin will review it.
+    </p>
+
+    <!-- Refusal notice -->
+    <div class="refusal-box" *ngIf="accessStatus?.status === 'refused' && accessStatus?.admin_note">
+      <div class="refusal-label">Reason for refusal:</div>
+      <div class="refusal-note">{{ accessStatus?.admin_note }}</div>
+    </div>
+
+    <!-- Request form -->
+    <div class="access-form">
+      <label class="form-label" for="reason-input">Why do you need access?</label>
+      <textarea
+        id="reason-input"
+        class="form-textarea"
+        [(ngModel)]="reason"
+        (blur)="reasonTouched = true"
+        placeholder="Describe your use case for the AI Engine module..."
+        rows="4"
+      ></textarea>
+      <div class="form-error" *ngIf="reasonTouched && !isReasonValid">
+        Please describe your use case (min 20 characters)
+      </div>
+
+      <div class="form-error" *ngIf="error">{{ error }}</div>
+
+      <button
+        class="submit-btn"
+        (click)="submitRequest()"
+        [disabled]="submitting"
+      >
+        <mat-spinner *ngIf="submitting" diameter="18"></mat-spinner>
+        <span *ngIf="!submitting">Submit Access Request</span>
+        <span *ngIf="submitting">Submitting...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── STATE B: Pending — awaiting admin review ── -->
+  <div class="access-card" *ngIf="accessStatus?.status === 'pending'">
+
+    <div class="access-icon-wrap">
+      <span class="access-clock-icon">⏳</span>
+    </div>
+
+    <h1 class="access-title">Request Pending</h1>
+    <p class="access-subtitle">
+      Your access request has been submitted and is awaiting admin review.
+    </p>
+
+    <div class="pending-info">
+      <div class="pending-row">
+        <span class="pending-label">Submitted on</span>
+        <span class="pending-value">{{ accessStatus?.requested_at | date:'medium' }}</span>
+      </div>
+      <div class="pending-row pending-status">
+        <span class="pulse-dot yellow"></span>
+        <span class="pending-awaiting">Awaiting review</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #loadingTpl>
+  <div class="access-wrapper">
+    <div class="access-card loading-card">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="loading-text">Checking access status...</p>
+    </div>
+  </div>
+</ng-template>

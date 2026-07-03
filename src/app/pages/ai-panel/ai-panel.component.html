@@ -1,0 +1,33 @@
+<div class="ai-panel glass-panel">
+  <div class="panel-header">
+    <div class="header-title">
+      <mat-icon>psychology</mat-icon>
+      <h2>Smart Tools</h2>
+    </div>
+    <button class="close-btn" (click)="closePanel.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="panel-tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'validator'" (click)="activeTab = 'validator'">Validator</button>
+    <button class="tab-btn" [class.active]="activeTab === 'rca'" (click)="activeTab = 'rca'">Root Cause</button>
+    <button class="tab-btn" [class.active]="activeTab === 'stats'" (click)="activeTab = 'stats'">Stats</button>
+  </div>
+
+  <div class="panel-content">
+    <div *ngIf="activeTab === 'validator'" class="tab-content fade-in">
+      <app-validator-dashboard></app-validator-dashboard>
+    </div>
+    <div *ngIf="activeTab === 'rca'" class="tab-content fade-in">
+      <app-rca-list></app-rca-list>
+    </div>
+    <div *ngIf="activeTab === 'stats'" class="tab-content fade-in">
+      <div class="stats-placeholder">
+        <mat-icon>bar_chart</mat-icon>
+        <p>AI Engine Statistics and KPIs</p>
+        <p class="subtext">Coming soon...</p>
+      </div>
+    </div>
+  </div>
+</div>

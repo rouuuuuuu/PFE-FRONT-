@@ -1,0 +1,114 @@
+<div class="admin-page page-fade-in">
+
+  <!-- ── Page Header ── -->
+  <div class="page-header">
+    <mat-icon class="header-icon">admin_panel_settings</mat-icon>
+    <div>
+      <h1 class="page-title">AI Module Access Requests</h1>
+      <p class="page-subtitle">Review and manage user access requests for the AI Engine module</p>
+    </div>
+  </div>
+
+  <!-- ── Tab Bar ── -->
+  <div class="tab-bar">
+    <button class="tab-pill" [class.active]="activeTab === 'pending'" (click)="switchTab('pending')">
+      Pending
+      <span class="tab-count" *ngIf="activeTab === 'pending' && requests.length > 0">{{ requests.length }}</span>
+    </button>
+    <button class="tab-pill" [class.active]="activeTab === 'approved'" (click)="switchTab('approved')">
+      Approved
+    </button>
+    <button class="tab-pill" [class.active]="activeTab === 'refused'" (click)="switchTab('refused')">
+      Refused
+    </button>
+  </div>
+
+  <!-- ── Loading ── -->
+  <div class="loading-center" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+  </div>
+
+  <!-- ── Error ── -->
+  <div class="error-box" *ngIf="error">{{ error }}</div>
+
+  <!-- ── Request Cards ── -->
+  <div class="requests-list" *ngIf="!loading && !error">
+
+    <div class="request-card"
+      *ngFor="let req of requests"
+      [class.removing]="removingIds.has(req.id)">
+
+      <!-- User info row -->
+      <div class="req-header">
+        <div class="req-user">
+          <span class="req-username">{{ req.username }}</span>
+          <span class="req-email">{{ req.email }}</span>
+        </div>
+        <span class="req-date">{{ req.requested_at | timeAgo }}</span>
+      </div>
+
+      <!-- Reason -->
+      <div class="req-reason" [class.expanded]="isExpanded(req.id)">
+        {{ req.reason }}
+      </div>
+      <button class="show-more-btn" *ngIf="(req.reason?.length ?? 0) > 180"
+        (click)="toggleExpand(req.id)">
+        {{ isExpanded(req.id) ? 'Show less' : 'Show more' }}
+      </button>
+
+      <!-- Admin note (for approved/refused) -->
+      <div class="req-admin-info" *ngIf="req.status !== 'pending' && (req.admin_note || req.reviewed_by_username)">
+        <div class="admin-note" *ngIf="req.admin_note">
+          <span class="admin-note-label">Admin Note:</span> {{ req.admin_note }}
+        </div>
+        <div class="reviewed-by" *ngIf="req.reviewed_by_username">
+          Reviewed by <strong>{{ req.reviewed_by_username }}</strong>
+          <span *ngIf="req.reviewed_at"> · {{ req.reviewed_at | timeAgo }}</span>
+        </div>
+      </div>
+
+      <!-- Action buttons (pending only) -->
+      <div class="req-actions" *ngIf="req.status === 'pending'">
+
+        <!-- Default: show approve/refuse buttons -->
+        <ng-container *ngIf="reviewingId !== req.id">
+          <button class="action-btn approve" (click)="startReview(req.id, 'approve')">
+            ✓ Approve
+          </button>
+          <button class="action-btn refuse" (click)="startReview(req.id, 'refuse')">
+            ✗ Refuse
+          </button>
+        </ng-container>
+
+        <!-- Inline review form -->
+        <div class="review-form" *ngIf="reviewingId === req.id">
+          <textarea class="review-textarea"
+            [(ngModel)]="reviewNote"
+            [placeholder]="reviewAction === 'approve' ? 'Optional approval note...' : 'Reason for refusal (optional)...'"
+            rows="2"></textarea>
+          <div class="review-actions">
+            <button class="action-btn cancel" (click)="cancelReview()">Cancel</button>
+            <button class="action-btn"
+              [ngClass]="reviewAction === 'approve' ? 'approve' : 'refuse'"
+              (click)="submitReview()"
+              [disabled]="submittingReview">
+              {{ submittingReview ? 'Processing...' : (reviewAction === 'approve' ? '✓ Confirm Approve' : '✗ Confirm Refuse') }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="requests.length === 0">
+      <mat-icon class="empty-icon">
+        {{ activeTab === 'pending' ? 'inbox' : activeTab === 'approved' ? 'check_circle' : 'block' }}
+      </mat-icon>
+      <p>No {{ activeTab }} requests.</p>
+    </div>
+
+  </div>
+
+</div>

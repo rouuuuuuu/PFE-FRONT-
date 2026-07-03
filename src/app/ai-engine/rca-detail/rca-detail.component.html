@@ -1,0 +1,131 @@
+<div class="rca-detail-page page-fade-in">
+
+  <!-- ── Back Button + Header ── -->
+  <div class="detail-top-bar">
+    <button class="btn-back" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to RCA List</span>
+    </button>
+  </div>
+
+  <div class="page-header">
+    <mat-icon class="header-icon">troubleshoot</mat-icon>
+    <div>
+      <h1 class="page-title">Root Cause Analysis</h1>
+      <p class="page-subtitle" *ngIf="rca">
+        Task #{{ rca.task_id }} — {{ rca.task_type | uppercase }} — {{ rca.router_hostname }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-center" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <!-- Error -->
+  <div class="error-box" *ngIf="error">{{ error }}</div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       MAIN 2-COLUMN GRID
+       ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="detail-grid" *ngIf="rca && !loading">
+
+    <!-- ── LEFT: Failure Timeline ── -->
+    <div class="detail-card">
+      <h3 class="card-section-title">Failure Timeline</h3>
+
+      <div class="timeline">
+        <div class="timeline-step" *ngFor="let step of rca.timeline; let i = index; let last = last">
+
+          <!-- Bullet -->
+          <div class="step-bullet" [style.background]="getStepColor(step.status) + '20'"
+            [style.color]="getStepColor(step.status)"
+            [style.borderColor]="getStepColor(step.status)">
+            {{ bullets[i] || (i + 1) }}
+          </div>
+
+          <!-- Connector line -->
+          <div class="step-connector" *ngIf="!last"
+            [style.background]="getStepColor(step.status) + '40'"></div>
+
+          <!-- Content -->
+          <div class="step-content">
+            <div class="step-title">{{ step.step }}</div>
+
+            <!-- Render as code block if it matches patterns -->
+            <ng-container *ngIf="isCodeBlock(step.detail); else plainDetail">
+              <div class="rca-code-block">{{ step.detail }}</div>
+            </ng-container>
+            <ng-template #plainDetail>
+              <div class="step-detail">{{ step.detail }}</div>
+            </ng-template>
+
+            <div class="step-time" *ngIf="step.ts">{{ step.ts | timeAgo }}</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RIGHT: AI Classification ── -->
+    <div class="right-column">
+
+      <!-- Section 1: Classified Cause -->
+      <div class="detail-card">
+        <span class="section-label">Classified Cause</span>
+        <div class="cause-name">{{ rca.cause_display || rca.classified_cause }}</div>
+        <span class="ai-badge confidence-badge">CONFIDENCE {{ (rca.confidence * 100).toFixed(0) }}%</span>
+        <p class="cause-description">{{ rca.error_message }}</p>
+      </div>
+
+      <!-- Section 2: Suggested Fixes -->
+      <div class="detail-card fixes-card" *ngIf="rca.suggested_fixes?.length">
+        <span class="fix-label">Suggested Fix</span>
+        <div class="fix-row" *ngFor="let fix of rca.suggested_fixes">
+          <span class="fix-arrow">→</span>
+          <span class="fix-text">{{ fix }}</span>
+        </div>
+      </div>
+
+      <!-- Section 3: Similar Past Failures -->
+      <div class="detail-card" *ngIf="rca.similar_task_ids?.length">
+        <span class="section-label">Similar Past Failures</span>
+        <div class="similar-row" *ngFor="let id of rca.similar_task_ids"
+          (click)="navigateToRca(id)">
+          <span class="similar-task-id mono">#{{ id }}</span>
+          <span class="similar-badge">Same cause</span>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="detail-actions">
+        <ng-container *ngIf="!rca.is_resolved">
+          <button class="btn-ghost" *ngIf="!showResolveInput" (click)="showResolveInput = true">
+            Mark as Resolved
+          </button>
+          <div class="resolve-form" *ngIf="showResolveInput">
+            <textarea class="resolve-textarea"
+              [(ngModel)]="resolutionNote"
+              placeholder="Optional resolution note..."
+              rows="2"></textarea>
+            <div class="resolve-actions">
+              <button class="btn-ghost" (click)="showResolveInput = false">Cancel</button>
+              <button class="btn-primary" (click)="resolveRca()" [disabled]="resolving">
+                {{ resolving ? 'Saving...' : 'Confirm Resolve' }}
+              </button>
+            </div>
+          </div>
+        </ng-container>
+        <div class="resolved-notice" *ngIf="rca.is_resolved">
+          <span class="resolved-dot"></span>
+          <span>Resolved</span>
+          <span class="resolved-note" *ngIf="rca.resolution_note">— {{ rca.resolution_note }}</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

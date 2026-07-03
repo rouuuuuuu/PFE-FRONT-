@@ -23,10 +23,14 @@ import { MatTableModule }              from '@angular/material/table';
 import { MatTooltipModule }            from '@angular/material/tooltip';
 import { MatAutocompleteModule }       from '@angular/material/autocomplete';
 import { ClipboardModule }             from '@angular/cdk/clipboard';
+import { MatDialog, MatDialogModule }  from '@angular/material/dialog';
 
 import { ApiService }           from '../../services/api.service';
 import { ProvisioningService }  from '../../services/provisioning.service';
+import { AiEngineService }      from '../../ai-engine/ai-engine.service';
+import { ValidationModalComponent } from '../../ai-engine/validation-modal/validation-modal.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TaskStateService } from '../../services/task-state.service';
 
 // ── Interfaces ───────────────────────────────────────────────
 interface RouterDevice {
@@ -72,7 +76,8 @@ type NatMode = 'sans_nat_avec_cpe' | 'sans_nat_sans_cpe';
     MatTooltipModule,
     MatAutocompleteModule,
     ClipboardModule,
-    TranslateModule
+    TranslateModule,
+    MatDialogModule
   ],
   templateUrl: './internet-provisioning.component.html',
   styleUrls: ['./internet-provisioning.component.css']
@@ -145,22 +150,41 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
     'swan_ticket', 'download'
   ];
 
+  private isBrowser: boolean;
+
   constructor(
     private fb        : FormBuilder,
     private api       : ApiService,
     private svc       : ProvisioningService,
     private cdr       : ChangeDetectorRef,
     private snackBar  : MatSnackBar,
-    private translate : TranslateService,
     private clipboard : Clipboard,
+    private translate : TranslateService,
+    private aiService : AiEngineService,
+    private dialog    : MatDialog,
+    private taskStateService: TaskStateService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   // ─────────────────────────────────────────────────────────
   ngOnInit(): void {
     this._buildForm();
     this._loadRouters();
     this.loadHistory();
+
+    const state = this.taskStateService.restore('internet');
+    if (state) {
+      this.form.patchValue(state.formData);
+      this.currentTaskId = state.taskId;
+      this.taskStatus = state.status;
+      if (this.taskStatus === 'completed') {
+        this.pollingActive = false;
+      } else if (['queued', 'pending', 'running'].includes(this.taskStatus)) {
+        if (this.currentTaskId) this._startStatusPolling(this.currentTaskId);
+      }
+    }
 
     if (isPlatformBrowser(this.platformId)) {
       interval(this.POLL_MS)
@@ -180,6 +204,16 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.taskStateService.save('internet', {
+      taskId: this.currentTaskId,
+      status: this.taskStatus || '',
+      formData: this.form.value,
+      activeStep: 0,
+      deviceName: this.form.get('router_name')?.value || '',
+      taskType: 'internet',
+      completedAt: null
+    });
+
     this.destroy$.next();
     this.destroy$.complete();
     this.statusPollDestroy$.next();
@@ -452,30 +486,43 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
           }
         };
 
-        this.svc.startProvisioning(payload).subscribe({
-          next: (res: any) => {
-            this.submitting   = false;
-            this.activeNatBtn = null;
-            const id = res?.task_id ?? res?.id ?? null;
-            this._toast(
-              id
-                ? this.translate.instant('PROVISIONING.TOAST_SUCCESS', { id })
-                : this.translate.instant('PROVISIONING.TOAST_SUCCESS_NOID'),
-              'success'
-            );
-            if (id) {
-              this.currentTaskId = id;
-              this._startStatusPolling(id);
+        const validationPayload = {
+          task_id: 0, // Placeholder, actual ID generated on execute
+          task_type: 'internet',
+          router_hostname: this.form.get('router_name')!.value,
+          vendor: this.routers.find(r => r.id === routerId)?.vendor || 'huawei',
+          task_data: payload
+        };
+
+        this.aiService.validateTask(validationPayload).subscribe({
+          next: (result) => {
+            if (result.verdict === 'blocked' || result.verdict === 'warning') {
+              this.submitting = false;
+              this.activeNatBtn = null;
+              this.cdr.detectChanges();
+              
+              const dialogRef = this.dialog.open(ValidationModalComponent, {
+                width: '500px',
+                data: {
+                  result,
+                  canProceed: result.verdict === 'warning'
+                }
+              });
+
+              dialogRef.afterClosed().subscribe(proceed => {
+                if (proceed) {
+                  this.submitting = true;
+                  this.activeNatBtn = natMode;
+                  this.doExecute(payload);
+                }
+              });
+            } else {
+              this.doExecute(payload);
             }
-            this._resetForm();
-            this.loadHistory();
           },
-          error: (err: any) => {
-            this.submitting   = false;
-            this.activeNatBtn = null;
-            const msg = err?.error?.error || err?.error?.detail
-              || this.translate.instant('PROVISIONING.TOAST_PROV_FAILED');
-            this._toast(msg, 'error');
+          error: () => {
+            // Validator down or error, proceed normally
+            this.doExecute(payload);
           }
         });
       },
@@ -487,6 +534,35 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
           this.translate.instant('PROVISIONING.TOAST_PORT_ERROR', { msg }),
           'error'
         );
+      }
+    });
+  }
+
+  private doExecute(payload: any): void {
+    this.svc.startProvisioning(payload).subscribe({
+      next: (res: any) => {
+        this.submitting   = false;
+        this.activeNatBtn = null;
+        const id = res?.task_id ?? res?.id ?? null;
+        this._toast(
+          id
+            ? this.translate.instant('PROVISIONING.TOAST_SUCCESS', { id })
+            : this.translate.instant('PROVISIONING.TOAST_SUCCESS_NOID'),
+          'success'
+        );
+        if (id) {
+          this.currentTaskId = id;
+          this._startStatusPolling(id);
+        }
+        this._resetForm();
+        this.loadHistory();
+      },
+      error: (err: any) => {
+        this.submitting   = false;
+        this.activeNatBtn = null;
+        const msg = err?.error?.error || err?.error?.detail
+          || this.translate.instant('PROVISIONING.TOAST_PROV_FAILED');
+        this._toast(msg, 'error');
       }
     });
   }

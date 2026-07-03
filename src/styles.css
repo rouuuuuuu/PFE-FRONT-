@@ -172,13 +172,14 @@ body.light-theme {
    BASE STYLES 
   /* ============================================================ */
 
-body {
+html, body {
   /* comment ta3 design système wé layout limit boundaries definitions variables */
-  height: 100%;
+  height: 100vh;
   /* comment ta3 design système wé layout limit boundaries definitions variables */
   margin: 0;
   /* comment ta3 design système wé layout limit boundaries definitions variables */
   padding: 0;
+  overflow: hidden;
   /* comment ta3 design système wé layout limit boundaries definitions variables */
   background: var(--bg-primary);
   /* comment ta3 design système wé layout limit boundaries definitions variables */
@@ -196,6 +197,13 @@ body {
 body,
 body * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+router-outlet + * {
+  display: block;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-primary);
 }
 
 /* ── Global page-header utility ─────────────────────────────────────────
@@ -701,4 +709,109 @@ textarea[matInput]::placeholder,
 }
 .mat-mdc-dialog-container .mat-mdc-button:not(.mat-primary):not(.mat-accent):not(.mat-warn) .mdc-button__label {
   color: var(--text-secondary) !important;
+}
+
+/* ============================================================
+   AI ENGINE — Shared Styles
+   ============================================================ */
+
+/* ── AI Verdict / Status Badges ── */
+.ai-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  display: inline-block;
+}
+
+.ai-badge.safe     { background: #22c55e18; color: #22c55e; }
+.ai-badge.warning  { background: #f59e0b18; color: #f59e0b; }
+.ai-badge.blocked  { background: #ef444418; color: #ef4444; }
+.ai-badge.pending  { background: #3b82f618; color: #3b82f6; }
+.ai-badge.approved { background: #22c55e18; color: #22c55e; }
+.ai-badge.refused  { background: #ef444418; color: #ef4444; }
+
+/* ── Feature Score Bars ── */
+.feature-bar-track {
+  height: 6px;
+  background: #252a3a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.feature-bar-track .feature-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+/* ── RCA Timeline Steps ── */
+.timeline-step {
+  display: flex;
+  gap: 14px;
+  padding-bottom: 18px;
+  position: relative;
+}
+
+.timeline-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 30px;
+  width: 1px;
+  bottom: 0;
+  background: #252a3a;
+}
+
+/* ── RCA Code Block ── */
+.rca-code-block {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: #0d0f14;
+  border: 1px solid #252a3a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #ff6b00;
+  margin-top: 8px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Sidebar Pending Badge ── */
+.ai-pending-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--primary-orange);
+  color: #fff;
+  margin-left: auto;
+}
+
+/* ── Pulse Animations ── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.4); }
+  50%      { box-shadow: 0 0 0 8px rgba(255, 107, 0, 0); }
+}
+
+/* ── Light-theme overrides for AI badges ── */
+body.light-theme .ai-badge.safe     { background: rgba(34, 197, 94, 0.12); }
+body.light-theme .ai-badge.warning  { background: rgba(245, 158, 11, 0.12); }
+body.light-theme .ai-badge.blocked  { background: rgba(239, 68, 68, 0.12); }
+body.light-theme .ai-badge.pending  { background: rgba(59, 130, 246, 0.12); }
+body.light-theme .ai-badge.approved { background: rgba(34, 197, 94, 0.12); }
+body.light-theme .ai-badge.refused  { background: rgba(239, 68, 68, 0.12); }
+
+body.light-theme .feature-bar-track { background: #e5e7eb; }
+body.light-theme .rca-code-block {
+  background: #f8f9fa;
+  border-color: #e5e7eb;
+  color: #d4500a;
 }

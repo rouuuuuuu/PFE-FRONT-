@@ -20,6 +20,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { ApiService } from '../../services/api.service';
 import { ProvisioningService } from '../../services/provisioning.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { TaskStateService } from '../../services/task-state.service';
 
 @Component({
   selector: 'app-port-reservation',
@@ -95,12 +96,27 @@ export class PortReservationComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
     private clipboard: Clipboard,
+    private taskStateService: TaskStateService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
     this.loadRouters();
     this.loadHistory();
+
+    const state = this.taskStateService.restore('port_reservation');
+    if (state) {
+      this.selectedRouter = state.formData.selectedRouter;
+      this.selectedPort = state.formData.selectedPort;
+      this.description = state.formData.description;
+      this.currentTaskId = state.taskId;
+      this.taskStatus = state.status;
+      if (this.taskStatus === 'completed') {
+        this.pollingActive = false;
+      } else if (['queued', 'pending', 'running'].includes(this.taskStatus)) {
+        if (this.currentTaskId) this._startStatusPolling(this.currentTaskId);
+      }
+    }
 
     // ── Polling — keep history table live ──
     if (isPlatformBrowser(this.platformId)) {
@@ -120,6 +136,20 @@ export class PortReservationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.taskStateService.save('port_reservation', {
+      taskId: this.currentTaskId,
+      status: this.taskStatus || '',
+      formData: {
+        selectedRouter: this.selectedRouter,
+        selectedPort: this.selectedPort,
+        description: this.description
+      },
+      activeStep: 0,
+      deviceName: this.selectedRouter?.name || this.selectedRouter?.ne_name || '',
+      taskType: 'port_reservation',
+      completedAt: null
+    });
+
     this.destroy$.next();
     this.destroy$.complete();
     this.statusPollDestroy$.next();

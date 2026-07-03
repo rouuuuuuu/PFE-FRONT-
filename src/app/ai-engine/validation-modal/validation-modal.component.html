@@ -1,0 +1,73 @@
+<div class="vmodal-container">
+  
+  <!-- Header -->
+  <div class="vmodal-header" [style.borderColor]="getVerdictColor(data.result.verdict) + '40'">
+    <h2 class="vmodal-title">AI Pre-Execution Check</h2>
+    <span class="ai-badge" [ngClass]="data.result.verdict" [style.borderColor]="getVerdictColor(data.result.verdict)">
+      {{ data.result.verdict_display || getVerdictLabel(data.result.verdict) }}
+    </span>
+  </div>
+
+  <div class="vmodal-content">
+    
+    <!-- Score Dial -->
+    <div class="dial-section">
+      <svg class="dial-svg" viewBox="0 0 180 100">
+        <path d="M 15 90 A 75 75 0 0 1 165 90"
+          fill="none" stroke="#252a3a" stroke-width="14" stroke-linecap="round"/>
+        <path d="M 15 90 A 75 75 0 0 1 165 90"
+          fill="none"
+          [attr.stroke]="getVerdictColor(data.result.verdict)"
+          stroke-width="14"
+          stroke-linecap="round"
+          stroke-dasharray="235"
+          [style.strokeDashoffset]="getArcOffset(data.result.success_probability)"
+          [style.filter]="'drop-shadow(0 0 6px ' + getVerdictColor(data.result.verdict) + '88)'"/>
+      </svg>
+      <div class="dial-label">
+        <span class="dial-percent" [style.color]="getVerdictColor(data.result.verdict)">
+          {{ (data.result.success_probability * 100).toFixed(0) }}%
+        </span>
+        <span class="dial-sub">Success Probability</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <p class="vmodal-desc">
+      {{ data.result.verdict === 'blocked' ? 'Task execution is blocked due to critical risks.' : 'Task execution has potential risks. Review the checks below.' }}
+    </p>
+
+    <!-- Pre-Execution Checks -->
+    <div class="vcard-checks">
+      <h3 class="vcard-section-title">Pre-Execution Checks</h3>
+      <div class="check-row" *ngFor="let check of data.result.pre_exec_checks"
+        [ngClass]="'check-' + check.status"
+        [class.top-failing]="data.result.verdict === 'blocked' && check.status === 'fail'">
+        <span class="check-icon">
+          <ng-container [ngSwitch]="check.status">
+            <span *ngSwitchCase="'ok'">✅</span>
+            <span *ngSwitchCase="'warn'">⚠️</span>
+            <span *ngSwitchCase="'fail'">❌</span>
+          </ng-container>
+        </span>
+        <div class="check-text">
+          <span class="check-name">{{ check.name }}</span>
+          <span class="check-detail">{{ check.detail }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="vmodal-actions">
+    <ng-container *ngIf="data.canProceed">
+      <button class="btn-ghost" (click)="onProceed()">Proceed Anyway</button>
+      <button class="btn-primary" (click)="onCancel()">Cancel</button>
+    </ng-container>
+    <ng-container *ngIf="!data.canProceed">
+      <button class="btn-primary" (click)="onCancel()">OK, I'll fix it</button>
+    </ng-container>
+  </div>
+
+</div>
