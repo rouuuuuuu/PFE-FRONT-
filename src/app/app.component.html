@@ -156,6 +156,8 @@
           <span class="nav-label">{{ 'NAV.INVENTORY' | translate }}</span>
         </a>
 
+
+
         <div class="nav-divider"></div>
 
         <div class="nav-item nav-toggle" (click)="toggleProvisioning()">
@@ -194,8 +196,11 @@
 
         <div class="nav-divider"></div>
 
-
-
+        <a class="nav-item" routerLink="/monitoring" routerLinkActive="nav-active">
+          <mat-icon class="nav-icon">monitor_heart</mat-icon>
+          <span class="nav-label">Monitoring</span>
+          <span class="alert-dot" *ngIf="hasMonitoringAlerts"></span>
+        </a>
       </nav>
     </mat-sidenav>
 

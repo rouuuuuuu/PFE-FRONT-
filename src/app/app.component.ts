@@ -37,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy { // Définition mta3 l'c
   isAiDrawerOpen = false; // Controls the AI right-side drawer
   isAiPanelOpen = false; // New state for AI Engine panel
   pendingAiCount = 0; // Badge count for pending AI access requests (admin only)
+  hasMonitoringAlerts = false; // Red dot for monitoring nav item
   private isBrowser: boolean;
   private aiPollSub: Subscription | null = null;
 

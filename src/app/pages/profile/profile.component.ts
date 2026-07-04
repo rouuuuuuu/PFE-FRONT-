@@ -11,6 +11,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { PreferencesService } from '../../services/preferences.service';
 
 @Component({
@@ -26,6 +27,7 @@ import { PreferencesService } from '../../services/preferences.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule
   ],

@@ -1,12 +1,26 @@
-<div class="profile-container glass-panel">
-  <div class="profile-header">
-    <h2>{{ 'PROFILE.SETTINGS' | translate }}</h2>
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE HEADER
+     ══════════════════════════════════════════════════════════════ -->
+<div class="page-header">
+  <div class="header-badge">
+    <mat-icon>person</mat-icon>
   </div>
+  <div>
+    <h1 class="page-title">{{ 'PROFILE.SETTINGS' | translate }}</h1>
+    <p class="page-subtitle">{{ 'PROFILE.ACCOUNT' | translate }}</p>
+  </div>
+</div>
 
-  <ng-container *ngIf="user$ | async as user; else loading">
-    <div class="profile-layout">
-      <!-- Sidebar Navigation -->
-      <div class="profile-sidebar">
+<ng-container *ngIf="user$ | async as user; else loading">
+
+  <!-- ══════════════════════════════════════════════════════════════
+       PROFILE LAYOUT — Sidebar + Content
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="profile-layout">
+
+    <!-- Sidebar Navigation -->
+    <mat-card class="sidebar-card">
+      <nav class="profile-sidebar">
         <button class="nav-item" [class.active]="activeTab === 'account'" (click)="activeTab = 'account'">
           <mat-icon>person</mat-icon> {{ 'PROFILE.ACCOUNT' | translate }}
         </button>
@@ -22,13 +36,22 @@
         <button class="nav-item" [class.active]="activeTab === 'preferences'" (click)="activeTab = 'preferences'">
           <mat-icon>settings</mat-icon> {{ 'PROFILE.PREFERENCES' | translate }}
         </button>
-      </div>
+      </nav>
+    </mat-card>
 
-      <!-- Main Content Area -->
-      <div class="profile-content">
-        <!-- Account Tab -->
-        <div *ngIf="activeTab === 'account'" class="tab-pane fade-in">
-          <h3>{{ 'PROFILE.ACCOUNT_DETAILS' | translate }}</h3>
+    <!-- Main Content Area -->
+    <div class="profile-content">
+
+      <!-- ── Account Tab ── -->
+      <div *ngIf="activeTab === 'account'" class="tab-pane fade-in">
+
+        <!-- Account Identity Card -->
+        <mat-card class="content-card">
+          <div class="section-label">
+            <mat-icon class="section-icon">badge</mat-icon>
+            {{ 'PROFILE.ACCOUNT_DETAILS' | translate }}
+          </div>
+
           <div class="account-card">
             <div class="avatar-large" [style.background-color]="authService.getAvatarColor(user.username)">
               {{ authService.getInitials(user) }}
@@ -39,7 +62,9 @@
               <div class="role-badge" [class.admin-badge]="user.is_admin">{{ user.role }}</div>
             </div>
           </div>
-          
+
+          <div class="section-divider"></div>
+
           <div class="account-details-grid">
             <div class="detail-item">
               <label>{{ 'PROFILE.FIRST_NAME' | translate }}</label>
@@ -59,93 +84,139 @@
             </div>
           </div>
 
-          <div class="account-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-            <button mat-stroked-button (click)="isEditing = !isEditing; isChangingPassword = false">{{ 'PROFILE.EDIT_PROFILE' | translate }}</button>
-            <button mat-stroked-button (click)="isChangingPassword = !isChangingPassword; isEditing = false">{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</button>
+          <div class="account-actions">
+            <button class="action-btn sync-btn" (click)="isEditing = !isEditing; isChangingPassword = false">
+              <mat-icon>edit</mat-icon>
+              <span>{{ 'PROFILE.EDIT_PROFILE' | translate }}</span>
+            </button>
+            <button class="action-btn sync-btn" (click)="isChangingPassword = !isChangingPassword; isEditing = false">
+              <mat-icon>lock</mat-icon>
+              <span>{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</span>
+            </button>
           </div>
 
-          <div *ngIf="profileMessage" class="success-message" style="color: #10B981; margin-top: 1rem;">{{ profileMessage }}</div>
-          <div *ngIf="passwordMessage" class="success-message" style="color: #10B981; margin-top: 1rem;">{{ passwordMessage }}</div>
+          <div *ngIf="profileMessage" class="success-msg fade-in">{{ profileMessage }}</div>
+          <div *ngIf="passwordMessage" class="success-msg fade-in">{{ passwordMessage }}</div>
 
           <!-- Edit Profile Form -->
-          <div *ngIf="isEditing" class="edit-form-card fade-in" style="margin-top: 1.5rem; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px;">
-            <form [formGroup]="editProfileForm" (ngSubmit)="updateProfile()" style="display: flex; flex-direction: column; gap: 1rem;">
-              <mat-form-field appearance="outline">
+          <div *ngIf="isEditing" class="edit-form fade-in">
+            <div class="section-label">
+              <mat-icon class="section-icon">edit_note</mat-icon>
+              {{ 'PROFILE.EDIT_PROFILE' | translate }}
+            </div>
+            <form [formGroup]="editProfileForm" (ngSubmit)="updateProfile()" class="form-grid">
+              <mat-form-field appearance="outline" class="form-field" floatLabel="always">
                 <mat-label>{{ 'PROFILE.DISPLAY_NAME' | translate }}</mat-label>
                 <input matInput formControlName="display_name">
+                <mat-icon matSuffix>badge</mat-icon>
               </mat-form-field>
-              
-              <div style="display: flex; gap: 1rem;">
-                <mat-form-field appearance="outline" style="flex: 1;">
-                  <mat-label>{{ 'PROFILE.FIRST_NAME' | translate }}</mat-label>
-                  <input matInput formControlName="first_name">
-                </mat-form-field>
-                <mat-form-field appearance="outline" style="flex: 1;">
-                  <mat-label>{{ 'PROFILE.LAST_NAME' | translate }}</mat-label>
-                  <input matInput formControlName="last_name">
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+                <mat-label>{{ 'PROFILE.FIRST_NAME' | translate }}</mat-label>
+                <input matInput formControlName="first_name">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+                <mat-label>{{ 'PROFILE.LAST_NAME' | translate }}</mat-label>
+                <input matInput formControlName="last_name">
+              </mat-form-field>
+              <div class="submit-row">
+                <button class="submit-btn" type="submit">
+                  <mat-icon>save</mat-icon>
+                  <span>{{ 'PROFILE.SAVE_CHANGES' | translate }}</span>
+                </button>
               </div>
-              
-              <button mat-raised-button color="primary" type="submit">{{ 'PROFILE.SAVE_CHANGES' | translate }}</button>
             </form>
           </div>
 
           <!-- Change Password Form -->
-          <div *ngIf="isChangingPassword" class="edit-form-card fade-in" style="margin-top: 1.5rem; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px;">
-            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" style="display: flex; flex-direction: column; gap: 1rem;">
-              <mat-form-field appearance="outline">
+          <div *ngIf="isChangingPassword" class="edit-form fade-in">
+            <div class="section-label">
+              <mat-icon class="section-icon">lock_reset</mat-icon>
+              {{ 'PROFILE.CHANGE_PASSWORD' | translate }}
+            </div>
+            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="form-grid">
+              <mat-form-field appearance="outline" class="form-field" floatLabel="always">
                 <mat-label>{{ 'PROFILE.CURRENT_PASSWORD' | translate }}</mat-label>
                 <input matInput type="password" formControlName="old_password">
+                <mat-icon matSuffix>vpn_key</mat-icon>
               </mat-form-field>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="form-field" floatLabel="always">
                 <mat-label>{{ 'PROFILE.NEW_PASSWORD' | translate }}</mat-label>
                 <input matInput type="password" formControlName="new_password">
+                <mat-icon matSuffix>lock</mat-icon>
               </mat-form-field>
-              <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">{{ 'PROFILE.UPDATE_PASSWORD' | translate }}</button>
+              <div class="submit-row">
+                <button class="submit-btn" type="submit" [disabled]="passwordForm.invalid">
+                  <mat-icon>lock_open</mat-icon>
+                  <span>{{ 'PROFILE.UPDATE_PASSWORD' | translate }}</span>
+                </button>
+              </div>
             </form>
           </div>
-        </div>
+        </mat-card>
+      </div>
 
-        <!-- User Management Tab -->
-        <div *ngIf="activeTab === 'users' && user.is_admin" class="tab-content fade-in">
-          <div class="content-header">
-            <h3>{{ 'PROFILE.USER_MANAGEMENT' | translate }}</h3>
+      <!-- ── User Management Tab ── -->
+      <div *ngIf="activeTab === 'users' && user.is_admin" class="tab-pane fade-in">
+        <mat-card class="content-card">
+          <div class="section-label">
+            <mat-icon class="section-icon">group_add</mat-icon>
+            {{ 'PROFILE.USER_MANAGEMENT' | translate }}
           </div>
-          <div class="user-management-container">
-            <!-- Create User Form (RegisterComponent) -->
-            <app-register></app-register>
-          </div>
-        </div>
+          <app-register></app-register>
+        </mat-card>
+      </div>
 
-        <!-- AI Admin Requests Tab (Admin Only) -->
-        <div *ngIf="activeTab === 'ai-admin' && user.is_admin" class="tab-pane fade-in">
-          <h3>{{ 'PROFILE.AI_ENGINE_ACCESS_REQUESTS' | translate }}</h3>
-          <div class="ai-requests-wrapper">
-            <app-admin-requests></app-admin-requests>
+      <!-- ── AI Admin Requests Tab ── -->
+      <div *ngIf="activeTab === 'ai-admin' && user.is_admin" class="tab-pane fade-in">
+        <mat-card class="content-card">
+          <div class="section-label">
+            <mat-icon class="section-icon">admin_panel_settings</mat-icon>
+            {{ 'PROFILE.AI_ENGINE_ACCESS_REQUESTS' | translate }}
           </div>
-        </div>
+          <app-admin-requests></app-admin-requests>
+        </mat-card>
+      </div>
 
-        <!-- AI User Access Tab -->
-        <div *ngIf="activeTab === 'ai-user' && !user.is_admin" class="tab-pane fade-in">
-          <h3>{{ 'PROFILE.AI_ENGINE_ACCESS_STATUS' | translate }}</h3>
-          <div class="ai-requests-wrapper">
-            <app-access-request></app-access-request>
+      <!-- ── AI User Access Tab ── -->
+      <div *ngIf="activeTab === 'ai-user' && !user.is_admin" class="tab-pane fade-in">
+        <mat-card class="content-card">
+          <div class="section-label">
+            <mat-icon class="section-icon">psychology</mat-icon>
+            {{ 'PROFILE.AI_ENGINE_ACCESS_STATUS' | translate }}
           </div>
-        </div>
+          <app-access-request></app-access-request>
+        </mat-card>
+      </div>
 
-        <!-- Preferences Tab -->
-        <div *ngIf="activeTab === 'preferences'" class="tab-pane fade-in">
-          <h3>{{ 'PROFILE.PREFERENCES' | translate }}</h3>
+      <!-- ── Preferences Tab ── -->
+      <div *ngIf="activeTab === 'preferences'" class="tab-pane fade-in">
+        <mat-card class="content-card">
+          <div class="section-label">
+            <mat-icon class="section-icon">tune</mat-icon>
+            {{ 'PROFILE.PREFERENCES' | translate }}
+          </div>
+
           <div class="preferences-grid">
             <div class="pref-item">
-              <label>{{ 'PROFILE.THEME' | translate }}</label>
+              <div class="pref-label-row">
+                <mat-icon class="pref-icon">palette</mat-icon>
+                <label>{{ 'PROFILE.THEME' | translate }}</label>
+              </div>
               <div class="pref-actions">
-                <button mat-stroked-button [class.active-pref]="(prefService.isDarkMode$ | async)" (click)="prefService.setTheme(true)">{{ 'PROFILE.DARK_THEME' | translate }}</button>
-                <button mat-stroked-button [class.active-pref]="!(prefService.isDarkMode$ | async)" (click)="prefService.setTheme(false)">{{ 'PROFILE.LIGHT_THEME' | translate }}</button>
+                <button class="filter-tab" [class.active]="(prefService.isDarkMode$ | async)" (click)="prefService.setTheme(true)">
+                  <mat-icon>dark_mode</mat-icon> {{ 'PROFILE.DARK_THEME' | translate }}
+                </button>
+                <button class="filter-tab" [class.active]="!(prefService.isDarkMode$ | async)" (click)="prefService.setTheme(false)">
+                  <mat-icon>light_mode</mat-icon> {{ 'PROFILE.LIGHT_THEME' | translate }}
+                </button>
               </div>
             </div>
+
             <div class="pref-item">
-              <label>{{ 'PROFILE.ACCENT_COLOR' | translate }}</label>
+              <div class="pref-label-row">
+                <mat-icon class="pref-icon">color_lens</mat-icon>
+                <label>{{ 'PROFILE.ACCENT_COLOR' | translate }}</label>
+              </div>
               <div class="pref-actions color-picker">
                 <div class="color-circle" [class.active-color]="(prefService.accentColor$ | async) === '#FF7900'" style="background-color: #FF7900;" (click)="prefService.setAccentColor('#FF7900')"></div>
                 <div class="color-circle" [class.active-color]="(prefService.accentColor$ | async) === '#3B82F6'" style="background-color: #3B82F6;" (click)="prefService.setAccentColor('#3B82F6')"></div>
@@ -154,23 +225,31 @@
                 <div class="color-circle" [class.active-color]="(prefService.accentColor$ | async) === '#EF4444'" style="background-color: #EF4444;" (click)="prefService.setAccentColor('#EF4444')"></div>
               </div>
             </div>
+
             <div class="pref-item">
-              <label>{{ 'PROFILE.LANGUAGE' | translate }}</label>
+              <div class="pref-label-row">
+                <mat-icon class="pref-icon">translate</mat-icon>
+                <label>{{ 'PROFILE.LANGUAGE' | translate }}</label>
+              </div>
               <div class="pref-actions">
-                <button mat-stroked-button [class.active-pref]="(prefService.currentLang$ | async) === 'en'" (click)="prefService.setLanguage('en')">{{ 'PROFILE.ENGLISH' | translate }}</button>
-                <button mat-stroked-button [class.active-pref]="(prefService.currentLang$ | async) === 'fr'" (click)="prefService.setLanguage('fr')">{{ 'PROFILE.FRENCH' | translate }}</button>
+                <button class="filter-tab" [class.active]="(prefService.currentLang$ | async) === 'en'" (click)="prefService.setLanguage('en')">
+                  {{ 'PROFILE.ENGLISH' | translate }}
+                </button>
+                <button class="filter-tab" [class.active]="(prefService.currentLang$ | async) === 'fr'" (click)="prefService.setLanguage('fr')">
+                  {{ 'PROFILE.FRENCH' | translate }}
+                </button>
               </div>
             </div>
           </div>
-        </div>
-
+        </mat-card>
       </div>
-    </div>
-  </ng-container>
 
-  <ng-template #loading>
-    <div class="loading-state">
-      <mat-spinner diameter="40"></mat-spinner>
     </div>
-  </ng-template>
-</div>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <div class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</ng-template>

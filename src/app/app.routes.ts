@@ -25,6 +25,7 @@ import { guestGuard } from './guards/guest.guard';
 import { aiAccessGuard } from './guards/ai-access.guard';
 import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { MonitoringComponent } from './pages/monitoring/monitoring.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
@@ -43,6 +44,7 @@ export const routes: Routes = [
   { path: 'upgrade', component: UpgradeComponent, canActivate: [authGuard] },
   { path: 'ai-assistant', component: AiAssistantComponent, canActivate: [authGuard] }, // Page AI Network Assistant
   { path: 'inventory', component: StockDashboardComponent, canActivate: [authGuard] },
+  { path: 'monitoring', component: MonitoringComponent, canActivate: [authGuard] },
   { path: 'reports', component: ReportListComponent, canActivate: [authGuard] }, // Page mta3 les rapports mensuels PDF (Monthly reports list page),
 
   {
