@@ -4,8 +4,8 @@
   <div class="page-header">
     <mat-icon class="header-icon">shield</mat-icon>
     <div>
-      <h1 class="page-title">Smart Provisioning Validator</h1>
-      <p class="page-subtitle">AI-powered pre-execution risk assessment and validation</p>
+      <h1 class="page-title">{{ 'VALIDATOR.TITLE' | translate }}</h1>
+      <p class="page-subtitle">{{ 'VALIDATOR.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
@@ -22,27 +22,27 @@
     <div class="stats-grid" *ngIf="stats">
 
       <div class="stat-card">
-        <span class="stat-label">Tasks Validated</span>
+        <span class="stat-label">{{ 'VALIDATOR.TASKS_VALIDATED' | translate }}</span>
         <span class="stat-value blue">{{ stats.tasks_validated }}</span>
-        <span class="stat-sub">Total validations run</span>
+        <span class="stat-sub">{{ 'VALIDATOR.TOTAL_VALIDATIONS' | translate }}</span>
       </div>
 
       <div class="stat-card">
-        <span class="stat-label">Failures Prevented</span>
+        <span class="stat-label">{{ 'VALIDATOR.FAILURES_PREVENTED' | translate }}</span>
         <span class="stat-value green">{{ stats.failures_prevented }}</span>
-        <span class="stat-sub">Blocked before execution</span>
+        <span class="stat-sub">{{ 'VALIDATOR.BLOCKED_BEFORE' | translate }}</span>
       </div>
 
       <div class="stat-card">
-        <span class="stat-label">Model Accuracy</span>
+        <span class="stat-label">{{ 'VALIDATOR.MODEL_ACCURACY' | translate }}</span>
         <span class="stat-value orange">{{ (stats.model_accuracy * 100).toFixed(1) }}%</span>
-        <span class="stat-sub">Prediction accuracy</span>
+        <span class="stat-sub">{{ 'VALIDATOR.PREDICTION_ACCURACY' | translate }}</span>
       </div>
 
       <div class="stat-card">
-        <span class="stat-label">Avg RCA Time</span>
+        <span class="stat-label">{{ 'VALIDATOR.AVG_RCA_TIME' | translate }}</span>
         <span class="stat-value yellow">{{ stats.avg_rca_seconds.toFixed(1) }}s</span>
-        <span class="stat-sub">Root cause analysis</span>
+        <span class="stat-sub">{{ 'VALIDATOR.ROOT_CAUSE_ANALYSIS' | translate }}</span>
       </div>
 
     </div>
@@ -51,13 +51,13 @@
          B. SECTION DIVIDER — Current Task
          ══════════════════════════════════════════════════════════════════════ -->
     <div class="section-divider">
-      <span class="section-title">Current Task — Validation Result</span>
+      <span class="section-title">{{ 'VALIDATOR.CURRENT_TASK_RESULT' | translate }}</span>
     </div>
 
     <!-- Empty state -->
     <div class="empty-state" *ngIf="!currentResult">
       <mat-icon class="empty-icon">task_alt</mat-icon>
-      <p>No task selected. Trigger validation from the Provisioning module.</p>
+      <p>{{ 'VALIDATOR.NO_TASK' | translate }}</p>
     </div>
 
     <!-- ══════════════════════════════════════════════════════════════════════
@@ -101,7 +101,7 @@
               [style.color]="getVerdictColor(currentResult.verdict)">
               {{ (currentResult.success_probability * 100).toFixed(0) }}%
             </span>
-            <span class="dial-sub">Success Probability</span>
+            <span class="dial-sub">{{ 'VALIDATOR.SUCCESS_PROB' | translate }}</span>
           </div>
         </div>
 
@@ -115,7 +115,7 @@
 
         <!-- Feature Confidence Bars -->
         <div class="feature-section">
-          <h3 class="feature-heading">Feature Confidence</h3>
+          <h3 class="feature-heading">{{ 'VALIDATOR.FEATURE_CONFIDENCE' | translate }}</h3>
           <div class="feature-row" *ngFor="let entry of featureEntries">
             <div class="feature-row-header">
               <span class="feature-name">{{ entry[0] }}</span>
@@ -134,11 +134,11 @@
 
         <!-- Action bar -->
         <div class="action-bar">
-          <button class="btn-ghost">View Details</button>
+          <button class="btn-ghost">{{ 'VALIDATOR.VIEW_DETAILS' | translate }}</button>
           <button class="btn-primary"
             [disabled]="currentResult.verdict === 'blocked'"
             [matTooltip]="currentResult.verdict === 'blocked' ? 'Task is blocked — too risky to execute' : ''">
-            ▶ Execute Task
+            ▶ {{ 'VALIDATOR.EXECUTE_TASK' | translate }}
           </button>
         </div>
       </div>
@@ -148,7 +148,7 @@
 
         <!-- Pre-Execution Checks -->
         <div class="vcard vcard-checks">
-          <h3 class="vcard-section-title">Pre-Execution Checks</h3>
+          <h3 class="vcard-section-title">{{ 'VALIDATOR.PRE_EXEC_CHECKS' | translate }}</h3>
 
           <div class="check-row" *ngFor="let check of currentResult.pre_exec_checks"
             [ngClass]="'check-' + check.status">
@@ -170,14 +170,14 @@
         <div class="vcard vcard-failed" *ngIf="lastFailed">
           <div class="failed-header">
             <span class="pulse-dot red"></span>
-            <span class="failed-badge">FAILED</span>
+            <span class="failed-badge">{{ 'VALIDATOR.FAILED' | translate }}</span>
           </div>
           <div class="failed-task-label">
             {{ lastFailed.task_type | uppercase }} — {{ lastFailed.router_hostname }}
           </div>
           <div class="failed-time">{{ lastFailed.evaluated_at | timeAgo }}</div>
           <button class="btn-rca" (click)="navigateToRca(lastFailed.task_id)">
-            🔍 View Full RCA
+            🔍 {{ 'VALIDATOR.VIEW_RCA' | translate }}
           </button>
         </div>
 
@@ -189,7 +189,7 @@
          D. VALIDATION HISTORY
          ══════════════════════════════════════════════════════════════════════ -->
     <div class="section-divider">
-      <span class="section-title">Validation History</span>
+      <span class="section-title">{{ 'VALIDATOR.HISTORY_TITLE' | translate }}</span>
     </div>
 
     <div class="vcard history-card" *ngIf="history.length > 0">
@@ -197,13 +197,13 @@
         <table class="history-table">
           <thead>
             <tr>
-              <th>Task #</th>
-              <th>Type</th>
-              <th>Router</th>
-              <th>Risk Score</th>
-              <th>Outcome</th>
-              <th>RCA</th>
-              <th>Time</th>
+              <th>{{ 'VALIDATOR.COL_TASK' | translate }}</th>
+              <th>{{ 'VALIDATOR.COL_TYPE' | translate }}</th>
+              <th>{{ 'VALIDATOR.COL_ROUTER' | translate }}</th>
+              <th>{{ 'VALIDATOR.COL_RISK' | translate }}</th>
+              <th>{{ 'VALIDATOR.COL_OUTCOME' | translate }}</th>
+              <th>{{ 'VALIDATOR.COL_RCA' | translate }}</th>
+              <th>{{ 'VALIDATOR.COL_TIME' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -221,7 +221,7 @@
                 <span class="risk-badge"
                   [style.background]="getRiskColor(item.success_probability) + '18'"
                   [style.color]="getRiskColor(item.success_probability)">
-                  {{ (item.success_probability * 100).toFixed(0) }}% safe
+                  {{ (item.success_probability * 100).toFixed(0) }}% {{ 'VALIDATOR.SAFE' | translate }}
                 </span>
               </td>
               <td>
@@ -231,7 +231,7 @@
               </td>
               <td>
                 <span class="rca-link" *ngIf="hasRca(item)" (click)="navigateToRca(item.task_id)">
-                  Available
+                  {{ 'VALIDATOR.AVAILABLE' | translate }}
                 </span>
                 <span class="rca-none" *ngIf="!hasRca(item)">—</span>
               </td>
@@ -244,7 +244,7 @@
 
     <div class="empty-state" *ngIf="history.length === 0 && !loading">
       <mat-icon class="empty-icon">history</mat-icon>
-      <p>No validation history yet.</p>
+      <p>{{ 'VALIDATOR.NO_HISTORY' | translate }}</p>
     </div>
 
   </ng-container>

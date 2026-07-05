@@ -256,36 +256,37 @@
   align-items: center;
   gap: 10px;
   padding: 0 28px;
-  height: 52px;
-  border-radius: 10px;
+  height: 48px;
+  border-radius: var(--radius-sm);
   border: none;
-  background: linear-gradient(135deg, var(--primary-orange), #ff8c42);
+  background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
   color: #fff;
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.5px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 16px rgba(255,94,0,0.3);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(255, 94, 0, 0.3);
 }
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(255,94,0,0.45);
+  box-shadow: 0 6px 24px rgba(255, 94, 0, 0.45);
 }
 
 .submit-btn:disabled {
-  background: rgba(255,255,255,0.08);
+  background: var(--bg-elevated);
   color: var(--text-muted);
+  border: 1px solid var(--glass-border);
   cursor: not-allowed;
   box-shadow: none;
 }
 
 .submit-btn mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 .btn-spinner {

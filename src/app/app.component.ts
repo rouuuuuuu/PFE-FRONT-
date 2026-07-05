@@ -56,6 +56,15 @@ export class AppComponent implements OnInit, OnDestroy { // Définition mta3 l'c
       const savedSidenav = localStorage.getItem('noc-sidenav');
       if (savedSidenav === 'closed') this.sidenavOpen = false;
 
+      // Subscribe to user changes to load their specific preferences
+      this.authService.currentUser$.subscribe(user => {
+        if (user) {
+          this.prefService.loadForUser(user.username);
+        } else {
+          this.prefService.resetToDefaults();
+        }
+      });
+
       if (this.authService.isLoggedIn()) {
         this.authService.loadCurrentUser().subscribe();
       }

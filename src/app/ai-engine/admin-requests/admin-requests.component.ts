@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AiEngineService } from '../ai-engine.service';
 import { AccessRequest } from '../ai-engine.models';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-requests',
@@ -15,7 +16,8 @@ import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
     FormsModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    TimeAgoPipe
+    TimeAgoPipe,
+    TranslateModule
   ],
   templateUrl: './admin-requests.component.html',
   styleUrl: './admin-requests.component.css',
@@ -39,7 +41,8 @@ export class AdminRequestsComponent implements OnInit {
 
   constructor(
     private aiService: AiEngineService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +61,7 @@ export class AdminRequestsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.error = 'Failed to load access requests.';
+        this.error = this.translate.instant('ADMIN_REQUESTS.ERROR_LOAD');
         this.loading = false;
         this.cdr.markForCheck();
       }

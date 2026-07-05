@@ -7,8 +7,8 @@
       <mat-icon>person_add</mat-icon>
     </div>
     <div>
-      <h1 class="page-title">Create User</h1>
-      <p class="page-subtitle">Admin portal — provision a new NOC account</p>
+      <h1 class="page-title">{{ 'REGISTER.TITLE' | translate }}</h1>
+      <p class="page-subtitle">{{ 'REGISTER.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
@@ -28,11 +28,11 @@
           <div class="field-group">
             <label class="field-label">
               <mat-icon class="label-icon">person</mat-icon>
-              Username
+              {{ 'REGISTER.USERNAME' | translate }}
             </label>
             <mat-form-field appearance="outline" class="full-width">
-              <input matInput formControlName="username" type="text" placeholder="e.g. jdupont" autocomplete="username">
-              <mat-error *ngIf="registerForm.get('username')?.hasError('required')">Username is required</mat-error>
+              <input matInput formControlName="username" type="text" [placeholder]="'REGISTER.USERNAME_PH' | translate" autocomplete="username">
+              <mat-error *ngIf="registerForm.get('username')?.hasError('required')">{{ 'REGISTER.USERNAME_REQ' | translate }}</mat-error>
             </mat-form-field>
           </div>
 
@@ -40,12 +40,12 @@
           <div class="field-group">
             <label class="field-label">
               <mat-icon class="label-icon">email</mat-icon>
-              Email Address
+              {{ 'REGISTER.EMAIL' | translate }}
             </label>
             <mat-form-field appearance="outline" class="full-width">
-              <input matInput formControlName="email" type="email" placeholder="name@orange.com" autocomplete="email">
-              <mat-error *ngIf="registerForm.get('email')?.hasError('required')">Email is required</mat-error>
-              <mat-error *ngIf="registerForm.get('email')?.hasError('email') && !registerForm.get('email')?.hasError('required')">Enter a valid email address</mat-error>
+              <input matInput formControlName="email" type="email" [placeholder]="'REGISTER.EMAIL_PH' | translate" autocomplete="email">
+              <mat-error *ngIf="registerForm.get('email')?.hasError('required')">{{ 'REGISTER.EMAIL_REQ' | translate }}</mat-error>
+              <mat-error *ngIf="registerForm.get('email')?.hasError('email') && !registerForm.get('email')?.hasError('required')">{{ 'REGISTER.EMAIL_INVALID' | translate }}</mat-error>
             </mat-form-field>
           </div>
 
@@ -53,15 +53,15 @@
           <div class="field-group">
             <label class="field-label">
               <mat-icon class="label-icon">lock</mat-icon>
-              Password
+              {{ 'REGISTER.PASSWORD' | translate }}
             </label>
             <mat-form-field appearance="outline" class="full-width">
-              <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Min. 6 characters" autocomplete="new-password">
+              <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'" [placeholder]="'REGISTER.PASSWORD_PH' | translate" autocomplete="new-password">
               <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword" class="visibility-btn">
                 <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
-              <mat-error *ngIf="registerForm.get('password')?.hasError('required')">Password is required</mat-error>
-              <mat-error *ngIf="registerForm.get('password')?.hasError('minlength') && !registerForm.get('password')?.hasError('required')">Password must be at least 6 characters</mat-error>
+              <mat-error *ngIf="registerForm.get('password')?.hasError('required')">{{ 'REGISTER.PASSWORD_REQ' | translate }}</mat-error>
+              <mat-error *ngIf="registerForm.get('password')?.hasError('minlength') && !registerForm.get('password')?.hasError('required')">{{ 'REGISTER.PASSWORD_MIN' | translate }}</mat-error>
             </mat-form-field>
           </div>
 
@@ -69,18 +69,18 @@
           <div class="field-group">
             <label class="field-label">
               <mat-icon class="label-icon">badge</mat-icon>
-              Role
+              {{ 'REGISTER.ROLE' | translate }}
             </label>
             <div class="role-selector">
               <button type="button" class="role-btn" [class.role-btn-active]="registerForm.get('role')?.value === 'user'" (click)="registerForm.get('role')?.setValue('user')">
                 <mat-icon>person</mat-icon>
-                <span>User</span>
-                <span class="role-desc">Standard access</span>
+                <span>{{ 'REGISTER.ROLE_USER' | translate }}</span>
+                <span class="role-desc">{{ 'REGISTER.ROLE_USER_DESC' | translate }}</span>
               </button>
               <button type="button" class="role-btn" [class.role-btn-active]="registerForm.get('role')?.value === 'admin'" (click)="registerForm.get('role')?.setValue('admin')">
                 <mat-icon>admin_panel_settings</mat-icon>
-                <span>Admin</span>
-                <span class="role-desc">Full access</span>
+                <span>{{ 'REGISTER.ROLE_ADMIN' | translate }}</span>
+                <span class="role-desc">{{ 'REGISTER.ROLE_ADMIN_DESC' | translate }}</span>
               </button>
             </div>
           </div>
@@ -101,7 +101,7 @@
           <button class="submit-btn" type="submit" [disabled]="registerForm.invalid || loading">
             <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
             <mat-icon *ngIf="!loading">person_add</mat-icon>
-            <span *ngIf="!loading">Create User</span>
+            <span *ngIf="!loading">{{ 'REGISTER.BTN_SUBMIT' | translate }}</span>
           </button>
 
         </form>
@@ -112,31 +112,31 @@
     <div class="info-panel">
       <div class="info-card">
         <mat-icon class="info-icon">info</mat-icon>
-        <h3 class="info-title">Account Guidelines</h3>
+        <h3 class="info-title">{{ 'REGISTER.INFO_TITLE' | translate }}</h3>
         <ul class="info-list">
           <li>
             <mat-icon>check</mat-icon>
-            Use the official Orange Tunisie email format
+            {{ 'REGISTER.INFO_1' | translate }}
           </li>
           <li>
             <mat-icon>check</mat-icon>
-            Password must be at least 6 characters
+            {{ 'REGISTER.INFO_2' | translate }}
           </li>
           <li>
             <mat-icon>check</mat-icon>
-            Assign <strong>User</strong> for read-only NOC access
+            <span [innerHTML]="'REGISTER.INFO_3' | translate"></span>
           </li>
           <li>
             <mat-icon>check</mat-icon>
-            Assign <strong>Admin</strong> to grant provisioning and user management rights
+            <span [innerHTML]="'REGISTER.INFO_4' | translate"></span>
           </li>
         </ul>
       </div>
 
       <div class="info-card info-card-warn">
         <mat-icon class="info-icon warn">warning</mat-icon>
-        <h3 class="info-title">Admin Privileges</h3>
-        <p class="info-text">Admin accounts can create users, access all provisioning features, and manage the full network inventory. Grant this role carefully.</p>
+        <h3 class="info-title">{{ 'REGISTER.WARN_TITLE' | translate }}</h3>
+        <p class="info-text">{{ 'REGISTER.WARN_TEXT' | translate }}</p>
       </div>
     </div>
 

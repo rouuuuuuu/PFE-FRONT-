@@ -4,22 +4,22 @@
   <div class="page-header">
     <mat-icon class="header-icon">admin_panel_settings</mat-icon>
     <div>
-      <h1 class="page-title">AI Module Access Requests</h1>
-      <p class="page-subtitle">Review and manage user access requests for the AI Engine module</p>
+      <h1 class="page-title">{{ 'ADMIN_REQUESTS.TITLE' | translate }}</h1>
+      <p class="page-subtitle">{{ 'ADMIN_REQUESTS.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
   <!-- ── Tab Bar ── -->
   <div class="tab-bar">
     <button class="tab-pill" [class.active]="activeTab === 'pending'" (click)="switchTab('pending')">
-      Pending
+      {{ 'ADMIN_REQUESTS.TAB_PENDING' | translate }}
       <span class="tab-count" *ngIf="activeTab === 'pending' && requests.length > 0">{{ requests.length }}</span>
     </button>
     <button class="tab-pill" [class.active]="activeTab === 'approved'" (click)="switchTab('approved')">
-      Approved
+      {{ 'ADMIN_REQUESTS.TAB_APPROVED' | translate }}
     </button>
     <button class="tab-pill" [class.active]="activeTab === 'refused'" (click)="switchTab('refused')">
-      Refused
+      {{ 'ADMIN_REQUESTS.TAB_REFUSED' | translate }}
     </button>
   </div>
 
@@ -53,16 +53,16 @@
       </div>
       <button class="show-more-btn" *ngIf="(req.reason?.length ?? 0) > 180"
         (click)="toggleExpand(req.id)">
-        {{ isExpanded(req.id) ? 'Show less' : 'Show more' }}
+        {{ isExpanded(req.id) ? ('ADMIN_REQUESTS.SHOW_LESS' | translate) : ('ADMIN_REQUESTS.SHOW_MORE' | translate) }}
       </button>
 
       <!-- Admin note (for approved/refused) -->
       <div class="req-admin-info" *ngIf="req.status !== 'pending' && (req.admin_note || req.reviewed_by_username)">
         <div class="admin-note" *ngIf="req.admin_note">
-          <span class="admin-note-label">Admin Note:</span> {{ req.admin_note }}
+          <span class="admin-note-label">{{ 'ADMIN_REQUESTS.ADMIN_NOTE' | translate }}</span> {{ req.admin_note }}
         </div>
         <div class="reviewed-by" *ngIf="req.reviewed_by_username">
-          Reviewed by <strong>{{ req.reviewed_by_username }}</strong>
+          {{ 'ADMIN_REQUESTS.REVIEWED_BY' | translate }} <strong>{{ req.reviewed_by_username }}</strong>
           <span *ngIf="req.reviewed_at"> · {{ req.reviewed_at | timeAgo }}</span>
         </div>
       </div>
@@ -73,10 +73,10 @@
         <!-- Default: show approve/refuse buttons -->
         <ng-container *ngIf="reviewingId !== req.id">
           <button class="action-btn approve" (click)="startReview(req.id, 'approve')">
-            ✓ Approve
+            {{ 'ADMIN_REQUESTS.BTN_APPROVE' | translate }}
           </button>
           <button class="action-btn refuse" (click)="startReview(req.id, 'refuse')">
-            ✗ Refuse
+            {{ 'ADMIN_REQUESTS.BTN_REFUSE' | translate }}
           </button>
         </ng-container>
 
@@ -84,15 +84,18 @@
         <div class="review-form" *ngIf="reviewingId === req.id">
           <textarea class="review-textarea"
             [(ngModel)]="reviewNote"
-            [placeholder]="reviewAction === 'approve' ? 'Optional approval note...' : 'Reason for refusal (optional)...'"
+            [placeholder]="reviewAction === 'approve' ? ('ADMIN_REQUESTS.NOTE_APPROVE_PH' | translate) : ('ADMIN_REQUESTS.NOTE_REFUSE_PH' | translate)"
             rows="2"></textarea>
           <div class="review-actions">
-            <button class="action-btn cancel" (click)="cancelReview()">Cancel</button>
+            <button class="action-btn cancel" (click)="cancelReview()">{{ 'ADMIN_REQUESTS.BTN_CANCEL' | translate }}</button>
             <button class="action-btn"
               [ngClass]="reviewAction === 'approve' ? 'approve' : 'refuse'"
               (click)="submitReview()"
               [disabled]="submittingReview">
-              {{ submittingReview ? 'Processing...' : (reviewAction === 'approve' ? '✓ Confirm Approve' : '✗ Confirm Refuse') }}
+              <ng-container *ngIf="submittingReview">{{ 'ADMIN_REQUESTS.BTN_PROCESSING' | translate }}</ng-container>
+              <ng-container *ngIf="!submittingReview">
+                {{ reviewAction === 'approve' ? ('ADMIN_REQUESTS.BTN_CONFIRM_APPROVE' | translate) : ('ADMIN_REQUESTS.BTN_CONFIRM_REFUSE' | translate) }}
+              </ng-container>
             </button>
           </div>
         </div>
@@ -106,7 +109,7 @@
       <mat-icon class="empty-icon">
         {{ activeTab === 'pending' ? 'inbox' : activeTab === 'approved' ? 'check_circle' : 'block' }}
       </mat-icon>
-      <p>No {{ activeTab }} requests.</p>
+      <p>{{ 'ADMIN_REQUESTS.NO_REQUESTS' | translate:{tab: activeTab} }}</p>
     </div>
 
   </div>

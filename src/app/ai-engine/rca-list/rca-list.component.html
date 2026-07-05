@@ -4,8 +4,8 @@
   <div class="page-header">
     <mat-icon class="header-icon">search</mat-icon>
     <div>
-      <h1 class="page-title">Root Cause Analysis</h1>
-      <p class="page-subtitle">AI-classified failure diagnostics and suggested fixes</p>
+      <h1 class="page-title">{{ 'RCA_LIST.TITLE' | translate }}</h1>
+      <p class="page-subtitle">{{ 'RCA_LIST.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
@@ -13,19 +13,19 @@
   <div class="filter-bar">
     <div class="filter-left">
       <span class="section-label">
-        {{ showResolved ? 'All Issues' : 'Open Issues' }}
+        {{ (showResolved ? 'RCA_LIST.ALL_ISSUES' : 'RCA_LIST.OPEN_ISSUES') | translate }}
       </span>
       <span class="count-badge" *ngIf="!loading">{{ rcas.length }}</span>
     </div>
     <div class="filter-controls">
       <select class="filter-select" [(ngModel)]="filterType" (change)="onFilterChange()">
-        <option value="">All Types</option>
+        <option value="">{{ 'RCA_LIST.ALL_TYPES' | translate }}</option>
         <option value="l2vc">L2VC</option>
         <option value="voip">VoIP</option>
         <option value="internet">Internet</option>
       </select>
       <select class="filter-select" [(ngModel)]="filterCause" (change)="onFilterChange()">
-        <option value="">All Causes</option>
+        <option value="">{{ 'RCA_LIST.ALL_CAUSES' | translate }}</option>
         <option value="config_syntax">Config Syntax</option>
         <option value="connectivity">Connectivity</option>
         <option value="authentication">Authentication</option>
@@ -39,7 +39,7 @@
       </select>
       <label class="toggle-label">
         <input type="checkbox" [(ngModel)]="showResolved" (change)="onFilterChange()">
-        <span>Show Resolved</span>
+        <span>{{ 'RCA_LIST.SHOW_RESOLVED' | translate }}</span>
       </label>
     </div>
   </div>
@@ -95,9 +95,9 @@
 
       <!-- Actions -->
       <div class="rca-actions">
-        <button class="btn-ghost-sm" (click)="viewDetail(rca.task_id)">View Details</button>
+        <button class="btn-ghost-sm" (click)="viewDetail(rca.task_id)">{{ 'RCA_LIST.VIEW_DETAILS' | translate }}</button>
         <button class="btn-ghost-sm resolve" (click)="resolveRca(rca)" *ngIf="!rca.is_resolved">
-          Mark Resolved
+          {{ 'RCA_LIST.MARK_RESOLVED' | translate }}
         </button>
       </div>
 
@@ -106,7 +106,7 @@
     <!-- Empty -->
     <div class="empty-state" *ngIf="rcas.length === 0">
       <mat-icon class="empty-icon">check_circle</mat-icon>
-      <p>No {{ showResolved ? '' : 'open ' }}issues found.</p>
+      <p>{{ 'RCA_LIST.NO_ISSUES' | translate:{status: showResolved ? '' : ('RCA_LIST.OPEN' | translate)} }}</p>
     </div>
 
   </div>

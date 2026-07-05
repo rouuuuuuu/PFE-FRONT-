@@ -21,6 +21,8 @@ import {
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 import { CauseLabelPipe } from '../../pipes/cause-label.pipe';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-monitoring',
   standalone: true,
@@ -31,7 +33,8 @@ import { CauseLabelPipe } from '../../pipes/cause-label.pipe';
     MatProgressSpinnerModule,
     MatTooltipModule,
     TimeAgoPipe,
-    CauseLabelPipe
+    CauseLabelPipe,
+    TranslateModule
   ],
   templateUrl: './monitoring.component.html',
   styleUrls: ['./monitoring.component.css']

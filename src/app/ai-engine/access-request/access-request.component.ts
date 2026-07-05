@@ -7,11 +7,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { AiEngineService } from '../ai-engine.service';
 import { AccessRequest } from '../ai-engine.models';
 import { AuthService } from '../../services/auth.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-access-request',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatProgressSpinnerModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatProgressSpinnerModule, MatIconModule, TranslateModule],
   templateUrl: './access-request.component.html',
   styleUrl: './access-request.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,7 +29,8 @@ export class AccessRequestComponent implements OnInit {
     private aiService: AiEngineService,
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +77,7 @@ export class AccessRequestComponent implements OnInit {
       },
       error: (err) => {
         this.submitting = false;
-        this.error = err.error?.detail || 'Failed to submit request. Please try again.';
+        this.error = err.error?.detail || this.translate.instant('ACCESS_REQUEST.ERROR_SUBMIT');
         this.cdr.markForCheck();
       }
     });

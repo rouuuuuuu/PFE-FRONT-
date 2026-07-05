@@ -7,6 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AiEngineService } from '../ai-engine.service';
 import { ValidationResult, ValidatorStats, RootCauseAnalysis } from '../ai-engine.models';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-validator-dashboard',
@@ -16,7 +17,8 @@ import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
     MatProgressSpinnerModule,
     MatIconModule,
     MatTooltipModule,
-    TimeAgoPipe
+    TimeAgoPipe,
+    TranslateModule
   ],
   templateUrl: './validator-dashboard.component.html',
   styleUrl: './validator-dashboard.component.css',

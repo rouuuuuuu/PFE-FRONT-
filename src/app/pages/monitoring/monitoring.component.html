@@ -7,19 +7,19 @@
       <mat-icon>monitor_heart</mat-icon>
     </div>
     <div>
-      <h1 class="page-title">Network Monitoring</h1>
-      <p class="page-subtitle">Last updated: {{ lastUpdated || '—' }}</p>
+      <h1 class="page-title">{{ 'MONITORING.TITLE' | translate }}</h1>
+      <p class="page-subtitle">{{ 'MONITORING.LAST_UPDATED' | translate }} {{ lastUpdated || '—' }}</p>
     </div>
   </div>
   <div class="monitor-header-actions">
     <span class="live-badge">
-      <span class="live-dot"></span> LIVE
+      <span class="live-dot"></span> {{ 'MONITORING.LIVE' | translate }}
     </span>
     <button class="btn-ghost" (click)="forceRefreshNetwork()" *ngIf="authService.isAdmin()"
       [disabled]="refreshingNetwork" matTooltip="Force SSH re-poll of all routers">
       <mat-spinner *ngIf="refreshingNetwork" diameter="14"></mat-spinner>
       <mat-icon *ngIf="!refreshingNetwork">refresh</mat-icon>
-      <span>Refresh Network</span>
+      <span>{{ 'MONITORING.REFRESH_BTN' | translate }}</span>
     </button>
   </div>
 </div>
@@ -29,7 +29,7 @@
      ══════════════════════════════════════════════════════════════ -->
 <div class="monitor-loading" *ngIf="loading">
   <mat-spinner diameter="40"></mat-spinner>
-  <span>Loading monitoring data...</span>
+  <span>{{ 'MONITORING.LOADING' | translate }}</span>
 </div>
 
 <ng-container *ngIf="!loading">
@@ -41,17 +41,17 @@
     <div class="section-header">
       <span class="section-title">
         <mat-icon class="section-title-icon">lan</mat-icon>
-        Network Health
+        {{ 'MONITORING.NETWORK_HEALTH' | translate }}
       </span>
       <div class="section-stats">
-        <span class="stat-pill green">{{ network.reachable }} UP</span>
+        <span class="stat-pill green">{{ network.reachable }} {{ 'MONITORING.UP' | translate }}</span>
         <span class="stat-pill red" *ngIf="network.unreachable > 0">
-          {{ network.unreachable }} DOWN
+          {{ network.unreachable }} {{ 'MONITORING.DOWN' | translate }}
         </span>
         <span class="health-pct" [style.color]="network.health_pct >= 80 ? '#22c55e' : '#ef4444'">
-          {{ network.health_pct }}% healthy
+          {{ network.health_pct }}% {{ 'MONITORING.HEALTHY' | translate }}
         </span>
-        <span class="cache-note">cached · refreshes every 60s</span>
+        <span class="cache-note">{{ 'MONITORING.CACHE_NOTE' | translate }}</span>
       </div>
     </div>
 
@@ -79,7 +79,7 @@
         </div>
         <div class="router-ping router-ping-down" *ngIf="!router.reachable">
           <mat-icon class="ping-icon">signal_wifi_off</mat-icon>
-          Unreachable
+          {{ 'MONITORING.UNREACHABLE' | translate }}
         </div>
       </div>
     </div>
@@ -94,31 +94,31 @@
     <div class="monitor-card">
       <div class="card-title">
         <mat-icon class="card-title-icon">rocket_launch</mat-icon>
-        Provisioning Today
+        {{ 'MONITORING.PROVISIONING_TODAY' | translate }}
       </div>
 
       <div class="stats-row-4">
         <div class="mini-stat">
           <div class="mini-stat-value blue">{{ provisioning.today.total }}</div>
-          <div class="mini-stat-label">Total</div>
+          <div class="mini-stat-label">{{ 'MONITORING.TOTAL' | translate }}</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-value green">{{ provisioning.today.completed }}</div>
-          <div class="mini-stat-label">Completed</div>
+          <div class="mini-stat-label">{{ 'MONITORING.COMPLETED' | translate }}</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-value red">{{ provisioning.today.failed }}</div>
-          <div class="mini-stat-label">Failed</div>
+          <div class="mini-stat-label">{{ 'MONITORING.FAILED' | translate }}</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-value orange">{{ provisioning.today.running }}</div>
-          <div class="mini-stat-label">Running</div>
+          <div class="mini-stat-label">{{ 'MONITORING.RUNNING' | translate }}</div>
         </div>
       </div>
 
       <!-- Success rate bar -->
       <div class="rate-bar-label">
-        Success rate: <strong>{{ provisioning.today.success_rate }}%</strong>
+        {{ 'MONITORING.SUCCESS_RATE' | translate }} <strong>{{ provisioning.today.success_rate }}%</strong>
       </div>
       <div class="bar-track">
         <div class="bar-fill" [style.width.%]="provisioning.today.success_rate" [style.background]="provisioning.today.success_rate >= 80
@@ -128,7 +128,7 @@
       </div>
 
       <!-- 7-day sparkline -->
-      <div class="sparkline-label">Last 7 days</div>
+      <div class="sparkline-label">{{ 'MONITORING.LAST_7_DAYS' | translate }}</div>
       <div class="sparkline">
         <div class="spark-bar-group" *ngFor="let d of provisioning.daily_sparkline">
           <div class="spark-bar"
@@ -140,7 +140,7 @@
       </div>
 
       <div class="avg-exec">
-        Avg execution time: <span class="mono">{{ formatElapsed(provisioning.avg_exec_secs) }}</span>
+        {{ 'MONITORING.AVG_EXEC_TIME' | translate }} <span class="mono">{{ formatElapsed(provisioning.avg_exec_secs) }}</span>
       </div>
     </div>
 
@@ -148,7 +148,7 @@
     <div class="monitor-card">
       <div class="card-title">
         <mat-icon class="card-title-icon">pending_actions</mat-icon>
-        Live Tasks
+        {{ 'MONITORING.LIVE_TASKS' | translate }}
         <span class="count-badge orange" *ngIf="provisioning.today.running > 0">
           {{ provisioning.today.running }}
         </span>
@@ -170,11 +170,11 @@
       </div>
 
       <div class="empty-state" *ngIf="provisioning.running_tasks.length === 0">
-        <mat-icon>check_circle</mat-icon> No tasks running
+        <mat-icon>check_circle</mat-icon> {{ 'MONITORING.NO_TASKS_RUNNING' | translate }}
       </div>
 
       <div class="card-divider"></div>
-      <div class="card-subtitle">Recent</div>
+      <div class="card-subtitle">{{ 'MONITORING.RECENT' | translate }}</div>
 
       <!-- Recent done feed -->
       <div class="task-feed">
@@ -195,7 +195,7 @@
       </div>
 
       <div class="empty-state" *ngIf="provisioning.recent_done.length === 0">
-        <mat-icon>inbox</mat-icon> No recent tasks
+        <mat-icon>inbox</mat-icon> {{ 'MONITORING.NO_RECENT_TASKS' | translate }}
       </div>
     </div>
   </div>
@@ -209,43 +209,43 @@
     <div class="monitor-card">
       <div class="card-title">
         <mat-icon class="card-title-icon">psychology</mat-icon>
-        AI Engine Activity
+        {{ 'MONITORING.AI_ENGINE' | translate }}
       </div>
 
       <div class="stats-row-4">
         <div class="mini-stat">
           <div class="mini-stat-value blue">{{ ai.validations_today.total }}</div>
-          <div class="mini-stat-label">Validated</div>
+          <div class="mini-stat-label">{{ 'MONITORING.VALIDATED' | translate }}</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-value green">{{ ai.validations_today.safe }}</div>
-          <div class="mini-stat-label">Safe</div>
+          <div class="mini-stat-label">{{ 'MONITORING.SAFE' | translate }}</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-value yellow">{{ ai.validations_today.warning }}</div>
-          <div class="mini-stat-label">Warning</div>
+          <div class="mini-stat-label">{{ 'MONITORING.WARNING' | translate }}</div>
         </div>
         <div class="mini-stat">
           <div class="mini-stat-value red">{{ ai.validations_today.blocked }}</div>
-          <div class="mini-stat-label">Blocked</div>
+          <div class="mini-stat-label">{{ 'MONITORING.BLOCKED' | translate }}</div>
         </div>
       </div>
 
       <!-- Open RCAs alert -->
       <div class="rca-alert" *ngIf="ai.rca.open > 0">
         <mat-icon>troubleshoot</mat-icon>
-        <span>{{ ai.rca.open }} open RCA{{ ai.rca.open > 1 ? 's' : '' }} need attention</span>
-        <a class="rca-link">View →</a>
+        <span>{{ ai.rca.open }} {{ 'MONITORING.OPEN_RCAS' | translate }}</span>
+        <a class="rca-link">{{ 'MONITORING.VIEW' | translate }} →</a>
       </div>
 
       <!-- Top cause -->
       <div class="top-cause" *ngIf="ai.rca.top_cause">
-        Most common failure: <span class="cause-chip">{{ ai.rca.top_cause | causeLabel }}</span>
-        <span class="cause-count">({{ ai.rca.top_cause_count }}x this week)</span>
+        {{ 'MONITORING.TOP_CAUSE' | translate }} <span class="cause-chip">{{ ai.rca.top_cause | causeLabel }}</span>
+        <span class="cause-count">({{ ai.rca.top_cause_count }}{{ 'MONITORING.TIMES_THIS_WEEK' | translate }})</span>
       </div>
 
       <!-- Recent RCAs mini list -->
-      <div class="card-subtitle" style="margin-top:12px">Recent RCAs</div>
+      <div class="card-subtitle" style="margin-top:12px">{{ 'MONITORING.RECENT_RCAS' | translate }}</div>
       <div class="rca-mini-list">
         <div class="rca-mini-row" *ngFor="let rca of ai.rca.recent">
           <div class="rca-mini-dot" [style.background]="rca.is_resolved ? '#22c55e' : '#ef4444'">
@@ -256,7 +256,7 @@
           <span class="rca-time mono">{{ rca.created_at | timeAgo }}</span>
         </div>
         <div class="empty-state" *ngIf="ai.rca.recent.length === 0">
-          <mat-icon>check_circle</mat-icon> No recent RCAs
+          <mat-icon>check_circle</mat-icon> {{ 'MONITORING.NO_RECENT_RCAS' | translate }}
         </div>
       </div>
     </div>
@@ -265,32 +265,32 @@
     <div class="monitor-card">
       <div class="card-title">
         <mat-icon class="card-title-icon">cable</mat-icon>
-        Port Health
+        {{ 'MONITORING.PORT_HEALTH' | translate }}
       </div>
 
       <!-- Summary grid -->
       <div class="port-summary-grid">
         <div class="port-stat">
           <div class="port-stat-value green">{{ ports.summary.active }}</div>
-          <div class="port-stat-label">Active</div>
+          <div class="port-stat-label">{{ 'MONITORING.ACTIVE' | translate }}</div>
         </div>
         <div class="port-stat">
           <div class="port-stat-value muted">{{ ports.summary.inactive }}</div>
-          <div class="port-stat-label">Inactive</div>
+          <div class="port-stat-label">{{ 'MONITORING.INACTIVE' | translate }}</div>
         </div>
         <div class="port-stat">
           <div class="port-stat-value yellow">{{ ports.summary.pending }}</div>
-          <div class="port-stat-label">Pending</div>
+          <div class="port-stat-label">{{ 'MONITORING.PENDING' | translate }}</div>
         </div>
         <div class="port-stat">
           <div class="port-stat-value red">{{ ports.summary.stuck }}</div>
-          <div class="port-stat-label">Stuck ⚠</div>
+          <div class="port-stat-label">{{ 'MONITORING.STUCK' | translate }} ⚠</div>
         </div>
       </div>
 
       <!-- Active % bar -->
       <div class="rate-bar-label">
-        Active: <strong>{{ ports.summary.active_pct }}%</strong> of all ports
+        {{ 'MONITORING.ACTIVE' | translate }}: <strong>{{ ports.summary.active_pct }}%</strong> {{ 'MONITORING.OF_ALL_PORTS' | translate }}
       </div>
       <div class="bar-track">
         <div class="bar-fill green-fill" [style.width.%]="ports.summary.active_pct"></div>
@@ -299,17 +299,17 @@
       <!-- Stuck ports alert -->
       <div class="stuck-alert" *ngIf="ports.stuck_ports.length > 0">
         <div class="card-subtitle stuck-subtitle">
-          <mat-icon>warning</mat-icon> Stuck Ports (no active task)
+          <mat-icon>warning</mat-icon> {{ 'MONITORING.STUCK_PORTS' | translate }}
         </div>
         <div class="stuck-row" *ngFor="let p of ports.stuck_ports">
           <span class="mono stuck-port-name">{{ p.port_name }}</span>
           <span class="stuck-router">{{ p.router }}</span>
-          <span class="stuck-badge">pending</span>
+          <span class="stuck-badge">{{ 'MONITORING.PENDING' | translate }}</span>
         </div>
       </div>
 
       <!-- Vendor breakdown -->
-      <div class="card-subtitle" style="margin-top:12px">Routers by Vendor</div>
+      <div class="card-subtitle" style="margin-top:12px">{{ 'MONITORING.VENDORS' | translate }}</div>
       <div class="vendor-bar-list">
         <div class="vendor-bar-row" *ngFor="let v of ports.vendor_breakdown">
           <span class="vendor-name" [style.color]="getVendorColor(v.vendor)">

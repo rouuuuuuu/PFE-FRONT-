@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { AdminRequestsComponent } from '../../ai-engine/admin-requests/admin-requests.component';
 import { AccessRequestComponent } from '../../ai-engine/access-request/access-request.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RegisterComponent } from '../register/register.component';
@@ -48,7 +48,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     public authService: AuthService, 
     private fb: FormBuilder,
-    public prefService: PreferencesService
+    public prefService: PreferencesService,
+    private translate: TranslateService
   ) {
     this.editProfileForm = this.fb.group({
       first_name: [''],
@@ -80,10 +81,10 @@ export class ProfileComponent implements OnInit {
     this.authService.updateProfile(this.editProfileForm.value).subscribe({
       next: () => {
         this.isEditing = false;
-        this.profileMessage = 'Profile updated successfully!';
+        this.profileMessage = this.translate.instant('PROFILE.UPDATE_SUCCESS');
         setTimeout(() => this.profileMessage = '', 3000);
       },
-      error: () => this.profileMessage = 'Failed to update profile.'
+      error: () => this.profileMessage = this.translate.instant('PROFILE.UPDATE_ERROR')
     });
   }
 
@@ -92,11 +93,11 @@ export class ProfileComponent implements OnInit {
     this.authService.changePassword(this.passwordForm.value).subscribe({
       next: () => {
         this.isChangingPassword = false;
-        this.passwordMessage = 'Password changed successfully!';
+        this.passwordMessage = this.translate.instant('PROFILE.PASSWORD_SUCCESS');
         this.passwordForm.reset();
         setTimeout(() => this.passwordMessage = '', 3000);
       },
-      error: () => this.passwordMessage = 'Failed to change password.'
+      error: () => this.passwordMessage = this.translate.instant('PROFILE.PASSWORD_ERROR')
     });
   }
 }

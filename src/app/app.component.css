@@ -76,30 +76,48 @@
 .profile-trigger {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 30px;
-  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  gap: 10px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 5px 12px 5px 5px;
   cursor: pointer;
-  color: #fff;
-  transition: all 0.3s;
-  margin-right: 1rem;
+  color: var(--text-primary);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-right: 16px;
+  font-family: 'Outfit', sans-serif;
 }
 
 .profile-trigger:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--glass-hover);
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 1px var(--orange-glow);
+}
+
+.profile-trigger mat-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--text-muted);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.profile-trigger:hover mat-icon {
+  color: var(--primary-orange);
 }
 
 .avatar-small {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 500;
-  font-size: 0.85rem;
+  font-weight: 600;
+  font-size: 12px;
+  color: #fff;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
 .profile-summary {
@@ -110,27 +128,33 @@
 }
 
 .profile-summary .user-name {
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .profile-summary .user-role {
-  font-size: 0.7rem;
-  color: #a0a0a0;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.profile-dropdown-menu.mat-menu-panel {
-  background: #15181e !important;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+/* ── Alert dot (monitoring) ── */
+.alert-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-red);
+  margin-left: auto;
+  flex-shrink: 0;
+  animation: alert-pulse 2s ease-in-out infinite;
 }
 
-.profile-dropdown-menu .mat-mdc-menu-item {
-  color: #fff !important;
-}
-
-.profile-dropdown-menu .mat-mdc-menu-item:hover {
-  background: rgba(255, 255, 255, 0.05) !important;
+@keyframes alert-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.5); }
+  50%      { opacity: 0.7; box-shadow: 0 0 0 4px rgba(244, 67, 54, 0); }
 }
 
 

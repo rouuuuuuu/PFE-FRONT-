@@ -80,10 +80,10 @@ export class ProvisioningService {
 
   /**
    * Liberate (release) a completed Internet provisioning task.
-   * POST /api/provisioning/liberate/<taskId>/
+   * POST /api/provisioning/internet/liberate/<taskId>/
    */
   liberateInternetTask(taskId: number): Observable<any> {
-    return this.http.post<any>(`${BASE}/api/provisioning/liberate/${taskId}/`, {});
+    return this.http.post<any>(`${BASE}/api/provisioning/internet/liberate/${taskId}/`, {});
   }
 
   /**

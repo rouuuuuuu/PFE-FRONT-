@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AiEngineService } from '../ai-engine.service';
 import { RootCauseAnalysis } from '../ai-engine.models';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-rca-list',
@@ -16,7 +17,8 @@ import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
     FormsModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    TimeAgoPipe
+    TimeAgoPipe,
+    TranslateModule
   ],
   templateUrl: './rca-list.component.html',
   styleUrl: './rca-list.component.css',

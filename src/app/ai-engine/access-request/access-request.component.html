@@ -8,31 +8,30 @@
       <span class="access-lock-icon">🔒</span>
     </div>
 
-    <h1 class="access-title">AI Engine Access Required</h1>
+    <h1 class="access-title">{{ 'ACCESS_REQUEST.TITLE_REQUIRED' | translate }}</h1>
     <p class="access-subtitle">
-      This module contains Smart Provisioning Validator and Auto Root Cause Analysis.
-      Submit a request and an admin will review it.
+      {{ 'ACCESS_REQUEST.SUBTITLE_REQUIRED' | translate }}
     </p>
 
     <!-- Refusal notice -->
     <div class="refusal-box" *ngIf="accessStatus?.status === 'refused' && accessStatus?.admin_note">
-      <div class="refusal-label">Reason for refusal:</div>
+      <div class="refusal-label">{{ 'ACCESS_REQUEST.REASON_REFUSAL' | translate }}</div>
       <div class="refusal-note">{{ accessStatus?.admin_note }}</div>
     </div>
 
     <!-- Request form -->
     <div class="access-form">
-      <label class="form-label" for="reason-input">Why do you need access?</label>
+      <label class="form-label" for="reason-input">{{ 'ACCESS_REQUEST.LABEL_REASON' | translate }}</label>
       <textarea
         id="reason-input"
         class="form-textarea"
         [(ngModel)]="reason"
         (blur)="reasonTouched = true"
-        placeholder="Describe your use case for the AI Engine module..."
+        [placeholder]="'ACCESS_REQUEST.PH_REASON' | translate"
         rows="4"
       ></textarea>
       <div class="form-error" *ngIf="reasonTouched && !isReasonValid">
-        Please describe your use case (min 20 characters)
+        {{ 'ACCESS_REQUEST.ERROR_REASON' | translate }}
       </div>
 
       <div class="form-error" *ngIf="error">{{ error }}</div>
@@ -43,8 +42,8 @@
         [disabled]="submitting"
       >
         <mat-spinner *ngIf="submitting" diameter="18"></mat-spinner>
-        <span *ngIf="!submitting">Submit Access Request</span>
-        <span *ngIf="submitting">Submitting...</span>
+        <span *ngIf="!submitting">{{ 'ACCESS_REQUEST.BTN_SUBMIT' | translate }}</span>
+        <span *ngIf="submitting">{{ 'ACCESS_REQUEST.BTN_SUBMITTING' | translate }}</span>
       </button>
     </div>
   </div>
@@ -56,19 +55,19 @@
       <span class="access-clock-icon">⏳</span>
     </div>
 
-    <h1 class="access-title">Request Pending</h1>
+    <h1 class="access-title">{{ 'ACCESS_REQUEST.TITLE_PENDING' | translate }}</h1>
     <p class="access-subtitle">
-      Your access request has been submitted and is awaiting admin review.
+      {{ 'ACCESS_REQUEST.SUBTITLE_PENDING' | translate }}
     </p>
 
     <div class="pending-info">
       <div class="pending-row">
-        <span class="pending-label">Submitted on</span>
+        <span class="pending-label">{{ 'ACCESS_REQUEST.SUBMITTED_ON' | translate }}</span>
         <span class="pending-value">{{ accessStatus?.requested_at | date:'medium' }}</span>
       </div>
       <div class="pending-row pending-status">
         <span class="pulse-dot yellow"></span>
-        <span class="pending-awaiting">Awaiting review</span>
+        <span class="pending-awaiting">{{ 'ACCESS_REQUEST.AWAITING_REVIEW' | translate }}</span>
       </div>
     </div>
   </div>
@@ -79,7 +78,7 @@
   <div class="access-wrapper">
     <div class="access-card loading-card">
       <mat-spinner diameter="40"></mat-spinner>
-      <p class="loading-text">Checking access status...</p>
+      <p class="loading-text">{{ 'ACCESS_REQUEST.CHECKING_STATUS' | translate }}</p>
     </div>
   </div>
 </ng-template>

@@ -70,10 +70,10 @@
 
       <!-- Smart Tools side panel trigger -->
       <button class="quicknav-btn quicknav-menu-trigger" (click)="isAiPanelOpen = !isAiPanelOpen"
-        [matTooltip]="'Smart Tools' | translate" matTooltipPosition="below"
+        [matTooltip]="'NAV.SMART_TOOLS' | translate" matTooltipPosition="below"
         [class.quicknav-active]="isAiPanelOpen">
         <mat-icon>psychology</mat-icon>
-        <span class="quicknav-label">Smart Tools</span>
+        <span class="quicknav-label">{{ 'NAV.SMART_TOOLS' | translate }}</span>
       </button>
 
     </div>
@@ -92,15 +92,15 @@
       <mat-icon>expand_more</mat-icon>
     </button>
 
-    <mat-menu #profileMenu="matMenu" class="profile-dropdown-menu" xPosition="before">
+    <mat-menu #profileMenu="matMenu" xPosition="before">
       <a mat-menu-item routerLink="/profile">
         <mat-icon>person</mat-icon>
         <span>My Profile</span>
       </a>
       <mat-divider></mat-divider>
-      <button mat-menu-item (click)="authService.logout()">
-        <mat-icon color="warn">logout</mat-icon>
-        <span style="color: #f44336;">Logout</span>
+      <button mat-menu-item class="logout-menu-item" (click)="authService.logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
       </button>
     </mat-menu>
 
@@ -198,7 +198,7 @@
 
         <a class="nav-item" routerLink="/monitoring" routerLinkActive="nav-active">
           <mat-icon class="nav-icon">monitor_heart</mat-icon>
-          <span class="nav-label">Monitoring</span>
+          <span class="nav-label">{{ 'NAV.MONITORING' | translate }}</span>
           <span class="alert-dot" *ngIf="hasMonitoringAlerts"></span>
         </a>
       </nav>

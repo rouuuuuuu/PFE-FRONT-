@@ -654,6 +654,20 @@ textarea[matInput]::placeholder,
   background: rgba(255, 121, 0, 0.12) !important;
 }
 
+/* Logout menu item — red accent */
+.logout-menu-item,
+.logout-menu-item span {
+  color: #ef4444 !important;
+}
+
+.logout-menu-item .mat-icon {
+  color: #ef4444 !important;
+}
+
+.logout-menu-item:hover {
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+
 /* ── Mat-Dialog theme (CDK overlay lives outside component scope) ── */
 .mat-mdc-dialog-container .mdc-dialog__surface {
   background: var(--bg-elevated, #1a1a2e) !important;

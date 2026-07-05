@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -38,7 +38,8 @@ export class RegisterComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -58,12 +59,12 @@ export class RegisterComponent {
     this.authService.register(this.registerForm.value).subscribe({
       next: (res) => {
         this.loading = false;
-        this.successMessage = 'User created successfully!';
+        this.successMessage = this.translate.instant('REGISTER.SUCCESS');
         this.registerForm.reset({ role: 'user' });
       },
       error: (err) => {
         this.loading = false;
-        this.error = err.error?.error || err.error?.message || 'Registration failed. Please try again.';
+        this.error = err.error?.error || err.error?.message || this.translate.instant('REGISTER.ERROR');
       }
     });
   }
