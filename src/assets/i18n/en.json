@@ -728,6 +728,17 @@
     "DOWNLOAD_CONFIG": "Download Config",
     "RETRY": "Retry"
   },
+  "USER_LIST": {
+    "TITLE": "User List",
+    "COL_USERNAME": "Username",
+    "COL_EMAIL": "Email",
+    "COL_ROLE": "Role",
+    "COL_STATUS": "Active Status",
+    "COL_JOINED": "Date Joined",
+    "COL_AI": "AI Access",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive"
+  },
   "HARDWARE_DETAILS": {
     "BACK_TO_SUMMARY": "Back to Summary",
     "LOADING": "Loading...",

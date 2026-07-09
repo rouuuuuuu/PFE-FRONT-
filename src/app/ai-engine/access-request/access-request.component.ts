@@ -8,6 +8,7 @@ import { AiEngineService } from '../ai-engine.service';
 import { AccessRequest } from '../ai-engine.models';
 import { AuthService } from '../../services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-access-request',
@@ -30,7 +31,8 @@ export class AccessRequestComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,14 @@ export class AccessRequestComponent implements OnInit {
       next: (status) => {
         this.accessStatus = status;
         this.loading = false;
+        
+        // User is seeing their result — mark notifications as read
+        this.notificationService.markAllRead().subscribe(() => {
+          if (this.notificationService.fetchCount) {
+            this.notificationService.fetchCount();  // updates the red dot
+          }
+        });
+
         // If already approved or admin → just show the status
         if (status.status === 'approved' || this.authService.isAdmin()) {
           this.cdr.markForCheck();

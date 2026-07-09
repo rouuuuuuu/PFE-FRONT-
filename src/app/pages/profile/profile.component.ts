@@ -15,7 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { PreferencesService } from '../../services/preferences.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { NotificationsListComponent } from './notifications-list/notifications-list.component';
+import { NotificationService } from '../../services/notification.service';
+import { HttpClient } from '@angular/common/http';
 
 // Custom validator for matching passwords
 export function passwordsMatchValidator(group: FormGroup) {
@@ -34,7 +35,6 @@ export function passwordsMatchValidator(group: FormGroup) {
     AccessRequestComponent,
     RegisterComponent,
     UserManagementComponent,
-    NotificationsListComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -61,7 +61,9 @@ export class ProfileComponent implements OnInit {
     private fb: FormBuilder,
     public prefService: PreferencesService,
     private translate: TranslateService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public notificationService: NotificationService,
+    private http: HttpClient
   ) {
     this.editProfileForm = this.fb.group({
       first_name: [''],
@@ -88,6 +90,14 @@ export class ProfileComponent implements OnInit {
         this.authService.loadCurrentUser().subscribe();
       }
     });
+
+    // Auto mark notifications as read when profile opens
+    this.http.post('http://127.0.0.1:8000/api/auth/notifications/mark-read/', {})
+      .subscribe(() => {
+        if (this.notificationService.fetchCount) {
+          this.notificationService.fetchCount();
+        }
+      });
   }
 
   updateProfile() {

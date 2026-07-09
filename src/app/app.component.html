@@ -81,17 +81,33 @@
     <div class="toolbar-spacer"></div>
 
     <!-- Profile Menu -->
-    <button class="profile-trigger" [matMenuTriggerFor]="profileMenu" *ngIf="authService.currentUser$ | async as user">
-      <div class="notification-dot" *ngIf="(notificationService.unreadCount$ | async)! > 0"></div>
-      <div class="avatar-small" [style.background-color]="authService.getAvatarColor(user.username)">
-        {{ authService.getInitials(user) }}
-      </div>
-      <div class="profile-summary">
-        <span class="user-name">{{ user.display_name || user.username }}</span>
-        <span class="user-role">{{ user.role }}</span>
-      </div>
-      <mat-icon>expand_more</mat-icon>
-    </button>
+    <div style="position: relative; display: inline-block;">
+      <button class="profile-trigger" [matMenuTriggerFor]="profileMenu" *ngIf="authService.currentUser$ | async as user">
+        <div class="avatar-small" [style.background-color]="authService.getAvatarColor(user.username)">
+          {{ authService.getInitials(user) }}
+        </div>
+        <div class="profile-summary">
+          <span class="user-name">{{ user.display_name || user.username }}</span>
+          <span class="user-role">{{ user.role }}</span>
+        </div>
+        <mat-icon>expand_more</mat-icon>
+      </button>
+      <span
+        *ngIf="(notifCount$ | async)! > 0"
+        style="
+          position: absolute;
+          top: 4px;
+          left: 4px;
+          width: 8px;
+          height: 8px;
+          background: #E53935;
+          border-radius: 50%;
+          border: 1.5px solid #1a1a1a;
+          pointer-events: none;
+          z-index: 10;
+        ">
+      </span>
+    </div>
 
     <mat-menu #profileMenu="matMenu" xPosition="before">
       <a mat-menu-item routerLink="/profile">

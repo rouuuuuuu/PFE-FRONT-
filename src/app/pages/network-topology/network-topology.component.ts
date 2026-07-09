@@ -40,13 +40,13 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule, TranslateModule],
   templateUrl: './network-topology.component.html',
-  styleUrl:    './network-topology.component.css'
+  styleUrl: './network-topology.component.css'
 })
 export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('svgContainer') svgRef!: ElementRef<SVGElement>;
 
-  loading  = true;
-  error    = '';
+  loading = true;
+  error = '';
   nodes: TopoNode[] = [];
   links: TopoLink[] = [];
 
@@ -56,9 +56,9 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   searchQuery: string = '';
   filteredSearchNodes: TopoNode[] = [];
 
-  totalNodes    = 0;
-  totalLinks    = 0;
-  activeAlarms  = 0;
+  totalNodes = 0;
+  totalLinks = 0;
+  activeAlarms = 0;
   criticalAlarms = 0;
 
   // Routing Analysis
@@ -75,12 +75,12 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   private nodeEl: any = null;  // D3 selection of node <g> groups
 
   readonly ALARM_COLORS: Record<string, string> = {
-    normal:   '#4caf50',
-    warning:  '#ffc107',
-    minor:    '#ff9800',
-    major:    '#f44336',
+    normal: '#4caf50',
+    warning: '#ffc107',
+    minor: '#ff9800',
+    major: '#f44336',
     critical: '#ff1744',
-    none:     '#555'
+    none: '#555'
   };
 
   readonly ALARM_SEVERITY: Record<string, number> = {
@@ -92,9 +92,9 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
     private zone: NgZone,
     private monitoringService: MonitoringService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
-  ngOnInit()  { this.loadData(); }
+  ngOnInit() { this.loadData(); }
 
   ngAfterViewInit() {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -119,11 +119,11 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
 
     forkJoin({
       routers: this.api.getRouters(),
-      links:   this.api.getBackhaulLinks()
+      links: this.api.getBackhaulLinks()
     }).subscribe({
       next: ({ routers, links }) => {
         const routerList: any[] = Array.isArray(routers) ? routers : (routers.results || []);
-        const linkList:   any[] = Array.isArray(links)   ? links   : (links.results   || []);
+        const linkList: any[] = Array.isArray(links) ? links : (links.results || []);
 
         const nodeMap = new Map<string, TopoNode>();
         routerList.forEach((r: any) => {
@@ -138,8 +138,8 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
 
         const topoLinks: TopoLink[] = [];
         linkList.forEach((l: any) => {
-          const src  = l.source_ne;
-          const tgt  = l.sink_ne;
+          const src = l.source_ne;
+          const tgt = l.sink_ne;
           const alrm = (l.alarm_severity || 'normal').toLowerCase();
 
           if (!nodeMap.has(src)) nodeMap.set(src, { id: src, name: src, ip: '', vendor: '', alarm: 'none', type: 'router' });
@@ -156,9 +156,9 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
         this.nodes = Array.from(nodeMap.values());
         this.links = topoLinks;
 
-        this.totalNodes     = this.nodes.length;
-        this.totalLinks     = this.links.length;
-        this.activeAlarms   = this.nodes.filter(n => n.alarm !== 'none' && n.alarm !== 'normal').length;
+        this.totalNodes = this.nodes.length;
+        this.totalLinks = this.links.length;
+        this.activeAlarms = this.nodes.filter(n => n.alarm !== 'none' && n.alarm !== 'normal').length;
         this.criticalAlarms = this.nodes.filter(n => n.alarm === 'critical' || n.alarm === 'major').length;
 
         this.loading = false;
@@ -181,14 +181,14 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
     const d3 = await import('d3');
 
     const container = this.svgRef.nativeElement.parentElement!;
-    const W = container.clientWidth  || 900;
+    const W = container.clientWidth || 900;
     const H = container.clientHeight || 600;
 
     d3.select(this.svgRef.nativeElement).selectAll('*').remove();
     this.simulation?.stop();
 
     const svg = d3.select(this.svgRef.nativeElement)
-      .attr('width',  W)
+      .attr('width', W)
       .attr('height', H);
 
     // Arrow markers
@@ -292,8 +292,8 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
             if (!event.active) this.simulation.alphaTarget(0.3).restart();
             d.fx = d.x; d.fy = d.y;
           })
-          .on('drag',  (event, d) => { d.fx = event.x; d.fy = event.y; })
-          .on('end',   (event, d) => {
+          .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y; })
+          .on('end', (event, d) => {
             if (!event.active) this.simulation.alphaTarget(0);
             d.fx = null; d.fy = null;
           })
@@ -338,9 +338,9 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
 
     // Force simulation
     this.simulation = d3.forceSimulation(nodes)
-      .force('link',      d3.forceLink(links).id((d: any) => d.id).distance(120).strength(0.6))
-      .force('charge',    d3.forceManyBody().strength(-350))
-      .force('center',    d3.forceCenter(W / 2, H / 2))
+      .force('link', d3.forceLink(links).id((d: any) => d.id).distance(120).strength(0.6))
+      .force('charge', d3.forceManyBody().strength(-350))
+      .force('center', d3.forceCenter(W / 2, H / 2))
       .force('collision', d3.forceCollide(28))
       .on('tick', () => {
         linkEl
@@ -363,7 +363,7 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   alarmColor(alarm: string) { return this.ALARM_COLORS[alarm] || '#555'; }
-  closePanel() { 
+  closePanel() {
     this.selectedNode = null;
     if (this.nodeEl) {
       this.nodeEl.classed('search-highlight', false);
@@ -377,8 +377,8 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
       return;
     }
     this.filteredSearchNodes = this.nodes.filter(n =>
-      n.id.toLowerCase().includes(q) || 
-      n.name.toLowerCase().includes(q) || 
+      n.id.toLowerCase().includes(q) ||
+      n.name.toLowerCase().includes(q) ||
       (n.ip && n.ip.includes(q))
     ).slice(0, 10);
   }
@@ -395,9 +395,9 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
     }
     const q = this.searchQuery.toLowerCase().trim();
     // Find matching node by id, name, or ip
-    const found = this.nodes.find(n => 
-      n.id.toLowerCase().includes(q) || 
-      n.name.toLowerCase().includes(q) || 
+    const found = this.nodes.find(n =>
+      n.id.toLowerCase().includes(q) ||
+      n.name.toLowerCase().includes(q) ||
       (n.ip && n.ip.includes(q))
     );
 
@@ -408,7 +408,7 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
         (typeof l.source === 'string' ? l.source : (l.source as TopoNode).id) === found.id ||
         (typeof l.target === 'string' ? l.target : (l.target as TopoNode).id) === found.id
       );
-      
+
       // Highlight the node in D3
       if (this.nodeEl) {
         this.nodeEl.classed('search-highlight', false);
@@ -421,17 +421,17 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
           const container = this.svgRef.nativeElement.parentElement!;
           const W = container.clientWidth || 900;
           const H = container.clientHeight || 600;
-          
+
           const svg = d3.select(this.svgRef.nativeElement);
           const zoomBehavior = d3.zoom<SVGElement, unknown>();
-          
+
           // Center the node
           const scale = 1.5;
           const x = W / 2 - found.x! * scale;
           const y = H / 2 - found.y! * scale;
-          
+
           svg.transition().duration(750).call(
-            zoomBehavior.transform as any, 
+            zoomBehavior.transform as any,
             d3.zoomIdentity.translate(x, y).scale(scale)
           );
         });
@@ -491,8 +491,8 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
     return (peer as TopoNode).id ?? '?';
   }
 
-  get statsNodes()    { return this.totalNodes;    }
-  get statsLinks()    { return this.totalLinks;     }
-  get statsAlarms()   { return this.activeAlarms;   }
+  get statsNodes() { return this.totalNodes; }
+  get statsLinks() { return this.totalLinks; }
+  get statsAlarms() { return this.activeAlarms; }
   get statsCritical() { return this.criticalAlarms; }
 }

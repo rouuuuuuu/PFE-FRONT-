@@ -15,7 +15,7 @@ const API_URL = 'http://127.0.0.1:8000/api';
 @Injectable({ providedIn: 'root' })
 export class MonitoringService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /** Full summary — used for initial load */
   getSummary(): Observable<MonitoringSummary> {

@@ -61,6 +61,15 @@ export class NotificationService {
     }
   }
 
+  fetchCount(): void {
+    if (!this.authService.isLoggedIn()) return;
+    this.http.get<UnreadCountResponse>(`${this.baseUrl}/unread-count/`).pipe(
+      catchError(() => [{ unread_count: 0 }])
+    ).subscribe((res: any) => {
+      this.unreadCount$.next(res.unread_count || 0);
+    });
+  }
+
   getNotifications(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/`);
   }

@@ -37,7 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class UserManagementComponent implements OnInit {
   dataSource: MatTableDataSource<CurrentUser> = new MatTableDataSource();
-  displayedColumns: string[] = ['username', 'email', 'role', 'status', 'dateJoined', 'aiAccess', 'actions'];
+  displayedColumns: string[] = ['username', 'email', 'role', 'status', 'dateJoined', 'aiAccess'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -57,14 +57,7 @@ export class UserManagementComponent implements OnInit {
   loadUsers() {
     this.authService.getUsers().subscribe({
       next: (response: any) => {
-        let usersData = [];
-        if (response && Array.isArray(response.results)) {
-          usersData = response.results;
-        } else if (Array.isArray(response)) {
-          usersData = response;
-        } else {
-          this.snackBar.open('Unexpected data format received', 'Close', { duration: 3000 });
-        }
+        const usersData = response?.results ? response.results : response;
         this.dataSource.data = usersData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

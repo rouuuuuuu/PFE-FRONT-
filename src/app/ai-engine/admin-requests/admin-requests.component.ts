@@ -7,6 +7,7 @@ import { AiEngineService } from '../ai-engine.service';
 import { AccessRequest } from '../ai-engine.models';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-admin-requests',
@@ -42,7 +43,8 @@ export class AdminRequestsComponent implements OnInit {
   constructor(
     private aiService: AiEngineService,
     private cdr: ChangeDetectorRef,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -55,8 +57,8 @@ export class AdminRequestsComponent implements OnInit {
     this.reviewingId = null;
 
     this.aiService.getAccessRequests(this.activeTab).subscribe({
-      next: (list) => {
-        this.requests = list;
+      next: (list: any) => {
+        this.requests = list?.results ? list.results : list;
         this.loading = false;
         this.cdr.markForCheck();
       },
@@ -112,6 +114,9 @@ export class AdminRequestsComponent implements OnInit {
           this.requests = this.requests.filter(r => r.id !== id);
           this.removingIds.delete(id);
           this.cdr.markForCheck();
+          if (this.notificationService.fetchCount) {
+            this.notificationService.fetchCount();
+          }
         }, 350);
       },
       error: () => {

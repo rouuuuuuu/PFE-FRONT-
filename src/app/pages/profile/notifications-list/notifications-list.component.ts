@@ -35,9 +35,16 @@ export class NotificationsListComponent implements OnInit {
   loadNotifications(): void {
     this.loading = true;
     this.notificationService.getNotifications().subscribe({
-      next: (data) => {
-        this.notifications = data;
+      next: (data: any) => {
+        this.notifications = data?.results ? data.results : data;
         this.loading = false;
+
+        // Auto mark all as read since user is now viewing them
+        this.notificationService.markAllRead().subscribe(() => {
+          if (this.notificationService.fetchCount) {
+            this.notificationService.fetchCount();  // updates the red dot immediately
+          }
+        });
       },
       error: (err) => {
         console.error('Error loading notifications', err);
@@ -58,17 +65,17 @@ export class NotificationsListComponent implements OnInit {
           this.notificationService.unreadCount$.next(currentCount - 1);
         }
       },
-      error: (err) => console.error('Failed to mark as read', err)
+      error: (err: any) => console.error('Failed to mark as read', err)
     });
   }
 
   markAllRead(): void {
     this.notificationService.markAllRead().subscribe({
       next: () => {
-        this.notifications.forEach(n => n.is_read = true);
+        this.loadNotifications();
         this.notificationService.unreadCount$.next(0);
       },
-      error: (err) => console.error('Failed to mark all as read', err)
+      error: (err: any) => console.error('Failed to mark all as read', err)
     });
   }
 }

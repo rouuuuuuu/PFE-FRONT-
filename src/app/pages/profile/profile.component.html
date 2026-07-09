@@ -36,9 +36,6 @@
         <button class="nav-item" [class.active]="activeTab === 'preferences'" (click)="activeTab = 'preferences'">
           <mat-icon>settings</mat-icon> {{ 'PROFILE.PREFERENCES' | translate }}
         </button>
-        <button class="nav-item" [class.active]="activeTab === 'notifications'" (click)="activeTab = 'notifications'">
-          <mat-icon>notifications</mat-icon> Notifications
-        </button>
       </nav>
     </mat-card>
 
@@ -172,7 +169,7 @@
           <div style="margin-top: 32px;"></div>
           <div class="section-label">
             <mat-icon class="section-icon">people</mat-icon>
-            User List
+            {{ 'USER_LIST.TITLE' | translate }}
           </div>
           <app-user-management></app-user-management>
         </mat-card>
@@ -197,17 +194,6 @@
             {{ 'PROFILE.AI_ENGINE_ACCESS_STATUS' | translate }}
           </div>
           <app-access-request></app-access-request>
-        </mat-card>
-      </div>
-
-      <!-- ── Notifications Tab ── -->
-      <div *ngIf="activeTab === 'notifications'" class="tab-pane fade-in">
-        <mat-card class="content-card">
-          <div class="section-label">
-            <mat-icon class="section-icon">notifications</mat-icon>
-            Notifications
-          </div>
-          <app-notifications-list></app-notifications-list>
         </mat-card>
       </div>
 
