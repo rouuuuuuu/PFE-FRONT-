@@ -15,7 +15,7 @@ import { PortReservationComponent } from './pages/port-reservation/port-reservat
 import { NetworkTopologyComponent } from './pages/network-topology/network-topology.component';
 import { InternetProvisioningComponent } from './pages/internet-provisioning/internet-provisioning.component';
 import { VoipProvisioningComponent } from './pages/voip-provisioning/voip-provisioning.component';
-import { L2vcProvisioningComponent } from './pages/l2vc-provisioning/l2vc-provisioning.component';
+import { MplsProvisioningComponent } from './pages/mpls-provisioning/mpls-provisioning.component';
 import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component'; // Page AI Network Assistant
 import { ReportListComponent } from './pages/report-list/report-list.component'; // Page mta3 les rapports PDF mensuels (Monthly PDF reports page)
 import { LoginComponent } from './pages/login/login.component';
@@ -56,7 +56,7 @@ export const routes: Routes = [
       { path: 'port-reservation', component: PortReservationComponent }, // Nouveau cheman lel reservation des ports
       { path: 'internet-service', component: InternetProvisioningComponent }, // Internet service provisioning wizard
       { path: 'voip-service', component: VoipProvisioningComponent }, // VoIP service provisioning wizard
-      { path: 'l2vc-service', component: L2vcProvisioningComponent } // L2VC service provisioning wizard
+      { path: 'mpls-service', component: MplsProvisioningComponent } // MPLS service provisioning wizard
     ]
   }
 ];

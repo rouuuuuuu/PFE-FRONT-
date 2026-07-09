@@ -1,0 +1,95 @@
+.user-management-container {
+  padding: 0;
+  background: transparent;
+}
+
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.role-badge.admin-badge {
+  background: var(--primary-orange);
+  color: white;
+}
+
+.ai-status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.status-approved { background: var(--status-green-bg); color: var(--status-green); border: 1px solid var(--status-green); }
+.status-rejected { background: var(--status-red-bg); color: var(--status-red); border: 1px solid var(--status-red); }
+.status-pending { background: var(--status-yellow-bg); color: var(--status-yellow); border: 1px solid var(--status-yellow); }
+.status-none { background: var(--bg-elevated); color: var(--text-muted); border: 1px solid var(--glass-border); }
+
+.inactive-row {
+  opacity: 0.5;
+}
+
+/* Action Buttons styling */
+.action-btn {
+  transition: all 0.2s ease;
+}
+.action-btn.edit-btn mat-icon {
+  color: var(--primary-orange);
+}
+.action-btn.edit-btn:hover {
+  background: var(--orange-glow);
+}
+.action-btn.menu-btn mat-icon {
+  color: var(--text-secondary);
+}
+.action-btn.menu-btn:hover {
+  color: var(--text-primary);
+}
+/* Custom Pagination styles matching other pages */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px 0 4px 0;
+  border-top: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  background: var(--primary-orange);
+  color: white;
+  border: none;
+  padding: 8px 22px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.page-btn:hover {
+  background: var(--secondary-orange);
+  box-shadow: var(--shadow-orange);
+}
+
+.page-btn:disabled {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.page-info {
+  color: var(--text-secondary);
+  font-size: 13px;
+  white-space: nowrap;
+}

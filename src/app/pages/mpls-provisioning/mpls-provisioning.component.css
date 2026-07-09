@@ -1,7 +1,6 @@
 /* ============================================================
-   SERVICE NIVEAU 3 L2VC MANUEL — L2VC Provisioning Form
+   MPLS PROVISIONING — Configuration Form
    NOC dark-mode industrial aesthetic
-   (Mirrors voip-provisioning styles exactly)
    ============================================================ */
 
 /* ── Page Header ── */
@@ -94,26 +93,82 @@
 
 .form-field { width: 100%; }
 
-/* ── Field + action button pair ── */
-.field-with-btn {
+/* ── Monospace for IP inputs ── */
+.mono-input {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace !important;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.mono-input::placeholder {
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+/* ── LAN Clients dynamic rows ── */
+.lan-clients-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.lan-row {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  flex-wrap: wrap;
+  animation: fadeSlideIn 0.25s ease;
 }
 
-.field-with-btn .form-field {
+.lan-field {
   flex: 1;
-  min-width: 200px;
+  min-width: 240px;
 }
 
-/* ── Action Buttons (SYNC_RT, SYNC_SW, IGNORE_SW) ── */
+.lan-add-btn {
+  background: rgba(76,175,80,0.12);
+  color: var(--status-green, #66bb6a);
+  border: 1.5px solid rgba(76,175,80,0.35);
+  width: 48px;
+  height: 56px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lan-add-btn:hover {
+  background: rgba(76,175,80,0.22);
+  border-color: var(--status-green, #66bb6a);
+  box-shadow: 0 0 12px rgba(76,175,80,0.2);
+}
+
+.lan-remove-btn {
+  background: rgba(244,67,54,0.1);
+  color: #ef5350;
+  border: 1.5px solid rgba(244,67,54,0.3);
+  width: 48px;
+  height: 56px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lan-remove-btn:hover {
+  background: rgba(244,67,54,0.2);
+  border-color: #ef5350;
+  box-shadow: 0 0 12px rgba(244,67,54,0.15);
+}
+
+/* ── Action Buttons base ── */
 .action-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0 16px;
-  height: 56px;           /* matches mat-form-field outline height */
   border-radius: var(--radius-sm, 8px);
   border: none;
   font-family: 'Outfit', sans-serif;
@@ -132,120 +187,33 @@
   height: 18px;
 }
 
-.sync-btn {
-  background: rgba(255,94,0,0.12);
-  color: var(--primary-orange);
-  border: 1.5px solid rgba(255,94,0,0.35);
-}
-
-.sync-btn:hover:not(:disabled) {
-  background: rgba(255,94,0,0.22);
-  border-color: var(--primary-orange);
-  box-shadow: 0 0 12px rgba(255,94,0,0.2);
-}
-
-.sync-btn:disabled {
-  background: rgba(255,255,255,0.04);
-  color: var(--text-muted);
-  border-color: #333;
-  cursor: not-allowed;
-}
-
-.ignore-btn {
-  background: rgba(244,67,54,0.1);
-  color: #ef5350;
-  border: 1.5px solid rgba(244,67,54,0.3);
-}
-
-.ignore-btn:hover {
-  background: rgba(244,67,54,0.2);
-  border-color: #ef5350;
-  box-shadow: 0 0 12px rgba(244,67,54,0.15);
-}
-
-/* ── Option typography ── */
-.opt-name  { font-weight: 600; color: var(--text-primary); }
-.opt-ip    { color: var(--text-secondary); font-size: 12px; }
-.opt-desc  { color: var(--text-muted); font-size: 11px; }
-
-.vendor-badge {
-  display: inline-block;
-  margin-left: 10px;
-  padding: 1px 7px;
-  border-radius: 10px;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-.vendor-huawei  { background: rgba(255,57,57,0.12);  color: #ff5c5c; border: 1px solid rgba(255,57,57,0.25); }
-.vendor-juniper { background: rgba(76,175,80,0.12);  color: var(--status-green); border: 1px solid rgba(76,175,80,0.25); }
-
-/* Interface option row layout */
-.iface-opt-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+/* ── VRF option styling ── */
+.vrf-option-text {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 12px;
-  width: 100%;
-}
-
-.iface-opt-bullet {
-  color: var(--primary-orange);
-  font-size: 10px;
-  flex-shrink: 0;
-}
-
-.iface-opt-name {
-  font-weight: 600;
-  color: var(--text-primary);
-  min-width: 110px;
-  flex-shrink: 0;
-}
-
-.iface-opt-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 1px 8px;
-  border-radius: 10px;
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 600;
   letter-spacing: 0.3px;
-  flex-shrink: 0;
 }
 
-.badge-up {
-  background: rgba(76, 175, 80, 0.15);
-  color: #81c784;
-  border: 1px solid rgba(76, 175, 80, 0.3);
+/* ── Management IP conditional field ── */
+.mgmt-field {
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.badge-down {
-  background: rgba(239, 83, 80, 0.14);
-  color: #ef9a9a;
-  border: 1px solid rgba(239, 83, 80, 0.28);
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 120px;
+  }
 }
 
-.iface-opt-desc {
-  color: var(--text-muted);
-  font-size: 11px;
-  font-style: italic;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.hint-green   { color: var(--status-green) !important; font-weight: 600; }
-.hint-ignored { color: #ef9a9a !important; font-weight: 600; }
-
-.bw-suffix { color: var(--text-muted); font-size: 13px; padding-right: 4px; }
-
-/* spinning icon on router field */
-.spin-icon { animation: spin 0.8s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* Submit row */
+/* ── Submit row ── */
 .submit-row {
   display: flex;
   justify-content: flex-end;
@@ -293,6 +261,10 @@
   display: inline-block;
   flex-shrink: 0;
 }
+
+/* spinning icon */
+.spin-icon { animation: spin 0.8s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 /* ══════════════════════════════════════════════════════════
    RESULT PANEL — Status / Script Output / Liberate
@@ -579,7 +551,7 @@
 .td-bold { font-weight: 600; color: var(--text-primary); }
 .td-secondary { color: var(--text-secondary); }
 .small { font-size: 11px; }
-.mono  { font-family: 'Courier New', monospace; }
+.mono  { font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace; font-size: 12px; }
 
 .td-id {
   font-weight: 700;
@@ -597,16 +569,6 @@
 
 .table-row { transition: background 0.18s ease; }
 .table-row:hover { background: rgba(255,255,255,0.03); }
-
-.device-cell { display: flex; align-items: center; gap: 8px; }
-
-.cell-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  color: var(--primary-orange);
-  opacity: 0.7;
-}
 
 /* Status badges */
 .status-badge {
@@ -669,6 +631,40 @@
   white-space: nowrap;
 }
 
+/* Download config button */
+.dl-btn {
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 4px 12px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.dl-btn:hover {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  background: rgba(255, 94, 0, 0.08);
+}
+
+.dl-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.dl-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+}
+
 /* Snackbar overrides */
 ::ng-deep .success-snackbar {
   background: var(--status-green) !important;
@@ -689,46 +685,10 @@
   font-weight: 600;
 }
 
-/* SWAN Ticket cell */
-.td-ticket {
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
-  color: var(--primary-orange);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-/* Download config button */
-.dl-btn {
-  background: transparent;
-  border: 1px solid #3a3a3a;
-  color: var(--text-muted);
-  border-radius: 6px;
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.18s ease;
-}
-
-.dl-btn:hover {
-  border-color: var(--primary-orange);
-  color: var(--primary-orange);
-  background: rgba(255, 94, 0, 0.08);
-}
-
-.dl-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-}
-
 /* Responsive */
-
 @media (max-width: 640px) {
   .form-grid     { grid-template-columns: 1fr; }
-  .field-with-btn { flex-direction: column; }
-  .action-btn    { width: 100%; justify-content: center; }
+  .lan-row       { flex-direction: column; }
+  .lan-add-btn,
+  .lan-remove-btn { width: 100%; justify-content: center; height: 40px; }
 }

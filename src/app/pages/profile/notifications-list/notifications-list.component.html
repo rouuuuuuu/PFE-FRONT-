@@ -1,0 +1,33 @@
+<div class="notifications-container">
+  <div class="notifications-header">
+    <h3>Notifications</h3>
+    <button mat-button color="primary" (click)="markAllRead()">Mark all as read</button>
+  </div>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && notifications.length === 0" class="empty-state">
+    <mat-icon>notifications_off</mat-icon>
+    <p>No notifications found.</p>
+  </div>
+
+  <div class="notification-list" *ngIf="!loading && notifications.length > 0">
+    <mat-card *ngFor="let notif of notifications" class="notification-card" [class.unread]="!notif.is_read">
+      <div class="notif-content">
+        <p class="notif-message">{{ notif.message }}</p>
+        <span class="notif-time">{{ notif.created_at | date:'short' }}</span>
+      </div>
+      <div class="notif-actions">
+        <button mat-icon-button color="primary" *ngIf="!notif.is_read" (click)="markAsRead(notif)" matTooltip="Mark as read">
+          <mat-icon>check_circle_outline</mat-icon>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>

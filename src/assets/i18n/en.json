@@ -19,7 +19,7 @@
     "NEW_PASSWORD": "New Password",
     "UPDATE_PASSWORD": "Update Password",
     "THEME": "Theme",
-    "DARK_THEME": "Dark (Glass)",
+    "DARK_THEME": "Dark",
     "LIGHT_THEME": "Light",
     "ACCENT_COLOR": "Accent Color",
     "LANGUAGE": "Language",
@@ -69,7 +69,7 @@
     "PORT_RESERVATION": "Port Reservation",
     "INTERNET_SERVICE": "Internet Service",
     "VOIP_SERVICE": "VoIP Service",
-    "L2VC_SERVICE": "L2VC Service",
+    "MPLS_SERVICE": "MPLS Service",
     "AI_ASSISTANT": "Iris - AI Assistant",
     "REPORTS": "Reports",
     "SMART_TOOLS": "Smart Tools",
@@ -389,6 +389,81 @@
     "TOAST_PROV_FAILED": "Provisioning failed.",
     "TOAST_PORT_ERROR": "Port resolution error: {{msg}}"
   },
+  "MPLS_PROV": {
+    "TITLE": "MPLS Configuration",
+    "SUBTITLE": "Configure MPLS VRF provisioning for B2B clients.",
+    "SECTIONS": {
+      "CLIENT_IDENTIFICATION": "Client Identification",
+      "LAN_CLIENT": "LAN Client",
+      "VRF_CONFIG": "VRF Configuration"
+    },
+    "LABELS": {
+      "CLIENT_NAME": "Client Name",
+      "IP_SIM": "IP SIM",
+      "LAN_CLIENT": "LAN Client",
+      "VRF_CLIENT": "VRF Client",
+      "MANAGEMENT_IP": "Management IP"
+    },
+    "HINTS": {
+      "IP_SIM": "Destination LAN client IP identifier",
+      "MGMT_IP": "Required for management VRF profiles"
+    },
+    "PLACEHOLDERS": {
+      "CLIENT_NAME": "e.g. ACME Corporation",
+      "IP_SIM": "e.g. 10.0.0.1",
+      "LAN_CLIENT": "e.g. 192.168.1.0/24",
+      "MGMT_IP": "e.g. 172.16.0.1",
+      "SEARCH": "Search by client or VRF..."
+    },
+    "ERRORS": {
+      "CLIENT_NAME": "Client name is required",
+      "IP_SIM": "IP SIM is required",
+      "LAN_CLIENT": "LAN address is required",
+      "VRF_CLIENT": "VRF profile is required",
+      "MGMT_IP": "Management IP is required for this VRF"
+    },
+    "BUTTONS": {
+      "EXECUTE": "Execute Task",
+      "ADD_LAN": "Add another LAN",
+      "REMOVE_LAN": "Remove this LAN"
+    },
+    "RESULT": {
+      "TASK": "Task",
+      "MESSAGE": "Result Message",
+      "OUTPUT": "Generated Config / Output",
+      "COPY": "Copy config",
+      "COPIED": "Copied",
+      "LIBERATE": "Liberate resource",
+      "LIBERATING": "Liberating...",
+      "POLLING": "Polling task status (every 3s)...",
+      "DISMISS": "Dismiss"
+    },
+    "HISTORY": {
+      "TITLE": "MPLS Task History",
+      "TABS": {
+        "ALL": "All",
+        "COMPLETED": "Completed",
+        "IN_PROGRESS": "In Progress",
+        "PENDING": "Pending",
+        "FAILED": "Failed"
+      },
+      "LOADING": "Loading history...",
+      "EMPTY": "No MPLS tasks found.",
+      "COLUMNS": {
+        "TASK_ID": "Task ID",
+        "CLIENT_NAME": "Client Name",
+        "VRF_CLIENT": "VRF Client",
+        "STATUS": "Status",
+        "EXECUTION": "Execution Timestamp",
+        "ACTIONS": "Actions"
+      },
+      "DOWNLOAD": "Download",
+      "CONFIG": "Config",
+      "PREV": "‹ Previous",
+      "NEXT": "Next ›",
+      "PAGE": "Page {{page}} of {{total}}"
+    }
+  },
   "VOIP_PROV": {
     "TITLE": "VoIP Service Provisioning",
     "SUBTITLE": "VoIP B2B Provisioning — Huawei & Juniper"
@@ -405,8 +480,8 @@
       "internet_provisioning_DESC": "Configure internet service including VRF, physical interfaces, and sub-interfaces.",
       "voip_provisioning_TITLE": "VoIP Provisioning",
       "voip_provisioning_DESC": "Configure VoIP service with gateway IP, VLAN, and physical interface provisioning.",
-      "l2vc_provisioning_TITLE": "L2VC Provisioning",
-      "l2vc_provisioning_DESC": "Configure L2VC service linking two PE routers with VLAN and physical interface parameters."
+      "mpls_provisioning_TITLE": "MPLS Provisioning",
+      "mpls_provisioning_DESC": "Configure MPLS VPN service with VRF, route distinguisher, and PE-CE routing parameters."
     }
   },
   "PROV_TASK": {
@@ -593,7 +668,7 @@
     "REASON_REFUSAL": "Reason for refusal:",
     "LABEL_REASON": "Why do you need access?",
     "PH_REASON": "Describe your use case for the AI Engine module...",
-    "ERROR_REASON": "Please describe your use case (min 20 characters)",
+    "ERROR_REASON": "Please describe your use case (min 10 characters)",
     "BTN_SUBMIT": "Submit Access Request",
     "BTN_SUBMITTING": "Submitting...",
     "TITLE_PENDING": "Request Pending",

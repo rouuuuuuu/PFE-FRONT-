@@ -36,6 +36,9 @@
         <button class="nav-item" [class.active]="activeTab === 'preferences'" (click)="activeTab = 'preferences'">
           <mat-icon>settings</mat-icon> {{ 'PROFILE.PREFERENCES' | translate }}
         </button>
+        <button class="nav-item" [class.active]="activeTab === 'notifications'" (click)="activeTab = 'notifications'">
+          <mat-icon>notifications</mat-icon> Notifications
+        </button>
       </nav>
     </mat-card>
 
@@ -95,9 +98,6 @@
             </button>
           </div>
 
-          <div *ngIf="profileMessage" class="success-msg fade-in">{{ profileMessage }}</div>
-          <div *ngIf="passwordMessage" class="success-msg fade-in">{{ passwordMessage }}</div>
-
           <!-- Edit Profile Form -->
           <div *ngIf="isEditing" class="edit-form fade-in">
             <div class="section-label">
@@ -136,13 +136,19 @@
             <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="form-grid">
               <mat-form-field appearance="outline" class="form-field" floatLabel="always">
                 <mat-label>{{ 'PROFILE.CURRENT_PASSWORD' | translate }}</mat-label>
-                <input matInput type="password" formControlName="old_password">
+                <input matInput type="password" formControlName="current_password">
                 <mat-icon matSuffix>vpn_key</mat-icon>
               </mat-form-field>
               <mat-form-field appearance="outline" class="form-field" floatLabel="always">
                 <mat-label>{{ 'PROFILE.NEW_PASSWORD' | translate }}</mat-label>
                 <input matInput type="password" formControlName="new_password">
                 <mat-icon matSuffix>lock</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+                <mat-label>Confirm Password</mat-label>
+                <input matInput type="password" formControlName="confirm_password">
+                <mat-icon matSuffix>lock</mat-icon>
+                <mat-error *ngIf="passwordForm.hasError('mismatch')">Passwords do not match.</mat-error>
               </mat-form-field>
               <div class="submit-row">
                 <button class="submit-btn" type="submit" [disabled]="passwordForm.invalid">
@@ -163,6 +169,12 @@
             {{ 'PROFILE.USER_MANAGEMENT' | translate }}
           </div>
           <app-register></app-register>
+          <div style="margin-top: 32px;"></div>
+          <div class="section-label">
+            <mat-icon class="section-icon">people</mat-icon>
+            User List
+          </div>
+          <app-user-management></app-user-management>
         </mat-card>
       </div>
 
@@ -185,6 +197,17 @@
             {{ 'PROFILE.AI_ENGINE_ACCESS_STATUS' | translate }}
           </div>
           <app-access-request></app-access-request>
+        </mat-card>
+      </div>
+
+      <!-- ── Notifications Tab ── -->
+      <div *ngIf="activeTab === 'notifications'" class="tab-pane fade-in">
+        <mat-card class="content-card">
+          <div class="section-label">
+            <mat-icon class="section-icon">notifications</mat-icon>
+            Notifications
+          </div>
+          <app-notifications-list></app-notifications-list>
         </mat-card>
       </div>
 

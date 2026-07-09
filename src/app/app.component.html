@@ -63,8 +63,8 @@
         <a mat-menu-item routerLink="/provisioning/voip-service">
           <mat-icon>phone_in_talk</mat-icon> {{ 'NAV.VOIP_SERVICE' | translate }}
         </a>
-        <a mat-menu-item routerLink="/provisioning/l2vc-service">
-          <mat-icon>compare_arrows</mat-icon> {{ 'NAV.L2VC_SERVICE' | translate }}
+        <a mat-menu-item routerLink="/provisioning/mpls-service">
+          <mat-icon>hub</mat-icon> {{ 'NAV.MPLS_SERVICE' | translate }}
         </a>
       </mat-menu>
 
@@ -82,6 +82,7 @@
 
     <!-- Profile Menu -->
     <button class="profile-trigger" [matMenuTriggerFor]="profileMenu" *ngIf="authService.currentUser$ | async as user">
+      <div class="notification-dot" *ngIf="(notificationService.unreadCount$ | async)! > 0"></div>
       <div class="avatar-small" [style.background-color]="authService.getAvatarColor(user.username)">
         {{ authService.getInitials(user) }}
       </div>
@@ -188,9 +189,9 @@
             <mat-icon class="nav-icon">phone_in_talk</mat-icon>
             <span class="nav-label">{{ 'NAV.VOIP_SERVICE' | translate }}</span>
           </a>
-          <a class="nav-item nav-sub-item" routerLink="/provisioning/l2vc-service" routerLinkActive="nav-active">
-            <mat-icon class="nav-icon">compare_arrows</mat-icon>
-            <span class="nav-label">{{ 'NAV.L2VC_SERVICE' | translate }}</span>
+          <a class="nav-item nav-sub-item" routerLink="/provisioning/mpls-service" routerLinkActive="nav-active">
+            <mat-icon class="nav-icon">hub</mat-icon>
+            <span class="nav-label">{{ 'NAV.MPLS_SERVICE' | translate }}</span>
           </a>
         </div>
 

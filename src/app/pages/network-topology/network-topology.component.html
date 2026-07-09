@@ -30,6 +30,32 @@
       </button>
     </div>
 
+    <!-- ── Route Analysis ── -->
+    <div class="topo-route-analysis">
+      <div class="route-input">
+        <input type="text" [(ngModel)]="sourceNode" (ngModelChange)="onSourceSearchChange()"
+               [matAutocomplete]="sourceAuto" [placeholder]="'Source Node'">
+        <mat-autocomplete #sourceAuto="matAutocomplete">
+          <mat-option *ngFor="let node of filteredSourceNodes" [value]="node.id">{{ node.name }}</mat-option>
+        </mat-autocomplete>
+      </div>
+      <mat-icon class="route-arrow">arrow_right_alt</mat-icon>
+      <div class="route-input">
+        <input type="text" [(ngModel)]="destNode" (ngModelChange)="onDestSearchChange()"
+               [matAutocomplete]="destAuto" [placeholder]="'Destination Node'">
+        <mat-autocomplete #destAuto="matAutocomplete">
+          <mat-option *ngFor="let node of filteredDestNodes" [value]="node.id">{{ node.name }}</mat-option>
+        </mat-autocomplete>
+      </div>
+      <button class="analyze-btn" [disabled]="analyzingRoute" (click)="analyzeRoute()">
+        <mat-spinner *ngIf="analyzingRoute" diameter="16"></mat-spinner>
+        <span *ngIf="!analyzingRoute">Analyze Route</span>
+      </button>
+      <button class="clear-route-btn" *ngIf="isisPathResponse" (click)="clearRouteAnalysis()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
     <!-- Stat pills -->
     <div class="stat-pills" *ngIf="!loading">
       <div class="stat-pill">
@@ -150,6 +176,31 @@
             <mat-icon>open_in_new</mat-icon>
             {{ 'TOPOLOGY.VIEW_DETAILS' | translate }}
           </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Path Details Bottom Panel ──────────────────────────────────── -->
+    <div class="bottom-panel" [class.bottom-panel-open]="isisPathResponse !== null">
+      <div class="bottom-panel-inner" *ngIf="isisPathResponse">
+        <div class="bottom-panel-header">
+          <mat-icon style="color:var(--primary-orange)">route</mat-icon>
+          <h2>IS-IS Shortest Path Result</h2>
+          <button class="panel-close" (click)="clearRouteAnalysis()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        
+        <div class="path-stats-row">
+          <div class="path-stat-card">
+            <span class="path-stat-label">Total Cost</span>
+            <span class="path-stat-value">{{ isisPathResponse.total_cost }}</span>
+          </div>
+          <div class="path-stat-card">
+            <span class="path-stat-label">Total Hops</span>
+            <span class="path-stat-value">{{ isisPathResponse.distance_hops }}</span>
+          </div>
         </div>
 
       </div>

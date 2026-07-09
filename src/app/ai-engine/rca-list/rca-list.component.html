@@ -20,7 +20,6 @@
     <div class="filter-controls">
       <select class="filter-select" [(ngModel)]="filterType" (change)="onFilterChange()">
         <option value="">{{ 'RCA_LIST.ALL_TYPES' | translate }}</option>
-        <option value="l2vc">L2VC</option>
         <option value="voip">VoIP</option>
         <option value="internet">Internet</option>
       </select>
@@ -67,8 +66,8 @@
         <div class="rca-info-top">
           <span class="rca-task-id mono">#{{ rca.task_id }}</span>
           <span class="type-badge"
-            [style.background]="rca.task_type === 'l2vc' ? '#3b82f618' : rca.task_type === 'voip' ? '#a855f718' : '#14b8a618'"
-            [style.color]="rca.task_type === 'l2vc' ? '#3b82f6' : rca.task_type === 'voip' ? '#a855f7' : '#14b8a6'">
+            [style.background]="rca.task_type === 'voip' ? '#a855f718' : '#14b8a618'"
+            [style.color]="rca.task_type === 'voip' ? '#a855f7' : '#14b8a6'">
             {{ rca.task_type | uppercase }}
           </span>
           <span class="rca-router">{{ rca.router_hostname }}</span>

@@ -385,3 +385,163 @@
   r: 22 !important;
   transition: all 0.3s ease;
 }
+
+/* ── Route Analysis Controls ── */
+.topo-route-analysis {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 20px;
+}
+
+.route-input {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: 160px;
+}
+.route-input input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  outline: none;
+}
+.route-arrow {
+  color: var(--text-muted);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+.analyze-btn {
+  background: var(--primary-orange);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  transition: background 0.3s;
+}
+.analyze-btn:hover {
+  background: var(--secondary-orange);
+}
+.analyze-btn:disabled {
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+.clear-route-btn {
+  background: transparent;
+  border: none;
+  color: #f44336;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+.clear-route-btn mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+/* ── Path Highlight & Glow ── */
+:host ::ng-deep .path-active {
+  stroke: #00e5ff !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: 6;
+  animation: march 1s linear infinite;
+}
+
+@keyframes march {
+  to { stroke-dashoffset: -12; }
+}
+
+:host ::ng-deep .neon-glow circle:first-child {
+  stroke: #00e5ff !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.8));
+  r: 22 !important;
+}
+
+:host ::ng-deep .link-badge rect {
+  fill: #0d1b2a;
+  stroke: #00e5ff;
+}
+:host ::ng-deep .link-badge text {
+  fill: #00e5ff;
+}
+
+/* ── Bottom Panel (Path Details) ── */
+.bottom-panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 40%;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--glass-border);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-panel-open {
+  transform: translateY(0);
+}
+
+.bottom-panel-inner {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.bottom-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bottom-panel-header h2 {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.path-stats-row {
+  display: flex;
+  gap: 16px;
+}
+.path-stat-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+}
+.path-stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.path-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-orange);
+  font-family: 'Outfit', sans-serif;
+}

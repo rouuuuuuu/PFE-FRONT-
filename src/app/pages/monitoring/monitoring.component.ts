@@ -127,8 +127,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
   getTaskTypeColor(type: string): string {
     const m: Record<string, string> = {
       internet: '#3b82f6',
-      voip: '#a855f7',
-      l2vc: '#06b6d4'
+      voip: '#a855f7'
     };
     return m[type] ?? '#94a3b8';
   }

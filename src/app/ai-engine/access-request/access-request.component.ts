@@ -61,7 +61,7 @@ export class AccessRequestComponent implements OnInit {
   }
 
   get isReasonValid(): boolean {
-    return this.reason.trim().length >= 20;
+    return this.reason.trim().length >= 10;
   }
 
   submitRequest(): void {

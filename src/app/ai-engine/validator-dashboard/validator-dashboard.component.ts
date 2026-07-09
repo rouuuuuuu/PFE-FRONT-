@@ -127,11 +127,11 @@ export class ValidatorDashboardComponent implements OnInit {
   }
 
   getTypeColor(type: string): string {
-    return ({ l2vc: '#3b82f6', voip: '#a855f7', internet: '#14b8a6' } as Record<string, string>)[type] ?? '#94a3b8';
+    return ({ voip: '#a855f7', internet: '#14b8a6' } as Record<string, string>)[type] ?? '#94a3b8';
   }
 
   getTypeBg(type: string): string {
-    return ({ l2vc: '#3b82f618', voip: '#a855f718', internet: '#14b8a618' } as Record<string, string>)[type] ?? '#94a3b818';
+    return ({ voip: '#a855f718', internet: '#14b8a618' } as Record<string, string>)[type] ?? '#94a3b818';
   }
 
   /** SVG arc dashoffset: 235 = full arc */

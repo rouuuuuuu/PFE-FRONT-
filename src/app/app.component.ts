@@ -14,6 +14,7 @@ import { AiPanelComponent } from './pages/ai-panel/ai-panel.component';
 import { AuthService } from './services/auth.service';
 import { AiEngineService } from './ai-engine/ai-engine.service';
 import { PreferencesService } from './services/preferences.service';
+import { NotificationService } from './services/notification.service';
 
 @Component({ // Hedhi décorateur y9oul l'Angular elli l'class hedhi rahi composant (This marks the class as an Angular Component)
   selector: 'app-root', // L'esem mta3 balise HTML bech n3aytou lel composant hedha (The HTML tag for this component)
@@ -45,7 +46,8 @@ export class AppComponent implements OnInit, OnDestroy { // Définition mta3 l'c
     @Inject(PLATFORM_ID) private platformId: Object,
     public authService: AuthService,
     private aiEngineService: AiEngineService,
-    public prefService: PreferencesService
+    public prefService: PreferencesService,
+    public notificationService: NotificationService
   ) { // Constructeur bech n'injectiwo el PLATFORM_ID (Constructor with Dependency Injection)
     this.isBrowser = isPlatformBrowser(this.platformId); // Nvériwiw si l'app texecuti fil browser, bech l'localStorage tekhdem (Avoid SSR errors with localStorage)
   }
@@ -97,4 +99,5 @@ export class AppComponent implements OnInit, OnDestroy { // Définition mta3 l'c
       localStorage.setItem('noc-sidenav', this.sidenavOpen ? 'open' : 'closed');
     }
   }
+
 } // Wfet l'class (End of component class)

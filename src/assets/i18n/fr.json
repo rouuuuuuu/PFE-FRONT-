@@ -19,7 +19,7 @@
     "NEW_PASSWORD": "Nouveau mot de passe",
     "UPDATE_PASSWORD": "Mettre à jour",
     "THEME": "Thème",
-    "DARK_THEME": "Sombre (Verre)",
+    "DARK_THEME": "Sombre",
     "LIGHT_THEME": "Clair",
     "ACCENT_COLOR": "Couleur d'accentuation",
     "LANGUAGE": "Langue",
@@ -69,7 +69,7 @@
     "PORT_RESERVATION": "Réservation de Port",
     "INTERNET_SERVICE": "Service Internet",
     "VOIP_SERVICE": "Service VoIP",
-    "L2VC_SERVICE": "Service L2VC",
+    "MPLS_SERVICE": "Service MPLS",
     "AI_ASSISTANT": "Iris - Assistant IA",
     "REPORTS": "Rapports",
     "SMART_TOOLS": "Outils Intelligents",
@@ -384,6 +384,81 @@
     "TOAST_PROV_FAILED": "Échec du provisionnement.",
     "TOAST_PORT_ERROR": "Erreur de résolution du port : {{msg}}"
   },
+  "MPLS_PROV": {
+    "TITLE": "Configuration MPLS",
+    "SUBTITLE": "Configurez le provisionnement VRF MPLS pour les clients B2B.",
+    "SECTIONS": {
+      "CLIENT_IDENTIFICATION": "Identification du Client",
+      "LAN_CLIENT": "Client LAN",
+      "VRF_CONFIG": "Configuration VRF"
+    },
+    "LABELS": {
+      "CLIENT_NAME": "Nom du Client",
+      "IP_SIM": "IP SIM",
+      "LAN_CLIENT": "Client LAN",
+      "VRF_CLIENT": "Client VRF",
+      "MANAGEMENT_IP": "IP de Gestion"
+    },
+    "HINTS": {
+      "IP_SIM": "Identifiant IP LAN de destination du client",
+      "MGMT_IP": "Requis pour les profils VRF de gestion"
+    },
+    "PLACEHOLDERS": {
+      "CLIENT_NAME": "ex. ACME Corporation",
+      "IP_SIM": "ex. 10.0.0.1",
+      "LAN_CLIENT": "ex. 192.168.1.0/24",
+      "MGMT_IP": "ex. 172.16.0.1",
+      "SEARCH": "Rechercher par client ou VRF..."
+    },
+    "ERRORS": {
+      "CLIENT_NAME": "Le nom du client est requis",
+      "IP_SIM": "L'IP SIM est requise",
+      "LAN_CLIENT": "L'adresse LAN est requise",
+      "VRF_CLIENT": "Le profil VRF est requis",
+      "MGMT_IP": "L'IP de gestion est requise pour ce VRF"
+    },
+    "BUTTONS": {
+      "EXECUTE": "Exécuter la tâche",
+      "ADD_LAN": "Ajouter un autre LAN",
+      "REMOVE_LAN": "Supprimer ce LAN"
+    },
+    "RESULT": {
+      "TASK": "Tâche",
+      "MESSAGE": "Message de résultat",
+      "OUTPUT": "Configuration générée / Sortie",
+      "COPY": "Copier la config",
+      "COPIED": "Copié",
+      "LIBERATE": "Libérer la ressource",
+      "LIBERATING": "Libération...",
+      "POLLING": "Vérification de l'état de la tâche (toutes les 3s)...",
+      "DISMISS": "Fermer"
+    },
+    "HISTORY": {
+      "TITLE": "Historique des tâches MPLS",
+      "TABS": {
+        "ALL": "Tous",
+        "COMPLETED": "Terminées",
+        "IN_PROGRESS": "En cours",
+        "PENDING": "En attente",
+        "FAILED": "Échouées"
+      },
+      "LOADING": "Chargement de l'historique...",
+      "EMPTY": "Aucune tâche MPLS trouvée.",
+      "COLUMNS": {
+        "TASK_ID": "ID Tâche",
+        "CLIENT_NAME": "Nom du Client",
+        "VRF_CLIENT": "Client VRF",
+        "STATUS": "Statut",
+        "EXECUTION": "Horodatage d'exécution",
+        "ACTIONS": "Actions"
+      },
+      "DOWNLOAD": "Télécharger",
+      "CONFIG": "Config",
+      "PREV": "‹ Précédent",
+      "NEXT": "Suivant ›",
+      "PAGE": "Page {{page}} sur {{total}}"
+    }
+  },
   "VOIP_PROV": {
     "TITLE": "Fourniture de Service VoIP",
     "SUBTITLE": "Provisionnement VoIP B2B — Huawei & Juniper"
@@ -400,8 +475,8 @@
       "internet_provisioning_DESC": "Configurer le service Internet incluant VRF, interfaces physiques et sous-interfaces.",
       "voip_provisioning_TITLE": "Service VoIP",
       "voip_provisioning_DESC": "Configurer le service VoIP avec passerelle IP, VLAN et interfaces physiques.",
-      "l2vc_provisioning_TITLE": "Service L2VC",
-      "l2vc_provisioning_DESC": "Configurer le service L2VC reliant deux routeurs PE avec les paramètres VLAN et les interfaces physiques."
+      "mpls_provisioning_TITLE": "Service MPLS",
+      "mpls_provisioning_DESC": "Configurer le service MPLS VPN avec VRF, route distinguisher et paramètres de routage PE-CE."
     }
   },
   "PROV_TASK": {
@@ -588,7 +663,7 @@
     "REASON_REFUSAL": "Raison du refus :",
     "LABEL_REASON": "Pourquoi avez-vous besoin d'un accès ?",
     "PH_REASON": "Décrivez votre cas d'utilisation pour le module Moteur IA...",
-    "ERROR_REASON": "Veuillez décrire votre cas d'utilisation (min 20 caractères)",
+    "ERROR_REASON": "Veuillez décrire votre cas d'utilisation (min 10 caractères)",
     "BTN_SUBMIT": "Soumettre la Demande d'Accès",
     "BTN_SUBMITTING": "Soumission...",
     "TITLE_PENDING": "Demande en Attente",

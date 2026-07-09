@@ -462,7 +462,7 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
           task_id: 0,
           task_type: 'voip',
           router_hostname: this.form.get('router_name')!.value,
-          vendor: this.routers.find(r => r.id === routerId)?.vendor || 'huawei',
+          vendor: (this.routers.find(r => r.id === routerId)?.vendor || 'huawei').toLowerCase(),
           task_data: payload
         };
 

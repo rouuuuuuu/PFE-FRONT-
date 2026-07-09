@@ -45,11 +45,11 @@ export class ProvisioningDashboardComponent { // classe mté3 l'component parsin
       route: '/provisioning/voip-service'
     },
     {
-      id: 'l2vc_provisioning',
-      title: 'L2VC Provisioning',
-      desc: 'Configure L2VC service linking two PE routers with VLAN and physical interface parameters.',
-      icon: 'compare_arrows',
-      route: '/provisioning/l2vc-service'
+      id: 'mpls_provisioning',
+      title: 'MPLS Provisioning',
+      desc: 'Configure MPLS VPN service with VRF, route distinguisher, and PE-CE routing parameters.',
+      icon: 'hub',
+      route: '/provisioning/mpls-service'
     }
   ];
 

@@ -11,6 +11,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ApiService } from '../../services/api.service';
 import { forkJoin } from 'rxjs';
 import type * as D3 from 'd3';
+import { MonitoringService } from '../../services/monitoring.service';
+import { IsisPathResponse } from '../monitoring/monitoring.models';
 
 interface TopoNode {
   id: string;
@@ -59,6 +61,14 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   activeAlarms  = 0;
   criticalAlarms = 0;
 
+  // Routing Analysis
+  sourceNode: string = '';
+  destNode: string = '';
+  filteredSourceNodes: TopoNode[] = [];
+  filteredDestNodes: TopoNode[] = [];
+  analyzingRoute = false;
+  isisPathResponse: IsisPathResponse | null = null;
+
   private simulation: any;
   private refreshTimer: any;
   private ro: ResizeObserver | null = null;
@@ -80,6 +90,7 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   constructor(
     private api: ApiService,
     private zone: NgZone,
+    private monitoringService: MonitoringService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -226,6 +237,51 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
       .attr('stroke-opacity', 0.7)
       .attr('marker-end', (d: any) => `url(#arrow-${d.alarm})`);
 
+    if (this.isisPathResponse && this.isisPathResponse.route.length > 0) {
+      const pathSet = new Set(this.isisPathResponse.path_details.map(p => `${p.from}->${p.to}`));
+      const pathSetRev = new Set(this.isisPathResponse.path_details.map(p => `${p.to}->${p.from}`));
+      linkEl.classed('path-active', (d: any) => pathSet.has(`${d.source.id}->${d.target.id}`) || pathSetRev.has(`${d.source.id}->${d.target.id}`));
+    }
+
+    // Link labels (badges)
+    let linkBadgeEl: any = null;
+    if (this.isisPathResponse && this.isisPathResponse.path_details && this.isisPathResponse.path_details.length > 0) {
+      const activeLinks = links.filter((d: any) => {
+        const id1 = `${d.source.id}->${d.target.id}`;
+        const id2 = `${d.target.id}->${d.source.id}`;
+        return this.isisPathResponse!.path_details.some(p => (`${p.from}->${p.to}` === id1) || (`${p.from}->${p.to}` === id2));
+      });
+
+      linkBadgeEl = g.append('g').selectAll('g')
+        .data(activeLinks).join('g')
+        .attr('class', 'link-badge');
+
+      linkBadgeEl.append('rect')
+        .attr('fill', '#0d1b2a')
+        .attr('stroke', '#00e5ff')
+        .attr('stroke-width', 1.5)
+        .attr('rx', 4)
+        .attr('ry', 4)
+        .attr('width', 80)
+        .attr('height', 22)
+        .attr('x', -40)
+        .attr('y', -11);
+
+      linkBadgeEl.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dy', 4)
+        .attr('fill', '#00e5ff')
+        .attr('font-size', '10px')
+        .attr('font-family', 'Outfit, sans-serif')
+        .attr('font-weight', '700')
+        .text((d: any) => {
+          const id1 = `${d.source.id}->${d.target.id}`;
+          const id2 = `${d.target.id}->${d.source.id}`;
+          const pd = this.isisPathResponse!.path_details.find(p => (`${p.from}->${p.to}` === id1) || (`${p.from}->${p.to}` === id2));
+          return pd ? `C: ${pd.cost} | ${pd.capacity}` : '';
+        });
+    }
+
     // Node groups
     const nodeEl = g.append('g').selectAll<SVGGElement, TopoNode>('g')
       .data(nodes).join('g')
@@ -254,6 +310,11 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
         nodeEl.classed('search-highlight', false);
         d3.select(_.currentTarget).classed('search-highlight', true);
       });
+
+    if (this.isisPathResponse && this.isisPathResponse.route.length > 0) {
+      const routeSet = new Set(this.isisPathResponse.route);
+      nodeEl.classed('neon-glow', (d: TopoNode) => routeSet.has(d.id));
+    }
 
     // Glow ring
     nodeEl.append('circle').attr('r', 18).attr('fill', 'none')
@@ -286,6 +347,14 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
           .attr('x1', (d: any) => d.source.x).attr('y1', (d: any) => d.source.y)
           .attr('x2', (d: any) => d.target.x).attr('y2', (d: any) => d.target.y);
         nodeEl.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
+
+        if (linkBadgeEl) {
+          linkBadgeEl.attr('transform', (d: any) => {
+            const x = (d.source.x + d.target.x) / 2;
+            const y = (d.source.y + d.target.y) / 2;
+            return `translate(${x},${y})`;
+          });
+        }
       });
 
     // Store reference for search highlight
@@ -368,6 +437,52 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
         });
       }
     }
+  }
+
+  onSourceSearchChange() {
+    const q = this.sourceNode.toLowerCase().trim();
+    if (!q) { this.filteredSourceNodes = []; return; }
+    this.filteredSourceNodes = this.nodes.filter(n =>
+      n.id.toLowerCase().includes(q) || n.name.toLowerCase().includes(q)
+    ).slice(0, 10);
+  }
+
+  onDestSearchChange() {
+    const q = this.destNode.toLowerCase().trim();
+    if (!q) { this.filteredDestNodes = []; return; }
+    this.filteredDestNodes = this.nodes.filter(n =>
+      n.id.toLowerCase().includes(q) || n.name.toLowerCase().includes(q)
+    ).slice(0, 10);
+  }
+
+  analyzeRoute() {
+    if (!this.sourceNode || !this.destNode) return;
+    this.analyzingRoute = true;
+    this.isisPathResponse = null;
+
+    this.monitoringService.getShortestPath(this.sourceNode, this.destNode).subscribe({
+      next: (res) => {
+        this.analyzingRoute = false;
+        if (res && res.status === 'success') {
+          this.isisPathResponse = res;
+        } else {
+          this.isisPathResponse = null;
+        }
+        this.zone.run(() => this.renderGraph());
+      },
+      error: () => {
+        this.analyzingRoute = false;
+        this.isisPathResponse = null;
+        this.zone.run(() => this.renderGraph());
+      }
+    });
+  }
+
+  clearRouteAnalysis() {
+    this.sourceNode = '';
+    this.destNode = '';
+    this.isisPathResponse = null;
+    this.zone.run(() => this.renderGraph());
   }
 
   getLinkPeer(peer: string | TopoNode | null | undefined): string {

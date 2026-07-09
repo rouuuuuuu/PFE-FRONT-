@@ -74,6 +74,7 @@
 
 /* ── Profile Menu ── */
 .profile-trigger {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -104,6 +105,18 @@
 
 .profile-trigger:hover mat-icon {
   color: var(--primary-orange);
+}
+
+.notification-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: #E53935;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  z-index: 10;
 }
 
 .avatar-small {

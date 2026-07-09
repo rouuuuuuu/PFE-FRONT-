@@ -89,3 +89,18 @@ export interface MonitoringSummary {
   ports: PortStats;
   generated_at: string;
 }
+
+export interface PathHop {
+  from: string;
+  to: string;
+  cost: number;
+  capacity: string;
+}
+
+export interface IsisPathResponse {
+  status: string;
+  route: string[];
+  path_details: PathHop[];
+  total_cost: number;
+  distance_hops: number;
+}

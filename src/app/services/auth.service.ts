@@ -42,7 +42,7 @@ export class AuthService {
 
   /** GET /api/auth/me/extended/ */
   loadCurrentUser(): Observable<CurrentUser> {
-    return this.http.get<CurrentUser>(`${this.baseUrl}/me/extended/`).pipe(
+    return this.http.get<CurrentUser>(`http://127.0.0.1:8000/api/auth/me/extended/`).pipe(
       tap(user => this.currentUser$.next(user))
     );
   }
@@ -59,9 +59,19 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/change-password/`, payload);
   }
 
+  /** PATCH /api/auth/users/<id>/change-password/ */
+  forceResetPassword(id: number, new_password: string): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/users/${id}/change-password/`, { new_password });
+  }
+
   /** GET /api/auth/users/ */
   getUsers(params?: any): Observable<CurrentUser[]> {
     return this.http.get<CurrentUser[]>(`${this.baseUrl}/users/`, { params });
+  }
+
+  /** PATCH /api/auth/users/<id>/change-password/ */
+  updateUserCredentials(id: number, data: any): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/users/${id}/change-password/`, data);
   }
 
   /** PATCH /api/auth/users/<id>/toggle-active/ */

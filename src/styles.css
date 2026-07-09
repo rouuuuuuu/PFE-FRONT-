@@ -33,7 +33,7 @@
 
 
 :root {
-  --primary-orange: #E84D17;
+  --primary-orange: #E4511D;
   /* comment ta3 design système wé layout limit boundaries definitions variables */
   --secondary-orange: #E87722;
   /* comment ta3 design système wé layout limit boundaries definitions variables */
@@ -400,6 +400,24 @@ body.light-theme .mat-mdc-cell {
   /* comment ta3 design système wé layout limit boundaries definitions variables */
 }
 
+/* Paginator */
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-paginator .mat-mdc-icon-button {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-paginator .mat-mdc-select-value {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-paginator .mat-mdc-select-arrow {
+  color: var(--text-primary) !important;
+}
+
 /* Form Fields */
 .mat-mdc-form-field {
   /* comment ta3 design système wé layout limit boundaries definitions variables */
@@ -633,7 +651,7 @@ textarea[matInput]::placeholder,
 
 .mat-mdc-menu-item:hover {
   background: var(--glass-hover, rgba(255, 121, 0, 0.08)) !important;
-  color: var(--primary-orange, #E84D17) !important;
+  color: var(--primary-orange, #E4511D) !important;
 }
 
 .mat-mdc-menu-item .mat-icon {
@@ -646,7 +664,7 @@ textarea[matInput]::placeholder,
 }
 
 .mat-mdc-menu-item:hover .mat-icon {
-  color: var(--primary-orange, #E84D17) !important;
+  color: var(--primary-orange, #E4511D) !important;
 }
 
 /* Fix the menu trigger ripple to orange */

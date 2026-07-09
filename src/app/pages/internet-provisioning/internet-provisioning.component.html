@@ -99,7 +99,6 @@
           <mat-option *ngFor="let s of subnetOptions" [value]="s.value">{{ s.label }}</mat-option>
         </mat-select>
         <mat-icon matSuffix>lan</mat-icon>
-        <mat-hint>{{ 'PROVISIONING.RANGE_HINT' | translate }}</mat-hint>
         <mat-error *ngIf="form.get('subnet_type')?.hasError('required')">
           {{ 'PROVISIONING.ERR_SUBNET' | translate }}
         </mat-error>

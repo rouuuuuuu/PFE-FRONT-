@@ -6,7 +6,8 @@ import {
   NetworkHealth,
   ProvisioningStats,
   AiStats,
-  PortStats
+  PortStats,
+  IsisPathResponse
 } from '../pages/monitoring/monitoring.models';
 
 const API_URL = 'http://127.0.0.1:8000/api';
@@ -44,5 +45,10 @@ export class MonitoringService {
   /** Force an SSH re-poll — admin only */
   refreshNetworkCache(): Observable<any> {
     return this.http.post(`${API_URL}/monitoring/network/refresh/`, {});
+  }
+
+  /** Get shortest path using IS-IS */
+  getShortestPath(source: string, destination: string): Observable<IsisPathResponse> {
+    return this.http.get<IsisPathResponse>(`${API_URL}/monitoring/isis/shortest-path/?source=${source}&destination=${destination}`);
   }
 }
