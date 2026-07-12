@@ -637,7 +637,7 @@
     "INFO_3": "Assign <strong>User</strong> for read-only NOC access",
     "INFO_4": "Assign <strong>Admin</strong> to grant provisioning and user management rights",
     "WARN_TITLE": "Admin Privileges",
-    "WARN_TEXT": "Admin accounts can create users, access all provisioning features, and manage the full network inventory. Grant this role carefully.",
+    "WARN_TEXT": "Admin accounts can create and manage users, approve AI Engine access requests, and execute advanced network provisioning tasks. Grant this role carefully.",
     "SUCCESS": "User created successfully!",
     "ERROR": "Failed to create user"
   },

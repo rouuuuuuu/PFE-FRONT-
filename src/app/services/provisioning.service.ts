@@ -102,4 +102,16 @@ export class ProvisioningService {
   liberateMplsTask(taskId: number): Observable<any> {
     return this.http.post<any>(`${BASE}/api/provisioning/mpls/liberate/${taskId}/`, {});
   }
+
+  /**
+   * Fetch the dynamic list of VRF/client names.
+   * GET /api/provisioning/clients/
+   * Returns: [{ id: number, vrf_name: string }, ...]
+   * Auth header is added automatically by the auth interceptor.
+   */
+  getVrfClients(): Observable<{ id: number; vrf_name: string }[]> {
+    return this.http.get<{ id: number; vrf_name: string }[]>(
+      `${BASE}/api/provisioning/clients/`
+    );
+  }
 }

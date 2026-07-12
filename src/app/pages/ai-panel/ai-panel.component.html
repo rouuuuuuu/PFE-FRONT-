@@ -1,68 +1,17 @@
 <div class="ai-panel glass-panel">
   <div class="panel-header">
     <div class="header-title">
-      <mat-icon>psychology</mat-icon>
-      <h2>{{ 'SMART_TOOLS.TITLE' | translate }}</h2>
+      <mat-icon>verified_user</mat-icon>
+      <h2>Smart Validator</h2>
     </div>
     <button class="close-btn" (click)="closePanel.emit()">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <div class="panel-tabs">
-    <button class="tab-btn" [class.active]="activeTab === 'validator'" (click)="activeTab = 'validator'">{{ 'SMART_TOOLS.TAB_VALIDATOR' | translate }}</button>
-    <button class="tab-btn" [class.active]="activeTab === 'rca'" (click)="activeTab = 'rca'">{{ 'SMART_TOOLS.TAB_RCA' | translate }}</button>
-    <button class="tab-btn" [class.active]="activeTab === 'stats'" (click)="activeTab = 'stats'">{{ 'SMART_TOOLS.TAB_STATS' | translate }}</button>
-  </div>
-
   <div class="panel-content">
-    <div *ngIf="activeTab === 'validator'" class="tab-content fade-in">
+    <div class="tab-content fade-in">
       <app-validator-dashboard></app-validator-dashboard>
-    </div>
-    <div *ngIf="activeTab === 'rca'" class="tab-content fade-in">
-      <app-rca-list></app-rca-list>
-    </div>
-    <div *ngIf="activeTab === 'stats'" class="tab-content fade-in">
-
-      <!-- Loading spinner -->
-      <div *ngIf="statsLoading" class="stats-loading">
-        <mat-spinner diameter="32"></mat-spinner>
-      </div>
-
-      <!-- Empty state -->
-      <div *ngIf="!statsLoading && isEmptyStats" class="stats-placeholder">
-        <mat-icon>bar_chart</mat-icon>
-        <p>{{ 'SMART_TOOLS.NO_DATA' | translate }}</p>
-      </div>
-
-      <!-- Stat cards grid -->
-      <div *ngIf="!statsLoading && !isEmptyStats && statsData" class="stats-grid">
-
-        <div class="stat-card">
-          <span class="stat-value blue">{{ statsData.tasks_validated }}</span>
-          <span class="stat-title">{{ 'SMART_TOOLS.TASKS_VALIDATED' | translate }}</span>
-          <span class="stat-label">{{ 'SMART_TOOLS.TODAY' | translate }}</span>
-        </div>
-
-        <div class="stat-card">
-          <span class="stat-value green">{{ statsData.failures_prevented }}</span>
-          <span class="stat-title">{{ 'SMART_TOOLS.FAILURES_PREVENTED' | translate }}</span>
-          <span class="stat-label">{{ 'SMART_TOOLS.BLOCKED_BY' | translate }}</span>
-        </div>
-
-        <div class="stat-card">
-          <span class="stat-value orange">{{ (statsData.model_accuracy * 100).toFixed(1) }}%</span>
-          <span class="stat-title">{{ 'SMART_TOOLS.MODEL_ACCURACY' | translate }}</span>
-          <span class="stat-label">{{ 'SMART_TOOLS.ON_VALIDATION' | translate }}</span>
-        </div>
-
-        <div class="stat-card">
-          <span class="stat-value yellow">{{ statsData.avg_rca_seconds }}s</span>
-          <span class="stat-title">{{ 'SMART_TOOLS.AVG_RCA_TIME' | translate }}</span>
-          <span class="stat-label">{{ 'SMART_TOOLS.VS_MANUAL' | translate }}</span>
-        </div>
-
-      </div>
     </div>
   </div>
 </div>

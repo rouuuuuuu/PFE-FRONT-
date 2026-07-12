@@ -632,7 +632,7 @@
     "INFO_3": "Attribuez <strong>Utilisateur</strong> pour un accès NOC en lecture seule",
     "INFO_4": "Attribuez <strong>Admin</strong> pour accorder les droits de provisioning et de gestion des utilisateurs",
     "WARN_TITLE": "Privilèges d'Admin",
-    "WARN_TEXT": "Les comptes d'administration peuvent créer des utilisateurs, accéder à toutes les fonctionnalités de provisioning et gérer l'inventaire complet du réseau. Accordez ce rôle avec prudence.",
+    "WARN_TEXT": "Les comptes d'administration peuvent créer et gérer des utilisateurs, approuver les demandes d'accès au moteur IA et exécuter des tâches avancées de provisioning réseau. Accordez ce rôle avec prudence.",
     "SUCCESS": "Utilisateur créé avec succès !",
     "ERROR": "Échec de la création de l'utilisateur"
   },

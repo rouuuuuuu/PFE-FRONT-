@@ -1,14 +1,14 @@
 import {
   Component, OnInit, OnDestroy, ChangeDetectorRef,
-  PLATFORM_ID, Inject
+  PLATFORM_ID, Inject, HostListener, ElementRef
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ReactiveFormsModule, FormBuilder, FormGroup, FormArray,
   Validators, FormsModule
 } from '@angular/forms';
-import { interval, Subject, Observable } from 'rxjs';
-import { switchMap, takeUntil, startWith, map } from 'rxjs/operators';
+import { interval, Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
   trigger, transition, style, animate
@@ -26,8 +26,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { VRF_LIST } from '../../shared/constants/vrf-list';
 
 import { ApiService } from '../../services/api.service';
 import { ProvisioningService } from '../../services/provisioning.service';
@@ -55,8 +53,7 @@ import { TaskStateService } from '../../services/task-state.service';
     MatTooltipModule,
     ClipboardModule,
     TranslateModule,
-    MatDialogModule,
-    MatAutocompleteModule
+    MatDialogModule
   ],
   templateUrl: './mpls-provisioning.component.html',
   styleUrls: ['./mpls-provisioning.component.css'],
@@ -84,9 +81,13 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
   // ── Form ─────────────────────────────────────────────────
   form!: FormGroup;
 
-  // ── VRF options ──────────────────────────────────────────
-  vrfList = VRF_LIST;
-  filteredVrfs!: Observable<string[]>;
+  // ── VRF / Client options (dynamic) ───────────────────────
+  vrfClients: { id: number; vrf_name: string }[] = [];
+  filteredVrfClients: { id: number; vrf_name: string }[] = [];
+  vrfSearch = '';
+  vrfDropdownOpen = false;
+  vrfLoading = false;
+  vrfError = '';
 
   // ── Conditional visibility ──────────────────────────────
   showManagementIp = false;
@@ -128,15 +129,25 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     private aiService: AiEngineService,
     private dialog: MatDialog,
     private taskStateService: TaskStateService,
+    private elRef: ElementRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
+  }
+
+  /** Close VRF dropdown when clicking outside this component */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elRef.nativeElement.contains(event.target)) {
+      this.vrfDropdownOpen = false;
+    }
   }
 
   // ─────────────────────────────────────────────────────────
   ngOnInit(): void {
     this._buildForm();
     this.loadHistory();
+    this._loadVrfClients();
 
     // Restore persisted task state
     const state = this.taskStateService.restore('mpls');
@@ -186,6 +197,67 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     this.statusPollDestroy$.complete();
   }
 
+  // ── VRF client fetch ──────────────────────────────────────
+  _loadVrfClients(): void {
+    this.vrfLoading = true;
+    this.vrfError = '';
+    this.svc.getVrfClients().subscribe({
+      next: (clients) => {
+        this.vrfClients = clients;
+        this._applyVrfFilter();
+        this.vrfLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.vrfError = 'Failed to load client list. Please refresh.';
+        this.vrfLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  filterVrfClients(): void {
+    this._applyVrfFilter();
+  }
+
+  private _applyVrfFilter(): void {
+    const q = this.vrfSearch.toLowerCase();
+    this.filteredVrfClients = q
+      ? this.vrfClients.filter(c => c.vrf_name.toLowerCase().includes(q))
+      : [...this.vrfClients];
+  }
+
+  toggleVrfDropdown(): void {
+    this.vrfDropdownOpen = !this.vrfDropdownOpen;
+    if (this.vrfDropdownOpen) {
+      this.vrfSearch = '';
+      this._applyVrfFilter();
+    }
+  }
+
+  selectVrf(client: { id: number; vrf_name: string }): void {
+    // Set both vrf_client and client_name to the same vrf_name string
+    this.form.patchValue({
+      vrf_client: client.vrf_name,
+      client_name: client.vrf_name
+    });
+    this.vrfDropdownOpen = false;
+    this._onVrfChange(client.vrf_name);
+  }
+
+  private _onVrfChange(vrf: string): void {
+    const isMgmt = /MNG|MGT/i.test(vrf || '');
+    this.showManagementIp = isMgmt;
+    const mgmtCtrl = this.form.get('management_ip')!;
+    if (isMgmt) {
+      mgmtCtrl.setValidators(Validators.required);
+    } else {
+      mgmtCtrl.clearValidators();
+      mgmtCtrl.setValue('');
+    }
+    mgmtCtrl.updateValueAndValidity();
+  }
+
   // ── Form builder ─────────────────────────────────────────
   private _buildForm(): void {
     this.form = this.fb.group({
@@ -195,33 +267,6 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
       vrf_client: ['', Validators.required],
       management_ip: ['']
     });
-
-    this.filteredVrfs = this.form.get('vrf_client')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || ''))
-    );
-
-    // Watch VRF for management keyword
-    this.form.get('vrf_client')!.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((vrf: string) => {
-        const isMgmt = /MNG|MGT/i.test(vrf || '');
-        this.showManagementIp = isMgmt;
-
-        const mgmtCtrl = this.form.get('management_ip')!;
-        if (isMgmt) {
-          mgmtCtrl.setValidators(Validators.required);
-        } else {
-          mgmtCtrl.clearValidators();
-          mgmtCtrl.setValue('');
-        }
-        mgmtCtrl.updateValueAndValidity();
-      });
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.vrfList.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   // ── LAN Clients dynamic array ────────────────────────────

@@ -52,38 +52,140 @@
           {{ network.health_pct }}% {{ 'MONITORING.HEALTHY' | translate }}
         </span>
         <span class="cache-note">{{ 'MONITORING.CACHE_NOTE' | translate }}</span>
+
+        <!-- ── Router search ── -->
+        <div class="router-search-wrap">
+          <mat-icon class="router-search-icon">search</mat-icon>
+          <input
+            id="input-router-search"
+            class="router-search-input"
+            type="text"
+            placeholder="Search hostname or IP…"
+            [(ngModel)]="routerSearch"
+            (ngModelChange)="onRouterSearch()"
+            autocomplete="off">
+          <button *ngIf="routerSearch"
+                  class="router-search-clear"
+                  type="button"
+                  (click)="routerSearch=''; onRouterSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
       </div>
     </div>
 
-    <!-- Router grid -->
-    <div class="router-grid">
-      <div class="router-card" *ngFor="let router of network.routers" [class.router-up]="router.reachable"
-        [class.router-down]="!router.reachable">
+    <!-- No-results state (both groups empty after filtering) -->
+    <div class="router-search-empty"
+         *ngIf="routerSearch && downRouters.length === 0 && upRouters.length === 0">
+      <mat-icon>search_off</mat-icon>
+      No routers match <strong>"{{ routerSearch }}"</strong>
+    </div>
 
-        <div class="router-card-top">
-          <div class="router-status-dot" [style.background]="router.reachable ? '#22c55e' : '#ef4444'"
-            [class.pulse]="!router.reachable">
-          </div>
-          <div class="router-vendor-badge" [style.color]="getVendorColor(router.vendor)"
-            [style.background]="getVendorColor(router.vendor) + '18'">
-            {{ router.vendor | uppercase }}
+
+
+    <!-- ── DOWN section (expanded by default) ── -->
+    <div class="group-section" *ngIf="downRouters.length > 0">
+      <button class="group-header group-header--down"
+              id="btn-group-toggle-down"
+              (click)="toggleSection('down')"
+              type="button">
+        <mat-icon class="group-chevron" [class.group-chevron--open]="!sections.down.collapsed">
+          chevron_right
+        </mat-icon>
+        <mat-icon class="group-status-icon group-status-icon--down">wifi_off</mat-icon>
+        <span class="group-label">DOWN</span>
+        <span class="group-count group-count--down">{{ downRouters.length }}</span>
+        <span class="group-hint" *ngIf="sections.down.collapsed">
+          — click to expand
+        </span>
+      </button>
+
+      <div class="group-body" [class.group-body--hidden]="sections.down.collapsed">
+        <div class="router-grid">
+          <div class="router-card router-down"
+               *ngFor="let router of visibleDownRouters()">
+            <div class="router-card-top">
+              <div class="router-status-dot pulse" [style.background]="'#ef4444'"></div>
+              <div class="router-vendor-badge"
+                   [style.color]="getVendorColor(router.vendor)"
+                   [style.background]="getVendorColor(router.vendor) + '18'">
+                {{ router.vendor | uppercase }}
+              </div>
+            </div>
+            <div class="router-name">{{ router.name }}</div>
+            <div class="router-ip mono">{{ router.ip }}</div>
+            <div class="router-ping router-ping-down">
+              <mat-icon class="ping-icon">signal_wifi_off</mat-icon>
+              {{ 'MONITORING.UNREACHABLE' | translate }}
+            </div>
           </div>
         </div>
 
-        <div class="router-name">{{ router.name }}</div>
-        <div class="router-ip mono">{{ router.ip }}</div>
-
-        <div class="router-ping" *ngIf="router.reachable">
-          <mat-icon class="ping-icon">network_ping</mat-icon>
-          {{ router.response_ms }}ms
-        </div>
-        <div class="router-ping router-ping-down" *ngIf="!router.reachable">
-          <mat-icon class="ping-icon">signal_wifi_off</mat-icon>
-          {{ 'MONITORING.UNREACHABLE' | translate }}
+        <!-- Load more — DOWN -->
+        <div class="load-more-row" *ngIf="!sections.down.collapsed && hasMore('down')">
+          <button class="load-more-btn" type="button"
+                  id="btn-load-more-down"
+                  (click)="showMoreCards('down')">
+            <mat-icon class="load-more-icon">expand_more</mat-icon>
+            {{ loadMoreLabel('down') }}
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- ── UP section (collapsed by default) ── -->
+    <div class="group-section" *ngIf="upRouters.length > 0">
+      <button class="group-header group-header--up"
+              id="btn-group-toggle-up"
+              (click)="toggleSection('up')"
+              type="button">
+        <mat-icon class="group-chevron" [class.group-chevron--open]="!sections.up.collapsed">
+          chevron_right
+        </mat-icon>
+        <mat-icon class="group-status-icon group-status-icon--up">wifi</mat-icon>
+        <span class="group-label">UP</span>
+        <span class="group-count group-count--up">{{ upRouters.length }}</span>
+        <span class="group-hint" *ngIf="sections.up.collapsed">
+          — click to expand
+        </span>
+      </button>
+
+      <div class="group-body" [class.group-body--hidden]="sections.up.collapsed">
+        <div class="router-grid">
+          <div class="router-card router-up"
+               *ngFor="let router of visibleUpRouters()">
+            <div class="router-card-top">
+              <div class="router-status-dot" style="background:#22c55e"></div>
+              <div class="router-vendor-badge"
+                   [style.color]="getVendorColor(router.vendor)"
+                   [style.background]="getVendorColor(router.vendor) + '18'">
+                {{ router.vendor | uppercase }}
+              </div>
+            </div>
+            <div class="router-name">{{ router.name }}</div>
+            <div class="router-ip mono">{{ router.ip }}</div>
+            <div class="router-ping">
+              <mat-icon class="ping-icon">network_ping</mat-icon>
+              {{ router.response_ms }}ms
+            </div>
+          </div>
+        </div>
+
+        <!-- Load more — UP -->
+        <div class="load-more-row" *ngIf="!sections.up.collapsed && hasMore('up')">
+          <button class="load-more-btn" type="button"
+                  id="btn-load-more-up"
+                  (click)="showMoreCards('up')">
+            <mat-icon class="load-more-icon">expand_more</mat-icon>
+            {{ loadMoreLabel('up') }}
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
+
 
   <!-- ══════════════════════════════════════════════════════════════
        SECTION 2 — PROVISIONING ACTIVITY (2 Columns)
@@ -205,13 +307,14 @@
        ══════════════════════════════════════════════════════════════ -->
   <div class="monitor-two-col" *ngIf="ai && ports">
 
-    <!-- AI Engine card -->
+    <!-- Smart Validator card -->
     <div class="monitor-card">
       <div class="card-title">
-        <mat-icon class="card-title-icon">psychology</mat-icon>
-        {{ 'MONITORING.AI_ENGINE' | translate }}
+        <mat-icon class="card-title-icon">verified_user</mat-icon>
+        Smart Validator
       </div>
 
+      <!-- 4 stat counters -->
       <div class="stats-row-4">
         <div class="mini-stat">
           <div class="mini-stat-value blue">{{ ai.validations_today.total }}</div>
@@ -231,35 +334,73 @@
         </div>
       </div>
 
-      <!-- Open RCAs alert -->
-      <div class="rca-alert" *ngIf="ai.rca.open > 0">
-        <mat-icon>troubleshoot</mat-icon>
-        <span>{{ ai.rca.open }} {{ 'MONITORING.OPEN_RCAS' | translate }}</span>
-        <a class="rca-link">{{ 'MONITORING.VIEW' | translate }} →</a>
-      </div>
+      <!-- Safety score ring + verdict breakdown -->
+      <div class="sv-panel">
 
-      <!-- Top cause -->
-      <div class="top-cause" *ngIf="ai.rca.top_cause">
-        {{ 'MONITORING.TOP_CAUSE' | translate }} <span class="cause-chip">{{ ai.rca.top_cause | causeLabel }}</span>
-        <span class="cause-count">({{ ai.rca.top_cause_count }}{{ 'MONITORING.TIMES_THIS_WEEK' | translate }})</span>
-      </div>
-
-      <!-- Recent RCAs mini list -->
-      <div class="card-subtitle" style="margin-top:12px">{{ 'MONITORING.RECENT_RCAS' | translate }}</div>
-      <div class="rca-mini-list">
-        <div class="rca-mini-row" *ngFor="let rca of ai.rca.recent">
-          <div class="rca-mini-dot" [style.background]="rca.is_resolved ? '#22c55e' : '#ef4444'">
+        <!-- SVG donut ring -->
+        <div class="sv-ring-wrap">
+          <svg class="sv-ring" viewBox="0 0 80 80">
+            <!-- track -->
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#1e2330" stroke-width="10"/>
+            <!-- safe arc (green) -->
+            <circle cx="40" cy="40" r="30" fill="none" stroke="#22c55e" stroke-width="10"
+              stroke-linecap="round"
+              stroke-dasharray="188.5"
+              [style.strokeDashoffset]="188.5 - (ai.validations_today.total > 0 ? (ai.validations_today.safe / ai.validations_today.total) * 188.5 : 0)"
+              transform="rotate(-90 40 40)"
+              [style.filter]="'drop-shadow(0 0 4px #22c55e88)'"/>
+          </svg>
+          <div class="sv-ring-label">
+            <span class="sv-ring-pct" [style.color]="ai.validations_today.total > 0 && (ai.validations_today.safe / ai.validations_today.total) >= 0.8 ? '#22c55e' : ai.validations_today.total > 0 && (ai.validations_today.safe / ai.validations_today.total) >= 0.5 ? '#f59e0b' : '#ef4444'">
+              {{ ai.validations_today.total > 0 ? ((ai.validations_today.safe / ai.validations_today.total) * 100).toFixed(0) : 0 }}%
+            </span>
+            <span class="sv-ring-sub">safe</span>
           </div>
-          <span class="rca-task mono">#{{ rca.task_id }}</span>
-          <span class="rca-cause">{{ rca.classified_cause | causeLabel }}</span>
-          <span class="rca-conf mono">{{ (rca.confidence * 100).toFixed(0) }}%</span>
-          <span class="rca-time mono">{{ rca.created_at | timeAgo }}</span>
         </div>
-        <div class="empty-state" *ngIf="ai.rca.recent.length === 0">
-          <mat-icon>check_circle</mat-icon> {{ 'MONITORING.NO_RECENT_RCAS' | translate }}
+
+        <!-- Verdict breakdown bars -->
+        <div class="sv-breakdown">
+          <div class="sv-bar-label">Verdict breakdown — today</div>
+
+          <div class="sv-bar-row">
+            <span class="sv-bar-name sv-safe">Safe</span>
+            <div class="sv-bar-track">
+              <div class="sv-bar-fill" style="background:#22c55e"
+                [style.width.%]="ai.validations_today.total > 0 ? (ai.validations_today.safe / ai.validations_today.total) * 100 : 0">
+              </div>
+            </div>
+            <span class="sv-bar-count mono">{{ ai.validations_today.safe }}</span>
+          </div>
+
+          <div class="sv-bar-row">
+            <span class="sv-bar-name sv-warn">Caution</span>
+            <div class="sv-bar-track">
+              <div class="sv-bar-fill" style="background:#f59e0b"
+                [style.width.%]="ai.validations_today.total > 0 ? (ai.validations_today.warning / ai.validations_today.total) * 100 : 0">
+              </div>
+            </div>
+            <span class="sv-bar-count mono">{{ ai.validations_today.warning }}</span>
+          </div>
+
+          <div class="sv-bar-row">
+            <span class="sv-bar-name sv-block">Blocked</span>
+            <div class="sv-bar-track">
+              <div class="sv-bar-fill" style="background:#ef4444"
+                [style.width.%]="ai.validations_today.total > 0 ? (ai.validations_today.blocked / ai.validations_today.total) * 100 : 0">
+              </div>
+            </div>
+            <span class="sv-bar-count mono">{{ ai.validations_today.blocked }}</span>
+          </div>
+
+          <!-- Zero-state -->
+          <div class="empty-state" *ngIf="ai.validations_today.total === 0">
+            <mat-icon>verified_user</mat-icon> No validations run today
+          </div>
         </div>
+
       </div>
     </div>
+
 
     <!-- Port Health card -->
     <div class="monitor-card">

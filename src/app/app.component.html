@@ -68,13 +68,22 @@
         </a>
       </mat-menu>
 
-      <!-- Smart Tools side panel trigger -->
+      <a class="quicknav-btn" routerLink="/monitoring" routerLinkActive="quicknav-active"
+        [matTooltip]="'NAV.MONITORING' | translate" matTooltipPosition="below">
+        <mat-icon>monitor_heart</mat-icon>
+        <span class="alert-dot" *ngIf="hasMonitoringAlerts" 
+              style="position: absolute; top: 8px; right: 20px; width: 6px; height: 6px; margin: 0;"></span>
+        <span class="quicknav-label">{{ 'NAV.MONITORING' | translate }}</span>
+      </a>
+
+      <!-- Smart Validator side panel trigger -->
       <button class="quicknav-btn quicknav-menu-trigger" (click)="isAiPanelOpen = !isAiPanelOpen"
-        [matTooltip]="'NAV.SMART_TOOLS' | translate" matTooltipPosition="below"
+        matTooltip="Smart Validator" matTooltipPosition="below"
         [class.quicknav-active]="isAiPanelOpen">
-        <mat-icon>psychology</mat-icon>
-        <span class="quicknav-label">{{ 'NAV.SMART_TOOLS' | translate }}</span>
+        <mat-icon>verified_user</mat-icon>
+        <span class="quicknav-label">Smart Validator</span>
       </button>
+
 
     </div>
 

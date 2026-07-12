@@ -69,6 +69,8 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   analyzingRoute = false;
   isisPathResponse: IsisPathResponse | null = null;
 
+  isHeaderCollapsed = false;
+
   private simulation: any;
   private refreshTimer: any;
   private ro: ResizeObserver | null = null;

@@ -41,7 +41,7 @@ export class ValidatorDashboardComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadData();

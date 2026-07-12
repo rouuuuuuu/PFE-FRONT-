@@ -10,8 +10,9 @@
       </div>
     </div>
 
-    <!-- ── Search ── -->
-    <div class="topo-search">
+    <ng-container *ngIf="!isHeaderCollapsed">
+      <!-- ── Search ── -->
+      <div class="topo-search">
       <mat-icon class="search-icon">search</mat-icon>
       <input type="text" 
              [(ngModel)]="searchQuery" 
@@ -92,8 +93,17 @@
         <span class="legend-dot" [style.background]="entry.color"></span>
         {{ entry.label }}
       </span>
-    </div>
+      </div>
+    </ng-container>
 
+    <div style="flex: 1; min-width: 10px;"></div>
+
+    <div class="topo-header-actions">
+      <button class="collapse-header-btn" (click)="isHeaderCollapsed = !isHeaderCollapsed"
+        [matTooltip]="isHeaderCollapsed ? ('Expand Header') : ('Collapse Header')" matTooltipPosition="left">
+        <mat-icon>{{ isHeaderCollapsed ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</mat-icon>
+      </button>
+    </div>
 
   </div>
 

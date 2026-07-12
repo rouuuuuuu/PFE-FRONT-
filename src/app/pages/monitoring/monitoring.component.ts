@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Subscription, interval, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -10,6 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { MonitoringService } from '../../services/monitoring.service';
 import { AuthService } from '../../services/auth.service';
+import { AiEngineService } from '../../ai-engine/ai-engine.service';
 import {
   NetworkHealth,
   ProvisioningStats,
@@ -28,6 +30,7 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -50,12 +53,79 @@ export class MonitoringComponent implements OnInit, OnDestroy {
   lastUpdated = '';
   refreshingNetwork = false;
 
+  // ── Section state (DOWN / UP) ────────────────────────────
+  readonly INITIAL_SHOW = 24;
+  readonly LOAD_MORE_STEP = 50;
+
+  sections: Record<'down' | 'up', { collapsed: boolean; visibleCount: number }> = {
+    down: { collapsed: false, visibleCount: this.INITIAL_SHOW },
+    up:   { collapsed: true,  visibleCount: this.INITIAL_SHOW }
+  };
+
+  // ── Search ─────────────────────────────────────────────
+  routerSearch = '';
+
+  onRouterSearch(): void {
+    // Reset load-more pagination when search changes
+    this.sections.down.visibleCount = this.INITIAL_SHOW;
+    this.sections.up.visibleCount   = this.INITIAL_SHOW;
+    // Auto-expand DOWN when searching so results are immediately visible
+    if (this.routerSearch.trim()) {
+      this.sections.down.collapsed = false;
+      this.sections.up.collapsed   = false;
+    }
+  }
+
+  get downRouters() {
+    const q = this.routerSearch.trim().toLowerCase();
+    const all = this.network?.routers.filter(r => !r.reachable) ?? [];
+    return q ? all.filter(r =>
+      r.name.toLowerCase().includes(q) || r.ip.toLowerCase().includes(q)
+    ) : all;
+  }
+
+  get upRouters() {
+    const q = this.routerSearch.trim().toLowerCase();
+    const all = this.network?.routers.filter(r =>  r.reachable) ?? [];
+    return q ? all.filter(r =>
+      r.name.toLowerCase().includes(q) || r.ip.toLowerCase().includes(q)
+    ) : all;
+  }
+
+  visibleDownRouters() { return this.downRouters.slice(0, this.sections.down.visibleCount); }
+  visibleUpRouters()   { return this.upRouters.slice(0,   this.sections.up.visibleCount);   }
+
+  toggleSection(s: 'down' | 'up'): void {
+    this.sections[s].collapsed = !this.sections[s].collapsed;
+  }
+
+  showMoreCards(s: 'down' | 'up'): void {
+    const total = s === 'down' ? this.downRouters.length : this.upRouters.length;
+    this.sections[s].visibleCount = Math.min(
+      this.sections[s].visibleCount + this.LOAD_MORE_STEP,
+      total
+    );
+  }
+
+  loadMoreLabel(s: 'down' | 'up'): string {
+    const total   = s === 'down' ? this.downRouters.length : this.upRouters.length;
+    const visible = this.sections[s].visibleCount;
+    const remain  = total - visible;
+    return remain <= this.LOAD_MORE_STEP ? `+ Show remaining ${remain}` : `+ Show 50 more`;
+  }
+
+  hasMore(s: 'down' | 'up'): boolean {
+    const total = s === 'down' ? this.downRouters.length : this.upRouters.length;
+    return this.sections[s].visibleCount < total;
+  }
+
   private dbPollSub: Subscription | null = null;
   private networkPollSub: Subscription | null = null;
 
   constructor(
     private monitoringService: MonitoringService,
-    public authService: AuthService
+    public authService: AuthService,
+    private aiService: AiEngineService
   ) { }
 
   ngOnInit(): void {
@@ -68,6 +138,16 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.ports = data.ports;
         this.lastUpdated = new Date().toLocaleTimeString();
         this.loading = false;
+        
+        // Fetch real stats to replace 0s
+        this.aiService.getStats().subscribe(stats => {
+          if (this.ai && stats) {
+            this.ai.validations_today.total = stats.tasks_validated || 0;
+            this.ai.validations_today.blocked = stats.failures_prevented || 0;
+            this.ai.validations_today.safe = (stats.tasks_validated || 0) - (stats.failures_prevented || 0);
+            this.ai.validations_today.warning = 0;
+          }
+        });
       },
       error: () => {
         this.loading = false;
@@ -80,10 +160,17 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         provisioning: this.monitoringService.getProvisioning(),
         ai: this.monitoringService.getAi(),
         ports: this.monitoringService.getPorts(),
+        valStats: this.aiService.getStats()
       }))
     ).subscribe(data => {
       this.provisioning = data.provisioning;
       this.ai = data.ai;
+      if (this.ai && data.valStats) {
+        this.ai.validations_today.total = data.valStats.tasks_validated || 0;
+        this.ai.validations_today.blocked = data.valStats.failures_prevented || 0;
+        this.ai.validations_today.safe = (data.valStats.tasks_validated || 0) - (data.valStats.failures_prevented || 0);
+        this.ai.validations_today.warning = 0;
+      }
       this.ports = data.ports;
       this.lastUpdated = new Date().toLocaleTimeString();
     });

@@ -10,9 +10,11 @@
 .topo-shell {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 64px);   /* subtract toolbar height */
+  height: calc(100vh - 112px);   /* subtract toolbar (56px) + app-content padding (56px) */
   overflow: hidden;
   background: var(--bg-primary);
+  border-radius: 12px;           /* Add slight rounding to match padding */
+  border: 1px solid var(--glass-border);
 }
 
 /* ── Header ──────────────────────────────────────────────── */
@@ -53,6 +55,26 @@
   margin: 0;
   font-size: 11px;
   color: var(--text-muted);
+}
+
+.collapse-header-btn {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.collapse-header-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--primary-orange);
 }
 
 /* ── Search ── */

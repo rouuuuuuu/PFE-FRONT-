@@ -95,20 +95,97 @@
 
     <div class="form-grid">
 
-      <!-- VRF CLIENT -->
-      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>{{ 'MPLS_PROV.LABELS.VRF_CLIENT' | translate }}</mat-label>
-        <input matInput [matAutocomplete]="vrfAuto" formControlName="vrf_client" id="input-mpls-vrf">
-        <mat-autocomplete #vrfAuto="matAutocomplete">
-          <mat-option *ngFor="let vrf of filteredVrfs | async" [value]="vrf">
-            <span class="vrf-option-text">{{ vrf }}</span>
-          </mat-option>
-        </mat-autocomplete>
-        <mat-icon matSuffix>account_tree</mat-icon>
-        <mat-error *ngIf="form.get('vrf_client')?.hasError('required')">
+      <!-- VRF CLIENT — dynamic searchable dropdown -->
+      <div class="vrf-field-wrapper" [class.vrf-open]="vrfDropdownOpen">
+        <label class="vrf-label">{{ 'MPLS_PROV.LABELS.VRF_CLIENT' | translate }}</label>
+
+        <!-- Trigger button -->
+        <button type="button" class="vrf-trigger"
+                id="btn-mpls-vrf-trigger"
+                [class.vrf-trigger--error]="form.get('vrf_client')?.invalid && form.get('vrf_client')?.touched"
+                (click)="toggleVrfDropdown()">
+
+          <!-- Loading state -->
+          <ng-container *ngIf="vrfLoading">
+            <mat-spinner diameter="16" class="vrf-inline-spinner"></mat-spinner>
+            <span class="vrf-placeholder">Loading clients…</span>
+          </ng-container>
+
+          <!-- Error state -->
+          <ng-container *ngIf="!vrfLoading && vrfError">
+            <mat-icon class="vrf-trigger-icon vrf-trigger-icon--err">error_outline</mat-icon>
+            <span class="vrf-placeholder vrf-placeholder--err">Error — click to retry</span>
+          </ng-container>
+
+          <!-- Normal state -->
+          <ng-container *ngIf="!vrfLoading && !vrfError">
+            <mat-icon class="vrf-trigger-icon">account_tree</mat-icon>
+            <span [class.vrf-placeholder]="!form.get('vrf_client')?.value"
+                  [class.vrf-selected-label]="!!form.get('vrf_client')?.value">
+              {{ form.get('vrf_client')?.value || ('MPLS_PROV.LABELS.VRF_CLIENT' | translate) }}
+            </span>
+          </ng-container>
+
+          <mat-icon class="vrf-chevron" [class.vrf-chevron--open]="vrfDropdownOpen">expand_more</mat-icon>
+        </button>
+
+        <!-- Validation error -->
+        <div class="vrf-error-msg"
+             *ngIf="form.get('vrf_client')?.invalid && form.get('vrf_client')?.touched">
           {{ 'MPLS_PROV.ERRORS.VRF_CLIENT' | translate }}
-        </mat-error>
-      </mat-form-field>
+        </div>
+
+        <!-- Dropdown panel -->
+        <div class="vrf-panel" *ngIf="vrfDropdownOpen && !vrfLoading && !vrfError">
+
+          <!-- Fetch-error inside panel with retry -->
+          <div class="vrf-fetch-error" *ngIf="vrfError">
+            <mat-icon>warning</mat-icon>
+            {{ vrfError }}
+            <button type="button" class="vrf-retry-btn" (click)="$event.stopPropagation(); _loadVrfClients()">Retry</button>
+          </div>
+
+          <!-- Filter input -->
+          <div class="vrf-search-wrap">
+            <mat-icon class="vrf-search-icon">search</mat-icon>
+            <input class="vrf-search-input" type="text"
+                   id="input-mpls-vrf-search"
+                   placeholder="Search client…"
+                   [(ngModel)]="vrfSearch"
+                   (ngModelChange)="filterVrfClients()"
+                   (click)="$event.stopPropagation()"
+                   autocomplete="off">
+            <button *ngIf="vrfSearch" type="button" class="vrf-clear-btn"
+                    (click)="vrfSearch=''; filterVrfClients(); $event.stopPropagation()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+
+          <!-- Count hint -->
+          <div class="vrf-count-hint">
+            {{ filteredVrfClients.length }} / {{ vrfClients.length }} clients
+          </div>
+
+          <!-- Options list -->
+          <ul class="vrf-list" role="listbox">
+            <li *ngFor="let client of filteredVrfClients"
+                class="vrf-item"
+                [class.vrf-item--active]="form.get('vrf_client')?.value === client.vrf_name"
+                (click)="selectVrf(client)"
+                role="option">
+              <mat-icon class="vrf-item-icon">router</mat-icon>
+              {{ client.vrf_name }}
+              <mat-icon class="vrf-item-check"
+                        *ngIf="form.get('vrf_client')?.value === client.vrf_name">check</mat-icon>
+            </li>
+            <li class="vrf-empty" *ngIf="!filteredVrfClients.length">
+              <mat-icon>search_off</mat-icon>
+              No clients match "{{ vrfSearch }}"
+            </li>
+          </ul>
+        </div>
+      </div>
+
 
       <!-- MANAGEMENT IP (conditional) -->
       <mat-form-field appearance="outline" class="form-field mgmt-field" floatLabel="always"

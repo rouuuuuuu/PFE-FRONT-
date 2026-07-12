@@ -2,12 +2,13 @@
 
   <!-- ── Page Header ── -->
   <div class="page-header">
-    <mat-icon class="header-icon">shield</mat-icon>
+    <mat-icon class="header-icon">verified_user</mat-icon>
     <div>
-      <h1 class="page-title">{{ 'VALIDATOR.TITLE' | translate }}</h1>
-      <p class="page-subtitle">{{ 'VALIDATOR.SUBTITLE' | translate }}</p>
+      <h1 class="page-title">Smart Validator</h1>
+      <p class="page-subtitle">AI-powered pre-execution risk assessment and validation</p>
     </div>
   </div>
+
 
   <!-- ── Loading ── -->
   <div class="loading-center" *ngIf="loading">
@@ -64,8 +65,7 @@
           <span class="vcard-task-label">
             {{ currentResult.task_type | uppercase }} — {{ currentResult.router_hostname }}
           </span>
-          <span class="ai-badge"
-            [ngClass]="currentResult.verdict"
+          <span class="ai-badge" [ngClass]="currentResult.verdict"
             [style.borderColor]="getVerdictColor(currentResult.verdict)">
             {{ currentResult.verdict_display || getVerdictLabel(currentResult.verdict) }}
           </span>
@@ -75,21 +75,16 @@
         <div class="dial-section">
           <svg class="dial-svg" viewBox="0 0 180 100">
             <!-- Background arc -->
-            <path d="M 15 90 A 75 75 0 0 1 165 90"
-              fill="none" stroke="#252a3a" stroke-width="14" stroke-linecap="round"/>
+            <path d="M 15 90 A 75 75 0 0 1 165 90" fill="none" stroke="#252a3a" stroke-width="14"
+              stroke-linecap="round" />
             <!-- Filled arc -->
-            <path d="M 15 90 A 75 75 0 0 1 165 90"
-              fill="none"
-              [attr.stroke]="getVerdictColor(currentResult.verdict)"
-              stroke-width="14"
-              stroke-linecap="round"
-              stroke-dasharray="235"
+            <path d="M 15 90 A 75 75 0 0 1 165 90" fill="none" [attr.stroke]="getVerdictColor(currentResult.verdict)"
+              stroke-width="14" stroke-linecap="round" stroke-dasharray="235"
               [style.strokeDashoffset]="getArcOffset(currentResult.success_probability)"
-              [style.filter]="'drop-shadow(0 0 6px ' + getVerdictColor(currentResult.verdict) + '88)'"/>
+              [style.filter]="'drop-shadow(0 0 6px ' + getVerdictColor(currentResult.verdict) + '88)'" />
           </svg>
           <div class="dial-label">
-            <span class="dial-percent"
-              [style.color]="getVerdictColor(currentResult.verdict)">
+            <span class="dial-percent" [style.color]="getVerdictColor(currentResult.verdict)">
               {{ (currentResult.success_probability * 100).toFixed(0) }}%
             </span>
             <span class="dial-sub">{{ 'VALIDATOR.SUCCESS_PROB' | translate }}</span>
@@ -97,8 +92,7 @@
         </div>
 
         <!-- Verdict pill -->
-        <div class="verdict-pill"
-          [style.background]="getVerdictColor(currentResult.verdict) + '18'"
+        <div class="verdict-pill" [style.background]="getVerdictColor(currentResult.verdict) + '18'"
           [style.color]="getVerdictColor(currentResult.verdict)"
           [style.borderColor]="getVerdictColor(currentResult.verdict) + '40'">
           {{ getVerdictIcon(currentResult.verdict) }} {{ getVerdictLabel(currentResult.verdict) }}
@@ -115,8 +109,7 @@
               </span>
             </div>
             <div class="feature-bar-track">
-              <div class="feature-bar-fill"
-                [style.width.%]="entry[1] * 100"
+              <div class="feature-bar-fill" [style.width.%]="entry[1] * 100"
                 [style.background]="getScoreColor(entry[1])">
               </div>
             </div>
@@ -126,8 +119,7 @@
         <!-- Action bar -->
         <div class="action-bar">
           <button class="btn-ghost">{{ 'VALIDATOR.VIEW_DETAILS' | translate }}</button>
-          <button class="btn-primary"
-            [disabled]="currentResult.verdict === 'blocked'"
+          <button class="btn-primary" [disabled]="currentResult.verdict === 'blocked'"
             [matTooltip]="currentResult.verdict === 'blocked' ? 'Task is blocked — too risky to execute' : ''">
             ▶ {{ 'VALIDATOR.EXECUTE_TASK' | translate }}
           </button>
@@ -201,16 +193,14 @@
             <tr *ngFor="let item of history">
               <td class="mono">{{ item.task_id }}</td>
               <td>
-                <span class="type-badge"
-                  [style.background]="getTypeBg(item.task_type)"
+                <span class="type-badge" [style.background]="getTypeBg(item.task_type)"
                   [style.color]="getTypeColor(item.task_type)">
                   {{ item.task_type | uppercase }}
                 </span>
               </td>
               <td>{{ item.router_hostname }}</td>
               <td>
-                <span class="risk-badge"
-                  [style.background]="getRiskColor(item.success_probability) + '18'"
+                <span class="risk-badge" [style.background]="getRiskColor(item.success_probability) + '18'"
                   [style.color]="getRiskColor(item.success_probability)">
                   {{ (item.success_probability * 100).toFixed(0) }}% {{ 'VALIDATOR.SAFE' | translate }}
                 </span>
