@@ -7,12 +7,12 @@
         <div class="header-icon-glow"></div>
       </div>
       <div>
-        <h1 class="header-title">Iris</h1>
+        <h1 class="header-title">{{ 'AI.TITLE' | translate }}</h1>
         <p class="header-sub">
-          {{ 'AI.ENGINE' | translate }}
+          {{ 'AI.SUBTITLE' | translate }}
           <span class="mode-badge mode-badge-native">
             <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle">psychology</mat-icon>
-            Llama 3.3 (OpenRouter)
+            {{ 'AI.LLAMA_MODEL' | translate }}
           </span>
         </p>
       </div>
@@ -29,6 +29,7 @@
 
   <div class="kpi-grid">
 
+    <!-- Critical SFPs -->
     <div class="kpi-card" [class.kpi-critical]="(stats?.critical_sfps ?? 0) > 0">
       <div class="kpi-icon-wrap kpi-red">
         <mat-icon>sensors</mat-icon>
@@ -44,11 +45,33 @@
           <mat-icon class="trend-icon">
             {{ (stats?.critical_sfps ?? 0) > 0 ? 'warning' : 'check_circle' }}
           </mat-icon>
-          {{ (stats?.critical_sfps ?? 0) > 0 ? ('AI.ACTION_REQUIRED' | translate) : ('AI.NOMINAL' | translate) }}
+          {{ (stats?.critical_sfps ?? 0) > 0 ? ('AI.ACTION_REQUIRED' | translate) : ('AI.ALL_OK' | translate) }}
         </div>
       </div>
     </div>
 
+    <!-- Warning SFPs -->
+    <div class="kpi-card" [class.kpi-critical]="(stats?.warning_sfps ?? 0) > 0">
+      <div class="kpi-icon-wrap kpi-orange">
+        <mat-icon>sensors</mat-icon>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-value">
+          <ng-container *ngIf="!statsLoading; else kpiSkeleton">
+            {{ stats?.warning_sfps ?? '—' }}
+          </ng-container>
+        </div>
+        <div class="kpi-label">{{ 'AI.WARNING_SFPS' | translate }}</div>
+        <div class="kpi-trend" [class.trend-bad]="(stats?.warning_sfps ?? 0) > 0">
+          <mat-icon class="trend-icon">
+            {{ (stats?.warning_sfps ?? 0) > 0 ? 'warning' : 'check_circle' }}
+          </mat-icon>
+          {{ (stats?.warning_sfps ?? 0) > 0 ? ('AI.CHECK_REQUIRED' | translate) : ('AI.NOMINAL' | translate) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- DOWN Ports -->
     <div class="kpi-card" [class.kpi-critical]="(stats?.down_ports ?? 0) > 0">
       <div class="kpi-icon-wrap kpi-orange">
         <mat-icon>settings_input_component</mat-icon>
@@ -64,49 +87,73 @@
           <mat-icon class="trend-icon">
             {{ (stats?.down_ports ?? 0) > 0 ? 'arrow_downward' : 'check_circle' }}
           </mat-icon>
-          {{ (stats?.down_ports ?? 0) > 0 ? ('AI.OUT_OF_SERVICE' | translate) : ('AI.NOMINAL' | translate) }}
+          {{ (stats?.down_ports ?? 0) > 0 ? ('AI.LINK_LOST' | translate) : ('AI.ALL_UP' | translate) }}
         </div>
       </div>
     </div>
 
-    <div class="kpi-card" [class.kpi-critical]="(stats?.critical_links ?? 0) > 0">
-      <div class="kpi-icon-wrap kpi-purple">
-        <mat-icon>cable</mat-icon>
+    <!-- Faulty Cards -->
+    <div class="kpi-card" [class.kpi-critical]="(stats?.faulty_cards ?? 0) > 0">
+      <div class="kpi-icon-wrap kpi-red">
+        <mat-icon>developer_board_off</mat-icon>
       </div>
       <div class="kpi-body">
         <div class="kpi-value">
           <ng-container *ngIf="!statsLoading; else kpiSkeleton">
-            {{ stats?.critical_links ?? '—' }}
+            {{ stats?.faulty_cards ?? '—' }}
           </ng-container>
         </div>
-        <div class="kpi-label">{{ 'AI.CRITICAL_LINKS' | translate }}</div>
-        <div class="kpi-trend" [class.trend-bad]="(stats?.critical_links ?? 0) > 0">
+        <div class="kpi-label">{{ 'AI.FAULTY_CARDS' | translate }}</div>
+        <div class="kpi-trend" [class.trend-bad]="(stats?.faulty_cards ?? 0) > 0">
           <mat-icon class="trend-icon">
-            {{ (stats?.critical_links ?? 0) > 0 ? 'link_off' : 'check_circle' }}
+            {{ (stats?.faulty_cards ?? 0) > 0 ? 'error_outline' : 'check_circle' }}
           </mat-icon>
-          {{ (stats?.critical_links ?? 0) > 0 ? ('AI.DEGRADED' | translate) : ('AI.NOMINAL' | translate) }}
+          {{ (stats?.faulty_cards ?? 0) > 0 ? ('AI.NEEDS_SWAP' | translate) : ('AI.NOMINAL' | translate) }}
         </div>
       </div>
     </div>
 
-    <div class="kpi-card kpi-info">
-      <div class="kpi-icon-wrap kpi-blue">
-        <mat-icon>router</mat-icon>
+    <!-- Out of Stock -->
+    <div class="kpi-card" [class.kpi-critical]="(stats?.stock?.out_of_stock ?? 0) > 0">
+      <div class="kpi-icon-wrap kpi-purple">
+        <mat-icon>inventory_2</mat-icon>
       </div>
       <div class="kpi-body">
         <div class="kpi-value">
           <ng-container *ngIf="!statsLoading; else kpiSkeleton">
-            {{ stats?.total_routers ?? '—' }}
+            {{ stats?.stock?.out_of_stock ?? '—' }}
           </ng-container>
         </div>
-        <div class="kpi-label">{{ 'AI.TOTAL_ROUTERS' | translate }}</div>
-        <div class="kpi-trend trend-ok">
-          <mat-icon class="trend-icon">device_hub</mat-icon>
-          {{ 'AI.INVENTORIED' | translate }}
+        <div class="kpi-label">{{ 'AI.OUT_OF_STOCK' | translate }}</div>
+        <div class="kpi-trend" [class.trend-bad]="(stats?.stock?.out_of_stock ?? 0) > 0">
+          <mat-icon class="trend-icon">
+            {{ (stats?.stock?.out_of_stock ?? 0) > 0 ? 'error_outline' : 'check_circle' }}
+          </mat-icon>
+          {{ (stats?.stock?.out_of_stock ?? 0) > 0 ? ('AI.REORDER_NEEDED' | translate) : ('AI.STOCKED' | translate) }}
         </div>
       </div>
     </div>
 
+  </div>
+
+  <!-- Stock summary row -->
+  <div class="stock-summary" *ngIf="stats?.stock">
+    <div class="stock-pill">
+      <mat-icon>inventory</mat-icon>
+      <span>{{ stats?.stock?.total_references }} {{ 'AI.REFS' | translate }}</span>
+    </div>
+    <div class="stock-pill stock-warn">
+      <mat-icon>trending_down</mat-icon>
+      <span>{{ stats?.stock?.low_stock }} {{ 'AI.LOW_STOCK' | translate }}</span>
+    </div>
+    <div class="stock-pill">
+      <mat-icon>sensors</mat-icon>
+      <span>{{ stats?.stock?.sfp_references }} {{ 'AI.SFP_REFS' | translate }}</span>
+    </div>
+    <div class="stock-pill">
+      <mat-icon>developer_board</mat-icon>
+      <span>{{ stats?.stock?.carte_references }} {{ 'AI.CARD_REFS' | translate }}</span>
+    </div>
   </div>
 
   <ng-template #kpiSkeleton>
@@ -118,7 +165,7 @@
     <div class="control-bar">
       <div class="engine-badge">
         <mat-icon class="engine-icon">cloud</mat-icon>
-        <span>OpenRouter &middot; Llama 3.3 &middot; Generative AI</span>
+        <span [innerHTML]="'AI.OPENROUTER_DESC' | translate"></span>
       </div>
       <button class="clear-btn" (click)="clearChat()" [matTooltip]="'AI.CLEAR_CHAT' | translate">
         <mat-icon>delete_sweep</mat-icon>
@@ -147,7 +194,8 @@
             <div class="bubble-content" [innerHTML]="msg.html"></div>
             <div class="msg-meta" *ngIf="msg.role === 'assistant' && (msg.model || msg.intent)">
               <span class="meta-badge" *ngIf="msg.model"><mat-icon>memory</mat-icon> {{ msg.model }}</span>
-              <span class="meta-badge" *ngIf="msg.intent"><mat-icon>adjust</mat-icon> Intent: {{ msg.intent | uppercase }}</span>
+              <span class="meta-badge" *ngIf="msg.intent"><mat-icon>adjust</mat-icon> Intent: {{ msg.intent | uppercase
+                }}</span>
             </div>
           </div>
 
@@ -173,9 +221,9 @@
 
       <div class="quick-prompts">
         <button *ngFor="let p of quickPrompts" class="quick-chip" (click)="usePrompt(p.text)" [disabled]="isLoading"
-          [matTooltip]="p.text">
+          [matTooltip]="p.text | translate">
           <mat-icon class="chip-icon">{{ p.icon }}</mat-icon>
-          {{ p.label }}
+          {{ p.label | translate }}
         </button>
       </div>
 
@@ -183,9 +231,7 @@
 
         <div class="input-wrapper" [class.input-wrapper-loading]="isLoading">
           <textarea #textareaInput class="chat-textarea" rows="1" [(ngModel)]="userInput" (keydown)="onKeyDown($event)"
-            (input)="autoResize($event)"
-            [placeholder]="'AI.INPUT_PLACEHOLDER' | translate"
-            [disabled]="isLoading">
+            (input)="autoResize($event)" [placeholder]="'AI.INPUT_PLACEHOLDER' | translate" [disabled]="isLoading">
           </textarea>
 
           <button class="send-btn" [class.send-btn-active]="userInput.trim().length > 0" (click)="sendMessage()"
@@ -198,9 +244,10 @@
         <div class="input-footer">
           <span class="input-hint">
             <mat-icon class="hint-icon">cloud</mat-icon>
-            OpenRouter API connected
+            {{ 'AI.API_CONNECTED' | translate }}
           </span>
-          <span class="char-count" *ngIf="userInput.length > 0">{{ userInput.length }} {{ 'AI.CHARS' | translate }}</span>
+          <span class="char-count" *ngIf="userInput.length > 0">{{ userInput.length }} {{ 'AI.CHARS' | translate
+            }}</span>
         </div>
 
       </div>

@@ -20,7 +20,7 @@ interface DisplayMessage {
   model?: string;   // Modèle utilisé (ex: meta-llama/llama-3.3-70b-instruct)
 }
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-ai-assistant',
@@ -37,8 +37,9 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   // ── Références DOM ────────────────────────────────────────────────────────
   @ViewChild('chatZone') chatZone!: ElementRef<HTMLDivElement>;
   @ViewChild('textareaInput') textareaInput!: ElementRef<HTMLTextAreaElement>;
+  headerSubtitle = 'Maintenance & Stock AI';
 
-  // ── KPI Cards — données chargées depuis /api/ai/stats/ ───────────────────
+  // ── KPI Cards — données chargées depuis /api/iris/stats/ ──────────────────
   stats: AiStats | null = null;
   statsLoading = true;
   statsError = false;
@@ -57,15 +58,16 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
 
   // ── Quick prompts displayed above the input area ────────────────────────
   readonly quickPrompts: { icon: string; label: string; text: string }[] = [
-    { icon: 'bar_chart', label: 'Network Summary', text: 'Give me a summary of the current network state.' },
-    { icon: 'sensors', label: 'Diagnose SFP Issues', text: 'Diagnose the current SFP problems on the network.' },
-    { icon: 'developer_board_off', label: 'Card Failure slot 3', text: 'Card failure on slot 3 of TUN_0010.' }
+    { icon: 'sensors', label: 'AI.PROMPT_1_LABEL', text: 'AI.PROMPT_1_TEXT' },
+    { icon: 'inventory_2', label: 'AI.PROMPT_2_LABEL', text: 'AI.PROMPT_2_TEXT' },
+    { icon: 'developer_board', label: 'AI.PROMPT_3_LABEL', text: 'AI.PROMPT_3_TEXT' }
   ];
 
   constructor(
     private aiService: AiAssistantService,
     private sanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
   ) {
     marked.setOptions({ breaks: true, gfm: true });
   }
@@ -91,11 +93,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     });
 
     // Welcome message
-    this._pushAssistantMessage(
-      '**Hello Iris Here! I\'m your AI Assistant :)**\n\n' +
-      'I can analyze alerts, critical equipment, and answer questions about the network.\n\n' +
-      '_Use the quick prompts below or type your own question._'
-    );
+    this._pushAssistantMessage(this.translate.instant('AI.WELCOME_MSG'));
   }
 
   ngOnDestroy(): void {
@@ -124,7 +122,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
       content: m.text
     }));
 
-    // Appel HTTP POST vers /api/ai/chat/native/
+    // Appel HTTP POST vers /api/iris/chat/native/
     this.activeSub = this.aiService.sendMessage(apiMessages).subscribe({
       next: (res) => {
         this._pushAssistantMessage(res.response, res.intent, res.model);
@@ -134,7 +132,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('[AiAssistant] Error sending message:', err);
-        this._pushAssistantMessage('An error occurred while contacting the AI engine. Please try again.');
+        this._pushAssistantMessage(this.translate.instant('AI.ERROR_MSG'));
         this.isLoading = false;
         this.cdr.detectChanges();
       }
@@ -144,9 +142,9 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
   // ════════════════════════════════════════════════════════════════════════
   //  TASK 3 — Quick Prompt : pré-remplir + envoyer automatiquement
   // ════════════════════════════════════════════════════════════════════════
-  usePrompt(text: string): void {
+  usePrompt(key: string): void {
     if (this.isLoading) return;
-    this.userInput = text;
+    this.userInput = this.translate.instant(key);
     this.sendMessage();
   }
 
@@ -157,7 +155,7 @@ export class AiAssistantComponent implements OnInit, OnDestroy {
     this.activeSub?.unsubscribe();
     this.isLoading = false;
     this.messages = [];
-    this._pushAssistantMessage('**Conversation cleared.**\n\nHow can I help you?');
+    this._pushAssistantMessage(this.translate.instant('AI.CLEARED_MSG'));
   }
 
   // ════════════════════════════════════════════════════════════════════════

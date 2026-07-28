@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -75,15 +74,14 @@ export class PortReservationComponent implements OnInit, OnDestroy {
   copyDone           = false;
 
   // ── History ─────────────────────────────────────────────────
-  history: any[] = [];
-  loadingHistory: boolean = false;
-  historyError: string | null = null;
+  historyTasks: any[] = [];
+  historyLoading: boolean = false;
   historySearch: string = '';
   filterStatus = 'all';
   historyPage = 0;
   historyPageSize = 10;
   historyColumns: string[] = [
-    'reservation_id', 'router_name', 'port_name',
+    'task_id', 'device_name', 'port_name',
     'description', 'status', 'created_at',
     'swan_ticket', 'download'
   ];
@@ -123,11 +121,12 @@ export class PortReservationComponent implements OnInit, OnDestroy {
       interval(this.POLL_MS)
         .pipe(
           takeUntil(this.destroy$),
-          switchMap(() => this.api.getPortReservationHistory())
+          switchMap(() => this.api.getProvisioningTasks())
         )
         .subscribe({
           next: (data: any) => {
-            this.history = Array.isArray(data) ? data : (data.results ?? []);
+            const all = Array.isArray(data) ? data : (data.results || []);
+            this.historyTasks = all.filter((t: any) => t.task_type === 'port_reservation');
             this.cdr.detectChanges();
           },
           error: (err: any) => console.error('Polling error:', err)
@@ -363,27 +362,15 @@ export class PortReservationComponent implements OnInit, OnDestroy {
   // ── History ─────────────────────────────────────────────────
 
   loadHistory(): void {
-    this.loadingHistory = true;
-    this.historyError = null;
-    this.api.getPortReservationHistory().subscribe({
+    this.historyLoading = true;
+    this.api.getProvisioningTasks().subscribe({
       next: (data: any) => {
-        this.history = Array.isArray(data) ? data : (data.results ?? []);
-        this.loadingHistory = false;
+        const all = Array.isArray(data) ? data : (data.results || []);
+        this.historyTasks = all.filter((t: any) => t.task_type === 'port_reservation');
+        this.historyLoading = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        this.loadingHistory = false;
-
-        if (err.status === 404) {
-          // Endpoint not yet available on the backend — treat as empty, not an error
-          this.history = [];
-          this.historyError = null;
-        } else {
-          // Real server or network failure
-          console.error('Failed to load reservation history:', err);
-          this.historyError = 'Could not load history. Please check your connection.';
-        }
-      }
+      error: () => { this.historyLoading = false; }
     });
   }
 
@@ -393,16 +380,16 @@ export class PortReservationComponent implements OnInit, OnDestroy {
 
   get filteredHistory(): any[] {
     let list = this.filterStatus === 'all'
-      ? this.history
-      : this.history.filter(h => h.status === this.filterStatus);
+      ? this.historyTasks
+      : this.historyTasks.filter(t => t.status === this.filterStatus);
 
     if (this.historySearch.trim()) {
       const q = this.historySearch.toLowerCase();
-      list = list.filter(h =>
-        (h.router_name || h.router || '').toLowerCase().includes(q) ||
-        (h.port_name   || h.port   || '').toLowerCase().includes(q) ||
-        (h.description || '').toLowerCase().includes(q) ||
-        (h.status      || '').toLowerCase().includes(q)
+      list = list.filter(t =>
+        (t.device_name || '').toLowerCase().includes(q) ||
+        (t.parameters?.interface_name || '').toLowerCase().includes(q) ||
+        (t.parameters?.description || '').toLowerCase().includes(q) ||
+        (t.status || '').toLowerCase().includes(q)
       );
     }
     return list;
@@ -428,8 +415,8 @@ export class PortReservationComponent implements OnInit, OnDestroy {
   }
 
   generateSwanTicket(h: any): string {
-    const d  = new Date(h.reserved_at || h.created_at);
-    const id = (h.reservation_id ?? h.id ?? 0).toString().padStart(4, '0');
+    const d  = new Date(h.created_at);
+    const id = (h.task_id ?? h.id ?? 0).toString().padStart(4, '0');
     return `SWAN-${this.formatDateForTicket(d)}-${id}`;
   }
 

@@ -2,9 +2,9 @@
   
   <!-- Header -->
   <div class="vmodal-header" [style.borderColor]="getVerdictColor(data.result.verdict) + '40'">
-    <h2 class="vmodal-title">AI Pre-Execution Check</h2>
+    <h2 class="vmodal-title">{{ 'VALIDATOR.MODAL_TITLE' | translate }}</h2>
     <span class="ai-badge" [ngClass]="data.result.verdict" [style.borderColor]="getVerdictColor(data.result.verdict)">
-      {{ data.result.verdict_display || getVerdictLabel(data.result.verdict) }}
+      {{ data.result.verdict_display || (getVerdictLabel(data.result.verdict) | translate) }}
     </span>
   </div>
 
@@ -28,18 +28,18 @@
         <span class="dial-percent" [style.color]="getVerdictColor(data.result.verdict)">
           {{ (data.result.success_probability * 100).toFixed(0) }}%
         </span>
-        <span class="dial-sub">Success Probability</span>
+        <span class="dial-sub">{{ 'VALIDATOR.SUCCESS_PROB' | translate }}</span>
       </div>
     </div>
 
     <!-- Description -->
     <p class="vmodal-desc">
-      {{ data.result.verdict === 'blocked' ? 'Task execution is blocked due to critical risks.' : 'Task execution has potential risks. Review the checks below.' }}
+      {{ data.result.verdict === 'blocked' ? ('VALIDATOR.BLOCKED_DESC' | translate) : ('VALIDATOR.WARNING_DESC' | translate) }}
     </p>
 
     <!-- Pre-Execution Checks -->
     <div class="vcard-checks">
-      <h3 class="vcard-section-title">Pre-Execution Checks</h3>
+      <h3 class="vcard-section-title">{{ 'VALIDATOR.PRE_EXEC_CHECKS' | translate }}</h3>
       <div class="check-row" *ngFor="let check of data.result.pre_exec_checks"
         [ngClass]="'check-' + check.status"
         [class.top-failing]="data.result.verdict === 'blocked' && check.status === 'fail'">
@@ -62,11 +62,11 @@
   <!-- Actions -->
   <div class="vmodal-actions">
     <ng-container *ngIf="data.canProceed">
-      <button class="btn-ghost" (click)="onProceed()">Proceed Anyway</button>
-      <button class="btn-primary" (click)="onCancel()">Cancel</button>
+      <button class="btn-ghost" (click)="onProceed()">{{ 'VALIDATOR.BTN_PROCEED' | translate }}</button>
+      <button class="btn-primary" (click)="onCancel()">{{ 'VALIDATOR.BTN_CANCEL' | translate }}</button>
     </ng-container>
     <ng-container *ngIf="!data.canProceed">
-      <button class="btn-primary" (click)="onCancel()">OK, I'll fix it</button>
+      <button class="btn-primary" (click)="onCancel()">{{ 'VALIDATOR.BTN_FIX' | translate }}</button>
     </ng-container>
   </div>
 

@@ -167,14 +167,14 @@
           <th mat-header-cell *matHeaderCellDef class="header-accent th-center">{{ 'STOCK.COL_ACTIONS' | translate }}</th>
           <td mat-cell *matCellDef="let item" class="td-center">
             <div class="action-buttons" *ngIf="isAdmin">
-              <button mat-icon-button color="primary" [matTooltip]="'STOCK.ACTION_INC' | translate" (click)="incrementStock(item)">
-                <mat-icon>add_circle</mat-icon>
+              <button class="action-btn btn-add" [matTooltip]="'STOCK.ACTION_INC' | translate" (click)="incrementStock(item)">
+                <mat-icon>add</mat-icon>
               </button>
-              <button mat-icon-button color="warn" [matTooltip]="'STOCK.ACTION_DEC' | translate" (click)="decrementStock(item)" [disabled]="item.stock_qte <= 0">
-                <mat-icon>remove_circle</mat-icon>
+              <button class="action-btn btn-remove" [matTooltip]="'STOCK.ACTION_DEC' | translate" (click)="decrementStock(item)" [disabled]="item.stock_qte <= 0">
+                <mat-icon>remove</mat-icon>
               </button>
-              <button mat-icon-button color="warn" class="delete-btn" [matTooltip]="'STOCK.ACTION_DEL' | translate" (click)="deleteItem(item)">
-                <mat-icon>delete</mat-icon>
+              <button class="action-btn btn-delete" [matTooltip]="'STOCK.ACTION_DEL' | translate" (click)="deleteItem(item)">
+                <mat-icon>delete_outline</mat-icon>
               </button>
             </div>
           </td>

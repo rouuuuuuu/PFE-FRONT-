@@ -1,5 +1,5 @@
 /* ============================================================
-   DASHBOARD — Dark Glass Cards
+   DASHBOARD — Dark Glass Cards + Mixed Chart Types
    ============================================================ */
 
 /* ── Page header: title left, button right ── */
@@ -207,37 +207,18 @@
   vertical-align: middle;
 }
 
-.dot--green {
-  background: var(--status-green);
-  box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
-}
-
-.dot--yellow {
-  background: var(--status-yellow);
-  box-shadow: 0 0 6px rgba(255, 193, 7, 0.4);
-}
-
-.dot--blue {
-  background: var(--status-blue);
-  box-shadow: 0 0 6px rgba(26, 115, 232, 0.4);
-}
-
-.dot--orange {
-  background: var(--primary-orange);
-  box-shadow: 0 0 6px rgba(255, 121, 0, 0.4);
-}
-
-.dot--red {
-  background: var(--status-red);
-  box-shadow: 0 0 6px rgba(244, 67, 54, 0.4);
-}
+.dot--green  { background: var(--status-green);  box-shadow: 0 0 6px rgba(76, 175, 80, 0.4); }
+.dot--yellow { background: var(--status-yellow); box-shadow: 0 0 6px rgba(255, 193, 7, 0.4); }
+.dot--blue   { background: var(--status-blue);   box-shadow: 0 0 6px rgba(26, 115, 232, 0.4); }
+.dot--orange { background: var(--primary-orange); box-shadow: 0 0 6px rgba(255, 121, 0, 0.4); }
+.dot--red    { background: var(--status-red);     box-shadow: 0 0 6px rgba(244, 67, 54, 0.4); }
 
 /* --- Text Colors --- */
 .text-orange { color: var(--primary-orange); }
 .text-red    { color: var(--status-red); }
 .text-green  { color: var(--status-green); }
 
-/* --- Chip pills (match card + pie chart colors) --- */
+/* --- Chip pills (match card + chart colors) --- */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -265,7 +246,10 @@
 /* Shared error */
 .chip--red    { background: rgba(244,67,54,0.10);  color:#ef9a9a; border:1px solid rgba(244,67,54,0.22); }
 
-/* --- Chart Expansion --- */
+/* ============================================================
+   CHART EXPANSION PANEL
+   ============================================================ */
+
 .chart-expansion {
   margin-bottom: 24px;
   width: 100%;
@@ -285,8 +269,9 @@
 }
 
 .canvas-wrapper {
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  max-width: 500px;
+  height: 320px;
   display: block;
 }
 
@@ -297,12 +282,76 @@
     transform: translateY(-10px);
     max-height: 0;
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
     max-height: 500px;
   }
+}
+
+/* ============================================================
+   CSS TREEMAP (Cards, SubCards)
+   ============================================================ */
+
+.treemap-wrapper {
+  width: 100%;
+  max-width: 520px;
+  height: 300px;
+}
+
+.treemap-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.treemap-cell {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px;
+  box-sizing: border-box;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+  transition: filter 0.2s ease, transform 0.15s ease;
+  cursor: default;
+  overflow: hidden;
+}
+
+.treemap-cell:hover {
+  filter: brightness(1.25);
+  transform: scale(1.015);
+  z-index: 2;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.treemap-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  line-height: 1.2;
+}
+
+.treemap-count {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
+  line-height: 1;
 }
 
 /* --- Responsive --- */
@@ -316,7 +365,12 @@
   }
 
   .canvas-wrapper {
-    width: 240px;
+    max-width: 100%;
+    height: 260px;
+  }
+
+  .treemap-wrapper {
+    max-width: 100%;
     height: 240px;
   }
 }
@@ -518,11 +572,6 @@
   animation: fadeInResult 0.35s ease-out;
 }
 
-@keyframes fadeInResult {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
 /* ── Top row: Health & Chart ── */
 .ai-report-header {
   display: grid;
@@ -550,7 +599,7 @@
   align-items: center;
   justify-content: center;
   background: conic-gradient(
-    #66bb6a calc(var(--pct) * 1%), 
+    #66bb6a calc(var(--pct) * 1%),
     #ef5350 0
   );
   position: relative;
@@ -560,7 +609,7 @@
   content: '';
   position: absolute;
   inset: 6px;
-  background: #1a1a24; /* matches card bg approximately */
+  background: #1a1a24;
   border-radius: 50%;
 }
 

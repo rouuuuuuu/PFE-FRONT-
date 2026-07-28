@@ -1,6 +1,6 @@
 import {
   Component, OnInit, OnDestroy, ChangeDetectorRef,
-  PLATFORM_ID, Inject, HostListener, ElementRef
+  PLATFORM_ID, Inject, ElementRef
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
@@ -18,6 +18,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -45,6 +46,7 @@ import { TaskStateService } from '../../services/task-state.service';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -81,16 +83,26 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
   // ── Form ─────────────────────────────────────────────────
   form!: FormGroup;
 
+  // ── Service Type options ─────────────────────────────────
+  serviceTypes = [
+    { value: 'TDD_MNG',      label: 'TDD Management' },
+    { value: 'TDD_MPLS',     label: 'TDD MPLS' },
+    { value: 'TDD_INTERNET', label: 'TDD Internet' },
+    { value: 'FDD_MPLS',     label: 'FDD MPLS' },
+    { value: 'VOIP_TDD',     label: 'VoIP TDD' }
+  ];
+
   // ── VRF / Client options (dynamic) ───────────────────────
   vrfClients: { id: number; vrf_name: string }[] = [];
   filteredVrfClients: { id: number; vrf_name: string }[] = [];
-  vrfSearch = '';
-  vrfDropdownOpen = false;
   vrfLoading = false;
   vrfError = '';
 
   // ── Conditional visibility ──────────────────────────────
   showManagementIp = false;
+
+  // ── LAN duplicate warnings ──────────────────────────────
+  lanWarnings: Record<number, string> = {};
 
   // ── UI state ─────────────────────────────────────────────
   submitting = false;
@@ -99,10 +111,13 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
   currentTaskId: number | null = null;
   taskStatus: string | null = null;
   taskResult: string | null = null;
-  taskScriptOutput: string | null = null;
+  taskError: string | null = null;
+  junosScript: string | null = null;
+  huaweiScript: string | null = null;
   pollingActive = false;
   liberating = false;
-  copyDone = false;
+  copyJunosDone = false;
+  copyHuaweiDone = false;
 
   // ── History ───────────────────────────────────────────────
   historyTasks: any[] = [];
@@ -135,13 +150,6 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
-  /** Close VRF dropdown when clicking outside this component */
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    if (!this.elRef.nativeElement.contains(event.target)) {
-      this.vrfDropdownOpen = false;
-    }
-  }
 
   // ─────────────────────────────────────────────────────────
   ngOnInit(): void {
@@ -155,9 +163,9 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
       this.form.patchValue(state.formData);
       this.currentTaskId = state.taskId;
       this.taskStatus = state.status;
-      if (this.taskStatus === 'completed') {
+      if (this.taskStatus === 'SUCCESS') {
         this.pollingActive = false;
-      } else if (['queued', 'pending', 'running'].includes(this.taskStatus)) {
+      } else if (['PENDING'].includes(this.taskStatus)) {
         if (this.currentTaskId) this._startStatusPolling(this.currentTaskId);
       }
     }
@@ -216,56 +224,45 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     });
   }
 
-  filterVrfClients(): void {
-    this._applyVrfFilter();
+  filterVrfClients(query: string = ''): void {
+    this._applyVrfFilter(query);
   }
 
-  private _applyVrfFilter(): void {
-    const q = this.vrfSearch.toLowerCase();
-    this.filteredVrfClients = q
-      ? this.vrfClients.filter(c => c.vrf_name.toLowerCase().includes(q))
+  private _applyVrfFilter(q: string = ''): void {
+    const query = (q || '').toLowerCase();
+    this.filteredVrfClients = query
+      ? this.vrfClients.filter(c => c.vrf_name.toLowerCase().includes(query))
       : [...this.vrfClients];
   }
 
-  toggleVrfDropdown(): void {
-    this.vrfDropdownOpen = !this.vrfDropdownOpen;
-    if (this.vrfDropdownOpen) {
-      this.vrfSearch = '';
-      this._applyVrfFilter();
-    }
-  }
-
-  selectVrf(client: { id: number; vrf_name: string }): void {
-    // Set both vrf_client and client_name to the same vrf_name string
-    this.form.patchValue({
-      vrf_client: client.vrf_name,
-      client_name: client.vrf_name
-    });
-    this.vrfDropdownOpen = false;
-    this._onVrfChange(client.vrf_name);
-  }
-
-  private _onVrfChange(vrf: string): void {
-    const isMgmt = /MNG|MGT/i.test(vrf || '');
-    this.showManagementIp = isMgmt;
-    const mgmtCtrl = this.form.get('management_ip')!;
-    if (isMgmt) {
-      mgmtCtrl.setValidators(Validators.required);
+  // ── Service type change handler ──────────────────────────
+  onServiceTypeChange(value: string): void {
+    this.showManagementIp = value === 'VOIP_TDD';
+    const mngCtrl = this.form.get('mng_ip')!;
+    if (this.showManagementIp) {
+      mngCtrl.setValidators(Validators.required);
     } else {
-      mgmtCtrl.clearValidators();
-      mgmtCtrl.setValue('');
+      mngCtrl.clearValidators();
+      mngCtrl.setValue('');
     }
-    mgmtCtrl.updateValueAndValidity();
+    mngCtrl.updateValueAndValidity();
   }
 
   // ── Form builder ─────────────────────────────────────────
   private _buildForm(): void {
     this.form = this.fb.group({
       client_name: ['', Validators.required],
-      ip_sim: ['', Validators.required],
+      ipsim: ['', Validators.required],
       lan_clients: this.fb.array([this.fb.control('', Validators.required)]),
       vrf_client: ['', Validators.required],
-      management_ip: ['']
+      service_type: ['', Validators.required],
+      mng_ip: ['']
+    });
+
+    this.form.get('vrf_client')?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(val => {
+      this.filterVrfClients(val);
     });
   }
 
@@ -281,7 +278,44 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
   removeLanClient(index: number): void {
     if (this.lanClients.length > 1) {
       this.lanClients.removeAt(index);
+      // Clean up warning for removed index
+      delete this.lanWarnings[index];
+      // Re-index warnings above the removed index
+      const updated: Record<number, string> = {};
+      for (const [k, v] of Object.entries(this.lanWarnings)) {
+        const numKey = Number(k);
+        if (numKey > index) {
+          updated[numKey - 1] = v;
+        } else {
+          updated[numKey] = v;
+        }
+      }
+      this.lanWarnings = updated;
     }
+  }
+
+  // ── LAN duplicate check (on blur) ────────────────────────
+  checkLanDuplicate(index: number): void {
+    const value = (this.lanClients.at(index).value || '').trim();
+    if (!value) {
+      delete this.lanWarnings[index];
+      return;
+    }
+
+    this.svc.checkMplsLan(value).subscribe({
+      next: (res: any) => {
+        if (res?.exists) {
+          this.lanWarnings[index] = 'This LAN is already provisioned for another client';
+        } else {
+          delete this.lanWarnings[index];
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // Silently ignore check errors — non-blocking feature
+        delete this.lanWarnings[index];
+      }
+    });
   }
 
   // ── Submission ────────────────────────────────────────────
@@ -297,19 +331,17 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
 
     this.submitting = true;
 
+    // Build the flat payload — no parameters wrapper, no task_type
     const payload: any = {
-      task_type: 'mpls',
-      parameters: {
-        client_name: this.form.get('client_name')!.value,
-        ip_sim: this.form.get('ip_sim')!.value,
-        lan_clients: this.lanClients.value as string[],
-        vrf_client: this.form.get('vrf_client')!.value
-      }
+      client_name: this.form.get('client_name')!.value,
+      ipsim: this.form.get('ipsim')!.value,
+      lan_clients: this.lanClients.value as string[],
+      vrf_client: this.form.get('vrf_client')!.value,
+      service_type: this.form.get('service_type')!.value,
+      mng_ip: this.form.get('service_type')!.value === 'VOIP_TDD'
+        ? (this.form.get('mng_ip')!.value || null)
+        : null
     };
-
-    if (this.showManagementIp) {
-      payload.parameters.management_ip = this.form.get('management_ip')!.value;
-    }
 
     const validationPayload = {
       task_id: 0,
@@ -370,6 +402,32 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
       },
       error: (err: any) => {
         this.submitting = false;
+
+        // Map per-field 400 validation errors from the backend
+        if (err?.status === 400 && err?.error && typeof err.error === 'object') {
+          const errors = err.error;
+          let hasFieldErrors = false;
+
+          for (const [field, message] of Object.entries(errors)) {
+            const ctrl = this.form.get(field);
+            if (ctrl) {
+              ctrl.setErrors({ serverError: message as string });
+              ctrl.markAsTouched();
+              hasFieldErrors = true;
+            }
+          }
+
+          if (hasFieldErrors) {
+            this._toast('Please fix the validation errors below.', 'warn');
+          } else {
+            // Fields not matching form controls — show as generic toast
+            const firstMsg = Object.values(errors)[0] as string;
+            this._toast(firstMsg || 'Validation error.', 'error');
+          }
+          this.cdr.detectChanges();
+          return;
+        }
+
         const msg = err?.error?.error || err?.error?.detail
           || 'Failed to start MPLS provisioning task.';
         this._toast(msg, 'error');
@@ -380,9 +438,11 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
   // ── Status Polling ────────────────────────────────────────
   private _startStatusPolling(taskId: number): void {
     this.pollingActive = true;
-    this.taskStatus = 'pending';
+    this.taskStatus = 'PENDING';
     this.taskResult = null;
-    this.taskScriptOutput = null;
+    this.taskError = null;
+    this.junosScript = null;
+    this.huaweiScript = null;
 
     this.statusPollDestroy$.next();
 
@@ -391,20 +451,31 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     interval(this.STATUS_POLL_MS)
       .pipe(
         takeUntil(this.statusPollDestroy$),
-        switchMap(() => this.api.getProvisioningStatus(taskId))
+        switchMap(() => this.svc.getMplsResult(taskId))
       )
       .subscribe({
         next: (res: any) => {
-          this.taskStatus = res?.status ?? 'unknown';
-          this.taskResult = res?.result ?? res?.message ?? null;
-          this.taskScriptOutput = res?.script_output ?? res?.generated_commands ?? null;
+          this.taskStatus = res?.status ?? 'PENDING';
           this.cdr.detectChanges();
 
-          if (this.taskStatus === 'completed' || this.taskStatus === 'failed') {
+          if (this.taskStatus === 'SUCCESS') {
             this.pollingActive = false;
+            this.junosScript = res?.junos_script ?? null;
+            this.huaweiScript = res?.huawei_script ?? null;
+            this.taskResult = null;
+            this.taskError = null;
+            this.statusPollDestroy$.next();
+            this.loadHistory();
+          } else if (this.taskStatus === 'FAILURE') {
+            this.pollingActive = false;
+            this.taskError = res?.error ?? 'An unknown error occurred.';
+            this.junosScript = null;
+            this.huaweiScript = null;
             this.statusPollDestroy$.next();
             this.loadHistory();
           }
+          // PENDING — keep polling
+          this.cdr.detectChanges();
         },
         error: (err: any) => {
           console.error('Status poll error:', err);
@@ -441,16 +512,26 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     this.currentTaskId = null;
     this.taskStatus = null;
     this.taskResult = null;
-    this.taskScriptOutput = null;
+    this.taskError = null;
+    this.junosScript = null;
+    this.huaweiScript = null;
     this.pollingActive = false;
   }
 
-  /** Copy script output to clipboard */
-  copyScriptOutput(): void {
-    if (!this.taskScriptOutput) return;
-    this.clipboard.copy(this.taskScriptOutput);
-    this.copyDone = true;
-    setTimeout(() => this.copyDone = false, 2000);
+  /** Copy Junos script output to clipboard */
+  copyJunosScript(): void {
+    if (!this.junosScript) return;
+    this.clipboard.copy(this.junosScript);
+    this.copyJunosDone = true;
+    setTimeout(() => this.copyJunosDone = false, 2000);
+  }
+
+  /** Copy Huawei script output to clipboard */
+  copyHuaweiScript(): void {
+    if (!this.huaweiScript) return;
+    this.clipboard.copy(this.huaweiScript);
+    this.copyHuaweiDone = true;
+    setTimeout(() => this.copyHuaweiDone = false, 2000);
   }
 
   // ── Reset ─────────────────────────────────────────────
@@ -462,6 +543,7 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     }
     this.lanClients.at(0).setValue('');
     this.showManagementIp = false;
+    this.lanWarnings = {};
   }
 
   // ── History ───────────────────────────────────────────────
@@ -536,16 +618,20 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
   // ── Status helpers ────────────────────────────────────────
   getStatusClass(s: string): string {
     const m: Record<string, string> = {
-      completed: 'status-completed', in_progress: 'status-in-progress',
-      pending: 'status-pending', failed: 'status-failed'
+      completed: 'status-completed', SUCCESS: 'status-completed',
+      in_progress: 'status-in-progress', PENDING: 'status-pending',
+      pending: 'status-pending', failed: 'status-failed',
+      FAILURE: 'status-failed'
     };
     return m[s] || '';
   }
 
   getStatusIcon(s: string): string {
     const m: Record<string, string> = {
-      completed: 'check_circle', in_progress: 'sync',
-      pending: 'schedule', failed: 'error'
+      completed: 'check_circle', SUCCESS: 'check_circle',
+      in_progress: 'sync', PENDING: 'schedule',
+      pending: 'schedule', failed: 'error',
+      FAILURE: 'error'
     };
     return m[s] || 'help';
   }

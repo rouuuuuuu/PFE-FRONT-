@@ -5,12 +5,20 @@ import { Observable } from 'rxjs';
 // ── URL de base du backend Django ────────────────────────────────────────────
 const API_URL = 'http://127.0.0.1:8000/api';
 
-// ── Interface pour les statistiques retournées par /api/ai/stats/ ───────────
+// ── Interface pour les statistiques retournées par /api/iris/stats/ ──────────
 export interface AiStats {
   critical_sfps: number;
+  warning_sfps: number;
   down_ports: number;
-  critical_links: number;
-  total_routers: number;
+  unexpected_down: number;
+  faulty_cards: number;
+  stock?: {
+    total_references: number;
+    out_of_stock: number;
+    low_stock: number;
+    sfp_references: number;
+    carte_references: number;
+  };
 }
 
 // ── Interface pour les messages envoyés au backend ───────────────────────────
@@ -31,21 +39,21 @@ export interface NativeResponse {
 })
 export class AiAssistantService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // ════════════════════════════════════════════════════════════════════════
   //  1. Récupérer les statistiques réseau en temps réel
-  //     GET /api/ai/stats/ → { critical_sfps, down_ports, critical_links, total_routers }
+  //     GET /api/iris/stats/ → { critical_sfps, down_ports, critical_links, total_routers }
   // ════════════════════════════════════════════════════════════════════════
   getAiStats(): Observable<AiStats> {
-    return this.http.get<AiStats>(`${API_URL}/ai/stats/`);
+    return this.http.get<AiStats>(`${API_URL}/iris/stats/`);
   }
 
   // ════════════════════════════════════════════════════════════════════════
   //  2. Envoyer un message au moteur natif (Rule-based)
-  //     POST /api/ai/chat/native/ → { response: string }
+  //     POST /api/iris/chat/native/ → { response: string }
   // ════════════════════════════════════════════════════════════════════════
   sendMessage(messages: ChatMessage[]): Observable<NativeResponse> {
-    return this.http.post<NativeResponse>(`${API_URL}/ai/chat/`, { messages });
+    return this.http.post<NativeResponse>(`${API_URL}/iris/chat/`, { messages });
   }
 }

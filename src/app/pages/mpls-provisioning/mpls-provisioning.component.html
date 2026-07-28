@@ -25,7 +25,7 @@
 
     <div class="form-grid">
 
-      <!-- CLIENT NAME -->
+      <!-- CLIENT NAME (free-text display name) -->
       <mat-form-field appearance="outline" class="form-field" floatLabel="always">
         <mat-label>{{ 'MPLS_PROV.LABELS.CLIENT_NAME' | translate }}</mat-label>
         <input matInput formControlName="client_name" id="input-mpls-client-name"
@@ -34,20 +34,53 @@
         <mat-error *ngIf="form.get('client_name')?.hasError('required')">
           {{ 'MPLS_PROV.ERRORS.CLIENT_NAME' | translate }}
         </mat-error>
-      </mat-form-field>
-
-      <!-- IP SIM -->
-      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
-        <mat-label>{{ 'MPLS_PROV.LABELS.IP_SIM' | translate }}</mat-label>
-        <input matInput formControlName="ip_sim" id="input-mpls-ip-sim"
-          [placeholder]="'MPLS_PROV.PLACEHOLDERS.IP_SIM' | translate" class="mono-input">
-        <mat-icon matSuffix>dns</mat-icon>
-        <mat-hint>{{ 'MPLS_PROV.HINTS.IP_SIM' | translate }}</mat-hint>
-        <mat-error *ngIf="form.get('ip_sim')?.hasError('required')">
-          {{ 'MPLS_PROV.ERRORS.IP_SIM' | translate }}
+        <mat-error *ngIf="form.get('client_name')?.hasError('serverError')">
+          {{ form.get('client_name')?.getError('serverError') }}
         </mat-error>
       </mat-form-field>
 
+      <!-- IPSIM (renamed from ip_sim) -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>{{ 'MPLS_PROV.LABELS.IP_SIM' | translate }}</mat-label>
+        <input matInput formControlName="ipsim" id="input-mpls-ipsim"
+          [placeholder]="'MPLS_PROV.PLACEHOLDERS.IP_SIM' | translate" class="mono-input">
+        <mat-icon matSuffix>dns</mat-icon>
+        <mat-hint>{{ 'MPLS_PROV.HINTS.IP_SIM' | translate }}</mat-hint>
+        <mat-error *ngIf="form.get('ipsim')?.hasError('required')">
+          {{ 'MPLS_PROV.ERRORS.IP_SIM' | translate }}
+        </mat-error>
+        <mat-error *ngIf="form.get('ipsim')?.hasError('serverError')">
+          {{ form.get('ipsim')?.getError('serverError') }}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section: Service Type ──────────────────────────────── -->
+    <div class="section-label">
+      <mat-icon class="section-icon">category</mat-icon>
+      {{ 'MPLS_PROV.SECTIONS.SERVICE_TYPE' | translate }}
+    </div>
+
+    <div class="form-grid">
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>{{ 'MPLS_PROV.LABELS.SERVICE_TYPE' | translate }}</mat-label>
+        <mat-select formControlName="service_type" id="select-mpls-service-type"
+          (selectionChange)="onServiceTypeChange($event.value)">
+          <mat-option *ngFor="let st of serviceTypes" [value]="st.value">
+            {{ st.label }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>tune</mat-icon>
+        <mat-error *ngIf="form.get('service_type')?.hasError('required')">
+          {{ 'MPLS_PROV.ERRORS.SERVICE_TYPE' | translate }}
+        </mat-error>
+        <mat-error *ngIf="form.get('service_type')?.hasError('serverError')">
+          {{ form.get('service_type')?.getError('serverError') }}
+        </mat-error>
+      </mat-form-field>
     </div>
 
     <div class="section-divider"></div>
@@ -60,16 +93,28 @@
 
     <div class="lan-clients-container" formArrayName="lan_clients">
       <div class="lan-row" *ngFor="let ctrl of lanClients.controls; let i = index; let last = last">
-        <mat-form-field appearance="outline" class="form-field lan-field" floatLabel="always">
-          <mat-label>{{ 'MPLS_PROV.LABELS.LAN_CLIENT' | translate }} {{ lanClients.length > 1 ? '#' + (i + 1) : '' }}</mat-label>
-          <input matInput [formControlName]="i" class="mono-input"
-            [id]="'input-mpls-lan-' + i"
-            [placeholder]="'MPLS_PROV.PLACEHOLDERS.LAN_CLIENT' | translate">
-          <mat-icon matSuffix>device_hub</mat-icon>
-          <mat-error *ngIf="lanClients.at(i).hasError('required')">
-            {{ 'MPLS_PROV.ERRORS.LAN_CLIENT' | translate }}
-          </mat-error>
-        </mat-form-field>
+        <div class="lan-input-wrapper">
+          <mat-form-field appearance="outline" class="form-field lan-field" floatLabel="always">
+            <mat-label>{{ 'MPLS_PROV.LABELS.LAN_CLIENT' | translate }} {{ lanClients.length > 1 ? '#' + (i + 1) : '' }}</mat-label>
+            <input matInput [formControlName]="i" class="mono-input"
+              [id]="'input-mpls-lan-' + i"
+              [placeholder]="'MPLS_PROV.PLACEHOLDERS.LAN_CLIENT' | translate"
+              (blur)="checkLanDuplicate(i)">
+            <mat-icon matSuffix>device_hub</mat-icon>
+            <mat-error *ngIf="lanClients.at(i).hasError('required')">
+              {{ 'MPLS_PROV.ERRORS.LAN_CLIENT' | translate }}
+            </mat-error>
+            <mat-error *ngIf="lanClients.at(i).hasError('serverError')">
+              {{ lanClients.at(i).getError('serverError') }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- LAN duplicate warning (non-blocking) -->
+          <div class="lan-warning" *ngIf="lanWarnings[i]" @slideIn>
+            <mat-icon class="lan-warning-icon">warning_amber</mat-icon>
+            <span>{{ lanWarnings[i] }}</span>
+          </div>
+        </div>
 
         <!-- Add button (only on last row) -->
         <button *ngIf="last" class="action-btn lan-add-btn" type="button"
@@ -95,108 +140,62 @@
 
     <div class="form-grid">
 
-      <!-- VRF CLIENT — dynamic searchable dropdown -->
-      <div class="vrf-field-wrapper" [class.vrf-open]="vrfDropdownOpen">
-        <label class="vrf-label">{{ 'MPLS_PROV.LABELS.VRF_CLIENT' | translate }}</label>
-
-        <!-- Trigger button -->
-        <button type="button" class="vrf-trigger"
-                id="btn-mpls-vrf-trigger"
-                [class.vrf-trigger--error]="form.get('vrf_client')?.invalid && form.get('vrf_client')?.touched"
-                (click)="toggleVrfDropdown()">
-
+      <!-- VRF CLIENT — standard mat-autocomplete -->
+      <mat-form-field appearance="outline" class="form-field" floatLabel="always">
+        <mat-label>{{ 'MPLS_PROV.LABELS.VRF_CLIENT' | translate }}</mat-label>
+        
+        <input type="text" matInput formControlName="vrf_client"
+               id="input-mpls-vrf-client"
+               [matAutocomplete]="autoVrf"
+               placeholder="Search client…">
+               
+        <mat-autocomplete #autoVrf="matAutocomplete" panelClass="vrf-autocomplete-panel">
           <!-- Loading state -->
-          <ng-container *ngIf="vrfLoading">
-            <mat-spinner diameter="16" class="vrf-inline-spinner"></mat-spinner>
-            <span class="vrf-placeholder">Loading clients…</span>
-          </ng-container>
+          <mat-option *ngIf="vrfLoading" disabled class="vrf-state-option">
+            <mat-spinner diameter="16" class="vrf-spinner-inline"></mat-spinner>
+            Loading clients…
+          </mat-option>
 
-          <!-- Error state -->
-          <ng-container *ngIf="!vrfLoading && vrfError">
-            <mat-icon class="vrf-trigger-icon vrf-trigger-icon--err">error_outline</mat-icon>
-            <span class="vrf-placeholder vrf-placeholder--err">Error — click to retry</span>
-          </ng-container>
-
-          <!-- Normal state -->
-          <ng-container *ngIf="!vrfLoading && !vrfError">
-            <mat-icon class="vrf-trigger-icon">account_tree</mat-icon>
-            <span [class.vrf-placeholder]="!form.get('vrf_client')?.value"
-                  [class.vrf-selected-label]="!!form.get('vrf_client')?.value">
-              {{ form.get('vrf_client')?.value || ('MPLS_PROV.LABELS.VRF_CLIENT' | translate) }}
-            </span>
-          </ng-container>
-
-          <mat-icon class="vrf-chevron" [class.vrf-chevron--open]="vrfDropdownOpen">expand_more</mat-icon>
-        </button>
-
-        <!-- Validation error -->
-        <div class="vrf-error-msg"
-             *ngIf="form.get('vrf_client')?.invalid && form.get('vrf_client')?.touched">
-          {{ 'MPLS_PROV.ERRORS.VRF_CLIENT' | translate }}
-        </div>
-
-        <!-- Dropdown panel -->
-        <div class="vrf-panel" *ngIf="vrfDropdownOpen && !vrfLoading && !vrfError">
-
-          <!-- Fetch-error inside panel with retry -->
-          <div class="vrf-fetch-error" *ngIf="vrfError">
-            <mat-icon>warning</mat-icon>
+          <!-- Error state with retry -->
+          <mat-option *ngIf="!vrfLoading && vrfError" disabled class="vrf-state-option vrf-error-option"
+                      (click)="_loadVrfClients(); $event.stopPropagation()">
+            <mat-icon class="vrf-error-icon-inline">error_outline</mat-icon>
             {{ vrfError }}
-            <button type="button" class="vrf-retry-btn" (click)="$event.stopPropagation(); _loadVrfClients()">Retry</button>
-          </div>
+          </mat-option>
 
-          <!-- Filter input -->
-          <div class="vrf-search-wrap">
-            <mat-icon class="vrf-search-icon">search</mat-icon>
-            <input class="vrf-search-input" type="text"
-                   id="input-mpls-vrf-search"
-                   placeholder="Search client…"
-                   [(ngModel)]="vrfSearch"
-                   (ngModelChange)="filterVrfClients()"
-                   (click)="$event.stopPropagation()"
-                   autocomplete="off">
-            <button *ngIf="vrfSearch" type="button" class="vrf-clear-btn"
-                    (click)="vrfSearch=''; filterVrfClients(); $event.stopPropagation()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
+          <!-- Options -->
+          <mat-option *ngFor="let client of filteredVrfClients" [value]="client.vrf_name">
+            {{ client.vrf_name }}
+          </mat-option>
 
-          <!-- Count hint -->
-          <div class="vrf-count-hint">
-            {{ filteredVrfClients.length }} / {{ vrfClients.length }} clients
-          </div>
-
-          <!-- Options list -->
-          <ul class="vrf-list" role="listbox">
-            <li *ngFor="let client of filteredVrfClients"
-                class="vrf-item"
-                [class.vrf-item--active]="form.get('vrf_client')?.value === client.vrf_name"
-                (click)="selectVrf(client)"
-                role="option">
-              <mat-icon class="vrf-item-icon">router</mat-icon>
-              {{ client.vrf_name }}
-              <mat-icon class="vrf-item-check"
-                        *ngIf="form.get('vrf_client')?.value === client.vrf_name">check</mat-icon>
-            </li>
-            <li class="vrf-empty" *ngIf="!filteredVrfClients.length">
-              <mat-icon>search_off</mat-icon>
-              No clients match "{{ vrfSearch }}"
-            </li>
-          </ul>
-        </div>
-      </div>
+          <!-- Empty state -->
+          <mat-option *ngIf="!vrfLoading && !vrfError && !filteredVrfClients.length" disabled>
+            No clients match.
+          </mat-option>
+        </mat-autocomplete>
+        <mat-icon matSuffix>account_tree</mat-icon>
+        <mat-error *ngIf="form.get('vrf_client')?.hasError('required')">
+          {{ 'MPLS_PROV.ERRORS.VRF_CLIENT' | translate }}
+        </mat-error>
+        <mat-error *ngIf="form.get('vrf_client')?.hasError('serverError')">
+          {{ form.get('vrf_client')?.getError('serverError') }}
+        </mat-error>
+      </mat-form-field>
 
 
-      <!-- MANAGEMENT IP (conditional) -->
+      <!-- MANAGEMENT IP (conditional — only when service_type === VOIP_TDD) -->
       <mat-form-field appearance="outline" class="form-field mgmt-field" floatLabel="always"
         *ngIf="showManagementIp" @slideIn>
         <mat-label>{{ 'MPLS_PROV.LABELS.MANAGEMENT_IP' | translate }}</mat-label>
-        <input matInput formControlName="management_ip" id="input-mpls-mgmt-ip"
+        <input matInput formControlName="mng_ip" id="input-mpls-mng-ip"
           [placeholder]="'MPLS_PROV.PLACEHOLDERS.MGMT_IP' | translate" class="mono-input">
         <mat-icon matSuffix>settings_ethernet</mat-icon>
         <mat-hint>{{ 'MPLS_PROV.HINTS.MGMT_IP' | translate }}</mat-hint>
-        <mat-error *ngIf="form.get('management_ip')?.hasError('required')">
+        <mat-error *ngIf="form.get('mng_ip')?.hasError('required')">
           {{ 'MPLS_PROV.ERRORS.MGMT_IP' | translate }}
+        </mat-error>
+        <mat-error *ngIf="form.get('mng_ip')?.hasError('serverError')">
+          {{ form.get('mng_ip')?.getError('serverError') }}
         </mat-error>
       </mat-form-field>
 
@@ -222,7 +221,7 @@
 </mat-card>
 
 <!-- ══════════════════════════════════════════════════════════════
-     RESULT PANEL (Polling / Output / Liberate)
+     RESULT PANEL (Polling / Script Output / Error / Liberate)
      ══════════════════════════════════════════════════════════════ -->
 <mat-card class="result-panel" *ngIf="pollingActive || taskStatus">
   <mat-card-content>
@@ -238,31 +237,53 @@
       </button>
     </div>
 
+    <!-- POLLING INDICATOR -->
     <div class="polling-indicator" *ngIf="pollingActive">
       <mat-icon class="spin-icon">autorenew</mat-icon>
       <span>{{ 'MPLS_PROV.RESULT.POLLING' | translate }}</span>
     </div>
 
-    <!-- STATUS TEXT -->
-    <div class="result-text" *ngIf="taskResult">
-      <div class="result-label">{{ 'MPLS_PROV.RESULT.MESSAGE' | translate }}</div>
-      <p>{{ taskResult }}</p>
+    <!-- FAILURE ERROR MESSAGE -->
+    <div class="task-error-panel" *ngIf="taskStatus === 'FAILURE' && taskError" @slideIn>
+      <mat-icon class="task-error-icon">error</mat-icon>
+      <div class="task-error-content">
+        <div class="task-error-label">Task Failed</div>
+        <p class="task-error-text">{{ taskError }}</p>
+      </div>
     </div>
 
-    <!-- SCRIPT OUTPUT -->
-    <div class="result-output" *ngIf="taskScriptOutput">
-      <div class="result-output-header">
-        <div class="result-label">{{ 'MPLS_PROV.RESULT.OUTPUT' | translate }}</div>
-        <button class="copy-btn" (click)="copyScriptOutput()">
-          <mat-icon>{{ copyDone ? 'check' : 'content_copy' }}</mat-icon>
-          {{ copyDone ? ('MPLS_PROV.RESULT.COPIED' | translate) : ('MPLS_PROV.RESULT.COPY' | translate) }}
+    <!-- JUNOS SCRIPT OUTPUT (always present on SUCCESS) -->
+    <div class="script-section" *ngIf="taskStatus === 'SUCCESS' && junosScript" @slideIn>
+      <div class="script-section-header">
+        <div class="result-label">
+          <mat-icon class="script-vendor-icon">terminal</mat-icon>
+          Junos Configuration
+        </div>
+        <button class="copy-btn" (click)="copyJunosScript()">
+          <mat-icon>{{ copyJunosDone ? 'check' : 'content_copy' }}</mat-icon>
+          {{ copyJunosDone ? ('MPLS_PROV.RESULT.COPIED' | translate) : ('MPLS_PROV.RESULT.COPY' | translate) }}
         </button>
       </div>
-      <div class="script-output-pre">{{ taskScriptOutput }}</div>
+      <div class="script-output-pre">{{ junosScript }}</div>
     </div>
 
-    <!-- LIBERATE BUTTON (only if completed) -->
-    <div class="liberate-row" *ngIf="taskStatus === 'completed'">
+    <!-- HUAWEI SCRIPT OUTPUT (only present for TDD_MPLS/FDD_MPLS — may be null) -->
+    <div class="script-section" *ngIf="taskStatus === 'SUCCESS' && huaweiScript" @slideIn>
+      <div class="script-section-header">
+        <div class="result-label">
+          <mat-icon class="script-vendor-icon">router</mat-icon>
+          Huawei Configuration
+        </div>
+        <button class="copy-btn" (click)="copyHuaweiScript()">
+          <mat-icon>{{ copyHuaweiDone ? 'check' : 'content_copy' }}</mat-icon>
+          {{ copyHuaweiDone ? ('MPLS_PROV.RESULT.COPIED' | translate) : ('MPLS_PROV.RESULT.COPY' | translate) }}
+        </button>
+      </div>
+      <div class="script-output-pre script-output-huawei">{{ huaweiScript }}</div>
+    </div>
+
+    <!-- LIBERATE BUTTON (only if completed / SUCCESS) -->
+    <div class="liberate-row" *ngIf="taskStatus === 'completed' || taskStatus === 'SUCCESS'">
       <button class="liberate-btn" type="button" (click)="liberateTask()" [disabled]="liberating">
         <mat-spinner *ngIf="liberating" diameter="18" class="btn-spinner"></mat-spinner>
         <mat-icon *ngIf="!liberating">lock_open</mat-icon>

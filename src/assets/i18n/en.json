@@ -169,7 +169,35 @@
     "INPUT_PLACEHOLDER": "Ask a question about the network... (Enter = send, Shift+Enter = new line)",
     "SEND": "Send (Enter)",
     "LOCAL_ENGINE_ACTIVE": "Local engine active — data stays secure",
-    "CHARS": "chars"
+    "CHARS": "chars",
+    "TITLE": "Iris",
+    "SUBTITLE": "Maintenance & Stock AI",
+    "LLAMA_MODEL": "Llama 3.3 (OpenRouter)",
+    "WARNING_SFPS": "Warning SFPs",
+    "CHECK_REQUIRED": "Check required",
+    "FAULTY_CARDS": "Faulty Cards",
+    "NEEDS_SWAP": "Needs swap",
+    "OUT_OF_STOCK": "Out of Stock",
+    "REORDER_NEEDED": "Reorder needed",
+    "STOCKED": "Stocked",
+    "LINK_LOST": "Link lost",
+    "ALL_UP": "All up",
+    "ALL_OK": "All OK",
+    "REFS": "refs",
+    "LOW_STOCK": "low stock",
+    "SFP_REFS": "SFP refs",
+    "CARD_REFS": "card refs",
+    "OPENROUTER_DESC": "OpenRouter &middot; Llama 3.3 &middot; Generative AI",
+    "API_CONNECTED": "OpenRouter API connected",
+    "PROMPT_1_LABEL": "SFP Health",
+    "PROMPT_1_TEXT": "Which SFPs are currently critical or degraded?",
+    "PROMPT_2_LABEL": "Stock Overview",
+    "PROMPT_2_TEXT": "What is our current stock level for SFPs and cards?",
+    "PROMPT_3_LABEL": "Faulty Cards",
+    "PROMPT_3_TEXT": "List all currently faulty cards.",
+    "WELCOME_MSG": "Ask me about SFP replacements, faulty cards, DOWN ports, spare parts availability, and stock levels.",
+    "ERROR_MSG": "An error occurred while contacting the AI engine. Please try again.",
+    "CLEARED_MSG": "**Conversation cleared.**\n\nHow can I help you?"
   },
   "TOPOLOGY": {
     "TITLE": "Live Network Topology",
@@ -394,6 +422,7 @@
     "SUBTITLE": "Configure MPLS VRF provisioning for B2B clients.",
     "SECTIONS": {
       "CLIENT_IDENTIFICATION": "Client Identification",
+      "SERVICE_TYPE": "Service Type",
       "LAN_CLIENT": "LAN Client",
       "VRF_CONFIG": "VRF Configuration"
     },
@@ -402,6 +431,7 @@
       "IP_SIM": "IP SIM",
       "LAN_CLIENT": "LAN Client",
       "VRF_CLIENT": "VRF Client",
+      "SERVICE_TYPE": "Service Type",
       "MANAGEMENT_IP": "Management IP"
     },
     "HINTS": {
@@ -420,7 +450,8 @@
       "IP_SIM": "IP SIM is required",
       "LAN_CLIENT": "LAN address is required",
       "VRF_CLIENT": "VRF profile is required",
-      "MGMT_IP": "Management IP is required for this VRF"
+      "SERVICE_TYPE": "Service type is required",
+      "MGMT_IP": "Management IP is required for VoIP TDD"
     },
     "BUTTONS": {
       "EXECUTE": "Execute Task",
@@ -547,7 +578,18 @@
     "STUCK": "Stuck",
     "OF_ALL_PORTS": "of all ports",
     "STUCK_PORTS": "Stuck Ports (no active task)",
-    "VENDORS": "Routers by Vendor"
+    "VENDORS": "Routers by Vendor",
+    "NO_ROUTERS_MATCH": "No routers match",
+    "DOWN_ROUTERS": "DOWN",
+    "UP_ROUTERS": "UP",
+    "CLICK_TO_EXPAND": "— click to expand",
+    "SMART_VALIDATOR": "Smart Validator",
+    "VERDICT_BREAKDOWN": "Verdict breakdown — today",
+    "SAFE_LABEL": "Safe",
+    "CAUTION_LABEL": "Caution",
+    "BLOCKED_LABEL": "Blocked",
+    "NO_VALIDATIONS": "No validations run today",
+    "SEARCH_PLACEHOLDER": "Search hostname or IP…"
   },
   "SMART_TOOLS": {
     "TITLE": "Smart Tools",
@@ -594,7 +636,13 @@
     "COL_TIME": "Time",
     "SAFE": "safe",
     "AVAILABLE": "Available",
-    "NO_HISTORY": "No validation history yet."
+    "NO_HISTORY": "No validation history yet.",
+    "MODAL_TITLE": "AI Pre-Execution Check",
+    "BLOCKED_DESC": "Task execution is blocked due to critical risks.",
+    "WARNING_DESC": "Task execution has potential risks. Review the checks below.",
+    "BTN_PROCEED": "Proceed Anyway",
+    "BTN_CANCEL": "Cancel",
+    "BTN_FIX": "OK, I'll fix it"
   },
   "RCA_LIST": {
     "TITLE": "Root Cause Analysis",

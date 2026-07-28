@@ -452,8 +452,9 @@
       <th mat-header-cell *matHeaderCellDef class="header-accent">
         {{ 'PROVISIONING.COL_CLIENT' | translate }}
       </th>
-      <td mat-cell *matCellDef="let t" class="td-secondary">
+      <td mat-cell *matCellDef="let t" class="td-secondary td-client">
         {{ t.parameters?.client_name || t.parameters?.nom_client || '—' }}
+        <span *ngIf="isCpe(t)" class="badge-cpe" title="NAT mode: sans_nat_avec_cpe">CPE</span>
       </td>
     </ng-container>
 
@@ -474,6 +475,22 @@
       </th>
       <td mat-cell *matCellDef="let t">
         <span class="chip chip-bw">{{ t.parameters?.debit_mbps || '—' }} Mbps</span>
+      </td>
+    </ng-container>
+
+    <!-- Private IP -->
+    <ng-container matColumnDef="private_ip">
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">Private IP</th>
+      <td mat-cell *matCellDef="let t" class="td-center td-mono">
+        {{ getIps(t).privateIp ?? '—' }}
+      </td>
+    </ng-container>
+
+    <!-- Public IP -->
+    <ng-container matColumnDef="public_ip">
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">Public IP</th>
+      <td mat-cell *matCellDef="let t" class="td-center td-mono">
+        {{ getIps(t).publicIp ?? '—' }}
       </td>
     </ng-container>
 

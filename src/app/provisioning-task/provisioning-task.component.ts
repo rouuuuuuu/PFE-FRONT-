@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../services/api.service';
+import { extractIps, ExtractedIps } from '../shared/utils/ip-extractor';
 import { forkJoin, Subscription, interval } from 'rxjs';
 import { switchMap, takeWhile, tap } from 'rxjs/operators';
 
@@ -52,6 +53,11 @@ export class ProvisioningTaskComponent implements OnInit, OnDestroy {
   messageType = '';
 
   columns = ['device_name', 'status', 'created_at'];
+  // For internet tasks we show extra IP columns
+  internetColumns = ['device_name', 'status', 'private_ip', 'public_ip', 'created_at'];
+
+  /** Cache extracted IPs per task id so the template getter doesn't re-run on every CD cycle */
+  private _ipsCache = new Map<number, ExtractedIps>();
 
   // Variables for the Autocomplete Dropdown
   allDevices: any[] = [];
@@ -79,6 +85,9 @@ export class ProvisioningTaskComponent implements OnInit, OnDestroy {
       this.form.task_type = this.currentTaskType;
 
       this.taskDisplayName = this.currentTaskType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+      // Use extended columns for internet provisioning tasks
+      this.columns = this.currentTaskType === 'internet' ? this.internetColumns : ['device_name', 'status', 'created_at'];
 
       this.loadTasks();
       this.message = '';
@@ -132,6 +141,7 @@ export class ProvisioningTaskComponent implements OnInit, OnDestroy {
   // --- ORIGINAL TASK LOGIC ---
   loadTasks() {
     this.loadingTasks = true;
+    this._ipsCache.clear();
     this.api.getProvisioningTasks().subscribe({
       next: (data: any) => {
         const allTasks = Array.isArray(data) ? data : (data.results || []);
@@ -143,6 +153,32 @@ export class ProvisioningTaskComponent implements OnInit, OnDestroy {
         this.loadingTasks = false;
       }
     });
+  }
+
+  // --- INTERNET TASK HELPERS ---
+
+  /**
+   * Returns true when the task's parameters indicate CPE mode.
+   * Checks parameters.nat_mode directly — no string parsing.
+   */
+  isCpe(task: any): boolean {
+    return task?.parameters?.nat_mode === 'sans_nat_avec_cpe';
+  }
+
+  /**
+   * Returns extracted IPs for the given task, using an in-memory cache
+   * so the regex doesn't run on every change-detection cycle.
+   */
+  getIps(task: any): ExtractedIps {
+    const id: number = task?.id ?? task?.task_id;
+    if (id !== undefined && this._ipsCache.has(id)) {
+      return this._ipsCache.get(id)!;
+    }
+    const result = extractIps(task?.script_output ?? null);
+    if (id !== undefined) {
+      this._ipsCache.set(id, result);
+    }
+    return result;
   }
 
   // --- LIVE STATUS POLLING ---

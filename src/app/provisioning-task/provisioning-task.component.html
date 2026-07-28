@@ -132,7 +132,10 @@
 
     <ng-container matColumnDef="device_name">
       <th mat-header-cell *matHeaderCellDef class="header-accent"> {{ 'PROV_TASK.COL_DEVICE' | translate }} </th>
-      <td mat-cell *matCellDef="let t" class="td-bold"> {{ t.device_name }} </td>
+      <td mat-cell *matCellDef="let t" class="td-bold td-device">
+        {{ t.device_name }}
+        <span *ngIf="isCpe(t)" class="badge-cpe" title="NAT mode: sans_nat_avec_cpe">CPE</span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="status">
@@ -141,6 +144,20 @@
         <span [style.color]="getStatusColor(t.status)" class="status-text">
           {{ t.status }}
         </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="private_ip">
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">Private IP</th>
+      <td mat-cell *matCellDef="let t" class="td-center td-mono">
+        {{ getIps(t).privateIp ?? '—' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="public_ip">
+      <th mat-header-cell *matHeaderCellDef class="header-accent th-center">Public IP</th>
+      <td mat-cell *matCellDef="let t" class="td-center td-mono">
+        {{ getIps(t).publicIp ?? '—' }}
       </td>
     </ng-container>
 
@@ -153,7 +170,7 @@
     <tr mat-row *matRowDef="let row; columns: columns;"></tr>
 
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell td-empty" colspan="3">
+      <td class="mat-cell td-empty" [attr.colspan]="columns.length">
         {{ 'PROV_TASK.NO_HISTORY_FOR' | translate }} {{ taskDisplayName }}.
       </td>
     </tr>

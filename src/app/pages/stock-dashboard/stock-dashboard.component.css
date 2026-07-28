@@ -408,15 +408,54 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
-.action-buttons button {
-  transform: scale(0.9);
+.action-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-.delete-btn {
-  color: #ef4444 !important;
+.action-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.action-btn:not(:disabled):hover {
+  transform: translateY(-2px);
+}
+
+.btn-add:not(:disabled):hover {
+  background: rgba(76, 175, 80, 0.1);
+  border-color: var(--status-green);
+  color: var(--status-green);
+}
+
+.btn-remove:not(:disabled):hover {
+  background: rgba(255, 152, 0, 0.1);
+  border-color: #ff9800;
+  color: #ff9800;
+}
+
+.btn-delete:not(:disabled):hover {
+  background: rgba(244, 67, 54, 0.1);
+  border-color: var(--status-red);
+  color: var(--status-red);
 }
 
 /* ── Transfer Cell ── */

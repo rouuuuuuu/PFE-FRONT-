@@ -137,6 +137,46 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
+.kpi-grid > :last-child:nth-child(odd) {
+  grid-column: span 2;
+}
+
+.stock-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.stock-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stock-pill mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--primary-orange);
+}
+
+.stock-warn {
+  border-color: rgba(255, 112, 67, 0.3);
+  color: #ffccbc;
+}
+.stock-warn mat-icon {
+  color: #ff7043;
+}
 
 .kpi-card {
   background: var(--glass-bg);

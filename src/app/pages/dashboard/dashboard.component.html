@@ -23,7 +23,7 @@
   <!-- ── Row 1: Devices ─────────────────────────────────────── -->
   <div class="dashboard-row">
 
-    <!-- Routers — orange -->
+    <!-- Routers — orange (pie) -->
     <mat-card class="stat-card border-orange clickable" (click)="toggleChart('routers')">
       <mat-card-content>
         <div class="stat-header">
@@ -40,7 +40,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Switches — indigo -->
+    <!-- Switches — indigo (histogram) -->
     <mat-card class="stat-card border-indigo clickable" (click)="toggleChart('switches')">
       <mat-card-content>
         <div class="stat-header">
@@ -55,9 +55,10 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Backhaul Links — green / red conditional -->
+    <!-- Backhaul Links — green/red (stacked bar) -->
     <mat-card class="stat-card clickable" (click)="toggleChart('links')"
-      [class.border-green]="stats.backhaul_links.alarm === 0" [class.border-red]="stats.backhaul_links.alarm > 0">
+      [class.border-green]="stats.backhaul_links.alarm === 0"
+      [class.border-red]="stats.backhaul_links.alarm > 0">
       <mat-card-content>
         <div class="stat-header">
           <mat-icon class="stat-icon icon-green">link</mat-icon>
@@ -81,9 +82,27 @@
         <mat-card-title>{{ 'DASHBOARD.DISTRIBUTION' | translate:{chartTitle: chartTitle} }}</mat-card-title>
       </mat-card-header>
       <mat-card-content class="chart-body">
-        <div class="canvas-wrapper">
-          <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"></canvas>
+
+        <!-- Canvas chart (pie, bar, doughnut, stacked bar) -->
+        <div class="canvas-wrapper" *ngIf="!isTreemap">
+          <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="chartType"></canvas>
         </div>
+
+        <!-- CSS Treemap -->
+        <div class="treemap-wrapper" *ngIf="isTreemap">
+          <div class="treemap-container">
+            <div *ngFor="let rect of treemapRects" class="treemap-cell"
+              [style.left.%]="rect.x"
+              [style.top.%]="rect.y"
+              [style.width.%]="rect.width"
+              [style.height.%]="rect.height"
+              [style.background]="rect.color">
+              <span class="treemap-label">{{ rect.label | slice:0:16 }}{{ rect.label.length > 16 ? '…' : '' }}</span>
+              <span class="treemap-count">{{ rect.count }}</span>
+            </div>
+          </div>
+        </div>
+
       </mat-card-content>
     </mat-card>
   </div>
@@ -91,7 +110,7 @@
   <!-- ── Row 2: Hardware ────────────────────────────────────── -->
   <div class="dashboard-row">
 
-    <!-- Ports — blue -->
+    <!-- Ports — blue (doughnut) -->
     <mat-card class="stat-card border-blue clickable" (click)="toggleChart('ports')">
       <mat-card-content>
         <div class="stat-header">
@@ -107,7 +126,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Cards — amber -->
+    <!-- Cards — amber (treemap) -->
     <mat-card class="stat-card border-amber clickable" (click)="toggleChart('cards')">
       <mat-card-content>
         <div class="stat-header">
@@ -126,7 +145,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- SFPs — cyan -->
+    <!-- SFPs — cyan (pie) -->
     <mat-card class="stat-card border-cyan clickable" (click)="toggleChart('sfps')">
       <mat-card-content>
         <div class="stat-header">
@@ -145,7 +164,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- SubCards — purple -->
+    <!-- SubCards — purple (treemap) -->
     <mat-card class="stat-card border-purple clickable" (click)="toggleChart('subcards')">
       <mat-card-content>
         <div class="stat-header">
@@ -173,9 +192,27 @@
         <mat-card-title>{{ 'DASHBOARD.DISTRIBUTION' | translate:{chartTitle: chartTitle} }}</mat-card-title>
       </mat-card-header>
       <mat-card-content class="chart-body">
-        <div class="canvas-wrapper">
-          <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"></canvas>
+
+        <!-- Canvas chart -->
+        <div class="canvas-wrapper" *ngIf="!isTreemap">
+          <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="chartType"></canvas>
         </div>
+
+        <!-- CSS Treemap -->
+        <div class="treemap-wrapper" *ngIf="isTreemap">
+          <div class="treemap-container">
+            <div *ngFor="let rect of treemapRects" class="treemap-cell"
+              [style.left.%]="rect.x"
+              [style.top.%]="rect.y"
+              [style.width.%]="rect.width"
+              [style.height.%]="rect.height"
+              [style.background]="rect.color">
+              <span class="treemap-label">{{ rect.label | slice:0:16 }}{{ rect.label.length > 16 ? '…' : '' }}</span>
+              <span class="treemap-count">{{ rect.count }}</span>
+            </div>
+          </div>
+        </div>
+
       </mat-card-content>
     </mat-card>
   </div>

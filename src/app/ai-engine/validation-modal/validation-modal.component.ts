@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ValidationResult } from '../ai-engine.models';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface ValidationModalData {
   result: ValidationResult;
@@ -12,7 +13,7 @@ export interface ValidationModalData {
 @Component({
   selector: 'app-validation-modal',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatIconModule],
+  imports: [CommonModule, MatDialogModule, MatIconModule, TranslateModule],
   templateUrl: './validation-modal.component.html',
   styleUrl: './validation-modal.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -33,7 +34,7 @@ export class ValidationModalComponent {
   }
 
   getVerdictLabel(verdict: string): string {
-    return ({ safe: 'Safe', warning: 'Caution', blocked: 'Blocked' } as Record<string, string>)[verdict] ?? 'Unknown';
+    return ({ safe: 'VALIDATOR.SAFE_LABEL', warning: 'VALIDATOR.CAUTION_LABEL', blocked: 'VALIDATOR.BLOCKED_LABEL' } as Record<string, string>)[verdict] ?? 'Unknown';
   }
 
   getArcOffset(probability: number): number {

@@ -31,6 +31,7 @@ import { AiEngineService }      from '../../ai-engine/ai-engine.service';
 import { ValidationModalComponent } from '../../ai-engine/validation-modal/validation-modal.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TaskStateService } from '../../services/task-state.service';
+import { extractIps, ExtractedIps } from '../../shared/utils/ip-extractor';
 
 // ── Interfaces ───────────────────────────────────────────────
 interface RouterDevice {
@@ -146,9 +147,13 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   historyPageSize = 10;
   historyColumns  : string[] = [
     'task_id', 'device_name', 'client_name',
-    'vlan', 'debit_mbps', 'status', 'created_at',
+    'vlan', 'debit_mbps', 'private_ip', 'public_ip',
+    'status', 'created_at',
     'swan_ticket', 'download'
   ];
+
+  /** Cache extracted IPs per task id — avoids re-running regex on every CD cycle */
+  private _ipsCache = new Map<number, ExtractedIps>();
 
   private isBrowser: boolean;
 
@@ -659,6 +664,7 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   // ── History ───────────────────────────────────────────────
   loadHistory(): void {
     this.historyLoading = true;
+    this._ipsCache.clear();
     this.api.getProvisioningTasks().subscribe({
       next: (data: any) => {
         const all = Array.isArray(data) ? data : (data.results || []);
@@ -668,6 +674,29 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
       },
       error: () => { this.historyLoading = false; }
     });
+  }
+
+  /**
+   * Returns true when the task used CPE mode.
+   * Reads parameters.nat_mode directly — no parsing.
+   */
+  isCpe(task: any): boolean {
+    return task?.parameters?.nat_mode === 'sans_nat_avec_cpe';
+  }
+
+  /**
+   * Returns extracted IPs for the given task, memoised by task id.
+   */
+  getIps(task: any): ExtractedIps {
+    const id: number = task?.id ?? task?.task_id;
+    if (id !== undefined && this._ipsCache.has(id)) {
+      return this._ipsCache.get(id)!;
+    }
+    const result = extractIps(task?.script_output ?? null);
+    if (id !== undefined) {
+      this._ipsCache.set(id, result);
+    }
+    return result;
   }
 
   get filteredHistory(): any[] {

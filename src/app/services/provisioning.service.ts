@@ -88,11 +88,31 @@ export class ProvisioningService {
 
 
   /**
-   * Start an MPLS provisioning task.
+   * Start MPLS Provisioning Task
    * POST /api/provisioning/mpls/start/
+   * Exact match of the backend flat JSON contract (no `parameters` wrapper).
    */
   startMplsProvisioning(payload: any): Observable<any> {
     return this.http.post<any>(`${BASE}/api/provisioning/mpls/start/`, payload);
+  }
+
+  /**
+   * Poll the result of an MPLS provisioning task.
+   * GET /api/provisioning/mpls/result/<taskId>/
+   * Returns: { status: 'PENDING'|'SUCCESS'|'FAILURE', junos_script?, huawei_script?, error? }
+   */
+  getMplsResult(taskId: number): Observable<any> {
+    return this.http.get<any>(`${BASE}/api/provisioning/mpls/result/${taskId}/`);
+  }
+
+  /**
+   * Check if a LAN CIDR is already provisioned.
+   * POST /api/provisioning/mpls/check-lan/
+   * Body: { network: "<cidr>" }
+   * Returns: { network: "...", exists: true|false }
+   */
+  checkMplsLan(network: string): Observable<any> {
+    return this.http.post<any>(`${BASE}/api/provisioning/mpls/check-lan/`, { network });
   }
 
   /**

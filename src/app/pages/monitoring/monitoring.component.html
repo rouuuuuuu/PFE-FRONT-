@@ -60,7 +60,7 @@
             id="input-router-search"
             class="router-search-input"
             type="text"
-            placeholder="Search hostname or IP…"
+            [placeholder]="'MONITORING.SEARCH_PLACEHOLDER' | translate"
             [(ngModel)]="routerSearch"
             (ngModelChange)="onRouterSearch()"
             autocomplete="off">
@@ -79,7 +79,7 @@
     <div class="router-search-empty"
          *ngIf="routerSearch && downRouters.length === 0 && upRouters.length === 0">
       <mat-icon>search_off</mat-icon>
-      No routers match <strong>"{{ routerSearch }}"</strong>
+      {{ 'MONITORING.NO_ROUTERS_MATCH' | translate }} <strong>"{{ routerSearch }}"</strong>
     </div>
 
 
@@ -94,10 +94,10 @@
           chevron_right
         </mat-icon>
         <mat-icon class="group-status-icon group-status-icon--down">wifi_off</mat-icon>
-        <span class="group-label">DOWN</span>
+        <span class="group-label">{{ 'MONITORING.DOWN_ROUTERS' | translate }}</span>
         <span class="group-count group-count--down">{{ downRouters.length }}</span>
         <span class="group-hint" *ngIf="sections.down.collapsed">
-          — click to expand
+          {{ 'MONITORING.CLICK_TO_EXPAND' | translate }}
         </span>
       </button>
 
@@ -144,10 +144,10 @@
           chevron_right
         </mat-icon>
         <mat-icon class="group-status-icon group-status-icon--up">wifi</mat-icon>
-        <span class="group-label">UP</span>
+        <span class="group-label">{{ 'MONITORING.UP_ROUTERS' | translate }}</span>
         <span class="group-count group-count--up">{{ upRouters.length }}</span>
         <span class="group-hint" *ngIf="sections.up.collapsed">
-          — click to expand
+          {{ 'MONITORING.CLICK_TO_EXPAND' | translate }}
         </span>
       </button>
 
@@ -311,7 +311,7 @@
     <div class="monitor-card">
       <div class="card-title">
         <mat-icon class="card-title-icon">verified_user</mat-icon>
-        Smart Validator
+        {{ 'MONITORING.SMART_VALIDATOR' | translate }}
       </div>
 
       <!-- 4 stat counters -->
@@ -354,16 +354,16 @@
             <span class="sv-ring-pct" [style.color]="ai.validations_today.total > 0 && (ai.validations_today.safe / ai.validations_today.total) >= 0.8 ? '#22c55e' : ai.validations_today.total > 0 && (ai.validations_today.safe / ai.validations_today.total) >= 0.5 ? '#f59e0b' : '#ef4444'">
               {{ ai.validations_today.total > 0 ? ((ai.validations_today.safe / ai.validations_today.total) * 100).toFixed(0) : 0 }}%
             </span>
-            <span class="sv-ring-sub">safe</span>
+            <span class="sv-ring-sub">{{ 'MONITORING.SAFE' | translate }}</span>
           </div>
         </div>
 
         <!-- Verdict breakdown bars -->
         <div class="sv-breakdown">
-          <div class="sv-bar-label">Verdict breakdown — today</div>
+          <div class="sv-bar-label">{{ 'MONITORING.VERDICT_BREAKDOWN' | translate }}</div>
 
           <div class="sv-bar-row">
-            <span class="sv-bar-name sv-safe">Safe</span>
+            <span class="sv-bar-name sv-safe">{{ 'MONITORING.SAFE_LABEL' | translate }}</span>
             <div class="sv-bar-track">
               <div class="sv-bar-fill" style="background:#22c55e"
                 [style.width.%]="ai.validations_today.total > 0 ? (ai.validations_today.safe / ai.validations_today.total) * 100 : 0">
@@ -373,7 +373,7 @@
           </div>
 
           <div class="sv-bar-row">
-            <span class="sv-bar-name sv-warn">Caution</span>
+            <span class="sv-bar-name sv-warn">{{ 'MONITORING.CAUTION_LABEL' | translate }}</span>
             <div class="sv-bar-track">
               <div class="sv-bar-fill" style="background:#f59e0b"
                 [style.width.%]="ai.validations_today.total > 0 ? (ai.validations_today.warning / ai.validations_today.total) * 100 : 0">
@@ -383,7 +383,7 @@
           </div>
 
           <div class="sv-bar-row">
-            <span class="sv-bar-name sv-block">Blocked</span>
+            <span class="sv-bar-name sv-block">{{ 'MONITORING.BLOCKED_LABEL' | translate }}</span>
             <div class="sv-bar-track">
               <div class="sv-bar-fill" style="background:#ef4444"
                 [style.width.%]="ai.validations_today.total > 0 ? (ai.validations_today.blocked / ai.validations_today.total) * 100 : 0">
@@ -394,7 +394,7 @@
 
           <!-- Zero-state -->
           <div class="empty-state" *ngIf="ai.validations_today.total === 0">
-            <mat-icon>verified_user</mat-icon> No validations run today
+            <mat-icon>verified_user</mat-icon> {{ 'MONITORING.NO_VALIDATIONS' | translate }}
           </div>
         </div>
 

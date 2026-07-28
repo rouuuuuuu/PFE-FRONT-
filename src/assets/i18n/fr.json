@@ -169,7 +169,35 @@
     "INPUT_PLACEHOLDER": "Posez une question sur le réseau... (Entrée = envoyer, Maj+Entrée = nouvelle ligne)",
     "SEND": "Envoyer (Entrée)",
     "LOCAL_ENGINE_ACTIVE": "Moteur local actif — les données restent sécurisées",
-    "CHARS": "caractères"
+    "CHARS": "caractères",
+    "TITLE": "Iris",
+    "SUBTITLE": "IA de Maintenance & Stock",
+    "LLAMA_MODEL": "Llama 3.3 (OpenRouter)",
+    "WARNING_SFPS": "SFP en Avertissement",
+    "CHECK_REQUIRED": "Vérification requise",
+    "FAULTY_CARDS": "Cartes Défectueuses",
+    "NEEDS_SWAP": "Remplacement nécessaire",
+    "OUT_OF_STOCK": "Rupture de Stock",
+    "REORDER_NEEDED": "Réapprovisionnement nécessaire",
+    "STOCKED": "En Stock",
+    "LINK_LOST": "Lien perdu",
+    "ALL_UP": "Tous actifs",
+    "ALL_OK": "Tout est OK",
+    "REFS": "réfs",
+    "LOW_STOCK": "stock faible",
+    "SFP_REFS": "réfs SFP",
+    "CARD_REFS": "réfs de cartes",
+    "OPENROUTER_DESC": "OpenRouter &middot; Llama 3.3 &middot; IA Générative",
+    "API_CONNECTED": "API OpenRouter connectée",
+    "PROMPT_1_LABEL": "Santé des SFP",
+    "PROMPT_1_TEXT": "Quels SFP sont actuellement critiques ou dégradés ?",
+    "PROMPT_2_LABEL": "Aperçu des Stocks",
+    "PROMPT_2_TEXT": "Quel est notre niveau de stock actuel pour les SFP et les cartes ?",
+    "PROMPT_3_LABEL": "Cartes Défectueuses",
+    "PROMPT_3_TEXT": "Lister toutes les cartes actuellement défectueuses.",
+    "WELCOME_MSG": "Posez-moi des questions sur les remplacements de SFP, les cartes défectueuses, les ports INACTIFS, la disponibilité des pièces de rechange et les niveaux de stock.",
+    "ERROR_MSG": "Une erreur est survenue lors de la communication avec le moteur IA. Veuillez réessayer.",
+    "CLEARED_MSG": "**Conversation effacée.**\n\nComment puis-je vous aider ?"
   },
   "TOPOLOGY": {
     "TITLE": "Topologie du Réseau en Direct",
@@ -389,6 +417,7 @@
     "SUBTITLE": "Configurez le provisionnement VRF MPLS pour les clients B2B.",
     "SECTIONS": {
       "CLIENT_IDENTIFICATION": "Identification du Client",
+      "SERVICE_TYPE": "Type de Service",
       "LAN_CLIENT": "Client LAN",
       "VRF_CONFIG": "Configuration VRF"
     },
@@ -397,6 +426,7 @@
       "IP_SIM": "IP SIM",
       "LAN_CLIENT": "Client LAN",
       "VRF_CLIENT": "Client VRF",
+      "SERVICE_TYPE": "Type de Service",
       "MANAGEMENT_IP": "IP de Gestion"
     },
     "HINTS": {
@@ -415,7 +445,8 @@
       "IP_SIM": "L'IP SIM est requise",
       "LAN_CLIENT": "L'adresse LAN est requise",
       "VRF_CLIENT": "Le profil VRF est requis",
-      "MGMT_IP": "L'IP de gestion est requise pour ce VRF"
+      "SERVICE_TYPE": "Le type de service est requis",
+      "MGMT_IP": "L'IP de gestion est requise pour VoIP TDD"
     },
     "BUTTONS": {
       "EXECUTE": "Exécuter la tâche",
@@ -542,7 +573,18 @@
     "STUCK": "Bloqué",
     "OF_ALL_PORTS": "de tous les ports",
     "STUCK_PORTS": "Ports bloqués (aucune tâche)",
-    "VENDORS": "Routeurs par Vendeur"
+    "VENDORS": "Routeurs par Vendeur",
+    "NO_ROUTERS_MATCH": "Aucun routeur ne correspond à",
+    "DOWN_ROUTERS": "INACTIFS",
+    "UP_ROUTERS": "ACTIFS",
+    "CLICK_TO_EXPAND": "— cliquer pour développer",
+    "SMART_VALIDATOR": "Validateur Intelligent",
+    "VERDICT_BREAKDOWN": "Répartition des verdicts — aujourd'hui",
+    "SAFE_LABEL": "Sûr",
+    "CAUTION_LABEL": "Attention",
+    "BLOCKED_LABEL": "Bloqué",
+    "NO_VALIDATIONS": "Aucune validation effectuée aujourd'hui",
+    "SEARCH_PLACEHOLDER": "Rechercher par nom d'hôte ou IP…"
   },
   "SMART_TOOLS": {
     "TITLE": "Outils Intelligents",
@@ -589,7 +631,13 @@
     "COL_TIME": "Heure",
     "SAFE": "sûr",
     "AVAILABLE": "Disponible",
-    "NO_HISTORY": "Aucun historique de validation."
+    "NO_HISTORY": "Aucun historique de validation.",
+    "MODAL_TITLE": "Vérification Pré-Exécution IA",
+    "BLOCKED_DESC": "L'exécution de la tâche est bloquée en raison de risques critiques.",
+    "WARNING_DESC": "L'exécution de la tâche présente des risques potentiels. Vérifiez les contrôles ci-dessous.",
+    "BTN_PROCEED": "Continuer quand même",
+    "BTN_CANCEL": "Annuler",
+    "BTN_FIX": "OK, je vais corriger"
   },
   "RCA_LIST": {
     "TITLE": "Analyse de Cause Profonde",
