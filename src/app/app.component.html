@@ -78,10 +78,10 @@
 
       <!-- Smart Validator side panel trigger -->
       <button class="quicknav-btn quicknav-menu-trigger" (click)="isAiPanelOpen = !isAiPanelOpen"
-        matTooltip="Smart Validator" matTooltipPosition="below"
+        [matTooltip]="'MONITORING.SMART_VALIDATOR' | translate" matTooltipPosition="below"
         [class.quicknav-active]="isAiPanelOpen">
         <mat-icon>verified_user</mat-icon>
-        <span class="quicknav-label">Smart Validator</span>
+        <span class="quicknav-label">{{ 'MONITORING.SMART_VALIDATOR' | translate }}</span>
       </button>
 
 
@@ -121,12 +121,12 @@
     <mat-menu #profileMenu="matMenu" xPosition="before">
       <a mat-menu-item routerLink="/profile">
         <mat-icon>person</mat-icon>
-        <span>My Profile</span>
+        <span>{{ 'PROFILE.MY_PROFILE' | translate }}</span>
       </a>
       <mat-divider></mat-divider>
       <button mat-menu-item class="logout-menu-item" (click)="authService.logout()">
         <mat-icon>logout</mat-icon>
-        <span>Logout</span>
+        <span>{{ 'NAV.LOGOUT' | translate }}</span>
       </button>
     </mat-menu>
 

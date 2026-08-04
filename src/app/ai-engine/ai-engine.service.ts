@@ -68,6 +68,13 @@ export class AiEngineService {
     return this.http.get<ValidationResult[]>(`${BASE}/validator/history/`, { params });
   }
 
+  updateValidationTaskId(validationId: number, taskId: number): Observable<ValidationResult> {
+    return this.http.patch<ValidationResult>(
+      `${BASE}/validate/${validationId}/update-task-id/`,
+      { task_id: taskId }
+    );
+  }
+
   // ── RCA ───────────────────────────────────────────────────────────────────
 
   getRcaList(filters?: {

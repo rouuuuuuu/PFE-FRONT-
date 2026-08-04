@@ -30,7 +30,10 @@ interface TopoLink {
   source: string | TopoNode;
   target: string | TopoNode;
   alarm: string;
-  rate: string;
+  rate: string;       // link speed label e.g. "100GE"
+  capacity?: string;  // IS-IS capacity string e.g. "10G"
+  cost?: number;      // IS-IS metric
+  delay?: number | null;
 }
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -68,6 +71,15 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   filteredDestNodes: TopoNode[] = [];
   analyzingRoute = false;
   isisPathResponse: IsisPathResponse | null = null;
+
+  // Link click popup
+  clickedLink: TopoLink | null = null;
+  clickedLinkCost: number | null = null;
+  linkPopupX = 0;
+  linkPopupY = 0;
+
+  // Route chain hover
+  activeHopIndex: number | null = null;
 
   isHeaderCollapsed = false;
 
@@ -120,13 +132,16 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
     if (showSpinner) this.loading = true;
 
     forkJoin({
-      routers: this.api.getRouters(),
-      links: this.api.getBackhaulLinks()
+      routers:  this.api.getRouters(),
+      topology: this.monitoringService.getIsisTopology(),
+      backhaul: this.api.getBackhaulLinks()   // alarm_severity per physical link
     }).subscribe({
-      next: ({ routers, links }) => {
-        const routerList: any[] = Array.isArray(routers) ? routers : (routers.results || []);
-        const linkList: any[] = Array.isArray(links) ? links : (links.results || []);
+      next: ({ routers, topology, backhaul }) => {
+        const routerList: any[]  = Array.isArray(routers)  ? routers  : (routers.results  || []);
+        const isisLinks:  any[]  = topology?.links ?? [];
+        const backhaulLinks: any[] = Array.isArray(backhaul) ? backhaul : (backhaul.results || []);
 
+        // ── Build node map from routers ─────────────────────────────────
         const nodeMap = new Map<string, TopoNode>();
         routerList.forEach((r: any) => {
           const id = r.name || r.loopback_ip;
@@ -138,29 +153,49 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
           });
         });
 
-        const topoLinks: TopoLink[] = [];
-        linkList.forEach((l: any) => {
-          const src = l.source_ne;
-          const tgt = l.sink_ne;
+        // ── Propagate alarm severity from backhaul links to nodes ───────
+        backhaulLinks.forEach((l: any) => {
+          const src  = l.source_ne;
+          const tgt  = l.sink_ne;
           const alrm = (l.alarm_severity || 'normal').toLowerCase();
-
           if (!nodeMap.has(src)) nodeMap.set(src, { id: src, name: src, ip: '', vendor: '', alarm: 'none', type: 'router' });
           if (!nodeMap.has(tgt)) nodeMap.set(tgt, { id: tgt, name: tgt, ip: '', vendor: '', alarm: 'none', type: 'router' });
-
           const srcNode = nodeMap.get(src)!;
           const tgtNode = nodeMap.get(tgt)!;
           if ((this.ALARM_SEVERITY[alrm] ?? 0) > (this.ALARM_SEVERITY[srcNode.alarm] ?? 0)) srcNode.alarm = alrm;
           if ((this.ALARM_SEVERITY[alrm] ?? 0) > (this.ALARM_SEVERITY[tgtNode.alarm] ?? 0)) tgtNode.alarm = alrm;
+        });
 
-          topoLinks.push({ source: src, target: tgt, alarm: alrm, rate: l.link_level || '' });
+        // ── Build links from ISIS topology (cost + capacity) ────────────
+        const topoLinks: TopoLink[] = [];
+        isisLinks.forEach((l: any) => {
+          const src = l.source;
+          const tgt = l.target;
+          if (!nodeMap.has(src)) nodeMap.set(src, { id: src, name: src, ip: '', vendor: '', alarm: 'none', type: 'router' });
+          if (!nodeMap.has(tgt)) nodeMap.set(tgt, { id: tgt, name: tgt, ip: '', vendor: '', alarm: 'none', type: 'router' });
+
+          // Derive per-link alarm from the node with the worst alarm
+          const srcAlarm = nodeMap.get(src)?.alarm ?? 'none';
+          const tgtAlarm = nodeMap.get(tgt)?.alarm ?? 'none';
+          const linkAlarm = (this.ALARM_SEVERITY[srcAlarm] ?? 0) >= (this.ALARM_SEVERITY[tgtAlarm] ?? 0) ? srcAlarm : tgtAlarm;
+
+          topoLinks.push({
+            source:   src,
+            target:   tgt,
+            alarm:    linkAlarm,
+            rate:     l.capacity || '',
+            capacity: l.capacity || undefined,
+            cost:     l.cost ?? undefined,
+            delay:    null
+          });
         });
 
         this.nodes = Array.from(nodeMap.values());
         this.links = topoLinks;
 
-        this.totalNodes = this.nodes.length;
-        this.totalLinks = this.links.length;
-        this.activeAlarms = this.nodes.filter(n => n.alarm !== 'none' && n.alarm !== 'normal').length;
+        this.totalNodes    = this.nodes.length;
+        this.totalLinks    = this.links.length;
+        this.activeAlarms  = this.nodes.filter(n => n.alarm !== 'none' && n.alarm !== 'normal').length;
         this.criticalAlarms = this.nodes.filter(n => n.alarm === 'critical' || n.alarm === 'major').length;
 
         this.loading = false;
@@ -237,7 +272,49 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
       .attr('stroke', (d: any) => this.ALARM_COLORS[d.alarm] || '#555')
       .attr('stroke-width', (d: any) => d.alarm === 'critical' ? 2.5 : 1.5)
       .attr('stroke-opacity', 0.7)
-      .attr('marker-end', (d: any) => `url(#arrow-${d.alarm})`);
+      .attr('marker-end', (d: any) => `url(#arrow-${d.alarm})`)
+      .style('cursor', 'pointer')
+      .on('click', (event: MouseEvent, d: any) => {
+        event.stopPropagation();
+        this.zone.run(() => {
+          const containerRect = this.svgRef.nativeElement.parentElement!.getBoundingClientRect();
+          
+          const containerWidth = containerRect.width || 900;
+          const containerHeight = containerRect.height || 600;
+          
+          let x = event.clientX - containerRect.left + 12;
+          let y = event.clientY - containerRect.top - 10;
+          
+          const popupWidth = 260; // Max popup width
+          const popupHeight = 200; // Max popup height
+          
+          if (x + popupWidth > containerWidth) {
+            x = event.clientX - containerRect.left - popupWidth - 12;
+          }
+          if (y + popupHeight > containerHeight) {
+            y = event.clientY - containerRect.top - popupHeight - 10;
+          }
+
+          // Absolute bounds clamping
+          this.linkPopupX = Math.max(0, Math.min(x, containerWidth - popupWidth));
+          this.linkPopupY = Math.max(0, Math.min(y, containerHeight - popupHeight));
+
+          this.clickedLink = d;
+          // Cost comes directly from the ISIS topology link
+          this.clickedLinkCost = d.cost ?? null;
+          // Fall back to IS-IS path details if available and link cost is missing
+          if (this.clickedLinkCost === null && this.isisPathResponse) {
+            const srcId = typeof d.source === 'string' ? d.source : d.source.id;
+            const tgtId = typeof d.target === 'string' ? d.target : d.target.id;
+            const pd = this.isisPathResponse.path_details.find(p =>
+              (p.from === srcId && p.to === tgtId) || (p.from === tgtId && p.to === srcId)
+            );
+            if (pd) this.clickedLinkCost = pd.cost;
+          }
+          // Also clear node selection to avoid overlapping panels
+          this.selectedNode = null;
+        });
+      });
 
     if (this.isisPathResponse && this.isisPathResponse.route.length > 0) {
       const pathSet = new Set(this.isisPathResponse.path_details.map(p => `${p.from}->${p.to}`));
@@ -302,6 +379,7 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
       )
       .on('click', (_: any, d: TopoNode) => {
         this.zone.run(() => {
+          this.clickedLink = null;  // close link popup when a node is clicked
           this.selectedNode = d;
           this.selectedNodeLinks = this.links.filter((l: any) =>
             (typeof l.source === 'string' ? l.source : (l.source as TopoNode).id) === d.id ||
@@ -484,6 +562,8 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
     this.sourceNode = '';
     this.destNode = '';
     this.isisPathResponse = null;
+    this.clickedLink = null;
+    this.activeHopIndex = null;
     this.zone.run(() => this.renderGraph());
   }
 
@@ -491,6 +571,12 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
     if (!peer) return '?';
     if (typeof peer === 'string') return peer;
     return (peer as TopoNode).id ?? '?';
+  }
+
+  getHopTooltip(hopIndex: number): string {
+    if (!this.isisPathResponse || !this.isisPathResponse.path_details[hopIndex]) return '';
+    const pd = this.isisPathResponse.path_details[hopIndex];
+    return `Cost: ${pd.cost}  |  Capacity: ${pd.capacity}`;
   }
 
   get statsNodes() { return this.totalNodes; }

@@ -7,6 +7,7 @@
     "AI_ACCESS": "AI Engine Access",
     "PREFERENCES": "Preferences",
     "ACCOUNT_DETAILS": "Account Details",
+    "MY_PROFILE": "My Profile",
     "FIRST_NAME": "First Name",
     "LAST_NAME": "Last Name",
     "DATE_JOINED": "Date Joined",
@@ -274,6 +275,7 @@
     "COL_SINK_NE": "Sink NE",
     "COL_SINK_PORT": "Sink Port",
     "COL_RATE": "Rate",
+    "COL_COST": "Cost",
     "COL_TYPE": "Type",
     "PREVIOUS": "Previous",
     "PAGE_INFO": "Page {{current}} of {{total}}",
@@ -317,7 +319,13 @@
     "PREVIOUS": "Previous",
     "NEXT": "Next",
     "PAGE_INFO": "Page {{current}} of {{total}}",
-    "DOWNLOAD_CONFIG": "Download Config"
+    "DOWNLOAD_CONFIG": "Download Config",
+    "RESULT_TASK": "Task",
+    "POLLING_IN_PROGRESS": "Polling in progress...",
+    "RESULT_LABEL": "Result",
+    "SCRIPT_OUTPUT": "Script Output",
+    "COPY": "Copy",
+    "COPIED": "Copied!"
   },
   "PROVISIONING": {
     "TITLE": "Internet Provisioning Service",
@@ -467,7 +475,10 @@
       "LIBERATE": "Liberate resource",
       "LIBERATING": "Liberating...",
       "POLLING": "Polling task status (every 3s)...",
-      "DISMISS": "Dismiss"
+      "DISMISS": "Dismiss",
+      "TASK_FAILED": "Task Failed",
+      "JUNOS_CONFIG": "Junos Configuration",
+      "HUAWEI_CONFIG": "Huawei Configuration"
     },
     "HISTORY": {
       "TITLE": "MPLS Task History",
@@ -637,6 +648,7 @@
     "SAFE": "safe",
     "AVAILABLE": "Available",
     "NO_HISTORY": "No validation history yet.",
+    "TOOLTIP_BLOCKED": "Task is blocked — too risky to execute",
     "MODAL_TITLE": "AI Pre-Execution Check",
     "BLOCKED_DESC": "Task execution is blocked due to critical risks.",
     "WARNING_DESC": "Task execution has potential risks. Review the checks below.",
@@ -849,5 +861,17 @@
     "FOUND": "report(s) found",
     "REFRESH_TOOLTIP": "Refresh list",
     "REFRESH": "Refresh"
+  },
+  "COMMON": {
+    "CLOSE": "Close",
+    "COPY": "Copy",
+    "MARK_AS_READ": "Mark as read",
+    "FORCE_RE_POLL": "Force SSH re-poll of all routers",
+    "SEARCH_CLIENT": "Search client…",
+    "PLACEHOLDER_1_4094": "1 – 4094",
+    "PLACEHOLDER_IP": "ex. 10.0.0.1",
+    "PLACEHOLDER_SOURCE_NODE": "Source Node",
+    "PLACEHOLDER_DEST_NODE": "Destination Node",
+    "PLACEHOLDER_BW": "ex. 100"
   }
 }

@@ -147,7 +147,7 @@
         <input type="text" matInput formControlName="vrf_client"
                id="input-mpls-vrf-client"
                [matAutocomplete]="autoVrf"
-               placeholder="Search client…">
+               [placeholder]="'COMMON.SEARCH_CLIENT' | translate">
                
         <mat-autocomplete #autoVrf="matAutocomplete" panelClass="vrf-autocomplete-panel">
           <!-- Loading state -->
@@ -247,7 +247,7 @@
     <div class="task-error-panel" *ngIf="taskStatus === 'FAILURE' && taskError" @slideIn>
       <mat-icon class="task-error-icon">error</mat-icon>
       <div class="task-error-content">
-        <div class="task-error-label">Task Failed</div>
+        <div class="task-error-label">{{ 'MPLS_PROV.RESULT.TASK_FAILED' | translate }}</div>
         <p class="task-error-text">{{ taskError }}</p>
       </div>
     </div>
@@ -257,7 +257,7 @@
       <div class="script-section-header">
         <div class="result-label">
           <mat-icon class="script-vendor-icon">terminal</mat-icon>
-          Junos Configuration
+          {{ 'MPLS_PROV.RESULT.JUNOS_CONFIG' | translate }}
         </div>
         <button class="copy-btn" (click)="copyJunosScript()">
           <mat-icon>{{ copyJunosDone ? 'check' : 'content_copy' }}</mat-icon>
@@ -265,21 +265,6 @@
         </button>
       </div>
       <div class="script-output-pre">{{ junosScript }}</div>
-    </div>
-
-    <!-- HUAWEI SCRIPT OUTPUT (only present for TDD_MPLS/FDD_MPLS — may be null) -->
-    <div class="script-section" *ngIf="taskStatus === 'SUCCESS' && huaweiScript" @slideIn>
-      <div class="script-section-header">
-        <div class="result-label">
-          <mat-icon class="script-vendor-icon">router</mat-icon>
-          Huawei Configuration
-        </div>
-        <button class="copy-btn" (click)="copyHuaweiScript()">
-          <mat-icon>{{ copyHuaweiDone ? 'check' : 'content_copy' }}</mat-icon>
-          {{ copyHuaweiDone ? ('MPLS_PROV.RESULT.COPIED' | translate) : ('MPLS_PROV.RESULT.COPY' | translate) }}
-        </button>
-      </div>
-      <div class="script-output-pre script-output-huawei">{{ huaweiScript }}</div>
     </div>
 
     <!-- LIBERATE BUTTON (only if completed / SUCCESS) -->
@@ -351,7 +336,7 @@
         {{ 'MPLS_PROV.HISTORY.COLUMNS.CLIENT_NAME' | translate }}
       </th>
       <td mat-cell *matCellDef="let t" class="td-bold">
-        {{ t.parameters?.client_name || '—' }}
+        {{ t.parameters?.client_name || t.device_name || '—' }}
       </td>
     </ng-container>
 
@@ -361,7 +346,7 @@
         {{ 'MPLS_PROV.HISTORY.COLUMNS.VRF_CLIENT' | translate }}
       </th>
       <td mat-cell *matCellDef="let t" class="td-secondary mono">
-        {{ t.parameters?.vrf_client || '—' }}
+        {{ t.parameters?.vrf_client || t.device_ip || '—' }}
       </td>
     </ng-container>
 

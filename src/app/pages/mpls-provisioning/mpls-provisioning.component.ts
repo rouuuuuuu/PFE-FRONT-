@@ -113,11 +113,10 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
   taskResult: string | null = null;
   taskError: string | null = null;
   junosScript: string | null = null;
-  huaweiScript: string | null = null;
   pollingActive = false;
   liberating = false;
   copyJunosDone = false;
-  copyHuaweiDone = false;
+  private lastValidationId: number | null = null;
 
   // ── History ───────────────────────────────────────────────
   historyTasks: any[] = [];
@@ -353,6 +352,7 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
 
     this.aiService.validateTask(validationPayload).subscribe({
       next: (result) => {
+        this.lastValidationId = result.id;
         if (result.verdict === 'blocked' || result.verdict === 'warning') {
           this.submitting = false;
           this.cdr.detectChanges();
@@ -387,6 +387,12 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.submitting = false;
         const id = res?.task_id ?? res?.id ?? null;
+
+        if (id && this.lastValidationId) {
+          this.aiService.updateValidationTaskId(this.lastValidationId, id).subscribe();
+          this.lastValidationId = null;
+        }
+
         this._toast(
           id
             ? `MPLS task #${id} started successfully.`
@@ -442,7 +448,6 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     this.taskResult = null;
     this.taskError = null;
     this.junosScript = null;
-    this.huaweiScript = null;
 
     this.statusPollDestroy$.next();
 
@@ -461,7 +466,6 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
           if (this.taskStatus === 'SUCCESS') {
             this.pollingActive = false;
             this.junosScript = res?.junos_script ?? null;
-            this.huaweiScript = res?.huawei_script ?? null;
             this.taskResult = null;
             this.taskError = null;
             this.statusPollDestroy$.next();
@@ -470,7 +474,6 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
             this.pollingActive = false;
             this.taskError = res?.error ?? 'An unknown error occurred.';
             this.junosScript = null;
-            this.huaweiScript = null;
             this.statusPollDestroy$.next();
             this.loadHistory();
           }
@@ -514,7 +517,6 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     this.taskResult = null;
     this.taskError = null;
     this.junosScript = null;
-    this.huaweiScript = null;
     this.pollingActive = false;
   }
 
@@ -526,13 +528,6 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     setTimeout(() => this.copyJunosDone = false, 2000);
   }
 
-  /** Copy Huawei script output to clipboard */
-  copyHuaweiScript(): void {
-    if (!this.huaweiScript) return;
-    this.clipboard.copy(this.huaweiScript);
-    this.copyHuaweiDone = true;
-    setTimeout(() => this.copyHuaweiDone = false, 2000);
-  }
 
   // ── Reset ─────────────────────────────────────────────
   private _resetForm(): void {
@@ -568,8 +563,12 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     if (this.searchQuery) {
       const q = this.searchQuery.toLowerCase();
       list = list.filter(t =>
+        // ProvisioningTask flat fields (new backend format)
+        (t.device_name    || '').toLowerCase().includes(q) ||
+        (t.device_ip      || '').toLowerCase().includes(q) ||
+        // Legacy parameters wrapper (old tasks already in DB)
         (t.parameters?.client_name || '').toLowerCase().includes(q) ||
-        (t.parameters?.vrf_client || '').toLowerCase().includes(q)
+        (t.parameters?.vrf_client  || '').toLowerCase().includes(q)
       );
     }
     return list;

@@ -86,6 +86,13 @@
         </td> <!-- parameters condition condition references boundaries execution definitions rules limitation elements configuration definition. -->
       </ng-container> <!-- sequences value block conditions syntax parameter mapping resolution token mapping sequence sequences pattern token limits string mapping loop parameter variables formatting. -->
 
+      <ng-container matColumnDef="cost">
+        <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'LINKS.COL_COST' | translate }}</th>
+        <td mat-cell *matCellDef="let l">
+          <span class="cost-text">{{ l.cost ?? l.metric ?? l.igp_cost ?? l.link_cost ?? '—' }}</span>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="link_type"> <!-- strings boundary limits format patterns limitation definitions rule limitations logic loops mapping configuration variable elements evaluation boundary validation constraint mappings pattern block iteration limits iteration structure mapping object limitation variables boundaries validation mapping text values format string parameter limits constraint limitations definition limit texts text context evaluation structure loop block string structure definitions sequence texts context parameters loop texts format text parsing variable context mappings sequence limitations variable sequences texts sequences boundary logic rules definition conditions constraints value syntax limit definitions boundaries syntax sequences configuration parameters values boundaries rules loop mappings rule limitations frame mapping configurations reference parameter mapping constraint object constraints pattern definition variables. -->
         <th mat-header-cell *matHeaderCellDef class="header-accent">{{ 'LINKS.COL_TYPE' | translate }}</th> <!-- variables text syntax string execution context mapping validation. -->
         <td mat-cell *matCellDef="let l"> <!-- constraints conditions configurations boundaries parameters elements iterations limitations rule context text logic logic string format boundary configuration reference structure text sequences bounds mapping structure loop limits parameters limits constraints sequence elements token texts reference boundaries limits limitation iterations limit conditions mappings structure token mappings string logic validation strings configurations elements limit iterations pattern variables references loop sequences values. -->

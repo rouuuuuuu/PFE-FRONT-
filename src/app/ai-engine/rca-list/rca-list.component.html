@@ -65,24 +65,21 @@
       <div class="rca-info">
         <div class="rca-info-top">
           <span class="rca-task-id mono">#{{ rca.task_id }}</span>
-          <span class="type-badge"
-            [style.background]="rca.task_type === 'voip' ? '#a855f718' : '#14b8a618'"
+          <span class="type-badge" [style.background]="rca.task_type === 'voip' ? '#a855f718' : '#14b8a618'"
             [style.color]="rca.task_type === 'voip' ? '#a855f7' : '#14b8a6'">
             {{ rca.task_type | uppercase }}
           </span>
           <span class="rca-router">{{ rca.router_hostname }}</span>
         </div>
         <div class="rca-info-bottom">
-          <span class="cause-chip"
-            [style.background]="getCauseBg(rca.classified_cause)"
+          <span class="cause-chip" [style.background]="getCauseBg(rca.classified_cause)"
             [style.color]="getCauseColor(rca.classified_cause)">
             {{ rca.cause_display || rca.classified_cause }}
           </span>
           <!-- Confidence mini bar -->
           <div class="confidence-bar-wrap">
             <div class="confidence-bar-track">
-              <div class="confidence-bar-fill"
-                [style.width.%]="rca.confidence * 100"
+              <div class="confidence-bar-fill" [style.width.%]="rca.confidence * 100"
                 [style.background]="getCauseColor(rca.classified_cause)">
               </div>
             </div>
@@ -94,7 +91,8 @@
 
       <!-- Actions -->
       <div class="rca-actions">
-        <button class="btn-ghost-sm" (click)="viewDetail(rca.task_id)">{{ 'RCA_LIST.VIEW_DETAILS' | translate }}</button>
+        <button class="btn-ghost-sm" (click)="viewDetail(rca.task_id)">{{ 'RCA_LIST.VIEW_DETAILS' | translate
+          }}</button>
         <button class="btn-ghost-sm resolve" (click)="resolveRca(rca)" *ngIf="!rca.is_resolved">
           {{ 'RCA_LIST.MARK_RESOLVED' | translate }}
         </button>

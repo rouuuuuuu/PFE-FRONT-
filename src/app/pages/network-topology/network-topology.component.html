@@ -35,7 +35,7 @@
     <div class="topo-route-analysis">
       <div class="route-input">
         <input type="text" [(ngModel)]="sourceNode" (ngModelChange)="onSourceSearchChange()"
-               [matAutocomplete]="sourceAuto" [placeholder]="'Source Node'">
+               [matAutocomplete]="sourceAuto" [placeholder]="'COMMON.PLACEHOLDER_SOURCE_NODE' | translate">
         <mat-autocomplete #sourceAuto="matAutocomplete">
           <mat-option *ngFor="let node of filteredSourceNodes" [value]="node.id">{{ node.name }}</mat-option>
         </mat-autocomplete>
@@ -43,7 +43,7 @@
       <mat-icon class="route-arrow">arrow_right_alt</mat-icon>
       <div class="route-input">
         <input type="text" [(ngModel)]="destNode" (ngModelChange)="onDestSearchChange()"
-               [matAutocomplete]="destAuto" [placeholder]="'Destination Node'">
+               [matAutocomplete]="destAuto" [placeholder]="'COMMON.PLACEHOLDER_DEST_NODE' | translate">
         <mat-autocomplete #destAuto="matAutocomplete">
           <mat-option *ngFor="let node of filteredDestNodes" [value]="node.id">{{ node.name }}</mat-option>
         </mat-autocomplete>
@@ -131,6 +131,40 @@
     <!-- SVG Graph -->
     <svg #svgContainer class="topo-svg" *ngIf="!loading && !error"></svg>
 
+    <!-- ── Link Detail Popup ──────────────────────────────────── -->
+    <div class="link-popup" *ngIf="clickedLink"
+         [style.left.px]="linkPopupX"
+         [style.top.px]="linkPopupY">
+      <div class="link-popup-header">
+        <mat-icon style="font-size:14px;width:14px;height:14px;color:var(--primary-orange)">linear_scale</mat-icon>
+        <span>Link Details</span>
+        <button class="link-popup-close" (click)="clickedLink = null"><mat-icon>close</mat-icon></button>
+      </div>
+      <div class="link-popup-row">
+        <span class="lp-key">From</span>
+        <span class="lp-val">{{ getLinkPeer(clickedLink.source) }}</span>
+      </div>
+      <div class="link-popup-row">
+        <span class="lp-key">To</span>
+        <span class="lp-val">{{ getLinkPeer(clickedLink.target) }}</span>
+      </div>
+      <div class="link-popup-row" *ngIf="clickedLink.capacity || clickedLink.rate">
+        <span class="lp-key">Capacity</span>
+        <span class="lp-val lp-accent">{{ clickedLink.capacity || clickedLink.rate }}</span>
+      </div>
+      <div class="link-popup-row">
+        <span class="lp-key">Cost</span>
+        <span class="lp-val" [class.lp-accent]="clickedLinkCost !== null">
+          {{ clickedLinkCost !== null ? clickedLinkCost : '—' }}
+        </span>
+      </div>
+      <div class="link-popup-row">
+        <span class="lp-key">Alarm</span>
+        <span class="lp-val" [style.color]="alarmColor(clickedLink.alarm)"
+              style="font-weight:700;text-transform:uppercase">{{ clickedLink.alarm }}</span>
+      </div>
+    </div>
+
     <!-- ── Node detail side panel ──────────────────────────────────── -->
     <div class="side-panel" [class.side-panel-open]="selectedNode !== null">
       <div class="side-panel-inner" *ngIf="selectedNode">
@@ -201,7 +235,8 @@
             <mat-icon>close</mat-icon>
           </button>
         </div>
-        
+
+        <!-- Stats row -->
         <div class="path-stats-row">
           <div class="path-stat-card">
             <span class="path-stat-label">Total Cost</span>
@@ -211,6 +246,32 @@
             <span class="path-stat-label">Total Hops</span>
             <span class="path-stat-value">{{ isisPathResponse.distance_hops }}</span>
           </div>
+        </div>
+
+        <!-- ── Route chain ── -->
+        <div class="route-chain-wrap">
+          <ng-container *ngFor="let hop of isisPathResponse.route; let i = index; let last = last">
+            <!-- Router node pill -->
+            <div class="rnode-pill"
+                 [class.rnode-first]="i === 0"
+                 [class.rnode-last]="last">
+              <mat-icon class="rnode-icon">router</mat-icon>
+              <span class="rnode-name">{{ hop }}</span>
+            </div>
+
+            <!-- Hop segment arrow (only between nodes) -->
+            <ng-container *ngIf="!last">
+              <div class="hop-segment"
+                   [matTooltip]="getHopTooltip(i)"
+                   matTooltipClass="hop-tooltip"
+                   (mouseenter)="activeHopIndex = i"
+                   (mouseleave)="activeHopIndex = null"
+                   [class.hop-segment-active]="activeHopIndex === i">
+                <div class="hop-arrow-line"></div>
+                <mat-icon class="hop-arrow-icon">arrow_right_alt</mat-icon>
+              </div>
+            </ng-container>
+          </ng-container>
         </div>
 
       </div>

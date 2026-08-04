@@ -54,6 +54,7 @@ export class LinksComponent implements OnInit { // l'classe principale hné (Com
     'sink_ne', // site sink (Mapping boundaries constraint limits)
     'sink_port', // port ta sink limit parameter variables limit text parameter.
     'link_rate', // qadah mbps loop loop parameter execution)
+    'cost',
     'link_type' // type kima mw walla of. (Evaluation bounds parameter logic syntax reference text loop conditions.)
   ];
 

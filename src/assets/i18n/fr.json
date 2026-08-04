@@ -7,6 +7,7 @@
     "AI_ACCESS": "Accès au moteur IA",
     "PREFERENCES": "Préférences",
     "ACCOUNT_DETAILS": "Détails du compte",
+    "MY_PROFILE": "Mon Profil",
     "FIRST_NAME": "Prénom",
     "LAST_NAME": "Nom",
     "DATE_JOINED": "Date d'inscription",
@@ -274,6 +275,7 @@
     "COL_SINK_NE": "NE Destination",
     "COL_SINK_PORT": "Port Destination",
     "COL_RATE": "Débit",
+    "COL_COST": "Coût",
     "COL_TYPE": "Type",
     "PREVIOUS": "Précédent",
     "PAGE_INFO": "Page {{current}} sur {{total}}",
@@ -317,7 +319,13 @@
     "PREVIOUS": "Précédent",
     "NEXT": "Suivant",
     "PAGE_INFO": "Page {{current}} sur {{total}}",
-    "DOWNLOAD_CONFIG": "Télécharger Config"
+    "DOWNLOAD_CONFIG": "Télécharger Config",
+    "RESULT_TASK": "Tâche",
+    "POLLING_IN_PROGRESS": "Interrogation en cours...",
+    "RESULT_LABEL": "Résultat",
+    "SCRIPT_OUTPUT": "Sortie du script",
+    "COPY": "Copier",
+    "COPIED": "Copié !"
   },
   "PROVISIONING": {
     "TITLE": "Service de Provisionnement Internet",
@@ -462,7 +470,10 @@
       "LIBERATE": "Libérer la ressource",
       "LIBERATING": "Libération...",
       "POLLING": "Vérification de l'état de la tâche (toutes les 3s)...",
-      "DISMISS": "Fermer"
+      "DISMISS": "Fermer",
+      "TASK_FAILED": "Échec de la Tâche",
+      "JUNOS_CONFIG": "Configuration Junos",
+      "HUAWEI_CONFIG": "Configuration Huawei"
     },
     "HISTORY": {
       "TITLE": "Historique des tâches MPLS",
@@ -632,6 +643,7 @@
     "SAFE": "sûr",
     "AVAILABLE": "Disponible",
     "NO_HISTORY": "Aucun historique de validation.",
+    "TOOLTIP_BLOCKED": "La tâche est bloquée — trop risquée pour être exécutée",
     "MODAL_TITLE": "Vérification Pré-Exécution IA",
     "BLOCKED_DESC": "L'exécution de la tâche est bloquée en raison de risques critiques.",
     "WARNING_DESC": "L'exécution de la tâche présente des risques potentiels. Vérifiez les contrôles ci-dessous.",
@@ -844,5 +856,17 @@
     "FOUND": "rapport(s) trouvé(s)",
     "REFRESH_TOOLTIP": "Actualiser la liste",
     "REFRESH": "Actualiser"
+  },
+  "COMMON": {
+    "CLOSE": "Fermer",
+    "COPY": "Copier",
+    "MARK_AS_READ": "Marquer comme lu",
+    "FORCE_RE_POLL": "Forcer l'interrogation SSH de tous les routeurs",
+    "SEARCH_CLIENT": "Rechercher un client…",
+    "PLACEHOLDER_1_4094": "1 – 4094",
+    "PLACEHOLDER_IP": "ex. 10.0.0.1",
+    "PLACEHOLDER_SOURCE_NODE": "Nœud source",
+    "PLACEHOLDER_DEST_NODE": "Nœud de destination",
+    "PLACEHOLDER_BW": "ex. 100"
   }
 }

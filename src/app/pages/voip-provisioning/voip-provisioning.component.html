@@ -42,7 +42,7 @@
         <mat-label>{{ 'PROVISIONING.VLAN_ID' | translate }}</mat-label>
         <input matInput type="number" formControlName="vlan"
                id="input-voip-vlan"
-               placeholder="1 – 4094" min="1" max="4094">
+               [placeholder]="'COMMON.PLACEHOLDER_1_4094' | translate" min="1" max="4094">
         <mat-icon matSuffix>tag</mat-icon>
         <mat-hint>{{ 'PROVISIONING.VLAN_HINT' | translate }}</mat-hint>
         <mat-error *ngIf="form.get('vlan')?.hasError('required')">
@@ -58,7 +58,7 @@
         <mat-label>&#64;IP GW</mat-label>
         <input matInput formControlName="pe_ip_address"
                id="input-voip-pe-ip"
-               placeholder="ex. 10.0.0.1">
+               [placeholder]="'COMMON.PLACEHOLDER_IP' | translate">
         <mat-icon matSuffix>language</mat-icon>
         <mat-error *ngIf="form.get('pe_ip_address')?.hasError('required')">
           {{ 'PROVISIONING.REQUIRED' | translate }}
@@ -276,7 +276,7 @@
         </div>
       </div>
 
-      <button class="dismiss-btn" (click)="dismissResult()" matTooltip="Fermer">
+      <button class="dismiss-btn" (click)="dismissResult()" [matTooltip]="'COMMON.CLOSE' | translate">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -297,7 +297,7 @@
     <div *ngIf="taskScriptOutput" class="result-output">
       <div class="result-output-header">
         <div class="result-label">Script Output</div>
-        <button class="copy-btn" (click)="copyScriptOutput()" matTooltip="Copier">
+        <button class="copy-btn" (click)="copyScriptOutput()" [matTooltip]="'COMMON.COPY' | translate">
           <mat-icon>{{ copyDone ? 'check' : 'content_copy' }}</mat-icon>
           <span>{{ copyDone ? 'Copié !' : 'Copier' }}</span>
         </button>

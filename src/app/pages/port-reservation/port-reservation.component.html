@@ -120,15 +120,15 @@
         </mat-icon>
         <div>
           <h3 class="result-title">
-            Task #{{ currentTaskId }}
+            {{ 'PORT_RESERVATION.RESULT_TASK' | translate }} #{{ currentTaskId }}
             <span class="status-badge" [class]="getStatusClass(taskStatus || 'pending')">
-              {{ taskStatus | titlecase }}
+              {{ 'PROVISIONING.STATUS_' + ((taskStatus || 'pending') | uppercase) | translate }}
             </span>
           </h3>
         </div>
       </div>
 
-      <button class="dismiss-btn" (click)="dismissResult()" matTooltip="Fermer">
+      <button class="dismiss-btn" (click)="dismissResult()" [matTooltip]="'COMMON.CLOSE' | translate">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -136,22 +136,22 @@
     <!-- Polling spinner -->
     <div *ngIf="pollingActive" class="polling-indicator">
       <mat-spinner diameter="18"></mat-spinner>
-      <span>Interrogation en cours…</span>
+      <span>{{ 'PORT_RESERVATION.POLLING_IN_PROGRESS' | translate }}</span>
     </div>
 
     <!-- Result text -->
     <div *ngIf="taskResult" class="result-text">
-      <div class="result-label">Résultat</div>
+      <div class="result-label">{{ 'PORT_RESERVATION.RESULT_LABEL' | translate }}</div>
       <p>{{ taskResult }}</p>
     </div>
 
     <!-- Script output -->
     <div *ngIf="taskScriptOutput" class="result-output">
       <div class="result-output-header">
-        <div class="result-label">Script Output</div>
-        <button class="copy-btn" (click)="copyScriptOutput()" matTooltip="Copier">
+        <div class="result-label">{{ 'PORT_RESERVATION.SCRIPT_OUTPUT' | translate }}</div>
+        <button class="copy-btn" (click)="copyScriptOutput()" [matTooltip]="'PORT_RESERVATION.COPY' | translate">
           <mat-icon>{{ copyDone ? 'check' : 'content_copy' }}</mat-icon>
-          <span>{{ copyDone ? 'Copié !' : 'Copier' }}</span>
+          <span>{{ copyDone ? ('PORT_RESERVATION.COPIED' | translate) : ('PORT_RESERVATION.COPY' | translate) }}</span>
         </button>
       </div>
       <pre class="script-output-pre">{{ taskScriptOutput }}</pre>

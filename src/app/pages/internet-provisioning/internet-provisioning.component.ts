@@ -134,6 +134,7 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
   pollingActive      = false;
   liberating         = false;
   copyDone           = false;
+  private lastValidationId: number | null = null;
 
   switchIgnored = false;
   has_switch    = false;
@@ -501,6 +502,7 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
 
         this.aiService.validateTask(validationPayload).subscribe({
           next: (result) => {
+            this.lastValidationId = result.id;
             if (result.verdict === 'blocked' || result.verdict === 'warning') {
               this.submitting = false;
               this.activeNatBtn = null;
@@ -549,6 +551,12 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
         this.submitting   = false;
         this.activeNatBtn = null;
         const id = res?.task_id ?? res?.id ?? null;
+
+        if (id && this.lastValidationId) {
+          this.aiService.updateValidationTaskId(this.lastValidationId, id).subscribe();
+          this.lastValidationId = null;
+        }
+
         this._toast(
           id
             ? this.translate.instant('PROVISIONING.TOAST_SUCCESS', { id })

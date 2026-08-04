@@ -121,6 +121,7 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
   pollingActive      = false;
   liberating         = false;
   copyDone           = false;
+  private lastValidationId: number | null = null;
 
   // ── History ───────────────────────────────────────────────
   historyTasks    : any[] = [];
@@ -468,6 +469,7 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
 
         this.aiService.validateTask(validationPayload).subscribe({
           next: (result) => {
+            this.lastValidationId = result.id;
             if (result.verdict === 'blocked' || result.verdict === 'warning') {
               this.submitting = false;
               this.cdr.detectChanges();
@@ -511,6 +513,12 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.submitting = false;
         const id = res?.task_id ?? res?.id ?? null;
+
+        if (id && this.lastValidationId) {
+          this.aiService.updateValidationTaskId(this.lastValidationId, id).subscribe();
+          this.lastValidationId = null;
+        }
+
         this._toast(
           id
             ? this.translate.instant('PROVISIONING.TOAST_SUCCESS', { id })

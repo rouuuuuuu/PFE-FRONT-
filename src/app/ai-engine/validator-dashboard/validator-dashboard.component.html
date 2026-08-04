@@ -4,8 +4,8 @@
   <div class="page-header">
     <mat-icon class="header-icon">verified_user</mat-icon>
     <div>
-      <h1 class="page-title">Smart Validator</h1>
-      <p class="page-subtitle">AI-powered pre-execution risk assessment and validation</p>
+      <h1 class="page-title">{{ 'VALIDATOR.TITLE' | translate }}</h1>
+      <p class="page-subtitle">{{ 'VALIDATOR.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
@@ -120,7 +120,7 @@
         <div class="action-bar">
           <button class="btn-ghost">{{ 'VALIDATOR.VIEW_DETAILS' | translate }}</button>
           <button class="btn-primary" [disabled]="currentResult.verdict === 'blocked'"
-            [matTooltip]="currentResult.verdict === 'blocked' ? 'Task is blocked — too risky to execute' : ''">
+            [matTooltip]="currentResult.verdict === 'blocked' ? ('VALIDATOR.TOOLTIP_BLOCKED' | translate) : ''">
             ▶ {{ 'VALIDATOR.EXECUTE_TASK' | translate }}
           </button>
         </div>

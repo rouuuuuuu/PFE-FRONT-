@@ -51,4 +51,9 @@ export class MonitoringService {
   getShortestPath(source: string, destination: string): Observable<IsisPathResponse> {
     return this.http.get<IsisPathResponse>(`${API_URL}/monitoring/isis/shortest-path/?source=${source}&destination=${destination}`);
   }
+
+  /** Full IS-IS topology — every link with cost and capacity */
+  getIsisTopology(): Observable<{ status: string; total_routers: number; total_links: number; links: { source: string; target: string; cost: number; capacity: string }[] }> {
+    return this.http.get<any>(`${API_URL}/monitoring/isis/topology/`);
+  }
 }

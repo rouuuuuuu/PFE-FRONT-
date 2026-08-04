@@ -506,7 +506,8 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  max-height: 40%;
+  max-height: 55%;
+  min-height: 140px;
   background: var(--bg-surface);
   border-top: 1px solid var(--glass-border);
   transform: translateY(100%);
@@ -514,6 +515,7 @@
   z-index: 10;
   display: flex;
   flex-direction: column;
+  overflow: visible;
 }
 
 .bottom-panel-open {
@@ -521,12 +523,15 @@
 }
 
 .bottom-panel-inner {
-  padding: 16px;
+  padding: 14px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--bg-surface);
+  border-radius: 0;
 }
 
 .bottom-panel-header {
@@ -544,26 +549,231 @@
 
 .path-stats-row {
   display: flex;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 .path-stat-card {
   background: var(--bg-elevated);
   border: 1px solid var(--glass-border);
   border-radius: 8px;
-  padding: 12px 20px;
+  padding: 8px 16px;
   display: flex;
   flex-direction: column;
-  min-width: 120px;
+  min-width: 100px;
 }
 .path-stat-label {
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
   color: var(--text-muted);
   letter-spacing: 0.5px;
 }
 .path-stat-value {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--primary-orange);
   font-family: 'Outfit', sans-serif;
+}
+
+/* ── Route chain ──────────────────────────────────────── */
+.route-chain-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding: 4px 0 8px;
+  overflow-x: auto;
+  overflow-y: visible;
+  flex-shrink: 0;
+  min-height: 44px;
+}
+
+/* Scrollbar for long routes */
+.route-chain-wrap::-webkit-scrollbar { height: 4px; }
+.route-chain-wrap::-webkit-scrollbar-track { background: transparent; }
+.route-chain-wrap::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
+
+.rnode-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rnode-first {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 8px rgba(255, 121, 0, 0.25);
+}
+
+.rnode-last {
+  border-color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.25);
+}
+
+.rnode-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--primary-orange);
+}
+
+.rnode-last .rnode-icon { color: #00e5ff; }
+
+.rnode-name {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Hop segment (arrow between nodes) ── */
+.hop-segment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0 4px;
+  z-index: 1;
+}
+
+.hop-arrow-line {
+  width: 24px;
+  height: 2px;
+  background: var(--glass-border);
+  transition: background 0.2s;
+}
+
+.hop-arrow-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  margin-left: -8px;
+  transition: color 0.2s;
+}
+
+.hop-segment-active .hop-arrow-line { background: #00e5ff; }
+.hop-segment-active .hop-arrow-icon { color: #00e5ff; }
+.hop-segment:hover .hop-arrow-line  { background: #00e5ff; }
+.hop-segment:hover .hop-arrow-icon  { color: #00e5ff; }
+
+/* ── Hop detail card (floats above arrow on hover) ── */
+.hop-detail-card {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0d1b2a;
+  border: 1px solid #00e5ff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(0,229,255,0.2);
+  animation: fadeInUp 0.15s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.hdc-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: #a0b8cc;
+}
+
+.hdc-row mat-icon { color: #00e5ff; flex-shrink: 0; }
+.hdc-row strong   { color: #ffffff; }
+
+/* ── Link Click Popup ─────────────────────────────────────── */
+.link-popup {
+  position: absolute;
+  z-index: 40;
+  background: var(--bg-elevated, #151f2e);
+  border: 1px solid var(--primary-orange, #FF7900);
+  border-radius: 10px;
+  min-width: 200px;
+  box-shadow: 0 6px 28px rgba(255, 121, 0, 0.2);
+  overflow: hidden;
+  animation: popupIn 0.18s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: all;
+}
+
+@keyframes popupIn {
+  from { opacity: 0; transform: scale(0.92) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.link-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255,121,0,0.08);
+  border-bottom: 1px solid var(--glass-border);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.link-popup-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  padding: 2px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.link-popup-close mat-icon { font-size: 16px; width: 16px; height: 16px; }
+.link-popup-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+.link-popup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+}
+.link-popup-row:last-child { border-bottom: none; }
+
+.lp-key {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.lp-val {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: right;
+  max-width: 130px;
+  word-break: break-all;
+}
+
+.lp-accent {
+  color: var(--primary-orange);
+  font-weight: 700;
 }

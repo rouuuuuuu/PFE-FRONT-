@@ -24,7 +24,7 @@
         <span class="notif-time">{{ notif.created_at | date:'short' }}</span>
       </div>
       <div class="notif-actions">
-        <button mat-icon-button color="primary" *ngIf="!notif.is_read" (click)="markAsRead(notif)" matTooltip="Mark as read">
+        <button mat-icon-button color="primary" *ngIf="!notif.is_read" (click)="markAsRead(notif)" [matTooltip]="'COMMON.MARK_AS_READ' | translate">
           <mat-icon>check_circle_outline</mat-icon>
         </button>
       </div>

@@ -10,10 +10,6 @@
         <h1 class="header-title">{{ 'AI.TITLE' | translate }}</h1>
         <p class="header-sub">
           {{ 'AI.SUBTITLE' | translate }}
-          <span class="mode-badge mode-badge-native">
-            <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle">psychology</mat-icon>
-            {{ 'AI.LLAMA_MODEL' | translate }}
-          </span>
         </p>
       </div>
     </div>
@@ -165,7 +161,7 @@
     <div class="control-bar">
       <div class="engine-badge">
         <mat-icon class="engine-icon">cloud</mat-icon>
-        <span [innerHTML]="'AI.OPENROUTER_DESC' | translate"></span>
+        <span [innerHTML]="'IRIS is here to help you !'|translate"></span>
       </div>
       <button class="clear-btn" (click)="clearChat()" [matTooltip]="'AI.CLEAR_CHAT' | translate">
         <mat-icon>delete_sweep</mat-icon>

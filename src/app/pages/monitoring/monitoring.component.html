@@ -16,7 +16,7 @@
       <span class="live-dot"></span> {{ 'MONITORING.LIVE' | translate }}
     </span>
     <button class="btn-ghost" (click)="forceRefreshNetwork()" *ngIf="authService.isAdmin()"
-      [disabled]="refreshingNetwork" matTooltip="Force SSH re-poll of all routers">
+      [disabled]="refreshingNetwork" [matTooltip]="'COMMON.FORCE_RE_POLL' | translate">
       <mat-spinner *ngIf="refreshingNetwork" diameter="14"></mat-spinner>
       <mat-icon *ngIf="!refreshingNetwork">refresh</mat-icon>
       <span>{{ 'MONITORING.REFRESH_BTN' | translate }}</span>
