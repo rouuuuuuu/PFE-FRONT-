@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'; // Décorateur Injectable men Angular (Marks class as an injectable service)
 import { HttpClient, HttpParams } from '@angular/common/http'; // HttpClient w HttpParams bech nb3thou les requêtes web (Classes for making HTTP requests and handling query params)
 import { Observable } from 'rxjs'; // Observable men RxJS bech ngériw les données asynchrones (Handles asynchronous data streams)
+import { environment } from '../../environments/environment';
 
 // Interface mta3 e'response mta3 generate report (Type-safe response shape from the Django report endpoint)
 export interface GenerateReportResponse {
@@ -19,7 +20,7 @@ export interface MonthlyReport {
   generated_at: string;         // ISO 8601 datetime string
 }
 
-const API_URL = 'http://127.0.0.1:8000/api'; // L'adresse mta3 l'backend Django (The base URL for our backend API)
+const API_URL = `${environment.apiUrl}/api`; // L'adresse mta3 l'backend Django (The base URL for our backend API)
 
 @Injectable({ // Y9oul l'Angular elli service hedha ynejjem tet'injecta f'blasa okhra (Allows this service to be injected into components)
   providedIn: 'root' // Mdisponible fil application l'koll (Service is provided at the root level, making it a singleton)

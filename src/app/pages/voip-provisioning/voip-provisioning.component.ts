@@ -470,27 +470,23 @@ export class VoipProvisioningComponent implements OnInit, OnDestroy {
         this.aiService.validateTask(validationPayload).subscribe({
           next: (result) => {
             this.lastValidationId = result.id;
-            if (result.verdict === 'blocked' || result.verdict === 'warning') {
-              this.submitting = false;
-              this.cdr.detectChanges();
-              
-              const dialogRef = this.dialog.open(ValidationModalComponent, {
-                width: '500px',
-                data: {
-                  result,
-                  canProceed: result.verdict === 'warning'
-                }
-              });
+            this.submitting = false;
+            this.cdr.detectChanges();
+            
+            const dialogRef = this.dialog.open(ValidationModalComponent, {
+              width: '500px',
+              data: {
+                result,
+                canProceed: result.verdict !== 'blocked'
+              }
+            });
 
-              dialogRef.afterClosed().subscribe(proceed => {
-                if (proceed) {
-                  this.submitting = true;
-                  this.doExecute(payload);
-                }
-              });
-            } else {
-              this.doExecute(payload);
-            }
+            dialogRef.afterClosed().subscribe(proceed => {
+              if (proceed) {
+                this.submitting = true;
+                this.doExecute(payload);
+              }
+            });
           },
           error: () => {
             this.doExecute(payload);

@@ -345,35 +345,31 @@ export class MplsProvisioningComponent implements OnInit, OnDestroy {
     const validationPayload = {
       task_id: 0,
       task_type: 'mpls',
-      router_hostname: '',
-      vendor: '',
+      router_hostname: this.form.get('client_name')!.value || 'MPLS',
+      vendor: 'huawei',
       task_data: payload
     };
 
     this.aiService.validateTask(validationPayload).subscribe({
       next: (result) => {
         this.lastValidationId = result.id;
-        if (result.verdict === 'blocked' || result.verdict === 'warning') {
-          this.submitting = false;
-          this.cdr.detectChanges();
+        this.submitting = false;
+        this.cdr.detectChanges();
 
-          const dialogRef = this.dialog.open(ValidationModalComponent, {
-            width: '500px',
-            data: {
-              result,
-              canProceed: result.verdict === 'warning'
-            }
-          });
+        const dialogRef = this.dialog.open(ValidationModalComponent, {
+          width: '500px',
+          data: {
+            result,
+            canProceed: result.verdict !== 'blocked'
+          }
+        });
 
-          dialogRef.afterClosed().subscribe(proceed => {
-            if (proceed) {
-              this.submitting = true;
-              this._doExecute(payload);
-            }
-          });
-        } else {
-          this._doExecute(payload);
-        }
+        dialogRef.afterClosed().subscribe(proceed => {
+          if (proceed) {
+            this.submitting = true;
+            this._doExecute(payload);
+          }
+        });
       },
       error: () => {
         // AI validation unavailable — proceed anyway

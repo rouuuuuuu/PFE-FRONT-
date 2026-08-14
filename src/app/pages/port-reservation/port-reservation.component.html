@@ -229,7 +229,7 @@
         {{ 'PORT_RESERVATION.HISTORY_COL_PORT' | translate }}
       </th>
       <td mat-cell *matCellDef="let h" class="td-secondary">
-        {{ h.parameters?.interface_name || '—' }}
+        {{ h.parameters?.port_name || '—' }}
       </td>
     </ng-container>
 

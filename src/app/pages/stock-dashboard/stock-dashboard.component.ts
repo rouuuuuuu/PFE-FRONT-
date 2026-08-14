@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { environment } from '../../../environments/environment';
 
 export interface StockItem {
   id: number;
@@ -44,7 +45,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class StockDashboardComponent implements OnInit, AfterViewInit {
 
-  private readonly API_URL = 'http://127.0.0.1:8000/api/inventory/stock/';
+  private readonly API_URL = `${environment.apiUrl}/api/inventory/stock/`;
 
   // ─── Table ───
   isAdmin = true; // Placeholder for RBAC

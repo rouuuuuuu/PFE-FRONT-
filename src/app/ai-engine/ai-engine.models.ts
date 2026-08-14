@@ -21,7 +21,7 @@ export interface PreExecCheck {
 export interface ValidationResult {
   id: number;
   task_id: number;
-  task_type: 'voip' | 'internet';
+  task_type: 'voip' | 'internet' | 'mpls';
   router_hostname: string;
   vendor: 'huawei' | 'juniper';
   success_probability: number;   // 0.0–1.0

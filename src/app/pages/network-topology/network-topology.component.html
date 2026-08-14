@@ -50,7 +50,7 @@
       </div>
       <button class="analyze-btn" [disabled]="analyzingRoute" (click)="analyzeRoute()">
         <mat-spinner *ngIf="analyzingRoute" diameter="16"></mat-spinner>
-        <span *ngIf="!analyzingRoute">Analyze Route</span>
+        <span *ngIf="!analyzingRoute">{{ 'TOPOLOGY.ANALYZE_ROUTE' | translate }}</span>
       </button>
       <button class="clear-route-btn" *ngIf="isisPathResponse" (click)="clearRouteAnalysis()">
         <mat-icon>close</mat-icon>
@@ -84,14 +84,14 @@
     <!-- Legend -->
     <div class="legend" *ngIf="!loading">
       <span class="legend-item" *ngFor="let entry of [
-        {label:'Normal',   color:'#4caf50'},
-        {label:'Warning',  color:'#ffc107'},
-        {label:'Minor',    color:'#ff9800'},
-        {label:'Major',    color:'#f44336'},
-        {label:'Critical', color:'#ff1744'}
+        {key:'TOPOLOGY.NORMAL',   color:'#4caf50'},
+        {key:'TOPOLOGY.WARNING',  color:'#ffc107'},
+        {key:'TOPOLOGY.MINOR',    color:'#ff9800'},
+        {key:'TOPOLOGY.MAJOR',    color:'#f44336'},
+        {key:'TOPOLOGY.CRITICAL', color:'#ff1744'}
       ]">
         <span class="legend-dot" [style.background]="entry.color"></span>
-        {{ entry.label }}
+        {{ entry.key | translate }}
       </span>
       </div>
     </ng-container>
@@ -100,7 +100,7 @@
 
     <div class="topo-header-actions">
       <button class="collapse-header-btn" (click)="isHeaderCollapsed = !isHeaderCollapsed"
-        [matTooltip]="isHeaderCollapsed ? ('Expand Header') : ('Collapse Header')" matTooltipPosition="left">
+        [matTooltip]="isHeaderCollapsed ? ('TOPOLOGY.EXPAND_HEADER' | translate) : ('TOPOLOGY.COLLAPSE_HEADER' | translate)" matTooltipPosition="left">
         <mat-icon>{{ isHeaderCollapsed ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</mat-icon>
       </button>
     </div>
@@ -125,7 +125,7 @@
     <!-- Error -->
     <div *ngIf="error && !loading" class="topo-error">
       <mat-icon>error_outline</mat-icon>
-      <p>{{ error }}</p>
+      <p>{{ error | translate }}</p>
     </div>
 
     <!-- SVG Graph -->
@@ -137,29 +137,29 @@
          [style.top.px]="linkPopupY">
       <div class="link-popup-header">
         <mat-icon style="font-size:14px;width:14px;height:14px;color:var(--primary-orange)">linear_scale</mat-icon>
-        <span>Link Details</span>
+        <span>{{ 'TOPOLOGY.LINK_DETAILS' | translate }}</span>
         <button class="link-popup-close" (click)="clickedLink = null"><mat-icon>close</mat-icon></button>
       </div>
       <div class="link-popup-row">
-        <span class="lp-key">From</span>
+        <span class="lp-key">{{ 'TOPOLOGY.FROM' | translate }}</span>
         <span class="lp-val">{{ getLinkPeer(clickedLink.source) }}</span>
       </div>
       <div class="link-popup-row">
-        <span class="lp-key">To</span>
+        <span class="lp-key">{{ 'TOPOLOGY.TO' | translate }}</span>
         <span class="lp-val">{{ getLinkPeer(clickedLink.target) }}</span>
       </div>
       <div class="link-popup-row" *ngIf="clickedLink.capacity || clickedLink.rate">
-        <span class="lp-key">Capacity</span>
+        <span class="lp-key">{{ 'TOPOLOGY.CAPACITY' | translate }}</span>
         <span class="lp-val lp-accent">{{ clickedLink.capacity || clickedLink.rate }}</span>
       </div>
       <div class="link-popup-row">
-        <span class="lp-key">Cost</span>
+        <span class="lp-key">{{ 'TOPOLOGY.COST' | translate }}</span>
         <span class="lp-val" [class.lp-accent]="clickedLinkCost !== null">
           {{ clickedLinkCost !== null ? clickedLinkCost : '—' }}
         </span>
       </div>
       <div class="link-popup-row">
-        <span class="lp-key">Alarm</span>
+        <span class="lp-key">{{ 'TOPOLOGY.ALARM' | translate }}</span>
         <span class="lp-val" [style.color]="alarmColor(clickedLink.alarm)"
               style="font-weight:700;text-transform:uppercase">{{ clickedLink.alarm }}</span>
       </div>
@@ -179,18 +179,18 @@
 
         <div class="panel-body">
           <div class="panel-row">
-            <span class="panel-key">IP</span>
+            <span class="panel-key">{{ 'TOPOLOGY.IP' | translate }}</span>
             <span class="panel-val">{{ selectedNode.ip || '—' }}</span>
           </div>
           <div class="panel-row">
-            <span class="panel-key">Vendor</span>
+            <span class="panel-key">{{ 'TOPOLOGY.VENDOR' | translate }}</span>
             <span class="panel-val vendor-badge"
               [style.color]="selectedNode.vendor === 'huawei' ? '#FF7900' : '#5b9bf8'">
-              {{ selectedNode.vendor || 'Unknown' }}
+              {{ selectedNode.vendor || ('TOPOLOGY.UNKNOWN' | translate) }}
             </span>
           </div>
           <div class="panel-row">
-            <span class="panel-key">Alarm</span>
+            <span class="panel-key">{{ 'TOPOLOGY.ALARM' | translate }}</span>
             <span class="panel-val"
               [style.color]="alarmColor(selectedNode.alarm)"
               style="font-weight:700;text-transform:uppercase;font-size:12px">
@@ -230,7 +230,7 @@
       <div class="bottom-panel-inner" *ngIf="isisPathResponse">
         <div class="bottom-panel-header">
           <mat-icon style="color:var(--primary-orange)">route</mat-icon>
-          <h2>IS-IS Shortest Path Result</h2>
+          <h2>{{ 'TOPOLOGY.ISIS_SHORTEST_PATH' | translate }}</h2>
           <button class="panel-close" (click)="clearRouteAnalysis()">
             <mat-icon>close</mat-icon>
           </button>
@@ -239,11 +239,11 @@
         <!-- Stats row -->
         <div class="path-stats-row">
           <div class="path-stat-card">
-            <span class="path-stat-label">Total Cost</span>
+            <span class="path-stat-label">{{ 'TOPOLOGY.TOTAL_COST' | translate }}</span>
             <span class="path-stat-value">{{ isisPathResponse.total_cost }}</span>
           </div>
           <div class="path-stat-card">
-            <span class="path-stat-label">Total Hops</span>
+            <span class="path-stat-label">{{ 'TOPOLOGY.TOTAL_HOPS' | translate }}</span>
             <span class="path-stat-value">{{ isisPathResponse.distance_hops }}</span>
           </div>
         </div>

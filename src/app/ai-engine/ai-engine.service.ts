@@ -7,8 +7,9 @@ import {
   RootCauseAnalysis,
   ValidatorStats
 } from './ai-engine.models';
+import { environment } from '../../environments/environment';
 
-const BASE = 'http://127.0.0.1:8000/api/ai';
+const BASE = `${environment.apiUrl}/api/ai`;
 
 @Injectable({ providedIn: 'root' })
 export class AiEngineService {

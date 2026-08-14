@@ -143,64 +143,7 @@
   </mat-card-content>
 </mat-card>
 
-<!-- ══════════════════════════════════════════════════════════════
-     RESULT PANEL — Status polling (no liberation for bandwidth upgrade)
-     ══════════════════════════════════════════════════════════════ -->
-<mat-card class="result-panel" *ngIf="currentTaskId">
-  <mat-card-content>
 
-    <div class="result-header">
-      <div class="result-header-left">
-        <mat-icon class="result-icon"
-                  [ngClass]="{
-                    'icon-pending'   : taskStatus === 'pending',
-                    'icon-progress'  : taskStatus === 'in_progress',
-                    'icon-completed' : taskStatus === 'completed',
-                    'icon-failed'    : taskStatus === 'failed'
-                  }">
-          {{ getStatusIcon(taskStatus || 'pending') }}
-        </mat-icon>
-        <div>
-          <h3 class="result-title">
-            Task #{{ currentTaskId }}
-            <span class="status-badge" [class]="getStatusClass(taskStatus || 'pending')">
-              {{ taskStatus | titlecase }}
-            </span>
-          </h3>
-        </div>
-      </div>
-
-      <button class="dismiss-btn" (click)="dismissResult()" [matTooltip]="'COMMON.CLOSE' | translate">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-
-    <!-- Polling spinner -->
-    <div *ngIf="pollingActive" class="polling-indicator">
-      <mat-spinner diameter="18"></mat-spinner>
-      <span>Interrogation en cours…</span>
-    </div>
-
-    <!-- Result text -->
-    <div *ngIf="taskResult" class="result-text">
-      <div class="result-label">Résultat</div>
-      <p>{{ taskResult }}</p>
-    </div>
-
-    <!-- Script output -->
-    <div *ngIf="taskScriptOutput" class="result-output">
-      <div class="result-output-header">
-        <div class="result-label">Script Output</div>
-        <button class="copy-btn" (click)="copyScriptOutput()" [matTooltip]="'COMMON.COPY' | translate">
-          <mat-icon>{{ copyDone ? 'check' : 'content_copy' }}</mat-icon>
-          <span>{{ copyDone ? 'Copié !' : 'Copier' }}</span>
-        </button>
-      </div>
-      <pre class="script-output-pre">{{ taskScriptOutput }}</pre>
-    </div>
-
-  </mat-card-content>
-</mat-card>
 
 <!-- ── History Section ── -->
 <div class="history-header">

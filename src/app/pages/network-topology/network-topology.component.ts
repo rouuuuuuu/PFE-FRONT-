@@ -36,7 +36,7 @@ interface TopoLink {
   delay?: number | null;
 }
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-network-topology',
@@ -105,6 +105,7 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
     private api: ApiService,
     private zone: NgZone,
     private monitoringService: MonitoringService,
+    private translate: TranslateService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -202,7 +203,7 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
         setTimeout(() => this.renderGraph(), 50);
       },
       error: err => {
-        this.error = 'Failed to load topology data.';
+        this.error = 'TOPOLOGY.LOAD_ERROR';
         this.loading = false;
         console.error(err);
       }
@@ -576,7 +577,9 @@ export class NetworkTopologyComponent implements OnInit, AfterViewInit, OnDestro
   getHopTooltip(hopIndex: number): string {
     if (!this.isisPathResponse || !this.isisPathResponse.path_details[hopIndex]) return '';
     const pd = this.isisPathResponse.path_details[hopIndex];
-    return `Cost: ${pd.cost}  |  Capacity: ${pd.capacity}`;
+    const costStr = this.translate.instant('TOPOLOGY.COST');
+    const capStr = this.translate.instant('TOPOLOGY.CAPACITY');
+    return `${costStr}: ${pd.cost}  |  ${capStr}: ${pd.capacity}`;
   }
 
   get statsNodes() { return this.totalNodes; }

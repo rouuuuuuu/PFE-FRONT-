@@ -1014,6 +1014,24 @@
   flex-shrink: 0;
 }
 
+.badge-nocpe {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  font-family: 'Outfit', sans-serif;
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--status-green, #4caf50);
+  border: 1px solid rgba(76, 175, 80, 0.4);
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: default;
+  flex-shrink: 0;
+}
+
 /* ── IP Address Cells ── */
 .td-mono {
   font-family: 'Courier New', monospace;

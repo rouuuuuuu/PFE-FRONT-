@@ -503,29 +503,25 @@ export class InternetProvisioningComponent implements OnInit, OnDestroy {
         this.aiService.validateTask(validationPayload).subscribe({
           next: (result) => {
             this.lastValidationId = result.id;
-            if (result.verdict === 'blocked' || result.verdict === 'warning') {
-              this.submitting = false;
-              this.activeNatBtn = null;
-              this.cdr.detectChanges();
-              
-              const dialogRef = this.dialog.open(ValidationModalComponent, {
-                width: '500px',
-                data: {
-                  result,
-                  canProceed: result.verdict === 'warning'
-                }
-              });
+            this.submitting = false;
+            this.activeNatBtn = null;
+            this.cdr.detectChanges();
+            
+            const dialogRef = this.dialog.open(ValidationModalComponent, {
+              width: '500px',
+              data: {
+                result,
+                canProceed: result.verdict !== 'blocked'
+              }
+            });
 
-              dialogRef.afterClosed().subscribe(proceed => {
-                if (proceed) {
-                  this.submitting = true;
-                  this.activeNatBtn = natMode;
-                  this.doExecute(payload);
-                }
-              });
-            } else {
-              this.doExecute(payload);
-            }
+            dialogRef.afterClosed().subscribe(proceed => {
+              if (proceed) {
+                this.submitting = true;
+                this.activeNatBtn = natMode;
+                this.doExecute(payload);
+              }
+            });
           },
           error: () => {
             // Validator down or error, proceed normally

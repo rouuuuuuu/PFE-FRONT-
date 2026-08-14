@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface CurrentUser {
   id: number;
@@ -27,7 +28,7 @@ export interface CurrentUser {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly baseUrl = 'http://127.0.0.1:8000/api/auth';
+  private readonly baseUrl = `${environment.apiUrl}/api/auth`;
   private isBrowser: boolean;
 
   currentUser$ = new BehaviorSubject<CurrentUser | null>(null);
@@ -42,7 +43,7 @@ export class AuthService {
 
   /** GET /api/auth/me/extended/ */
   loadCurrentUser(): Observable<CurrentUser> {
-    return this.http.get<CurrentUser>(`http://127.0.0.1:8000/api/auth/me/extended/`).pipe(
+    return this.http.get<CurrentUser>(`${environment.apiUrl}/api/auth/me/extended/`).pipe(
       tap(user => this.currentUser$.next(user))
     );
   }

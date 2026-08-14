@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, Subscription, timer } from 'rxjs';
 import { switchMap, filter, catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 export interface UnreadCountResponse {
   unread_count: number;
@@ -13,7 +14,7 @@ export interface UnreadCountResponse {
   providedIn: 'root'
 })
 export class NotificationService {
-  private readonly baseUrl = 'http://127.0.0.1:8000/api/auth/notifications';
+  private readonly baseUrl = `${environment.apiUrl}/api/auth/notifications`;
   private isBrowser: boolean;
   private pollingSub?: Subscription;
 

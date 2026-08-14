@@ -17,6 +17,7 @@ import { PreferencesService } from '../../services/preferences.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { NotificationService } from '../../services/notification.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 // Custom validator for matching passwords
 export function passwordsMatchValidator(group: FormGroup) {
@@ -92,7 +93,7 @@ export class ProfileComponent implements OnInit {
     });
 
     // Auto mark notifications as read when profile opens
-    this.http.post('http://127.0.0.1:8000/api/auth/notifications/mark-read/', {})
+    this.http.post(`${environment.apiUrl}/api/auth/notifications/mark-read/`, {})
       .subscribe(() => {
         if (this.notificationService.fetchCount) {
           this.notificationService.fetchCount();

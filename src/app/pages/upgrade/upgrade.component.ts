@@ -19,6 +19,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../services/api.service';
 import { ProvisioningService } from '../../services/provisioning.service';
+import { environment } from '../../../environments/environment';
 
 interface Device {
   device_id: number;
@@ -79,7 +80,7 @@ interface Upgrade {
   styleUrls: ['./upgrade.component.css']
 })
 export class UpgradeComponent implements OnInit, OnDestroy {
-  private readonly BASE_URL = 'http://127.0.0.1:8000';
+  private readonly BASE_URL = environment.apiUrl;
   private apiUrl = `${this.BASE_URL}/api/provisioning`;
   private destroy$ = new Subject<void>();
   private statusPollDestroy$ = new Subject<void>();
